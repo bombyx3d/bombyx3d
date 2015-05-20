@@ -29,6 +29,14 @@ add_subdirectory(3rdparty)
 
 file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     cmake/*.cmake
+    io/files/*.cpp
+    io/files/*.h
+    io/streams/*.cpp
+    io/streams/*.h
+    io/*.cpp
+    io/*.h
+    utility/*.cpp
+    utility/*.h
 )
 
 z_set_source_groups(${source_files})
