@@ -20,17 +20,15 @@
 # THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.1)
+if(NOT __Z_SET_SOURCE_GROUPS_CMAKE_INCLUDED)
+    set(__Z_SET_SOURCE_GROUPS_CMAKE_INCLUDED TRUE)
 
-set(__Z_ENGINE_DONT_ADD_SUBDIRECTORY TRUE)
-include(cmake/Engine.cmake)
+    macro(z_set_source_groups)
+        foreach(file ${ARGN})
+            get_filename_component(path "${file}" DIRECTORY)
+            string(REPLACE "/" "\\" path "${path}")
+            source_group("Source Files\\${path}" FILES "${file}")
+        endforeach()
+    endmacro()
 
-add_subdirectory(3rdparty)
-
-file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-    cmake/*.cmake
-)
-
-z_set_source_groups(${source_files})
-add_library(engine STATIC ${source_files})
-set_target_properties(engine PROPERTIES CXX_STANDARD 11)
+endif()

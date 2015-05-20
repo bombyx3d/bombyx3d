@@ -20,17 +20,23 @@
 # THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.1)
+if(NOT __Z_ENUM_OPTION_CMAKE_INCLUDED)
+    set(__Z_ENUM_OPTION_CMAKE_INCLUDED TRUE)
 
-set(__Z_ENGINE_DONT_ADD_SUBDIRECTORY TRUE)
-include(cmake/Engine.cmake)
+    macro(z_enum_option name description value values)
+        set("${name}" "${value}" CACHE STRING "${description} (possible values are: ${values})")
 
-add_subdirectory(3rdparty)
+        set(valid NO)
+        foreach(possible_value ${values})
+            if("${${name}}" STREQUAL "${possible_value}")
+                set(valid YES)
+                break()
+            endif()
+        endforeach()
 
-file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-    cmake/*.cmake
-)
+        if(NOT ${valid})
+            message(FATAL_ERROR "Invalid value \"${${name}}\" for option \"${name}\". Valid values are: ${values}")
+        endif()
+    endmacro()
 
-z_set_source_groups(${source_files})
-add_library(engine STATIC ${source_files})
-set_target_properties(engine PROPERTIES CXX_STANDARD 11)
+endif()

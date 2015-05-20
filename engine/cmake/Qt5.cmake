@@ -20,17 +20,36 @@
 # THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.1)
+if(NOT __Z_FIND_QT5_CMAKE_INCLUDED)
+    set(__Z_FIND_QT5_CMAKE_INCLUDED TRUE)
 
-set(__Z_ENGINE_DONT_ADD_SUBDIRECTORY TRUE)
-include(cmake/Engine.cmake)
+    set(Z_QT5_FOUND NO)
 
-add_subdirectory(3rdparty)
+    find_package(Qt5Widgets)
+    if(Qt5Widgets_FOUND)
+        find_package(Qt5Core)
+        find_package(Qt5Gui)
+        find_package(Qt5Network)
+        find_package(Qt5Multimedia)
+        find_package(Qt5OpenGL)
+        if(Qt5Core_FOUND AND Qt5Gui_FOUND AND Qt5Network_FOUND AND Qt5Multimedia_FOUND AND Qt5OpenGL_FOUND)
+            set(Z_QT5_FOUND YES)
+        endif()
+    endif()
 
-file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-    cmake/*.cmake
-)
+    macro(z_target_link_qt5 target)
+        if(Z_QT5_FOUND)
+            target_link_libraries("${target}" Qt5::Core Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::OpenGL)
+            if(MSVC)
+                target_compile_options("${target}" PRIVATE /wd4458)
+            endif()
+        endif()
+    endmacro()
 
-z_set_source_groups(${source_files})
-add_library(engine STATIC ${source_files})
-set_target_properties(engine PROPERTIES CXX_STANDARD 11)
+    macro(z_qt5_sources)
+        if(NOT Z_TARGET_QT5)
+            set_source_files_properties(${ARGN} PROPERTIES HEADER_FILE_ONLY TRUE)
+        endif()
+    endmacro()
+
+endif()

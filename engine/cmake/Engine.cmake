@@ -1,4 +1,4 @@
-#
+﻿#
 # Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,17 +20,29 @@
 # THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.1)
+if(NOT __Z_ENGINE_CMAKE_INCLUDED)
+    set(__Z_ENGINE_CMAKE_INCLUDED TRUE)
 
-set(__Z_ENGINE_DONT_ADD_SUBDIRECTORY TRUE)
-include(cmake/Engine.cmake)
+    get_filename_component(path "${CMAKE_CURRENT_LIST_FILE}" PATH)
+    get_filename_component(path "${path}" ABSOLUTE)
+    include("${path}/EnumOption.cmake")
+    include("${path}/SetSourceGroups.cmake")
+    include("${path}/Qt5.cmake")
+    include("${path}/OpenGL.cmake")
+    include("${path}/TargetPlatform.cmake")
 
-add_subdirectory(3rdparty)
+    if(MSVC)
+        add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+        add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+        add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
+    endif()
 
-file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-    cmake/*.cmake
-)
+    get_filename_component(engine_directory "${path}" PATH)
+    include_directories("${engine_directory}")
+    include_directories("${engine_directory}/3rdparty/glm")
 
-z_set_source_groups(${source_files})
-add_library(engine STATIC ${source_files})
-set_target_properties(engine PROPERTIES CXX_STANDARD 11)
+    if(NOT __Z_ENGINE_DONT_ADD_SUBDIRECTORY AND NOT TARGET engine)
+        add_subdirectory("${engine_directory}" engine)
+    endif()
+
+endif()

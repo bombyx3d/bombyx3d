@@ -22,4 +22,4 @@
 
 cmake_minimum_required(VERSION 3.1)
 
-add_subdirectory(engine)
+include(engine/cmake/Engine.cmake)

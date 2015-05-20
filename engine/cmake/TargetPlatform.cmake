@@ -20,17 +20,43 @@
 # THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.1)
+if(NOT __Z_TARGET_PLATFORM_CMAKE_INCLUDED)
+    set(__Z_TARGET_PLATFORM_CMAKE_INCLUDED TRUE)
 
-set(__Z_ENGINE_DONT_ADD_SUBDIRECTORY TRUE)
-include(cmake/Engine.cmake)
+    get_filename_component(path "${CMAKE_CURRENT_LIST_FILE}" PATH)
+    include("${path}/Qt5.cmake")
+    include("${path}/EnumOption.cmake")
 
-add_subdirectory(3rdparty)
+    set(Z_SUPPORTED_PLATFORMS "dummy")
+    set(Z_DEFAULT_PLATFORM "dummy")
 
-file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-    cmake/*.cmake
-)
+    #######################
+    # Supported platforms
 
-z_set_source_groups(${source_files})
-add_library(engine STATIC ${source_files})
-set_target_properties(engine PROPERTIES CXX_STANDARD 11)
+    if(${Z_QT5_FOUND})
+        list(APPEND Z_SUPPORTED_PLATFORMS "qt5")
+    endif()
+
+    #######################
+    # Default platform
+
+    if (${Z_QT5_FOUND})
+        set(Z_DEFAULT_PLATFORM "qt5")
+    endif()
+
+    #######################
+
+    z_enum_option(Z_TARGET_PLATFORM "Target platform" "${Z_DEFAULT_PLATFORM}" "${Z_SUPPORTED_PLATFORMS}")
+
+    set(Z_TARGET_DUMMY FALSE)
+    set(Z_TARGET_QT5 FALSE)
+
+    if(Z_TARGET_PLATFORM STREQUAL "dummy")
+        set(Z_TARGET_DUMMY TRUE)
+        add_definitions(-DZ_TARGET_DUMMY)
+    elseif(Z_TARGET_PLATFORM STREQUAL "qt5")
+        set(Z_TARGET_QT5 TRUE)
+        add_definitions(-DZ_TARGET_QT5)
+    endif()
+
+endif()
