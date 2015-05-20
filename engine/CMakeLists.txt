@@ -33,6 +33,8 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     io/files/*.h
     io/streams/*.cpp
     io/streams/*.h
+    io/zip/*.cpp
+    io/zip/*.h
     io/*.cpp
     io/*.h
     utility/*.cpp
