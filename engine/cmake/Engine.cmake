@@ -37,6 +37,10 @@ if(NOT __Z_ENGINE_CMAKE_INCLUDED)
         add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
     endif()
 
+    if(Z_OPENGL_FOUND)
+        add_definitions(-DZ_OPENGL_FOUND)
+    endif()
+
     get_filename_component(engine_directory "${path}" PATH)
     include_directories("${engine_directory}")
     include_directories("${engine_directory}/3rdparty/glm")

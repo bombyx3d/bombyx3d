@@ -37,6 +37,11 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     io/zip/*.h
     io/*.cpp
     io/*.h
+    opengl/api/dummy/*.h
+    opengl/api/normal/*.h
+    opengl/api/qt5/*.h
+    opengl/api/*.cpp
+    opengl/api/*.h
     utility/*.cpp
     utility/*.h
 )
@@ -46,3 +51,5 @@ add_library(engine STATIC ${source_files})
 
 set_target_properties(engine PROPERTIES CXX_STANDARD 11)
 target_link_libraries(engine glew libminizip)
+z_target_link_qt5(engine)
+z_target_link_opengl(engine)
