@@ -21,26 +21,15 @@
 #
 
 cmake_minimum_required(VERSION 3.1)
+project(bzip2 C)
 
-set(__Z_ENGINE_DONT_ADD_SUBDIRECTORY TRUE)
-include(cmake/Engine.cmake)
+if(MSVC)
+    add_definitions(/wd4244 /wd4267)
+endif()
 
-add_subdirectory(3rdparty)
+file(GLOB source_files *.c *.h)
+source_group("Source Files" FILES ${source_files})
 
-file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-    cmake/*.cmake
-    io/files/*.cpp
-    io/files/*.h
-    io/streams/*.cpp
-    io/streams/*.h
-    io/*.cpp
-    io/*.h
-    utility/*.cpp
-    utility/*.h
-)
+add_library(bzip2 STATIC ${source_files})
 
-z_set_source_groups(${source_files})
-add_library(engine STATIC ${source_files})
-
-set_target_properties(engine PROPERTIES CXX_STANDARD 11)
-target_link_libraries(engine bzip2 zlib)
+target_include_directories(bzip2 BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
