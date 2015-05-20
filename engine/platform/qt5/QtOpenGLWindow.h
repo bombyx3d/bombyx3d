@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,24 +21,37 @@
  */
 
 #pragma once
+#include "QtOpenGLRenderThread.h"
+#include <QGLWidget>
 
 namespace Z
 {
-    class PlatformInitOptions;
-
-    class PlatformCallbacks
+    class QtOpenGLWindow : public QGLWidget
     {
+        Q_OBJECT
+
     public:
-        PlatformCallbacks() = default;
-        virtual ~PlatformCallbacks() = default;
+        explicit QtOpenGLWindow(QWidget* parent = nullptr);
+        ~QtOpenGLWindow();
 
-        virtual const PlatformInitOptions* getInitOptions() const = 0;
+    protected:
+        void resizeEvent(QResizeEvent* resizeEvent) override;
+        void paintEvent(QPaintEvent* paintEvent) override;
 
-        virtual bool onInitialize(int width, int height) = 0;
-        virtual void onShutdown() = 0;
-        virtual void onSuspend() = 0;
-        virtual void onResume() = 0;
-        virtual void onViewportSizeChanged(int width, int height) = 0;
-        virtual void onPaintEvent(double time) = 0;
+        void showEvent(QShowEvent* showEvent) override;
+        void hideEvent(QHideEvent* hideEvent) override;
+        void closeEvent(QCloseEvent* closeEvent) override;
+
+        void mousePressEvent(QMouseEvent* mouseEvent) override;
+        void mouseMoveEvent(QMouseEvent* mouseEvent) override;
+        void mouseReleaseEvent(QMouseEvent* mouseEvent) override;
+
+        void keyPressEvent(QKeyEvent* keyEvent) override;
+        void keyReleaseEvent(QKeyEvent* keyEvent) override;
+
+    private:
+        QtOpenGLRenderThread m_RenderThread;
+        bool m_Initialized = false;
+        bool m_InitializationFailed = false;
     };
 }

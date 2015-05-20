@@ -21,10 +21,16 @@
  */
 
 #pragma once
+#include "platform/PlatformInitOptions.h"
+
+#define Z_GAME_CLASS(CLASS) \
+    ::Z::Game* ::Z::Game::create() { \
+        return new ::CLASS; \
+    }
 
 namespace Z
 {
-    class Game
+    class Game : public PlatformInitOptions
     {
     public:
         Game() = default;
@@ -32,10 +38,10 @@ namespace Z
 
         static Game* create();
 
-        virtual int preferredDisplayWidth() const;
-        virtual int preferredDisplayHeight() const;
-        virtual int preferredDepthBufferBits() const;
-        virtual int preferredStencilBufferBits() const;
+        virtual int preferredDisplayWidth() const override;
+        virtual int preferredDisplayHeight() const override;
+        virtual int preferredDepthBufferBits() const override;
+        virtual int preferredStencilBufferBits() const override;
 
         virtual bool initialize() = 0;
         virtual void shutdown() = 0;

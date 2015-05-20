@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,26 +19,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "QtFileSystem.h"
+#include "QtOpenGLWindow.h"
+#include <QApplication>
 
-#pragma once
+using namespace Z;
 
-namespace Z
+int main(int argc, char** argv)
 {
-    class PlatformInitOptions;
+    QCoreApplication::setAttribute(Qt::AA_X11InitThreads);
+    QApplication app(argc, argv);
 
-    class PlatformCallbacks
-    {
-    public:
-        PlatformCallbacks() = default;
-        virtual ~PlatformCallbacks() = default;
+    FileSystem::defaultFileSystem()->add(std::make_shared<QtFileSystem>(app.applicationDirPath()));
+    FileSystem::defaultFileSystem()->add(std::make_shared<QtFileSystem>(":/"));
+    FileSystem::defaultFileSystem()->add(std::make_shared<QtFileSystem>("."));
 
-        virtual const PlatformInitOptions* getInitOptions() const = 0;
+    QtOpenGLWindow window;
+    window.show();
 
-        virtual bool onInitialize(int width, int height) = 0;
-        virtual void onShutdown() = 0;
-        virtual void onSuspend() = 0;
-        virtual void onResume() = 0;
-        virtual void onViewportSizeChanged(int width, int height) = 0;
-        virtual void onPaintEvent(double time) = 0;
-    };
+    return app.exec();
 }

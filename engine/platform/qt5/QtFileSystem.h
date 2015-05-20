@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,24 +21,28 @@
  */
 
 #pragma once
+#include "io/FileSystem.h"
+#include "QtFileReader.h"
+#include <QDir>
+#include <QStandardPaths>
+#include <memory>
 
 namespace Z
 {
-    class PlatformInitOptions;
-
-    class PlatformCallbacks
+    class QtFileSystem : public FileSystem
     {
     public:
-        PlatformCallbacks() = default;
-        virtual ~PlatformCallbacks() = default;
+        explicit QtFileSystem(const QDir& baseDir);
+        explicit QtFileSystem(const QString& baseDir);
 
-        virtual const PlatformInitOptions* getInitOptions() const = 0;
+        QString absoluteFilePath(const std::string& file) const;
 
-        virtual bool onInitialize(int width, int height) = 0;
-        virtual void onShutdown() = 0;
-        virtual void onSuspend() = 0;
-        virtual void onResume() = 0;
-        virtual void onViewportSizeChanged(int width, int height) = 0;
-        virtual void onPaintEvent(double time) = 0;
+        static QString getStandardPath(QStandardPaths::StandardLocation location);
+
+        bool fileExists(const std::string& path) final override;
+        FileReaderPtr openFile(const std::string& path) final override;
+
+    private:
+        QDir m_BaseDir;
     };
 }

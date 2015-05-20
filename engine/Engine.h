@@ -42,8 +42,12 @@ namespace Z
         Engine();
         ~Engine();
 
-        bool onInitialize() final override;
+        const PlatformInitOptions* getInitOptions() const final override;
+
+        bool onInitialize(int width, int height) final override;
         void onShutdown() final override;
+        void onSuspend() final override;
+        void onResume() final override;
         void onViewportSizeChanged(int width, int height) final override;
         void onPaintEvent(double time) final override;
     };

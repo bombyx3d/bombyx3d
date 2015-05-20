@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,24 +21,6 @@
  */
 
 #pragma once
+#include <QString>
 
-namespace Z
-{
-    class PlatformInitOptions;
-
-    class PlatformCallbacks
-    {
-    public:
-        PlatformCallbacks() = default;
-        virtual ~PlatformCallbacks() = default;
-
-        virtual const PlatformInitOptions* getInitOptions() const = 0;
-
-        virtual bool onInitialize(int width, int height) = 0;
-        virtual void onShutdown() = 0;
-        virtual void onSuspend() = 0;
-        virtual void onResume() = 0;
-        virtual void onViewportSizeChanged(int width, int height) = 0;
-        virtual void onPaintEvent(double time) = 0;
-    };
-}
+#define zqUtf8Printable(str) ((str).toUtf8().constData())

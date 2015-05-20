@@ -46,14 +46,29 @@ namespace Z
         return new Engine;
     }
 
-    bool Engine::onInitialize()
+    const PlatformInitOptions* Engine::getInitOptions() const
     {
+        return m_Game.get();
+    }
+
+    bool Engine::onInitialize(int width, int height)
+    {
+        (void)width;
+        (void)height;
         return m_Game->initialize();
     }
 
     void Engine::onShutdown()
     {
         m_Game->shutdown();
+    }
+
+    void Engine::onSuspend()
+    {
+    }
+
+    void Engine::onResume()
+    {
     }
 
     void Engine::onViewportSizeChanged(int width, int height)

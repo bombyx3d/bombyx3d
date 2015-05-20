@@ -24,21 +24,15 @@
 
 namespace Z
 {
-    class PlatformInitOptions;
-
-    class PlatformCallbacks
+    class PlatformInitOptions
     {
     public:
-        PlatformCallbacks() = default;
-        virtual ~PlatformCallbacks() = default;
+        PlatformInitOptions() = default;
+        virtual ~PlatformInitOptions() = default;
 
-        virtual const PlatformInitOptions* getInitOptions() const = 0;
-
-        virtual bool onInitialize(int width, int height) = 0;
-        virtual void onShutdown() = 0;
-        virtual void onSuspend() = 0;
-        virtual void onResume() = 0;
-        virtual void onViewportSizeChanged(int width, int height) = 0;
-        virtual void onPaintEvent(double time) = 0;
+        virtual int preferredDisplayWidth() const = 0;
+        virtual int preferredDisplayHeight() const = 0;
+        virtual int preferredDepthBufferBits() const = 0;
+        virtual int preferredStencilBufferBits() const = 0;
     };
 }

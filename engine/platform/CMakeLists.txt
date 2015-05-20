@@ -22,41 +22,20 @@
 
 cmake_minimum_required(VERSION 3.1)
 
-set(__Z_ENGINE_DONT_ADD_SUBDIRECTORY TRUE)
-include(cmake/Engine.cmake)
-
-add_subdirectory(3rdparty)
+if(Z_TARGET_QT5)
+    set(CMAKE_AUTOMOC TRUE)
+    set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
+endif()
 
 file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-    cmake/*.cmake
-    io/files/*.cpp
-    io/files/*.h
-    io/streams/*.cpp
-    io/streams/*.h
-    io/zip/*.cpp
-    io/zip/*.h
-    io/*.cpp
-    io/*.h
-    opengl/api/dummy/*.h
-    opengl/api/normal/*.h
-    opengl/api/qt5/*.h
-    opengl/api/*.cpp
-    opengl/api/*.h
-    opengl/*.cpp
-    opengl/*.h
-    utility/*.cpp
-    utility/*.h
-    *.cpp
-    *.h
+    *
+    "${Z_TARGET_PLATFORM}/*"
 )
 
 z_set_source_groups(${source_files})
-add_library(engine STATIC ${source_files})
+add_library(platform STATIC ${source_files})
 
-set_target_properties(engine PROPERTIES CXX_STANDARD 11)
-target_link_libraries(engine glew libminizip)
-z_target_link_qt5(engine)
-z_target_link_opengl(engine)
-
-add_subdirectory(platform)
-target_link_libraries(engine platform)
+set_target_properties(platform PROPERTIES CXX_STANDARD 11)
+target_link_libraries(platform engine)
+z_target_link_qt5(platform)
+z_target_link_opengl(platform)

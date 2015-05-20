@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,24 +21,31 @@
  */
 
 #pragma once
+#include <deque>
+#include <mutex>
+#include <functional>
 
 namespace Z
 {
-    class PlatformInitOptions;
-
-    class PlatformCallbacks
+    class FunctionQueue
     {
     public:
-        PlatformCallbacks() = default;
-        virtual ~PlatformCallbacks() = default;
+        FunctionQueue() = default;
+        ~FunctionQueue() = default;
 
-        virtual const PlatformInitOptions* getInitOptions() const = 0;
+        void clear();
 
-        virtual bool onInitialize(int width, int height) = 0;
-        virtual void onShutdown() = 0;
-        virtual void onSuspend() = 0;
-        virtual void onResume() = 0;
-        virtual void onViewportSizeChanged(int width, int height) = 0;
-        virtual void onPaintEvent(double time) = 0;
+        void post(const std::function<void()>& function);
+        void post(std::function<void()>&& function);
+
+        bool processOne();
+        void processAll();
+
+    private:
+        std::mutex m_Mutex;
+        std::deque<std::function<void()>> m_Queue;
+
+        FunctionQueue(const FunctionQueue&) = delete;
+        FunctionQueue& operator=(const FunctionQueue&) = delete;
     };
 }

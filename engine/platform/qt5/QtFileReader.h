@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,24 +21,33 @@
  */
 
 #pragma once
+#include "io/files/FileReader.h"
+#include <string>
+#include <mutex>
+#include <memory>
+#include <QFile>
 
 namespace Z
 {
-    class PlatformInitOptions;
-
-    class PlatformCallbacks
+    class QtFileReader : public FileReader
     {
     public:
-        PlatformCallbacks() = default;
-        virtual ~PlatformCallbacks() = default;
+        QtFileReader(const std::string& name, std::unique_ptr<QFile>&& file);
+        ~QtFileReader();
 
-        virtual const PlatformInitOptions* getInitOptions() const = 0;
+        const std::string& name() const override;
 
-        virtual bool onInitialize(int width, int height) = 0;
-        virtual void onShutdown() = 0;
-        virtual void onSuspend() = 0;
-        virtual void onResume() = 0;
-        virtual void onViewportSizeChanged(int width, int height) = 0;
-        virtual void onPaintEvent(double time) = 0;
+        uint64_t size() const override;
+        bool read(uint64_t offset, void* buffer, size_t size) override;
+
+    private:
+        std::mutex m_Mutex;
+        std::string m_Name;
+        std::unique_ptr<QFile> m_File;
+        uint64_t m_Size;
+        uint64_t m_Offset;
+
+        QtFileReader(const QtFileReader&) = delete;
+        QtFileReader& operator=(const QtFileReader&) = delete;
     };
 }

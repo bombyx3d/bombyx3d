@@ -19,26 +19,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "Game.h"
 
-#pragma once
+Z_GAME_CLASS(Game)
 
-namespace Z
+bool Game::initialize()
 {
-    class PlatformInitOptions;
+    return true;
+}
 
-    class PlatformCallbacks
-    {
-    public:
-        PlatformCallbacks() = default;
-        virtual ~PlatformCallbacks() = default;
+void Game::shutdown()
+{
+}
 
-        virtual const PlatformInitOptions* getInitOptions() const = 0;
-
-        virtual bool onInitialize(int width, int height) = 0;
-        virtual void onShutdown() = 0;
-        virtual void onSuspend() = 0;
-        virtual void onResume() = 0;
-        virtual void onViewportSizeChanged(int width, int height) = 0;
-        virtual void onPaintEvent(double time) = 0;
-    };
+void Game::runFrame(double time)
+{
+    (void)time;
 }

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,24 +21,46 @@
  */
 
 #pragma once
+#include "platform/PlatformCallbacks.h"
+#include "utility/FunctionQueue.h"
+#include <atomic>
+#include <future>
+#include <cstdint>
+#include <QElapsedTimer>
+#include <QThread>
+#include <QGLWidget>
 
 namespace Z
 {
-    class PlatformInitOptions;
-
-    class PlatformCallbacks
+    class QtOpenGLRenderThread : public QThread, protected FunctionQueue
     {
+        Q_OBJECT
+
     public:
-        PlatformCallbacks() = default;
-        virtual ~PlatformCallbacks() = default;
+        explicit QtOpenGLRenderThread(QGLWidget* gl);
+        ~QtOpenGLRenderThread();
 
-        virtual const PlatformInitOptions* getInitOptions() const = 0;
+        bool start(int width, int height);
+        void postShutdown();
 
-        virtual bool onInitialize(int width, int height) = 0;
-        virtual void onShutdown() = 0;
-        virtual void onSuspend() = 0;
-        virtual void onResume() = 0;
-        virtual void onViewportSizeChanged(int width, int height) = 0;
-        virtual void onPaintEvent(double time) = 0;
+        void suspend();
+        void resume();
+
+        void resize(int width, int height);
+
+        PlatformCallbacks* callbacks() const { return m_Callbacks.get(); }
+        using FunctionQueue::post;
+
+    protected:
+        void run() override;
+
+    private:
+        QGLWidget* m_GL;
+        std::unique_ptr<PlatformCallbacks> m_Callbacks;
+        QElapsedTimer m_Timer;
+        std::atomic<uint32_t> m_ViewportSize;
+        std::promise<bool> m_ThreadStartPromise;
+        std::atomic<bool> m_Suspended;
+        std::atomic<bool> m_ShuttingDown;
     };
 }

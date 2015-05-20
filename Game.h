@@ -21,24 +21,12 @@
  */
 
 #pragma once
+#include "engine/Game.h"
 
-namespace Z
+class Game : public Z::Game
 {
-    class PlatformInitOptions;
-
-    class PlatformCallbacks
-    {
-    public:
-        PlatformCallbacks() = default;
-        virtual ~PlatformCallbacks() = default;
-
-        virtual const PlatformInitOptions* getInitOptions() const = 0;
-
-        virtual bool onInitialize(int width, int height) = 0;
-        virtual void onShutdown() = 0;
-        virtual void onSuspend() = 0;
-        virtual void onResume() = 0;
-        virtual void onViewportSizeChanged(int width, int height) = 0;
-        virtual void onPaintEvent(double time) = 0;
-    };
-}
+public:
+    bool initialize() final override;
+    void shutdown() final override;
+    void runFrame(double time) final override;
+};
