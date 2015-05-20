@@ -44,8 +44,11 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     opengl/api/*.h
     opengl/*.cpp
     opengl/*.h
+    platform/*.h
     utility/*.cpp
     utility/*.h
+    *.cpp
+    *.h
 )
 
 z_set_source_groups(${source_files})
