@@ -31,7 +31,7 @@ endif()
 file(GLOB source_files *.c *.h)
 source_group("Source Files" FILES ${source_files})
 
-add_library(zlib STATIC ${EXCLUDE_FROM_ALL}
+add_library(zlib STATIC
     ${source_files}
 )
 

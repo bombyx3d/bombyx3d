@@ -43,4 +43,4 @@ z_set_source_groups(${source_files})
 add_library(engine STATIC ${source_files})
 
 set_target_properties(engine PROPERTIES CXX_STANDARD 11)
-target_link_libraries(engine bzip2 zlib)
+target_link_libraries(engine libminizip)
