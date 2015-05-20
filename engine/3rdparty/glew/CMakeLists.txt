@@ -21,8 +21,19 @@
 #
 
 cmake_minimum_required(VERSION 3.1)
+project(glew C)
 
-add_subdirectory(zlib)
-add_subdirectory(bzip2)
-add_subdirectory(minizip)
-add_subdirectory(glew)
+file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" include/GL/*.h src/*.c)
+z_set_source_groups(${source_files})
+add_library(glew STATIC EXCLUDE_FROM_ALL ${source_files})
+
+if(Z_OPENGL_FOUND)
+    set_source_files_properties(src/dummy.c PROPERTIES HEADER_FILE_ONLY TRUE)
+else()
+    set_source_files_properties(src/glew.c PROPERTIES HEADER_FILE_ONLY TRUE)
+endif()
+
+target_include_directories(glew PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_compile_definitions(glew PRIVATE GLEW_BUILD)
+target_compile_definitions(glew PUBLIC GLEW_STATIC GLEW_NO_GLU)
+z_target_link_opengl(glew)
