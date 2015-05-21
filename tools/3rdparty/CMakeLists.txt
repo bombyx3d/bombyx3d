@@ -20,6 +20,7 @@
 # THE SOFTWARE.
 #
 
+add_subdirectory(assimp)
 add_subdirectory(minizip)
 add_subdirectory(libpng)
 add_subdirectory(libtiff)
