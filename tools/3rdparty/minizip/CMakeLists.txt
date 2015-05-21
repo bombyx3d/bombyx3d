@@ -21,16 +21,15 @@
 #
 
 cmake_minimum_required(VERSION 3.1)
+project(minizip C)
 
-include(engine/cmake/Engine.cmake)
-add_subdirectory(tools)
+if(MSVC)
+    add_definitions(/wd4101 /wd4244 /wd4267 /wd4456)
+endif()
 
-file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-    *.cpp
-    *.h
-)
+add_definitions(-DHAVE_BZIP2)
 
+file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" *)
 z_set_source_groups(${source_files})
-add_executable(game ${source_files})
-set_target_properties(game PROPERTIES CXX_STANDARD 11)
-target_link_libraries(game engine)
+add_executable(minizip ${source_files})
+target_link_libraries(minizip libminizip)

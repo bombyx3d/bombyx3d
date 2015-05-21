@@ -29,24 +29,8 @@ endif()
 
 add_definitions(-DHAVE_BZIP2)
 
-set(source_files
-    crypt.h
-    ioapi.c
-    ioapi.h
-    ioapi_buf.c
-    ioapi_buf.h
-    ioapi_mem.c
-    ioapi_mem.h
-    iowin32.c
-    iowin32.h
-    unzip.c
-    unzip.h
-    zip.c
-    zip.h
-)
-
-source_group("Source Files" FILES ${source_files})
-
+file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" *.c *.h)
+z_set_source_groups(${source_files})
 add_library(libminizip STATIC ${source_files})
 
 if(NOT WIN32)
@@ -56,6 +40,3 @@ endif()
 set_target_properties(libminizip PROPERTIES OUTPUT_NAME "minizip")
 target_include_directories(libminizip BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_link_libraries(libminizip zlib bzip2)
-
-add_executable(minizip EXCLUDE_FROM_ALL minizip.c)
-target_link_libraries(minizip libminizip)

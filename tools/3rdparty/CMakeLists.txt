@@ -20,17 +20,4 @@
 # THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.1)
-
-include(engine/cmake/Engine.cmake)
-add_subdirectory(tools)
-
-file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-    *.cpp
-    *.h
-)
-
-z_set_source_groups(${source_files})
-add_executable(game ${source_files})
-set_target_properties(game PROPERTIES CXX_STANDARD 11)
-target_link_libraries(game engine)
+add_subdirectory(minizip)
