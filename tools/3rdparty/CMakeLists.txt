@@ -21,3 +21,4 @@
 #
 
 add_subdirectory(minizip)
+add_subdirectory(libpng)
