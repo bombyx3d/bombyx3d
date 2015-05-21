@@ -25,6 +25,7 @@ if(NOT __Z_ENGINE_CMAKE_INCLUDED)
 
     get_filename_component(path "${CMAKE_CURRENT_LIST_FILE}" PATH)
     get_filename_component(path "${path}" ABSOLUTE)
+    include("${path}/DisableWarnings.cmake")
     include("${path}/EnumOption.cmake")
     include("${path}/SetSourceGroups.cmake")
     include("${path}/Qt5.cmake")
