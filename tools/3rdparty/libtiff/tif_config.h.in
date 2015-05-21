@@ -1,0 +1,90 @@
+
+#define CCITT_SUPPORT 1
+#define CHECK_JPEG_YCBCR_SUBSAMPLING 1
+#define CHUNKY_STRIP_READ_SUPPORT 1
+#define CXX_SUPPORT 1
+#define DEFAULT_EXTRASAMPLE_AS_ALPHA 1
+#define DEFER_STRILE_LOAD 1
+#define JPEG_SUPPORT 1
+#define LZW_SUPPORT 1
+#define LOGLUV_SUPPORT 1
+#define MDI_SUPPORT 1
+#define NEXT_SUPPORT 1
+#define OJPEG_SUPPORT 1
+#define PACKBITS_SUPPORT 1
+#define PIXARLOG_SUPPORT 1
+#define SUBIFD_SUPPORT 1
+#define THUNDER_SUPPORT 1
+#define ZIP_SUPPORT 1
+#define PHOTOSHOP_SUPPORT 1
+#define COLORIMETRY_SUPPORT 1
+#define IPTC_SUPPORT 1
+#define ICC_SUPPORT 1
+#define YCBCR_SUPPORT 1
+#define CMYK_SUPPORT 1
+#undef LZMA_SUPPORT
+#undef JBIG_SUPPORT
+#undef JPEG_DUAL_MODE_8_12
+#undef HAVE_JBG_NEWLEN
+#undef STRIPCHOP_DEFAULT
+#undef STRIP_SIZE_DEFAULT
+
+#define HAVE_IEEEFP 1
+
+#cmakedefine HAVE_ASSERT_H 1
+#cmakedefine HAVE_STDINT_H 1
+#cmakedefine HAVE_INTTYPES_H 1
+#cmakedefine HAVE_UNISTD_H 1
+#cmakedefine HAVE_SEARCH_H 1
+#cmakedefine HAVE_FCNTL_H 1
+#cmakedefine HAVE_IO_H 1
+#cmakedefine HAVE_STRINGS_H 1
+#cmakedefine HAVE_STRING_H 1
+#cmakedefine HAVE_SYS_TYPES_H 1
+
+#cmakedefine HAVE_MMAP 1
+
+#define HOST_BIGENDIAN @HOST_BIGENDIAN@
+#define HOST_FILLORDER @HOST_FILLORDER@
+#cmakedefine WORDS_BIGENDIAN 1
+
+
+#ifdef _WIN32
+#define USE_WIN32_FILEIO 1
+#endif
+
+#ifndef _DARWIN_USE_64_BIT_INODE
+#define _DARWIN_USE_64_BIT_INODE 1
+#endif
+
+#ifndef _TIFF_TYPES
+#define _TIFF_TYPES
+
+#ifndef __STDC_FORMAT_MACROS
+#define __STDC_FORMAT_MACROS 1
+#endif
+
+#include <stddef.h>
+#include <stdio.h>
+
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+
+#ifdef HAVE_INTTYPES_H
+#include <inttypes.h>
+#endif
+
+#define TIFF_UINT64_FORMAT "%" PRIu64
+
+typedef int8_t TIFF_INT8_T;
+typedef uint8_t TIFF_UINT8_T;
+typedef int16_t TIFF_INT16_T;
+typedef uint16_t TIFF_UINT16_T;
+typedef int32_t TIFF_INT32_T;
+typedef uint32_t TIFF_UINT32_T;
+typedef int64_t TIFF_INT64_T;
+typedef uint64_t TIFF_UINT64_T;
+typedef ptrdiff_t TIFF_SSIZE_T;
+
+#endif /* _TIFF_TYPES */
