@@ -33,9 +33,9 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
 z_set_source_groups(${source_files})
-add_library(platform STATIC ${source_files})
+add_library(libplatform STATIC ${source_files})
 
-set_target_properties(platform PROPERTIES CXX_STANDARD 11)
-target_link_libraries(platform engine)
-z_target_link_qt5(platform)
-z_target_link_opengl(platform)
+set_target_properties(libplatform PROPERTIES OUTPUT_NAME "platform" CXX_STANDARD 11)
+target_link_libraries(libplatform libengine)
+z_target_link_qt5(libplatform)
+z_target_link_opengl(libplatform)

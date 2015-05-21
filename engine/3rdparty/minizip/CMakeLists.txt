@@ -39,4 +39,4 @@ endif()
 
 set_target_properties(libminizip PROPERTIES OUTPUT_NAME "minizip")
 target_include_directories(libminizip BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
-target_link_libraries(libminizip zlib bzip2)
+target_link_libraries(libminizip libz libbzip2)

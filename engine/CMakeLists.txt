@@ -51,12 +51,12 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
 z_set_source_groups(${source_files})
-add_library(engine STATIC ${source_files})
+add_library(libengine STATIC ${source_files})
 
-set_target_properties(engine PROPERTIES CXX_STANDARD 11)
-target_link_libraries(engine glew libminizip)
-z_target_link_qt5(engine)
-z_target_link_opengl(engine)
+set_target_properties(libengine PROPERTIES OUTPUT_NAME "engine" CXX_STANDARD 11)
+target_link_libraries(libengine libglew libminizip)
+z_target_link_qt5(libengine)
+z_target_link_opengl(libengine)
 
 add_subdirectory(platform)
-target_link_libraries(engine platform)
+target_link_libraries(libengine libplatform)

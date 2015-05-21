@@ -33,4 +33,4 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
 z_set_source_groups(${source_files})
 add_executable(game ${source_files})
 set_target_properties(game PROPERTIES CXX_STANDARD 11)
-target_link_libraries(game engine)
+target_link_libraries(game libengine)

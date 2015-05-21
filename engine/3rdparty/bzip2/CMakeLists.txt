@@ -30,6 +30,7 @@ endif()
 file(GLOB source_files *.c *.h)
 source_group("Source Files" FILES ${source_files})
 
-add_library(bzip2 STATIC ${source_files})
+add_library(libbzip2 STATIC ${source_files})
 
-target_include_directories(bzip2 BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+set_target_properties(libbzip2 PROPERTIES OUTPUT_NAME "bzip2")
+target_include_directories(libbzip2 BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
