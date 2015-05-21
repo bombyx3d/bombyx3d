@@ -21,7 +21,7 @@
 #
 
 cmake_minimum_required(VERSION 3.1)
-project(minizip C)
+project(libminizip C)
 
 if(MSVC)
     add_definitions(/wd4101 /wd4244 /wd4267 /wd4456)
