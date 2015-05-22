@@ -20,7 +20,33 @@
 # THE SOFTWARE.
 #
 
-include(../engine/cmake/Engine.cmake)
+project(ResBuild)
 
-add_subdirectory(3rdparty)
-add_subdirectory(resbuild)
+include(cmake/CompileUIFiles.cmake)
+
+find_package(Qt5Widgets REQUIRED)
+find_package(QT5Gui REQUIRED)
+find_package(QT5Core REQUIRED)
+find_package(QT5Xml REQUIRED)
+find_package(Qt5OpenGL REQUIRED)
+set(QT_LIBRARIES Qt5::OpenGL Qt5::Widgets Qt5::Gui Qt5::Xml Qt5::Core)
+
+set(CMAKE_AUTOMOC YES)
+set(CMAKE_AUTOUIC YES)
+set(CMAKE_AUTORCC YES)
+set(CMAKE_INCLUDE_CURRENT_DIR YES)
+
+compile_ui_files(ui_files
+    MainWindow.ui
+)
+
+add_executable(ResBuild
+    ${ui_files}
+    res/resources.qrc
+    MainWindow.cpp
+    MainWindow.h
+    main.cpp
+)
+
+set_target_properties(ResBuild PROPERTIES CXX_STANDARD 11)
+target_link_libraries(ResBuild ${QT_LIBRARIES})

@@ -1,4 +1,4 @@
-#
+﻿#
 # Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,7 +20,14 @@
 # THE SOFTWARE.
 #
 
-include(../engine/cmake/Engine.cmake)
+macro(compile_ui_files target)
 
-add_subdirectory(3rdparty)
-add_subdirectory(resbuild)
+    set(${target} ${ARGN})
+
+    foreach(ui_file ${ARGN})
+        qt5_wrap_ui(header_file "${ui_file}")
+        set_source_files_properties("${header_file}" PROPERTIES GENERATED TRUE)
+        list(APPEND ${target} "${header_file}")
+    endforeach()
+
+endmacro()

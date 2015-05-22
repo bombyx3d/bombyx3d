@@ -1,0 +1,12 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>media-floppy.png</file>
+    <file>document-new.png</file>
+    <file>folder.png</file>
+    <file>fatcow_modified/hammer_lightning.png</file>
+    <file>fatcow_modified/hammer_ok.png</file>
+    <file>edit-clear.png</file>
+    <file>list-add.png</file>
+    <file>list-remove.png</file>
+  </qresource>
+</RCC>
