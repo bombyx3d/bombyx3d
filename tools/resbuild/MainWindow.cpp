@@ -20,6 +20,8 @@
  * THE SOFTWARE.
  */
 #include "MainWindow.h"
+#include "NewRuleDialog.h"
+#include "BuilderFactory.h"
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QCloseEvent>
@@ -122,7 +124,13 @@ void MainWindow::on_uiAddRuleButton_clicked()
     if (!m_Project)
         return;
 
-    // FIXME
+    NewRuleDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+        BuilderFactory* factory = dialog.selectedFactory();
+        if (factory) {
+            QMessageBox::critical(this, tr(""), factory->builderName());
+        }
+    }
 
     updateUI();
 }

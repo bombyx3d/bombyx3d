@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="icons">
+    <file>fatcow_modified/compile_dark.png</file>
+    <file>emblem-system.png</file>
     <file>media-floppy.png</file>
     <file>document-new.png</file>
     <file>folder.png</file>

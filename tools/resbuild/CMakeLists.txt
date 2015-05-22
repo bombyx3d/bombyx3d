@@ -38,15 +38,24 @@ set(CMAKE_INCLUDE_CURRENT_DIR YES)
 
 set(ui_files
     MainWindow.ui
+    NewRuleDialog.ui
 )
 
 set(source_files
     ${ui_files}
     res/resources.qrc
+    BinaryFileBuilder.cpp
+    BinaryFileBuilder.h
+    Builder.cpp
+    Builder.h
+    BuilderFactory.cpp
+    BuilderFactory.h
     FileUtil.cpp
     FileUtil.h
     MainWindow.cpp
     MainWindow.h
+    NewRuleDialog.cpp
+    NewRuleDialog.h
     main.cpp
     Project.cpp
     Project.h
