@@ -36,17 +36,30 @@ set(CMAKE_AUTOUIC YES)
 set(CMAKE_AUTORCC YES)
 set(CMAKE_INCLUDE_CURRENT_DIR YES)
 
-compile_ui_files(ui_files
+set(ui_files
     MainWindow.ui
 )
 
-add_executable(ResBuild
+set(source_files
     ${ui_files}
     res/resources.qrc
+    FileUtil.cpp
+    FileUtil.h
     MainWindow.cpp
     MainWindow.h
     main.cpp
+    Project.cpp
+    Project.h
+    Rule.cpp
+    Rule.h
 )
+
+compile_ui_files(compiled_ui_files ${ui_files})
+
+source_group("UI Files" FILES ${compiled_ui_files})
+z_set_source_groups(${source_files})
+
+add_executable(ResBuild ${compiled_ui_files} ${source_files})
 
 set_target_properties(ResBuild PROPERTIES CXX_STANDARD 11)
 target_link_libraries(ResBuild ${QT_LIBRARIES})

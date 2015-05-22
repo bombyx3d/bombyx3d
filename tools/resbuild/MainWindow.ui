@@ -47,6 +47,15 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="showDropIndicator" stdset="0">
+          <bool>false</bool>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <property name="uniformItemSizes">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
        <item>

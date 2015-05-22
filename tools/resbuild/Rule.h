@@ -21,40 +21,24 @@
  */
 
 #pragma once
-#include "ui_MainWindow.h"
-#include "Project.h"
-#include <memory>
-#include <QWidget>
+#include <QDomElement>
+#include <QObject>
 
-class MainWindow : public QWidget, private Ui_MainWindow
+class Project;
+
+class Rule : public QObject
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget* parent = nullptr);
-    ~MainWindow();
+    explicit Rule(Project* project);
+    ~Rule();
 
-protected:
-    void closeEvent(QCloseEvent* event) override;
+    Project* project() const { return m_Project; }
+
+    bool load(const QDomElement& element, QString* errorMessage = nullptr);
+    bool save(const QDomElement& element, QString* errorMessage = nullptr);
 
 private:
-    std::unique_ptr<Project> m_Project;
-    QString m_FileName;
-
-    bool saveIfNeeded();
-
-    Q_SLOT void on_uiNewFileButton_clicked();
-    Q_SLOT void on_uiOpenFileButton_clicked();
-    Q_SLOT bool on_uiSaveFileButton_clicked();
-
-    Q_SLOT void on_uiAddRuleButton_clicked();
-    Q_SLOT void on_uiRemoveRuleButton_clicked();
-
-    Q_SLOT void on_uiDraftBuildButton_clicked();
-    Q_SLOT void on_uiFinalBuildButton_clicked();
-    Q_SLOT void on_uiCleanButton_clicked();
-
-    Q_SLOT void on_uiRuleList_itemSelectionChanged();
-
-    Q_SLOT void updateUI();
+    Project* m_Project;
 };

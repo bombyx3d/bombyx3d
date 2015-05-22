@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,40 +21,17 @@
  */
 
 #pragma once
-#include "ui_MainWindow.h"
-#include "Project.h"
-#include <memory>
-#include <QWidget>
+#include <QObject>
+#include <QByteArray>
+#include <QString>
 
-class MainWindow : public QWidget, private Ui_MainWindow
+class FileUtil : public QObject
 {
-    Q_OBJECT
-
 public:
-    MainWindow(QWidget* parent = nullptr);
-    ~MainWindow();
-
-protected:
-    void closeEvent(QCloseEvent* event) override;
+    static bool writeFile(const QString& fileName, const QByteArray& data,
+        bool keepBackupFile = false, QString* errorMessage = nullptr);
 
 private:
-    std::unique_ptr<Project> m_Project;
-    QString m_FileName;
-
-    bool saveIfNeeded();
-
-    Q_SLOT void on_uiNewFileButton_clicked();
-    Q_SLOT void on_uiOpenFileButton_clicked();
-    Q_SLOT bool on_uiSaveFileButton_clicked();
-
-    Q_SLOT void on_uiAddRuleButton_clicked();
-    Q_SLOT void on_uiRemoveRuleButton_clicked();
-
-    Q_SLOT void on_uiDraftBuildButton_clicked();
-    Q_SLOT void on_uiFinalBuildButton_clicked();
-    Q_SLOT void on_uiCleanButton_clicked();
-
-    Q_SLOT void on_uiRuleList_itemSelectionChanged();
-
-    Q_SLOT void updateUI();
+    FileUtil() = default;
+    ~FileUtil() = default;
 };

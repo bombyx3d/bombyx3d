@@ -19,42 +19,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "ui_MainWindow.h"
+#include "Rule.h"
 #include "Project.h"
-#include <memory>
-#include <QWidget>
 
-class MainWindow : public QWidget, private Ui_MainWindow
+Rule::Rule(Project* project)
+    : QObject(project)
+    , m_Project(project)
 {
-    Q_OBJECT
+}
 
-public:
-    MainWindow(QWidget* parent = nullptr);
-    ~MainWindow();
+Rule::~Rule()
+{
+}
 
-protected:
-    void closeEvent(QCloseEvent* event) override;
+bool Rule::load(const QDomElement& element, QString* errorMessage)
+{
+    // FIXME
+    return true;
+}
 
-private:
-    std::unique_ptr<Project> m_Project;
-    QString m_FileName;
-
-    bool saveIfNeeded();
-
-    Q_SLOT void on_uiNewFileButton_clicked();
-    Q_SLOT void on_uiOpenFileButton_clicked();
-    Q_SLOT bool on_uiSaveFileButton_clicked();
-
-    Q_SLOT void on_uiAddRuleButton_clicked();
-    Q_SLOT void on_uiRemoveRuleButton_clicked();
-
-    Q_SLOT void on_uiDraftBuildButton_clicked();
-    Q_SLOT void on_uiFinalBuildButton_clicked();
-    Q_SLOT void on_uiCleanButton_clicked();
-
-    Q_SLOT void on_uiRuleList_itemSelectionChanged();
-
-    Q_SLOT void updateUI();
-};
+bool Rule::save(const QDomElement& element, QString* errorMessage)
+{
+    // FIXME
+    return true;
+}
