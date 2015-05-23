@@ -24,6 +24,8 @@
 #include <QObject>
 #include <QDomElement>
 #include <QDir>
+#include <QFileInfo>
+#include <QList>
 #include <QHash>
 #include <QIcon>
 #include <vector>
@@ -102,6 +104,7 @@ public:
     virtual bool load(const QDomElement& element, const QDir& projectDir, QString* errorMessage);
     virtual bool save(QDomElement& element, const QDir& projectDir, QString* errorMessage);
 
+    virtual QList<QFileInfo> inputFiles() const = 0;
     virtual bool build(BuildState* state) = 0;
 
 signals:

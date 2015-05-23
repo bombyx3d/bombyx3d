@@ -32,8 +32,9 @@ class BuildProgressWidget::BuildThread : public QThread, private BuildState
     Q_OBJECT
 
 public:
-    explicit BuildThread(BuildProgressWidget* widget)
+    explicit BuildThread(const BuildDirectoryPtr& buildDir, BuildProgressWidget* widget)
         : m_Widget(widget)
+        , m_BuildDirectory(buildDir)
         , m_ShouldAbort(false)
     {
     }
@@ -72,12 +73,14 @@ signals:
 
 private:
     BuildProgressWidget* m_Widget;
+    BuildDirectoryPtr m_BuildDirectory;
     std::atomic<bool> m_ShouldAbort;
 };
 
 
-BuildProgressWidget::BuildProgressWidget(QWidget* parent)
+BuildProgressWidget::BuildProgressWidget(const BuildDirectoryPtr& buildDir, QWidget* parent)
     : QDialog(parent)
+    , m_BuildDirectory(buildDir)
 {
     setupUi(this);
 
@@ -89,7 +92,7 @@ BuildProgressWidget::BuildProgressWidget(QWidget* parent)
 
     adjustSize();
 
-    m_BuildThread = new BuildThread(this);
+    m_BuildThread = new BuildThread(buildDir, this);
     connect(m_BuildThread, SIGNAL(buildSucceeded()), SLOT(buildSucceeded()));
     connect(m_BuildThread, SIGNAL(buildFailed()), SLOT(buildFailed()));
     connect(m_BuildThread, SIGNAL(buildAborted()), SLOT(buildAborted()));

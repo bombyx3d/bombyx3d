@@ -21,42 +21,22 @@
  */
 
 #pragma once
-#include "ui_BuildProgressWidget.h"
-#include "BuildDirectory.h"
-#include <QDialog>
+#include <QObject>
+#include <QDir>
+#include <sqlite3.h>
+#include <memory>
 
-class BuildProgressWidget : public QDialog, private Ui_BuildProgressWidget
+class BuildDirectory : public QObject
 {
-    Q_OBJECT
-
 public:
-    explicit BuildProgressWidget(const BuildDirectoryPtr& buildDir, QWidget* parent = nullptr);
-    ~BuildProgressWidget();
+    BuildDirectory(QObject* parent = nullptr);
+    ~BuildDirectory();
 
-signals:
-    void buildWindowClosed();
-
-protected:
-    void closeEvent(QCloseEvent* event) override;
+    bool init(const QDir& dir, const QString& projectName, QString* errorMessage = nullptr);
 
 private:
-    class BuildThread;
-
-    BuildThread* m_BuildThread;
-    BuildDirectoryPtr m_BuildDirectory;
-    bool m_CloseAfterAbort = false;
-    bool m_HasWarnings = false;
-
-    Q_SLOT void buildSucceeded();
-    Q_SLOT void buildFailed();
-    Q_SLOT void buildAborted();
-
-    Q_SLOT void setStatusText(const QString& message);
-
-    Q_SLOT void printInfo(const QString& message);
-    Q_SLOT void printWarning(const QString& message);
-    Q_SLOT void printError(const QString& message);
-
-    Q_SLOT void on_uiAbortButton_clicked();
-    Q_SLOT void on_uiCloseButton_clicked();
+    QDir m_Dir;
+    sqlite3* m_Database;
 };
+
+using BuildDirectoryPtr = std::shared_ptr<BuildDirectory>;

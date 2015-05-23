@@ -43,6 +43,7 @@ public:
     bool load(const QDomElement& element, const QDir& projectDir, QString* errorMessage) override;
     bool save(QDomElement& element, const QDir& projectDir, QString* errorMessage) override;
 
+    QList<QFileInfo> inputFiles() const override;
     bool build(BuildState* state);
 
 signals:

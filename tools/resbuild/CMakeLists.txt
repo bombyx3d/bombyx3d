@@ -48,6 +48,8 @@ set(source_files
     res/resources.qrc
     builders/BinaryFileBuilder.cpp
     builders/BinaryFileBuilder.h
+    BuildDirectory.cpp
+    BuildDirectory.h
     Builder.cpp
     Builder.h
     BuildProgressWidget.cpp
@@ -73,4 +75,4 @@ z_set_source_groups(${source_files})
 add_executable(ResBuild ${compiled_ui_files} ${source_files})
 
 set_target_properties(ResBuild PROPERTIES CXX_STANDARD 11)
-target_link_libraries(ResBuild ${QT_LIBRARIES})
+target_link_libraries(ResBuild libsqlite3 ${QT_LIBRARIES})

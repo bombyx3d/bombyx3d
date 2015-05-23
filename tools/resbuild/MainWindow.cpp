@@ -44,7 +44,17 @@ void MainWindow::build(bool draft)
     if (!m_Project || m_BuildProgress)
         return;
 
-    m_BuildProgress = new BuildProgressWidget(this);
+    QDir targetPath = QFileInfo(m_FileName).absoluteDir();
+    QString projectName = QFileInfo(m_FileName).fileName();
+
+    BuildDirectoryPtr buildDirectory = std::make_shared<BuildDirectory>();
+    QString errorMessage = tr("Unknown error.");
+    if (!buildDirectory->init(targetPath, projectName, &errorMessage)) {
+        QMessageBox::critical(this, tr("Error"), errorMessage);
+        return;
+    }
+
+    m_BuildProgress = new BuildProgressWidget(buildDirectory, this);
     connect(m_BuildProgress, SIGNAL(buildWindowClosed()), this, SLOT(buildWindowClosed()));
     m_BuildProgress->setModal(true);
     m_BuildProgress->setWindowModality(Qt::ApplicationModal);
