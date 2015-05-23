@@ -47,6 +47,9 @@ public:
             rulesToBuild.reserve(m_Project->rules().size());
 
             for (const auto& rule : m_Project->rules()) {
+                if (shouldAbort())
+                    break;
+
                 QList<QString> outputFiles = rule->builder()->outputFiles();
                 QList<QFileInfo> inputFiles = rule->builder()->inputFiles();
                 if (m_BuildDirectory->shouldBuild(inputFiles, outputFiles))
@@ -56,6 +59,9 @@ public:
             double count = float(rulesToBuild.size());
             double index = 0;
             for (const auto& rule : rulesToBuild) {
+                if (shouldAbort())
+                    break;
+
                 ++index;
                 emit setStatus(tr("Building \"%1\"...").arg(rule->name()));
                 emit setProgress(float(index / count));
@@ -200,8 +206,10 @@ void BuildProgressWidget::setStatusText(const QString& message)
 
 void BuildProgressWidget::setProgress(float value)
 {
-    uiProgressBar->setRange(0, 100);
-    uiProgressBar->setValue(int(value * 100.0f));
+    if (uiAbortButton->isVisible() && uiAbortButton->isEnabled()) {
+        uiProgressBar->setRange(0, 100);
+        uiProgressBar->setValue(int(value * 100.0f));
+    }
 }
 
 void BuildProgressWidget::printInfo(const QString& message)
@@ -234,6 +242,7 @@ void BuildProgressWidget::on_uiAbortButton_clicked()
     else {
         uiAbortButton->setEnabled(false);
         uiStatusLabel->setText(tr("Aborting..."));
+        uiProgressBar->setRange(0, 0);
         m_BuildThread->abort();
     }
 }
