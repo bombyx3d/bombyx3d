@@ -56,5 +56,7 @@ private:
 
     Q_SLOT void on_uiRuleList_itemSelectionChanged();
 
+    Q_SLOT void onRuleCreated(Rule* rule);
+
     Q_SLOT void updateUI();
 };

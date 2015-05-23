@@ -21,24 +21,35 @@
  */
 
 #pragma once
+#include "Builder.h"
 #include <QDomElement>
 #include <QObject>
 
 class Project;
+class QListWidgetItem;
 
 class Rule : public QObject
 {
     Q_OBJECT
 
 public:
+    QListWidgetItem* listWidgetItem = nullptr;
+
     explicit Rule(Project* project);
+    Rule(Project* project, const BuilderPtr& builder);
     ~Rule();
 
     Project* project() const { return m_Project; }
+    const BuilderPtr& builder() const { return m_Builder; }
+
+    const QString& name() const { return m_Name; }
+    void setName(const QString& name);
 
     bool load(const QDomElement& element, QString* errorMessage = nullptr);
-    bool save(const QDomElement& element, QString* errorMessage = nullptr);
+    bool save(QDomElement& element, QString* errorMessage = nullptr);
 
 private:
     Project* m_Project;
+    BuilderPtr m_Builder;
+    QString m_Name;
 };

@@ -71,6 +71,7 @@ bool Project::load(const QString& fileName, QString* errorMessage)
         return false;
     }
 
+    uint64_t nextRuleID = 1;
     for (QDomNode n = rootElement.firstChild(); !n.isNull(); n = n.nextSibling()) {
         QDomElement e = n.toElement();
         if (e.isNull())
@@ -85,7 +86,10 @@ bool Project::load(const QString& fileName, QString* errorMessage)
                     std::unique_ptr<Rule> rule(new Rule(this));
                     if (!rule->load(ee, errorMessage))
                         return false;
+                    auto rulePtr = rule.get();
                     m_Rules.emplace_back(std::move(rule));
+                    emit ruleCreated(rulePtr);
+                    ++nextRuleID;
                 } else {
                     if (errorMessage) {
                         *errorMessage = tr("Unable to parse file \"%1\": at line %2, column %3: unexpected element \"%4\".")
@@ -103,6 +107,7 @@ bool Project::load(const QString& fileName, QString* errorMessage)
         }
     }
 
+    m_NextRuleID = nextRuleID;
     setModified(false);
 
     return true;
@@ -130,4 +135,11 @@ bool Project::save(const QString& fileName, QString* errorMessage)
 
     setModified(false);
     return true;
+}
+
+void Project::createRule(const BuilderPtr& builder)
+{
+    m_Rules.emplace_back(new Rule(this, builder));
+    setModified();
+    emit ruleCreated(m_Rules.back().get());
 }

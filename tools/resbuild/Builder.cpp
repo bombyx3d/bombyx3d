@@ -20,11 +20,74 @@
  * THE SOFTWARE.
  */
 #include "Builder.h"
+#include "builders/BinaryFileBuilder.h"
 
-Builder::Builder(QObject* parent)
+namespace
+{
+    template <class TYPE> class BuilderFactory : public Builder::Factory
+    {
+    public:
+        BuilderFactory() : Builder::Factory(TYPE::staticName(), TYPE::staticXmlId(), TYPE::staticIcon()) {}
+        BuilderPtr createBuilder() const override { return std::make_shared<TYPE>(); }
+    };
+}
+
+Builder::Factory::Factory(const QString& name, const QString& xmlId, const QIcon& icon)
+    : builderName(name)
+    , builderXmlId(xmlId)
+    , builderIcon(icon)
 {
 }
 
-Builder::~Builder()
+static std::unique_ptr<Builder::FactoryList> g_FactoryList;
+static std::unique_ptr<Builder::FactoryHash> g_FactoryHash;
+
+static void initFactoryList()
 {
+    if (!g_FactoryList) {
+        g_FactoryList.reset(new Builder::FactoryList);
+        g_FactoryList->emplace_back(std::make_shared<BuilderFactory<BinaryFileBuilder>>());
+    }
+
+    if (!g_FactoryHash) {
+        g_FactoryHash.reset(new Builder::FactoryHash);
+        for (const auto& factory : *g_FactoryList)
+            g_FactoryHash->insert(factory->builderXmlId, factory);
+    }
+}
+
+const Builder::FactoryList& Builder::factories()
+{
+    initFactoryList();
+    return *g_FactoryList;
+}
+
+Builder::FactoryPtr Builder::factoryWithXmlId(const QString& xmlId)
+{
+    initFactoryList();
+    return g_FactoryHash->value(xmlId);
+}
+
+QIcon Builder::staticIcon()
+{
+    return QIcon(":/icons/emblem-system.png");
+}
+
+QIcon Builder::icon() const
+{
+    return Builder::staticIcon();
+}
+
+bool Builder::load(const QDomElement& element, const QString* errorMessage)
+{
+    Q_UNUSED(element);
+    Q_UNUSED(errorMessage);
+    return true;
+}
+
+bool Builder::save(QDomElement& element, const QString* errorMessage)
+{
+    Q_UNUSED(element);
+    Q_UNUSED(errorMessage);
+    return true;
 }

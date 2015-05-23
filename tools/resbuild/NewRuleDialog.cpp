@@ -20,7 +20,6 @@
  * THE SOFTWARE.
  */
 #include "NewRuleDialog.h"
-#include "BuilderFactory.h"
 #include <QPushButton>
 
 NewRuleDialog::NewRuleDialog(QWidget* parent)
@@ -29,9 +28,9 @@ NewRuleDialog::NewRuleDialog(QWidget* parent)
     setupUi(this);
     on_uiBuilderList_itemSelectionChanged();
 
-    for (const auto& factory : BuilderFactory::allFactories()) {
-        auto item = new QListWidgetItem(factory->builderIcon(), factory->builderName(), uiBuilderList);
-        item->setData(Qt::UserRole, qVariantFromValue(static_cast<QObject*>(factory.get())));
+    for (const auto& factory : Builder::factories()) {
+        auto item = new QListWidgetItem(factory->builderIcon, factory->builderName, uiBuilderList);
+        m_Factories.emplace(std::make_pair(item, factory));
     }
 }
 
@@ -39,12 +38,14 @@ NewRuleDialog::~NewRuleDialog()
 {
 }
 
-BuilderFactory* NewRuleDialog::selectedFactory() const
+Builder::FactoryPtr NewRuleDialog::selectedFactory() const
 {
     QList<QListWidgetItem*> selectedItems = uiBuilderList->selectedItems();
     if (selectedItems.count() != 1)
         return nullptr;
-    return qobject_cast<BuilderFactory*>(qvariant_cast<QObject*>(selectedItems[0]->data(Qt::UserRole)));
+
+    auto it = m_Factories.find(selectedItems[0]);
+    return (it != m_Factories.end() ? it->second : Builder::FactoryPtr());
 }
 
 void NewRuleDialog::on_uiBuilderList_itemSelectionChanged()

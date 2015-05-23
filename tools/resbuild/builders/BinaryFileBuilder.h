@@ -26,8 +26,11 @@
 class BinaryFileBuilder : public Builder
 {
     Q_OBJECT
+    Z_BUILDER_XMLID("BinaryFileBuilder")
+    Z_BUILDER_NAME(tr("Binary file"))
+    Z_BUILDER_ICON(":/icons/fatcow_modified/compile_dark.png")
 
 public:
-    explicit BinaryFileBuilder(QObject* parent = nullptr);
+    BinaryFileBuilder();
     ~BinaryFileBuilder();
 };

@@ -44,12 +44,10 @@ set(ui_files
 set(source_files
     ${ui_files}
     res/resources.qrc
-    BinaryFileBuilder.cpp
-    BinaryFileBuilder.h
+    builders/BinaryFileBuilder.cpp
+    builders/BinaryFileBuilder.h
     Builder.cpp
     Builder.h
-    BuilderFactory.cpp
-    BuilderFactory.h
     FileUtil.cpp
     FileUtil.h
     MainWindow.cpp

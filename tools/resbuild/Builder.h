@@ -22,12 +22,67 @@
 
 #pragma once
 #include <QObject>
+#include <QDomElement>
+#include <QHash>
+#include <QIcon>
+#include <vector>
+#include <memory>
+
+
+#define Z_BUILDER_XMLID(ID) \
+    public: \
+    static QString staticXmlId() { return ID; } \
+    virtual QString xmlId() const { return ID; }
+
+#define Z_BUILDER_NAME(NAME) \
+    public: \
+    static QString staticName() { return NAME; } \
+    virtual QString name() const override { return NAME; }
+
+#define Z_BUILDER_ICON(ICON) \
+    public: \
+    static QIcon staticIcon() { return QIcon(ICON); } \
+    QIcon icon() const override { return QIcon(ICON); }
+
+
+class Builder;
+using BuilderPtr = std::shared_ptr<Builder>;
 
 class Builder : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit Builder(QObject* parent = nullptr);
-    ~Builder();
+    class Factory
+    {
+    public:
+        const QString builderName;
+        const QString builderXmlId;
+        const QIcon builderIcon;
+
+        Factory(const QString& name, const QString& xmlId, const QIcon& icon);
+        virtual ~Factory() = default;
+
+        virtual BuilderPtr createBuilder() const = 0;
+    };
+
+    using FactoryPtr = std::shared_ptr<Builder::Factory>;
+    using FactoryList = std::vector<FactoryPtr>;
+    using FactoryHash = QHash<QString, FactoryPtr>;
+
+    static const FactoryList& factories();
+    static FactoryPtr factoryWithXmlId(const QString& xmlId);
+
+
+    Builder() = default;
+    ~Builder() = default;
+
+    virtual QString xmlId() const = 0;
+    virtual QString name() const = 0;
+
+    static QIcon staticIcon();
+    virtual QIcon icon() const;
+
+    virtual bool load(const QDomElement& element, const QString* errorMessage);
+    virtual bool save(QDomElement& element, const QString* errorMessage);
 };

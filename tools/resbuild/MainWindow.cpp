@@ -21,7 +21,7 @@
  */
 #include "MainWindow.h"
 #include "NewRuleDialog.h"
-#include "BuilderFactory.h"
+#include "Builder.h"
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QCloseEvent>
@@ -67,14 +67,18 @@ void MainWindow::on_uiNewFileButton_clicked()
     if (path.length() == 0)
         return;
 
+    uiRuleList->clear();
+
     m_Project.reset(new Project);
     connect(m_Project.get(), SIGNAL(updateUI()), SLOT(updateUI()));
+    connect(m_Project.get(), SIGNAL(ruleCreated(Rule*)), SLOT(onRuleCreated(Rule*)));
     m_FileName = path;
 
     QString message = tr("Unknown error.");
     if (!m_Project->save(m_FileName, &message)) {
         QMessageBox::critical(this, tr("Error"), tr("Unable to create file \"%1\": %2").arg(m_FileName).arg(message));
         m_Project.reset();
+        uiRuleList->clear();
     }
 
     updateUI();
@@ -89,14 +93,18 @@ void MainWindow::on_uiOpenFileButton_clicked()
     if (path.length() == 0)
         return;
 
+    uiRuleList->clear();
+
     m_Project.reset(new Project);
     connect(m_Project.get(), SIGNAL(updateUI()), SLOT(updateUI()));
+    connect(m_Project.get(), SIGNAL(ruleCreated(Rule*)), SLOT(onRuleCreated(Rule*)));
     m_FileName = path;
 
     QString message = tr("Unknown error.");
     if (!m_Project->load(m_FileName, &message)) {
         QMessageBox::critical(this, tr("Error"), tr("Unable to load file \"%1\": %2").arg(m_FileName).arg(message));
         m_Project.reset();
+        uiRuleList->clear();
     }
 
     updateUI();
@@ -126,10 +134,9 @@ void MainWindow::on_uiAddRuleButton_clicked()
 
     NewRuleDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
-        BuilderFactory* factory = dialog.selectedFactory();
-        if (factory) {
-            QMessageBox::critical(this, tr(""), factory->builderName());
-        }
+        Builder::FactoryPtr factory = dialog.selectedFactory();
+        if (factory)
+            m_Project->createRule(factory->createBuilder());
     }
 
     updateUI();
@@ -182,6 +189,13 @@ void MainWindow::on_uiCleanButton_clicked()
 void MainWindow::on_uiRuleList_itemSelectionChanged()
 {
     updateUI();
+}
+
+void MainWindow::onRuleCreated(Rule* rule)
+{
+    if (!rule->listWidgetItem) {
+        rule->listWidgetItem = new QListWidgetItem(rule->builder()->icon(), rule->name(), uiRuleList);
+    }
 }
 
 void MainWindow::updateUI()

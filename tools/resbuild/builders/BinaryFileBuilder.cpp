@@ -19,26 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "BinaryFileBuilder.h"
 
-#pragma once
-#include "Builder.h"
-#include <vector>
-#include <memory>
-#include <QIcon>
-#include <QString>
-
-class BuilderFactory : public QObject
+BinaryFileBuilder::BinaryFileBuilder()
 {
-    Q_OBJECT
+}
 
-public:
-    static const std::vector<std::unique_ptr<BuilderFactory>>& allFactories();
-
-    virtual const QIcon& builderIcon() const;
-    virtual const QString& builderName() const = 0;
-
-    virtual Builder* createBuilder() const = 0;
-
-protected:
-    BuilderFactory() = default;
-};
+BinaryFileBuilder::~BinaryFileBuilder()
+{
+}
