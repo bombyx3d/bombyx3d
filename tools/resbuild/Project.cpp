@@ -143,3 +143,29 @@ void Project::createRule(const BuilderPtr& builder)
     setModified();
     emit ruleCreated(m_Rules.back().get());
 }
+
+void Project::removeRule(Rule* rule)
+{
+    for (auto it = m_Rules.begin(); it != m_Rules.end(); ++it) {
+        if (it->get() == rule) {
+            std::unique_ptr<Rule> rulePtr = std::move(*it);
+            m_Rules.erase(it);
+            setModified();
+            emit ruleDeleted(rulePtr.get());
+            return;
+        }
+    }
+}
+
+void Project::removeRule(QListWidgetItem* item)
+{
+    for (auto it = m_Rules.begin(); it != m_Rules.end(); ++it) {
+        if (it->get()->listWidgetItem == item) {
+            std::unique_ptr<Rule> rule = std::move(*it);
+            m_Rules.erase(it);
+            setModified();
+            emit ruleDeleted(rule.get());
+            return;
+        }
+    }
+}

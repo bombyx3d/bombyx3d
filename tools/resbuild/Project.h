@@ -43,9 +43,12 @@ public:
 
     uint64_t nextRuleId() { auto id = m_NextRuleID++; setModified(true); return id; }
     void createRule(const BuilderPtr& builder);
+    void removeRule(Rule* rule);
+    void removeRule(QListWidgetItem* item);
 
 signals:
     void ruleCreated(Rule* rule);
+    void ruleDeleted(Rule* rule);
     void updateUI();
 
 private:

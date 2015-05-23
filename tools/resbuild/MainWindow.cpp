@@ -72,6 +72,7 @@ void MainWindow::on_uiNewFileButton_clicked()
     m_Project.reset(new Project);
     connect(m_Project.get(), SIGNAL(updateUI()), SLOT(updateUI()));
     connect(m_Project.get(), SIGNAL(ruleCreated(Rule*)), SLOT(onRuleCreated(Rule*)));
+    connect(m_Project.get(), SIGNAL(ruleDeleted(Rule*)), SLOT(onRuleDeleted(Rule*)));
     m_FileName = path;
 
     QString message = tr("Unknown error.");
@@ -98,6 +99,7 @@ void MainWindow::on_uiOpenFileButton_clicked()
     m_Project.reset(new Project);
     connect(m_Project.get(), SIGNAL(updateUI()), SLOT(updateUI()));
     connect(m_Project.get(), SIGNAL(ruleCreated(Rule*)), SLOT(onRuleCreated(Rule*)));
+    connect(m_Project.get(), SIGNAL(ruleDeleted(Rule*)), SLOT(onRuleDeleted(Rule*)));
     m_FileName = path;
 
     QString message = tr("Unknown error.");
@@ -157,7 +159,8 @@ void MainWindow::on_uiRemoveRuleButton_clicked()
     if (r == QMessageBox::No)
         return;
 
-    // FIXME
+    for (int i = 0; i < selectedRules.count(); i++)
+        m_Project->removeRule(selectedRules[i]);
 
     updateUI();
 }
@@ -193,9 +196,14 @@ void MainWindow::on_uiRuleList_itemSelectionChanged()
 
 void MainWindow::onRuleCreated(Rule* rule)
 {
-    if (!rule->listWidgetItem) {
+    if (!rule->listWidgetItem)
         rule->listWidgetItem = new QListWidgetItem(rule->builder()->icon(), rule->name(), uiRuleList);
-    }
+}
+
+void MainWindow::onRuleDeleted(Rule* rule)
+{
+    delete rule->listWidgetItem;
+    rule->listWidgetItem = nullptr;
 }
 
 void MainWindow::updateUI()

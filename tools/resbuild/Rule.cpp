@@ -52,6 +52,7 @@ void Rule::setName(const QString& name)
     m_Name = name;
     if (listWidgetItem)
         listWidgetItem->setText(name);
+    m_Project->setModified();
 }
 
 bool Rule::load(const QDomElement& element, QString* errorMessage)
