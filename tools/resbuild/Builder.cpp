@@ -22,6 +22,7 @@
 #include "Builder.h"
 #include "builders/BinaryFileBuilder.h"
 #include <QWidget>
+#include <QBoxLayout>
 
 namespace
 {
@@ -84,19 +85,24 @@ QWidget* Builder::createEditor(QWidget* parent)
     QWidget* editor = new QWidget(parent);
     editor->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     connect(this, SIGNAL(destroyed()), editor, SLOT(deleteLater()));
+
+    new QVBoxLayout(editor);
+
     return editor;
 }
 
-bool Builder::load(const QDomElement& element, const QString* errorMessage)
+bool Builder::load(const QDomElement& element, const QDir& projectDir, QString* errorMessage)
 {
     Q_UNUSED(element);
+    Q_UNUSED(projectDir);
     Q_UNUSED(errorMessage);
     return true;
 }
 
-bool Builder::save(QDomElement& element, const QString* errorMessage)
+bool Builder::save(QDomElement& element, const QDir& projectDir, QString* errorMessage)
 {
     Q_UNUSED(element);
+    Q_UNUSED(projectDir);
     Q_UNUSED(errorMessage);
     return true;
 }

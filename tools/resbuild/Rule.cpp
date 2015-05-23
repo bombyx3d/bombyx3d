@@ -44,6 +44,7 @@ Rule::Rule(Project* project, const BuilderPtr& builder)
     , m_Builder(builder)
     , m_Name(tr("Rule %1").arg(project->nextRuleId()))
 {
+    connect(builder.get(), SIGNAL(setModified()), m_Project, SLOT(setModified()));
 }
 
 Rule::~Rule()
@@ -56,6 +57,7 @@ void Rule::setName(const QString& name)
     if (listWidgetItem)
         listWidgetItem->setText(name);
     m_Project->setModified();
+    emit nameChanged(name);
 }
 
 QWidget* Rule::createEditor(QWidget* parent)
@@ -74,6 +76,7 @@ QWidget* Rule::createEditor(QWidget* parent)
 
     QLineEdit* nameEdit = new QLineEdit(name(), editor);
     connect(nameEdit, SIGNAL(textEdited(const QString&)), this, SLOT(setName(const QString&)));
+    connect(this, SIGNAL(nameChanged(const QString&)), nameEdit, SLOT(setText(const QString&)));
     nameEdit->setObjectName("nameEdit");
     nameEdit->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
     label->setBuddy(nameEdit);
@@ -86,7 +89,7 @@ QWidget* Rule::createEditor(QWidget* parent)
     return editor;
 }
 
-bool Rule::load(const QDomElement& element, QString* errorMessage)
+bool Rule::load(const QDomElement& element, const QDir& projectDir, QString* errorMessage)
 {
     BuilderPtr builder;
 
@@ -136,6 +139,8 @@ bool Rule::load(const QDomElement& element, QString* errorMessage)
                 }
                 return false;
             }
+            if (!builder->load(e, projectDir, errorMessage))
+                return false;
         } else {
             if (errorMessage) {
                 *errorMessage = tr("at line %1, column %2: unexpected element \"%3\".")
@@ -153,13 +158,15 @@ bool Rule::load(const QDomElement& element, QString* errorMessage)
         return false;
     }
 
-    m_Name = name;
+    setName(name);
+
     m_Builder = std::move(builder);
+    connect(m_Builder.get(), SIGNAL(setModified()), m_Project, SLOT(setModified()));
 
     return true;
 }
 
-bool Rule::save(QDomElement& element, QString* errorMessage)
+bool Rule::save(QDomElement& element, const QDir& projectDir, QString* errorMessage)
 {
     element.setAttribute(g_RuleNameAttribute, m_Name);
 
@@ -167,7 +174,7 @@ bool Rule::save(QDomElement& element, QString* errorMessage)
     element.appendChild(builderElement);
 
     builderElement.setAttribute(g_BuilderIdAttribute, m_Builder->xmlId());
-    if (!m_Builder->save(builderElement, errorMessage))
+    if (!m_Builder->save(builderElement, projectDir, errorMessage))
         return false;
 
     return true;

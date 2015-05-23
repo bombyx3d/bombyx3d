@@ -33,4 +33,21 @@ class BinaryFileBuilder : public Builder
 public:
     BinaryFileBuilder();
     ~BinaryFileBuilder();
+
+    Q_SLOT void setInputFile(const QString& file);
+    Q_SLOT void setOutputName(const QString& name);
+    Q_SLOT void browseInputFile();
+
+    QWidget* createEditor(QWidget* parent = nullptr) override;
+
+    bool load(const QDomElement& element, const QDir& projectDir, QString* errorMessage) override;
+    bool save(QDomElement& element, const QDir& projectDir, QString* errorMessage) override;
+
+signals:
+    void inputFileChanged(const QString& text);
+    void outputNameChanged(const QString& text);
+
+private:
+    QString m_InputFile;
+    QString m_OutputName;
 };

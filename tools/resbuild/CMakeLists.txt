@@ -37,6 +37,7 @@ set(CMAKE_AUTORCC YES)
 set(CMAKE_INCLUDE_CURRENT_DIR YES)
 
 set(ui_files
+    builders/BinaryFileBuilder.ui
     MainWindow.ui
     NewRuleDialog.ui
 )

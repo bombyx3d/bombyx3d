@@ -48,8 +48,11 @@ public:
 
     QWidget* createEditor(QWidget* parent = nullptr);
 
-    bool load(const QDomElement& element, QString* errorMessage = nullptr);
-    bool save(QDomElement& element, QString* errorMessage = nullptr);
+    bool load(const QDomElement& element, const QDir& projectDir, QString* errorMessage = nullptr);
+    bool save(QDomElement& element, const QDir& projectDir, QString* errorMessage = nullptr);
+
+signals:
+    void nameChanged(const QString& name);
 
 private:
     Project* m_Project;

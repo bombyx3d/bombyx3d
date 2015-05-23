@@ -39,7 +39,7 @@ public:
     bool save(const QString& fileName, QString* errorMessage = nullptr);
 
     bool isModified() const { return m_Modified; }
-    void setModified(bool flag = true) { m_Modified = flag; emit updateUI(); }
+    Q_SLOT void setModified(bool flag = true) { m_Modified = flag; emit updateUI(); }
 
     uint64_t nextRuleId() { auto id = m_NextRuleID++; setModified(true); return id; }
     void createRule(const BuilderPtr& builder);

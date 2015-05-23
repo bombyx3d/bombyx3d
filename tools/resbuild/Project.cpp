@@ -41,6 +41,8 @@ Project::~Project()
 
 bool Project::load(const QString& fileName, QString* errorMessage)
 {
+    QDir projectDir = QFileInfo(fileName).absoluteDir();
+
     m_Rules.clear();
     setModified(true);
 
@@ -84,7 +86,7 @@ bool Project::load(const QString& fileName, QString* errorMessage)
                     continue;
                 if (ee.tagName() == g_RuleElement) {
                     std::unique_ptr<Rule> rule(new Rule(this));
-                    if (!rule->load(ee, errorMessage))
+                    if (!rule->load(ee, projectDir, errorMessage))
                         return false;
                     auto rulePtr = rule.get();
                     rule->isNewlyCreatedRule = false;
@@ -116,6 +118,7 @@ bool Project::load(const QString& fileName, QString* errorMessage)
 
 bool Project::save(const QString& fileName, QString* errorMessage)
 {
+    QDir projectDir = QFileInfo(fileName).absoluteDir();
     QDomDocument doc;
 
     QDomElement rootElement = doc.createElement(g_RootElement);
@@ -126,7 +129,7 @@ bool Project::save(const QString& fileName, QString* errorMessage)
 
     for (const auto& rule : m_Rules) {
         QDomElement ruleElement = doc.createElement(g_RuleElement);
-        if (!rule->save(ruleElement, errorMessage))
+        if (!rule->save(ruleElement, projectDir, errorMessage))
             return false;
         rulesElement.appendChild(ruleElement);
     }

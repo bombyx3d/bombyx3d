@@ -20,6 +20,12 @@
  * THE SOFTWARE.
  */
 #include "BinaryFileBuilder.h"
+#include "Ui_BinaryFileBuilder.h"
+#include <QWidget>
+#include <QFileDialog>
+
+static const QString g_InputFileAttribute = "inputFile";
+static const QString g_OutputNameAttribute = "outputName";
 
 BinaryFileBuilder::BinaryFileBuilder()
 {
@@ -27,4 +33,96 @@ BinaryFileBuilder::BinaryFileBuilder()
 
 BinaryFileBuilder::~BinaryFileBuilder()
 {
+}
+
+void BinaryFileBuilder::setInputFile(const QString& file)
+{
+    if (m_InputFile != file) {
+        m_InputFile = file;
+        emit inputFileChanged(file);
+        emit setModified();
+    }
+}
+
+void BinaryFileBuilder::setOutputName(const QString& name)
+{
+    if (m_OutputName != name) {
+        m_OutputName = name;
+        emit outputNameChanged(name);
+        emit setModified();
+    }
+}
+
+void BinaryFileBuilder::browseInputFile()
+{
+    QWidget* parent = qobject_cast<QWidget*>(sender());
+    QString file = QFileDialog::getOpenFileName(parent, tr("Select input file"), m_InputFile, tr("All files (*)"));
+    if (file.length() > 0)
+        setInputFile(file);
+}
+
+QWidget* BinaryFileBuilder::createEditor(QWidget* parent)
+{
+    QWidget* editor = Builder::createEditor(parent);
+
+    QWidget* widget = new QWidget(editor);
+    editor->layout()->addWidget(widget);
+
+    Ui_BinaryFileBuilder ui;
+    ui.setupUi(widget);
+
+    connect(ui.uiInputFileEdit, SIGNAL(textEdited(const QString&)), this, SLOT(setInputFile(const QString&)));
+    connect(this, SIGNAL(inputFileChanged(const QString&)),ui.uiInputFileEdit, SLOT(setText(const QString&)));
+    ui.uiInputFileEdit->setText(m_InputFile);
+
+    connect(ui.uiOutputNameEdit, SIGNAL(textEdited(const QString&)), this, SLOT(setOutputName(const QString&)));
+    connect(this, SIGNAL(outputNameChanged(const QString&)),ui.uiOutputNameEdit, SLOT(setText(const QString&)));
+    ui.uiOutputNameEdit->setText(m_OutputName);
+
+    connect(ui.uiInputBrowseButton, SIGNAL(clicked()), this, SLOT(browseInputFile()));
+
+    return editor;
+}
+
+bool BinaryFileBuilder::load(const QDomElement& element, const QDir& projectDir, QString* errorMessage)
+{
+    if (!Builder::load(element, projectDir, errorMessage))
+        return false;
+
+    if (!element.hasAttribute(g_InputFileAttribute)) {
+        if (errorMessage) {
+            *errorMessage = tr("at line %1, column %2: missing attribute \"%4\" for element \"%3\" .")
+                .arg(element.lineNumber()).arg(element.columnNumber()).arg(element.tagName()).arg(g_InputFileAttribute);
+        }
+        return false;
+    }
+
+    if (!element.hasAttribute(g_OutputNameAttribute)) {
+        if (errorMessage) {
+            *errorMessage = tr("at line %1, column %2: missing attribute \"%4\" for element \"%3\" .")
+                .arg(element.lineNumber()).arg(element.columnNumber()).arg(element.tagName()).arg(g_OutputNameAttribute);
+        }
+        return false;
+    }
+
+    QString inputFile = projectDir.absoluteFilePath(element.attribute(g_InputFileAttribute));
+    QString canonicalInputFile = QFileInfo(inputFile).canonicalFilePath();
+    if (canonicalInputFile.length() > 0)
+        inputFile = canonicalInputFile;
+
+    setInputFile(inputFile);
+    setOutputName(element.attribute(g_OutputNameAttribute));
+
+    return true;
+}
+
+bool BinaryFileBuilder::save(QDomElement& element, const QDir& projectDir, QString* errorMessage)
+{
+    if (!Builder::save(element, projectDir, errorMessage))
+        return false;
+
+    element.setAttribute(g_InputFileAttribute, projectDir.relativeFilePath(m_InputFile));
+    element.setAttribute(g_OutputNameAttribute, m_OutputName);
+
+    return true;
 }
