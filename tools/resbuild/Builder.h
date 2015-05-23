@@ -105,6 +105,7 @@ public:
     virtual bool save(QDomElement& element, const QDir& projectDir, QString* errorMessage);
 
     virtual QList<QFileInfo> inputFiles() const = 0;
+    virtual QList<QString> outputFiles() const = 0;
     virtual bool build(BuildState* state) = 0;
 
 signals:

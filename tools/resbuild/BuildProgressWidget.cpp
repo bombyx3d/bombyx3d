@@ -32,9 +32,10 @@ class BuildProgressWidget::BuildThread : public QThread, private BuildState
     Q_OBJECT
 
 public:
-    explicit BuildThread(const BuildDirectoryPtr& buildDir, BuildProgressWidget* widget)
+    explicit BuildThread(const BuildDirectoryPtr& buildDir, const Project* project, BuildProgressWidget* widget)
         : m_Widget(widget)
         , m_BuildDirectory(buildDir)
+        , m_Project(project)
         , m_ShouldAbort(false)
     {
     }
@@ -42,7 +43,29 @@ public:
     void run() override
     {
         try {
-            // FIXME
+            std::vector<Rule*> rulesToBuild;
+            rulesToBuild.reserve(m_Project->rules().size());
+
+            for (const auto& rule : m_Project->rules()) {
+                QList<QString> outputFiles = rule->builder()->outputFiles();
+                QList<QFileInfo> inputFiles = rule->builder()->inputFiles();
+                if (m_BuildDirectory->shouldBuild(inputFiles, outputFiles))
+                    rulesToBuild.push_back(rule.get());
+            }
+
+            double count = float(rulesToBuild.size());
+            double index = 0;
+            for (const auto& rule : rulesToBuild) {
+                ++index;
+                emit setStatus(tr("Building \"%1\"...").arg(rule->name()));
+                emit setProgress(float(index / count));
+
+                if (!rule->builder()->build(this)) {
+                    printError(tr("Unable to build rule \"%1\".").arg(rule->name()));
+                    emit buildFailed();
+                    return;
+                }
+            }
         } catch (const std::exception& e) {
             printError(QString::fromLocal8Bit(e.what()));
             emit buildFailed();
@@ -66,6 +89,7 @@ signals:
     void buildAborted();
 
     void setStatus(const QString& message) final override;
+    void setProgress(float progress);
 
     void printInfo(const QString& message) final override;
     void printWarning(const QString& message) final override;
@@ -74,11 +98,12 @@ signals:
 private:
     BuildProgressWidget* m_Widget;
     BuildDirectoryPtr m_BuildDirectory;
+    const Project* m_Project;
     std::atomic<bool> m_ShouldAbort;
 };
 
 
-BuildProgressWidget::BuildProgressWidget(const BuildDirectoryPtr& buildDir, QWidget* parent)
+BuildProgressWidget::BuildProgressWidget(const BuildDirectoryPtr& buildDir, const Project* project, QWidget* parent)
     : QDialog(parent)
     , m_BuildDirectory(buildDir)
 {
@@ -92,11 +117,12 @@ BuildProgressWidget::BuildProgressWidget(const BuildDirectoryPtr& buildDir, QWid
 
     adjustSize();
 
-    m_BuildThread = new BuildThread(buildDir, this);
+    m_BuildThread = new BuildThread(buildDir, project, this);
     connect(m_BuildThread, SIGNAL(buildSucceeded()), SLOT(buildSucceeded()));
     connect(m_BuildThread, SIGNAL(buildFailed()), SLOT(buildFailed()));
     connect(m_BuildThread, SIGNAL(buildAborted()), SLOT(buildAborted()));
     connect(m_BuildThread, SIGNAL(setStatus(const QString&)), SLOT(setStatusText(const QString&)));
+    connect(m_BuildThread, SIGNAL(setProgress(float)), SLOT(setProgress(float)));
     connect(m_BuildThread, SIGNAL(printInfo(const QString&)), SLOT(printInfo(const QString&)));
     connect(m_BuildThread, SIGNAL(printWarning(const QString&)), SLOT(printWarning(const QString&)));
     connect(m_BuildThread, SIGNAL(printError(const QString&)), SLOT(printError(const QString&)));
@@ -166,13 +192,21 @@ void BuildProgressWidget::buildAborted()
 
 void BuildProgressWidget::setStatusText(const QString& message)
 {
-    if (uiAbortButton->isVisible() && uiAbortButton->isEnabled())
+    if (uiAbortButton->isVisible() && uiAbortButton->isEnabled()) {
         uiStatusLabel->setText(message);
+        uiLogView->appendHtml(QString("<p style=\"color: silver\">%1</p>").arg(message));
+    }
+}
+
+void BuildProgressWidget::setProgress(float value)
+{
+    uiProgressBar->setRange(0, 100);
+    uiProgressBar->setValue(int(value * 100.0f));
 }
 
 void BuildProgressWidget::printInfo(const QString& message)
 {
-    uiLogView->appendHtml(QString("<p style=\"color: silver\">%1</p>").arg(message));
+    uiLogView->appendHtml(QString("<p style=\"color: teal\">%1</p>").arg(message));
     uiLogView->setVisible(true);
 }
 

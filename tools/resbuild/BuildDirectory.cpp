@@ -84,3 +84,9 @@ bool BuildDirectory::init(const QDir& dir, const QString& projectName, QString* 
 
     return true;
 }
+
+bool BuildDirectory::shouldBuild(const QList<QFileInfo>& inputFiles, const QList<QString>& outputFiles)
+{
+    // FIXME
+    return true;
+}

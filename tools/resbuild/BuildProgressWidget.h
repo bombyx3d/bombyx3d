@@ -22,6 +22,7 @@
 
 #pragma once
 #include "ui_BuildProgressWidget.h"
+#include "Project.h"
 #include "BuildDirectory.h"
 #include <QDialog>
 
@@ -30,7 +31,7 @@ class BuildProgressWidget : public QDialog, private Ui_BuildProgressWidget
     Q_OBJECT
 
 public:
-    explicit BuildProgressWidget(const BuildDirectoryPtr& buildDir, QWidget* parent = nullptr);
+    explicit BuildProgressWidget(const BuildDirectoryPtr& buildDir, const Project* project, QWidget* parent = nullptr);
     ~BuildProgressWidget();
 
 signals:
@@ -52,6 +53,7 @@ private:
     Q_SLOT void buildAborted();
 
     Q_SLOT void setStatusText(const QString& message);
+    Q_SLOT void setProgress(float value);
 
     Q_SLOT void printInfo(const QString& message);
     Q_SLOT void printWarning(const QString& message);

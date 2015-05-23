@@ -44,6 +44,7 @@ public:
     bool save(QDomElement& element, const QDir& projectDir, QString* errorMessage) override;
 
     QList<QFileInfo> inputFiles() const override;
+    QList<QString> outputFiles() const override;
     bool build(BuildState* state);
 
 signals:

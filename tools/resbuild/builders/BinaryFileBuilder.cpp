@@ -134,6 +134,13 @@ QList<QFileInfo> BinaryFileBuilder::inputFiles() const
     return files;
 }
 
+QList<QString> BinaryFileBuilder::outputFiles() const
+{
+    QList<QString> files;
+    files.append(m_OutputName);
+    return files;
+}
+
 bool BinaryFileBuilder::build(BuildState* state)
 {
     // FIXME

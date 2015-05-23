@@ -54,7 +54,7 @@ void MainWindow::build(bool draft)
         return;
     }
 
-    m_BuildProgress = new BuildProgressWidget(buildDirectory, this);
+    m_BuildProgress = new BuildProgressWidget(buildDirectory, m_Project.get(), this);
     connect(m_BuildProgress, SIGNAL(buildWindowClosed()), this, SLOT(buildWindowClosed()));
     m_BuildProgress->setModal(true);
     m_BuildProgress->setWindowModality(Qt::ApplicationModal);

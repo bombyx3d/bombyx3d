@@ -47,6 +47,8 @@ public:
     void removeRule(QListWidgetItem* item);
     Rule* ruleForItem(QListWidgetItem* item);
 
+    const std::vector<std::unique_ptr<Rule>>& rules() const { return m_Rules; }
+
 signals:
     void ruleCreated(Rule* rule);
     void ruleDeleted(Rule* rule);

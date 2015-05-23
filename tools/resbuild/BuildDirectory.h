@@ -23,6 +23,8 @@
 #pragma once
 #include <QObject>
 #include <QDir>
+#include <QFileInfo>
+#include <QList>
 #include <sqlite3.h>
 #include <memory>
 
@@ -33,6 +35,8 @@ public:
     ~BuildDirectory();
 
     bool init(const QDir& dir, const QString& projectName, QString* errorMessage = nullptr);
+
+    bool shouldBuild(const QList<QFileInfo>& inputFiles, const QList<QString>& outputFiles);
 
 private:
     QDir m_Dir;
