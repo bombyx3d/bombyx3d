@@ -45,6 +45,7 @@ public:
     void createRule(const BuilderPtr& builder);
     void removeRule(Rule* rule);
     void removeRule(QListWidgetItem* item);
+    Rule* ruleForItem(QListWidgetItem* item);
 
 signals:
     void ruleCreated(Rule* rule);

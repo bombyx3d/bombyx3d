@@ -83,6 +83,8 @@ public:
     static QIcon staticIcon();
     virtual QIcon icon() const;
 
+    virtual QWidget* createEditor(QWidget* parent = nullptr);
+
     virtual bool load(const QDomElement& element, const QString* errorMessage);
     virtual bool save(QDomElement& element, const QString* errorMessage);
 };

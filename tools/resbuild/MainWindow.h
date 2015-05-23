@@ -39,6 +39,8 @@ protected:
 
 private:
     std::unique_ptr<Project> m_Project;
+    bool m_LoadingProject = false;
+    QWidget* m_CurrentEditor = nullptr;
     QString m_FileName;
 
     bool saveIfNeeded();

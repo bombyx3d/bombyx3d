@@ -34,6 +34,7 @@ class Rule : public QObject
 
 public:
     QListWidgetItem* listWidgetItem = nullptr;
+    bool isNewlyCreatedRule = true;
 
     explicit Rule(Project* project);
     Rule(Project* project, const BuilderPtr& builder);
@@ -43,7 +44,9 @@ public:
     const BuilderPtr& builder() const { return m_Builder; }
 
     const QString& name() const { return m_Name; }
-    void setName(const QString& name);
+    Q_SLOT void setName(const QString& name);
+
+    QWidget* createEditor(QWidget* parent = nullptr);
 
     bool load(const QDomElement& element, QString* errorMessage = nullptr);
     bool save(QDomElement& element, QString* errorMessage = nullptr);

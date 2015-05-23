@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  */
 #include "NewRuleDialog.h"
+#include <cassert>
 #include <QPushButton>
 
 NewRuleDialog::NewRuleDialog(QWidget* parent)
@@ -52,4 +53,18 @@ void NewRuleDialog::on_uiBuilderList_itemSelectionChanged()
 {
     QList<QListWidgetItem*> selectedItems = uiBuilderList->selectedItems();
     uiButtonBox->button(QDialogButtonBox::Ok)->setEnabled(selectedItems.count() == 1);
+}
+
+void NewRuleDialog::on_uiBuilderList_itemDoubleClicked(QListWidgetItem* item)
+{
+    uiBuilderList->clearSelection();
+    uiBuilderList->setCurrentItem(item);
+
+    QList<QListWidgetItem*> selectedItems = uiBuilderList->selectedItems();
+    if (selectedItems.count() == 1 && selectedItems[0] == item) {
+        accept();
+        return;
+    }
+
+    assert(false);
 }

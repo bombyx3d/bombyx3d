@@ -40,4 +40,5 @@ private:
     std::unordered_map<QListWidgetItem*, Builder::FactoryPtr> m_Factories;
 
     Q_SLOT void on_uiBuilderList_itemSelectionChanged();
+    Q_SLOT void on_uiBuilderList_itemDoubleClicked(QListWidgetItem* item);
 };

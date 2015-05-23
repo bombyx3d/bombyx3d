@@ -22,6 +22,7 @@
 #include "MainWindow.h"
 #include "NewRuleDialog.h"
 #include "Builder.h"
+#include <QLineEdit>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QCloseEvent>
@@ -102,12 +103,18 @@ void MainWindow::on_uiOpenFileButton_clicked()
     connect(m_Project.get(), SIGNAL(ruleDeleted(Rule*)), SLOT(onRuleDeleted(Rule*)));
     m_FileName = path;
 
+    m_LoadingProject = true;
     QString message = tr("Unknown error.");
-    if (!m_Project->load(m_FileName, &message)) {
+    bool result = m_Project->load(m_FileName, &message);
+    m_LoadingProject = false;
+
+    if (!result) {
         QMessageBox::critical(this, tr("Error"), tr("Unable to load file \"%1\": %2").arg(m_FileName).arg(message));
         m_Project.reset();
         uiRuleList->clear();
     }
+
+    uiRuleList->setCurrentItem(uiRuleList->count() > 0 ? uiRuleList->item(0) : nullptr);
 
     updateUI();
 }
@@ -191,6 +198,34 @@ void MainWindow::on_uiCleanButton_clicked()
 
 void MainWindow::on_uiRuleList_itemSelectionChanged()
 {
+    if (m_CurrentEditor) {
+        m_CurrentEditor->deleteLater();
+        m_CurrentEditor = nullptr;
+    }
+
+    uiContentsArea->setWidget(nullptr);
+
+    if (!m_LoadingProject) {
+        QList<QListWidgetItem*> selectedRules = uiRuleList->selectedItems();
+        if (selectedRules.count() == 1) {
+            Rule* rule = m_Project->ruleForItem(selectedRules[0]);
+            if (rule) {
+                m_CurrentEditor = rule->createEditor(uiContentsArea);
+                if (m_CurrentEditor) {
+                    uiContentsArea->setWidget(m_CurrentEditor);
+                    if (rule->isNewlyCreatedRule) {
+                        rule->isNewlyCreatedRule = false;
+                        auto nameEdit = m_CurrentEditor->findChild<QLineEdit*>("nameEdit");
+                        if (nameEdit) {
+                            nameEdit->selectAll();
+                            nameEdit->setFocus();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     updateUI();
 }
 
@@ -198,6 +233,8 @@ void MainWindow::onRuleCreated(Rule* rule)
 {
     if (!rule->listWidgetItem)
         rule->listWidgetItem = new QListWidgetItem(rule->builder()->icon(), rule->name(), uiRuleList);
+    if (!m_LoadingProject)
+        uiRuleList->setCurrentItem(rule->listWidgetItem);
 }
 
 void MainWindow::onRuleDeleted(Rule* rule)

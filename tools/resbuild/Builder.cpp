@@ -21,6 +21,7 @@
  */
 #include "Builder.h"
 #include "builders/BinaryFileBuilder.h"
+#include <QWidget>
 
 namespace
 {
@@ -76,6 +77,14 @@ QIcon Builder::staticIcon()
 QIcon Builder::icon() const
 {
     return Builder::staticIcon();
+}
+
+QWidget* Builder::createEditor(QWidget* parent)
+{
+    QWidget* editor = new QWidget(parent);
+    editor->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    connect(this, SIGNAL(destroyed()), editor, SLOT(deleteLater()));
+    return editor;
 }
 
 bool Builder::load(const QDomElement& element, const QString* errorMessage)

@@ -24,6 +24,9 @@
 #include "Project.h"
 #include <cassert>
 #include <QListWidgetItem>
+#include <QLineEdit>
+#include <QBoxLayout>
+#include <QLabel>
 
 static const QString g_BuilderElement = "Builder";
 static const QString g_RuleNameAttribute = "name";
@@ -53,6 +56,34 @@ void Rule::setName(const QString& name)
     if (listWidgetItem)
         listWidgetItem->setText(name);
     m_Project->setModified();
+}
+
+QWidget* Rule::createEditor(QWidget* parent)
+{
+    QWidget* editor = new QWidget(parent);
+    connect(this, SIGNAL(destroyed()), editor, SLOT(deleteLater()));
+
+    QVBoxLayout* vLayout = new QVBoxLayout(editor);
+
+    QHBoxLayout* hLayout = new QHBoxLayout;
+    vLayout->addLayout(hLayout);
+
+    QLabel* label = new QLabel(tr("Rule &name:"), editor);
+    label->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    hLayout->addWidget(label);
+
+    QLineEdit* nameEdit = new QLineEdit(name(), editor);
+    connect(nameEdit, SIGNAL(textEdited(const QString&)), this, SLOT(setName(const QString&)));
+    nameEdit->setObjectName("nameEdit");
+    nameEdit->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
+    label->setBuddy(nameEdit);
+    hLayout->addWidget(nameEdit);
+
+    QWidget* builderSettings = m_Builder->createEditor(editor);
+    if (builderSettings)
+        vLayout->addWidget(builderSettings);
+
+    return editor;
 }
 
 bool Rule::load(const QDomElement& element, QString* errorMessage)

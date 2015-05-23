@@ -87,6 +87,7 @@ bool Project::load(const QString& fileName, QString* errorMessage)
                     if (!rule->load(ee, errorMessage))
                         return false;
                     auto rulePtr = rule.get();
+                    rule->isNewlyCreatedRule = false;
                     m_Rules.emplace_back(std::move(rule));
                     emit ruleCreated(rulePtr);
                     ++nextRuleID;
@@ -168,4 +169,13 @@ void Project::removeRule(QListWidgetItem* item)
             return;
         }
     }
+}
+
+Rule* Project::ruleForItem(QListWidgetItem* item)
+{
+    for (auto it = m_Rules.begin(); it != m_Rules.end(); ++it) {
+        if (it->get()->listWidgetItem == item)
+            return it->get();
+    }
+    return nullptr;
 }
