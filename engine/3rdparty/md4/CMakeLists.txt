@@ -21,21 +21,15 @@
 #
 
 cmake_minimum_required(VERSION 3.1)
-project(sqlite3 C)
-
-find_package(Threads)
+project(libmd4 C)
 
 if(MSVC)
-    add_definitions(/wd4456 /wd4459)
+    add_definitions(/wd4101 /wd4244 /wd4267 /wd4456)
 endif()
 
 file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" *.c *.h)
 z_set_source_groups(${source_files})
+add_library(libmd4 STATIC ${source_files})
 
-add_library(libsqlite3 STATIC sqlite3.c sqlite3.h sqlite3ext.h)
-set_target_properties(libsqlite3 PROPERTIES OUTPUT_NAME "sqlite3")
-target_include_directories(libsqlite3 BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
-target_link_libraries(libsqlite3 ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS})
-
-add_executable(sqlite3 EXCLUDE_FROM_ALL shell.c)
-target_link_libraries(sqlite3 libsqlite3)
+set_target_properties(libmd4 PROPERTIES OUTPUT_NAME "md4")
+target_include_directories(libmd4 BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
