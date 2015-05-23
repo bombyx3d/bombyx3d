@@ -49,6 +49,19 @@
 class Builder;
 using BuilderPtr = std::shared_ptr<Builder>;
 
+
+class BuildState
+{
+public:
+    virtual ~BuildState() = default;
+    virtual bool shouldAbort() const = 0;
+    virtual void setStatus(const QString& message) = 0;
+    virtual void printInfo(const QString& message) = 0;
+    virtual void printWarning(const QString& message) = 0;
+    virtual void printError(const QString& message) = 0;
+};
+
+
 class Builder : public QObject
 {
     Q_OBJECT
@@ -88,6 +101,8 @@ public:
 
     virtual bool load(const QDomElement& element, const QDir& projectDir, QString* errorMessage);
     virtual bool save(QDomElement& element, const QDir& projectDir, QString* errorMessage);
+
+    virtual bool build(BuildState* state) = 0;
 
 signals:
     void setModified();

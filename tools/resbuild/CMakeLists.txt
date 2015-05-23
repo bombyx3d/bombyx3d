@@ -38,6 +38,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR YES)
 
 set(ui_files
     builders/BinaryFileBuilder.ui
+    BuildProgressWidget.ui
     MainWindow.ui
     NewRuleDialog.ui
 )
@@ -49,6 +50,8 @@ set(source_files
     builders/BinaryFileBuilder.h
     Builder.cpp
     Builder.h
+    BuildProgressWidget.cpp
+    BuildProgressWidget.h
     FileUtil.cpp
     FileUtil.h
     MainWindow.cpp

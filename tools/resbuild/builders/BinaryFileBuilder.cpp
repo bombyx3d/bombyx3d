@@ -126,3 +126,9 @@ bool BinaryFileBuilder::save(QDomElement& element, const QDir& projectDir, QStri
 
     return true;
 }
+
+bool BinaryFileBuilder::build(BuildState* state)
+{
+    // FIXME
+    return true;
+}

@@ -26,6 +26,8 @@
 #include <memory>
 #include <QWidget>
 
+class BuildProgressWidget;
+
 class MainWindow : public QWidget, private Ui_MainWindow
 {
     Q_OBJECT
@@ -34,14 +36,19 @@ public:
     MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
+    void build(bool draft);
+
 protected:
     void closeEvent(QCloseEvent* event) override;
 
 private:
     std::unique_ptr<Project> m_Project;
+    BuildProgressWidget* m_BuildProgress = nullptr;
     bool m_LoadingProject = false;
     QWidget* m_CurrentEditor = nullptr;
     QString m_FileName;
+
+    Q_SLOT void buildWindowClosed();
 
     bool saveIfNeeded();
 

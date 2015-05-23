@@ -21,35 +21,40 @@
  */
 
 #pragma once
-#include "Builder.h"
+#include "ui_BuildProgressWidget.h"
+#include <QDialog>
 
-class BinaryFileBuilder : public Builder
+class BuildProgressWidget : public QDialog, private Ui_BuildProgressWidget
 {
     Q_OBJECT
-    Z_BUILDER_XMLID("BinaryFileBuilder")
-    Z_BUILDER_NAME(tr("Binary file"))
-    Z_BUILDER_ICON(":/icons/fatcow_modified/compile_dark.png")
 
 public:
-    BinaryFileBuilder();
-    ~BinaryFileBuilder();
-
-    Q_SLOT void setInputFile(const QString& file);
-    Q_SLOT void setOutputName(const QString& name);
-    Q_SLOT void browseInputFile();
-
-    QWidget* createEditor(QWidget* parent = nullptr) override;
-
-    bool load(const QDomElement& element, const QDir& projectDir, QString* errorMessage) override;
-    bool save(QDomElement& element, const QDir& projectDir, QString* errorMessage) override;
-
-    bool build(BuildState* state);
+    BuildProgressWidget(QWidget* parent = nullptr);
+    ~BuildProgressWidget();
 
 signals:
-    void inputFileChanged(const QString& text);
-    void outputNameChanged(const QString& text);
+    void buildWindowClosed();
+
+protected:
+    void closeEvent(QCloseEvent* event) override;
 
 private:
-    QString m_InputFile;
-    QString m_OutputName;
+    class BuildThread;
+
+    BuildThread* m_BuildThread;
+    bool m_CloseAfterAbort = false;
+    bool m_HasWarnings = false;
+
+    Q_SLOT void buildSucceeded();
+    Q_SLOT void buildFailed();
+    Q_SLOT void buildAborted();
+
+    Q_SLOT void setStatusText(const QString& message);
+
+    Q_SLOT void printInfo(const QString& message);
+    Q_SLOT void printWarning(const QString& message);
+    Q_SLOT void printError(const QString& message);
+
+    Q_SLOT void on_uiAbortButton_clicked();
+    Q_SLOT void on_uiCloseButton_clicked();
 };

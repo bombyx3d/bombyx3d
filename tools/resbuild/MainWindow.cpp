@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  */
 #include "MainWindow.h"
+#include "BuildProgressWidget.h"
 #include "NewRuleDialog.h"
 #include "Builder.h"
 #include <QLineEdit>
@@ -38,12 +39,31 @@ MainWindow::~MainWindow()
 {
 }
 
+void MainWindow::build(bool draft)
+{
+    if (!m_Project || m_BuildProgress)
+        return;
+
+    m_BuildProgress = new BuildProgressWidget(this);
+    connect(m_BuildProgress, SIGNAL(buildWindowClosed()), this, SLOT(buildWindowClosed()));
+    m_BuildProgress->setModal(true);
+    m_BuildProgress->setWindowModality(Qt::ApplicationModal);
+    m_BuildProgress->show();
+}
+
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-    if (!saveIfNeeded())
+    if (m_BuildProgress || !saveIfNeeded())
         event->ignore();
     else
         event->accept();
+}
+
+void MainWindow::buildWindowClosed()
+{
+    m_BuildProgress->hide();
+    m_BuildProgress->deleteLater();
+    m_BuildProgress = nullptr;
 }
 
 bool MainWindow::saveIfNeeded()
@@ -61,7 +81,7 @@ bool MainWindow::saveIfNeeded()
 
 void MainWindow::on_uiNewFileButton_clicked()
 {
-    if (!saveIfNeeded())
+    if (m_BuildProgress || !saveIfNeeded())
         return;
 
     QString path = QFileDialog::getSaveFileName(this, tr("Create project"), m_FileName, tr("Project file (*.resproj)"));
@@ -88,7 +108,7 @@ void MainWindow::on_uiNewFileButton_clicked()
 
 void MainWindow::on_uiOpenFileButton_clicked()
 {
-    if (!saveIfNeeded())
+    if (m_BuildProgress || !saveIfNeeded())
         return;
 
     QString path = QFileDialog::getOpenFileName(this, tr("Open project"), m_FileName, tr("Project file (*.resproj)"));
@@ -138,7 +158,7 @@ bool MainWindow::on_uiSaveFileButton_clicked()
 
 void MainWindow::on_uiAddRuleButton_clicked()
 {
-    if (!m_Project)
+    if (m_BuildProgress || !m_Project)
         return;
 
     NewRuleDialog dialog(this);
@@ -153,7 +173,7 @@ void MainWindow::on_uiAddRuleButton_clicked()
 
 void MainWindow::on_uiRemoveRuleButton_clicked()
 {
-    if (!m_Project)
+    if (m_BuildProgress || !m_Project)
         return;
 
     QList<QListWidgetItem*> selectedRules = uiRuleList->selectedItems();
@@ -174,18 +194,12 @@ void MainWindow::on_uiRemoveRuleButton_clicked()
 
 void MainWindow::on_uiDraftBuildButton_clicked()
 {
-    if (!m_Project)
-        return;
-
-    // FIXME
+    build(true);
 }
 
 void MainWindow::on_uiFinalBuildButton_clicked()
 {
-    if (!m_Project)
-        return;
-
-    // FIXME
+    build(false);
 }
 
 void MainWindow::on_uiCleanButton_clicked()
@@ -205,7 +219,7 @@ void MainWindow::on_uiRuleList_itemSelectionChanged()
 
     uiContentsArea->setWidget(nullptr);
 
-    if (!m_LoadingProject) {
+    if (!m_BuildProgress && !m_LoadingProject) {
         QList<QListWidgetItem*> selectedRules = uiRuleList->selectedItems();
         if (selectedRules.count() == 1) {
             Rule* rule = m_Project->ruleForItem(selectedRules[0]);
@@ -233,7 +247,7 @@ void MainWindow::onRuleCreated(Rule* rule)
 {
     if (!rule->listWidgetItem)
         rule->listWidgetItem = new QListWidgetItem(rule->builder()->icon(), rule->name(), uiRuleList);
-    if (!m_LoadingProject)
+    if (!m_BuildProgress && !m_LoadingProject)
         uiRuleList->setCurrentItem(rule->listWidgetItem);
 }
 
