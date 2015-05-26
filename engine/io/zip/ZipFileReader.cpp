@@ -90,7 +90,7 @@ namespace Z
                     else
                         bytesToRead = size_t(m_Offset - offset);
 
-                    int r = unzReadCurrentFile(m_Handle, buffer.data(), bytesToRead);
+                    int r = unzReadCurrentFile(m_Handle, buffer.data(), static_cast<unsigned int>(bytesToRead));
                     if (r <= 0) {
                         Z_LOG("Error reading file \"" << m_Name << "\".");
                         return false;
@@ -102,7 +102,7 @@ namespace Z
             Z_ASSERT(m_Offset == offset);
         }
 
-        int r = unzReadCurrentFile(m_Handle, buffer, size);
+        int r = unzReadCurrentFile(m_Handle, buffer, static_cast<unsigned int>(size));
         if (r <= 0) {
             Z_LOG("Error reading file \"" << m_Name << "\".");
             return false;
