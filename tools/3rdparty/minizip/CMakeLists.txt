@@ -29,7 +29,9 @@ endif()
 
 add_definitions(-DHAVE_BZIP2)
 
-file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" *)
-z_set_source_groups(${source_files})
-add_executable(minizip ${source_files})
-target_link_libraries(minizip libminizip)
+add_library(libzip STATIC EXCLUDE_FROM_ALL zip.c zip.h)
+target_link_libraries(libzip libunzip)
+z_set_source_groups(zip.c zip.h)
+
+add_executable(minizip EXCLUDE_FROM_ALL minizip.c)
+target_link_libraries(minizip libzip)

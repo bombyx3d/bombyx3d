@@ -54,7 +54,7 @@ z_set_source_groups(${source_files})
 add_library(libengine STATIC ${source_files})
 
 set_target_properties(libengine PROPERTIES OUTPUT_NAME "engine" CXX_STANDARD 11)
-target_link_libraries(libengine libjpeg libglew libminizip)
+target_link_libraries(libengine libjpeg libglew libunzip)
 z_target_link_qt5(libengine)
 z_target_link_opengl(libengine)
 

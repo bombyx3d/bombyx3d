@@ -45,7 +45,7 @@ add_library(libassimp STATIC
 )
 
 target_include_directories(libassimp BEFORE PUBLIC "${CMAKE_CURRENT_BINARY_DIR}" include)
-target_link_libraries(libassimp libminizip libz)
+target_link_libraries(libassimp libunzip libz)
 set_target_properties(libassimp PROPERTIES OUTPUT_NAME "assimp")
 
 add_subdirectory(tools/assimp_cmd)

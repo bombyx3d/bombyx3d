@@ -21,7 +21,7 @@
 #
 
 cmake_minimum_required(VERSION 3.1)
-project(libminizip C)
+project(libunzip C)
 
 if(MSVC)
     add_definitions(/wd4101 /wd4244 /wd4267 /wd4456)
@@ -31,12 +31,12 @@ add_definitions(-DHAVE_BZIP2)
 
 file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" *.c *.h)
 z_set_source_groups(${source_files})
-add_library(libminizip STATIC ${source_files})
+add_library(libunzip STATIC ${source_files})
 
 if(NOT WIN32)
     set_source_files_properties(iowin32.c PROPERTIES HEADER_FILE_ONLY TRUE)
 endif()
 
-set_target_properties(libminizip PROPERTIES OUTPUT_NAME "minizip")
-target_include_directories(libminizip BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
-target_link_libraries(libminizip libz libbzip2)
+set_target_properties(libunzip PROPERTIES OUTPUT_NAME "minizip")
+target_include_directories(libunzip BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_link_libraries(libunzip libz libbzip2)
