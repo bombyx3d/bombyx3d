@@ -67,6 +67,8 @@
 #define WRITEBUFFERSIZE (16384)
 #define MAXFILENAME     (256)
 
+#ifdef LIBZIP
+
 uLong filetime(const char *filename, tm_zip *tmzip, uLong *dostime)
 {
     int ret = 0;
@@ -122,6 +124,8 @@ uLong filetime(const char *filename, tm_zip *tmzip, uLong *dostime)
 #endif
     return ret;
 }
+
+#else /* LIBZIP */
 
 int check_file_exists(const char* filename)
 {
@@ -438,3 +442,5 @@ int main(int argc, char *argv[])
     free(buf);
     return err;
 }
+
+#endif /* LIBZIP */

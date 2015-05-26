@@ -22,6 +22,8 @@
 
 project(ResBuild)
 
+add_subdirectory(core)
+
 include(cmake/CompileUIFiles.cmake)
 
 find_package(Qt5Widgets REQUIRED)
@@ -75,4 +77,4 @@ z_set_source_groups(${source_files})
 add_executable(ResBuild ${compiled_ui_files} ${source_files})
 
 set_target_properties(ResBuild PROPERTIES CXX_STANDARD 11)
-target_link_libraries(ResBuild libsqlite3 ${QT_LIBRARIES})
+target_link_libraries(ResBuild libresbuild libsqlite3 ${QT_LIBRARIES})

@@ -20,20 +20,21 @@
 # THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.1)
-project(minizip C)
+set(source_files
+    project/BuildRule.cpp
+    project/BuildRule.h
+    project/BuildProject.cpp
+    project/BuildProject.cpp
+    zip/ZipExtraField.cpp
+    zip/ZipExtraField.h
+    zip/ZipReader.cpp
+    zip/ZipReader.h
+    zip/ZipWriter.cpp
+    zip/ZipWriter.h
+    BuildManager.cpp
+    BuildManager.h
+)
 
-if(MSVC)
-    add_definitions(/wd4101 /wd4244 /wd4267 /wd4456)
-endif()
-
-add_definitions(-DHAVE_BZIP2)
-
-add_library(libzip STATIC EXCLUDE_FROM_ALL minizip.c zip.c zip.h)
-target_link_libraries(libzip libunzip)
-target_compile_definitions(libzip PRIVATE LIBZIP)
-target_include_directories(libzip BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
-z_set_source_groups(zip.c zip.h)
-
-add_executable(minizip EXCLUDE_FROM_ALL minizip.c)
-target_link_libraries(minizip libzip)
+z_set_source_groups(${source_files})
+add_library(libresbuild STATIC EXCLUDE_FROM_ALL ${source_files})
+target_link_libraries(libresbuild libzip libunzip libmd4)
