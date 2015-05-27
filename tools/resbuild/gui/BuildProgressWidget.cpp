@@ -78,7 +78,8 @@ private:
 };
 
 
-BuildProgressWidget::BuildProgressWidget(const std::string& outputFile, const BuildProjectPtr& project, QWidget* parent)
+BuildProgressWidget::BuildProgressWidget(const std::string& outputFile, const BuildProjectPtr& project,
+        bool draft, QWidget* parent)
     : QDialog(parent)
 {
     setupUi(this);
@@ -101,8 +102,9 @@ BuildProgressWidget::BuildProgressWidget(const std::string& outputFile, const Bu
     connect(m_Listener.get(), SIGNAL(printWarning(const QString&)), SLOT(printWarning(const QString&)), Qt::QueuedConnection);
     connect(m_Listener.get(), SIGNAL(printError(const QString&)), SLOT(printError(const QString&)), Qt::QueuedConnection);
 
+    auto mode = (draft ? BuildManager::INCREMENTAL_DRAFT_BUILD : BuildManager::FULL_OPTIMIZED_BUILD);
     m_BuildManager = std::make_shared<BuildManager>();
-    m_BuildManager->startBuild(outputFile, project.get(), BuildManager::INCREMENTAL_DRAFT_BUILD, m_Listener.get());
+    m_BuildManager->startBuild(outputFile, project.get(), mode, m_Listener.get());
 }
 
 BuildProgressWidget::~BuildProgressWidget()

@@ -48,7 +48,7 @@ void MainWindow::build(bool draft)
     QString projectName = QFileInfo(m_FileName).completeBaseName();
     std::string outputFile = targetPath.absoluteFilePath(QString("%1.pak").arg(projectName)).toUtf8().constData();
 
-    m_BuildProgress = new BuildProgressWidget(outputFile, m_Project, this);
+    m_BuildProgress = new BuildProgressWidget(outputFile, m_Project, draft, this);
     connect(m_BuildProgress, SIGNAL(buildWindowClosed()), this, SLOT(buildWindowClosed()));
     m_BuildProgress->setModal(true);
     m_BuildProgress->setWindowModality(Qt::ApplicationModal);

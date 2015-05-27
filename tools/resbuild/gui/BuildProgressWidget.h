@@ -32,7 +32,8 @@ class BuildProgressWidget : public QDialog, private Ui_BuildProgressWidget
     Q_OBJECT
 
 public:
-    BuildProgressWidget(const std::string& outputFile, const BuildProjectPtr& project, QWidget* parent = nullptr);
+    BuildProgressWidget(const std::string& outputFile, const BuildProjectPtr& project,
+        bool draft, QWidget* parent = nullptr);
     ~BuildProgressWidget();
 
 signals:
