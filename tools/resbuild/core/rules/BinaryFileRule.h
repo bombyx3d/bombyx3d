@@ -21,45 +21,25 @@
  */
 
 #pragma once
-#include "BuildRule.h"
-#include <vector>
-#include <string>
-#include <memory>
-#include <functional>
+#include "../project/BuildRule.h"
 
-class BuildProject
+class BinaryFileRule : public BuildRule
 {
 public:
-    class Listener
-    {
-    public:
-        virtual ~Listener() = default;
-        virtual void onProjectModified(BuildProject*) {}
-    };
+    static const std::string CLASS_NAME;
 
-    static const std::string ROOT_ELEMENT;
-    static const std::string RULE_ELEMENT;
-    static const std::string CLASS_ATTRIBUTE;
+    explicit BinaryFileRule(uint32_t id, Listener* listener = nullptr) : BuildRule(id, listener) {}
 
-    explicit BuildProject(Listener* listener = nullptr);
-    ~BuildProject();
+    const std::string& className() const override { return CLASS_NAME; }
 
-    uint32_t nextRuleID() const { return m_NextRuleID; }
-    const std::vector<BuildRulePtr>& rules() const { return m_Rules; }
+    void setInputFile(const std::string& file);
+    void setOutputFile(const std::string& file);
 
-    void addRule(const BuildRulePtr& rule);
-    void removeRule(const BuildRule* rule);
+    void load(TiXmlElement* element) override;
+    void save(TiXmlElement* element, const std::function<std::string(const std::string&)>& remapFileName) override;
 
-    void load(const std::string& file, BuildRule::Listener* ruleListener = nullptr);
-    void save(const std::string& file, const std::function<std::string(const std::string&)>& remapFileName);
+    bool build(BuildManager* buildManager) override;
 
-private:
-    Listener* m_Listener;
-    std::vector<BuildRulePtr> m_Rules;
-    uint32_t m_NextRuleID = 1;
-
-    BuildProject(const BuildProject&) = delete;
-    BuildProject& operator=(const BuildProject&) = delete;
+protected:
+    void calcSettingsHash(MD4_CTX* context) const override;
 };
-
-using BuildProjectPtr = std::shared_ptr<BuildProject>;

@@ -51,6 +51,7 @@ private:
     QWidget* m_CurrentEditor = nullptr;
     QString m_FileName;
     std::unordered_map<BuildRule*, QListWidgetItem*> m_ListWidgetItems;
+    std::unordered_map<QListWidgetItem*, BuildRule*> m_ListWidgetRules;
 
     Q_SLOT void buildWindowClosed();
 

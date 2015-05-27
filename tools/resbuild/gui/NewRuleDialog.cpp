@@ -20,8 +20,11 @@
  * THE SOFTWARE.
  */
 #include "NewRuleDialog.h"
+#include "../core/rules/BinaryFileRule.h"
 #include <cassert>
 #include <QPushButton>
+
+static const std::string g_InvalidClassName;
 
 NewRuleDialog::NewRuleDialog(QWidget* parent)
     : QDialog(parent)
@@ -29,29 +32,23 @@ NewRuleDialog::NewRuleDialog(QWidget* parent)
     setupUi(this);
     on_uiBuilderList_itemSelectionChanged();
 
-    /*
-    for (const auto& factory : Builder::factories()) {
-        auto item = new QListWidgetItem(factory->builderIcon, factory->builderName, uiBuilderList);
-        m_Factories.emplace(std::make_pair(item, factory));
-    }
-    */
+    auto item = new QListWidgetItem(QIcon(":/icons/fatcow_modified/compile_dark.png"), tr("Binary File"), uiBuilderList);
+    m_ClassNames.emplace(std::make_pair(item, BinaryFileRule::CLASS_NAME));
 }
 
 NewRuleDialog::~NewRuleDialog()
 {
 }
 
-/*
-Builder::FactoryPtr NewRuleDialog::selectedFactory() const
+const std::string& NewRuleDialog::selectedClass() const
 {
     QList<QListWidgetItem*> selectedItems = uiBuilderList->selectedItems();
     if (selectedItems.count() != 1)
-        return nullptr;
+        return g_InvalidClassName;
 
-    auto it = m_Factories.find(selectedItems[0]);
-    return (it != m_Factories.end() ? it->second : Builder::FactoryPtr());
+    auto it = m_ClassNames.find(selectedItems[0]);
+    return (it != m_ClassNames.end() ? it->second : g_InvalidClassName);
 }
-*/
 
 void NewRuleDialog::on_uiBuilderList_itemSelectionChanged()
 {

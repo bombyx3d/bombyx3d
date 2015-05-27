@@ -24,6 +24,7 @@
 #include <sys/stat.h>
 #include <sstream>
 #include <stdexcept>
+#include <algorithm>
 #include <cstdio>
 #include <cerrno>
 
@@ -42,13 +43,32 @@ BuildProject::~BuildProject()
 
 void BuildProject::addRule(const BuildRulePtr& rule)
 {
+    m_NextRuleID = std::max(m_NextRuleID, rule->id() + 1);
     m_Rules.emplace_back(rule);
     if (m_Listener)
         m_Listener->onProjectModified(this);
 }
 
+void BuildProject::removeRule(const BuildRule* rule)
+{
+    bool modified = false;
+
+    for (auto it = m_Rules.begin(); it != m_Rules.end(); ++it) {
+        if (it->get() == rule) {
+            m_Rules.erase(it);
+            modified = true;
+            break;
+        }
+    }
+
+    if (modified && m_Listener)
+        m_Listener->onProjectModified(this);
+}
+
 void BuildProject::load(const std::string& file, BuildRule::Listener* ruleListener)
 {
+    m_NextRuleID = 1;
+
     std::string path = file;
     size_t index = path.rfind('/');
   #ifdef _WIN32
@@ -93,7 +113,7 @@ void BuildProject::load(const std::string& file, BuildRule::Listener* ruleListen
             throw new std::runtime_error(ss.str());
         }
 
-        BuildRulePtr rule = BuildRule::createBuildRule(classAttribute->ValueStr(), ruleListener);
+        BuildRulePtr rule = BuildRule::createBuildRule(classAttribute->ValueStr(), nextRuleID(), ruleListener);
         if (!rule) {
             std::stringstream ss;
             ss << "Unable to load XML file \"" << file << "\": at line " << rootElement->Row() << ", column "
@@ -102,6 +122,7 @@ void BuildProject::load(const std::string& file, BuildRule::Listener* ruleListen
         }
 
         rule->load(element);
+        m_NextRuleID = std::max(m_NextRuleID, rule->id() + 1);
         m_Rules.emplace_back(std::move(rule));
     }
 }

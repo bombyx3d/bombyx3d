@@ -47,13 +47,16 @@ public:
     };
 
     static const std::string NAME_ATTRIBUTE;
+    static const std::string ID_ATTRIBUTE;
     static const std::string INPUT_FILE_ELEMENT;
     static const std::string OUTPUT_FILE_ELEMENT;
 
-    explicit BuildRule(Listener* listener = nullptr);
+    explicit BuildRule(uint32_t id, Listener* listener = nullptr);
     virtual ~BuildRule();
 
     virtual const std::string& className() const = 0;
+
+    uint32_t id() const { return m_ID; }
 
     const std::string& name() const { return m_Name; }
     void setName(const std::string& name);
@@ -65,10 +68,10 @@ public:
 
     virtual void load(TiXmlElement* element);
     virtual void save(TiXmlElement* element, const std::function<std::string(const std::string&)>& remapFileName);
-    
+
     virtual bool build(BuildManager* buildManager) = 0;
 
-    static BuildRulePtr createBuildRule(const std::string& name, Listener* listener = nullptr);
+    static BuildRulePtr createBuildRule(const std::string& className, uint32_t id, Listener* listener = nullptr);
 
 protected:
     void notifyListener();
@@ -86,6 +89,7 @@ protected:
     static void hashStringVector(MD4_CTX* context, const std::vector<std::string>& vec);
 
 private:
+    uint32_t m_ID;
     Listener* m_Listener;
     std::string m_Name;
     std::vector<std::string> m_InputFiles;

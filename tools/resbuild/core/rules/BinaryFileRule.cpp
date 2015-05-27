@@ -19,26 +19,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "BinaryFileRule.h"
 
-#pragma once
-#include "ui_NewRuleDialog.h"
-#include <string>
-#include <unordered_map>
-#include <QDialog>
+const std::string BinaryFileRule::CLASS_NAME = "BinaryFile";
 
-class NewRuleDialog : public QDialog, private Ui_NewRuleDialog
+void BinaryFileRule::setInputFile(const std::string& file)
 {
-    Q_OBJECT
+    clearInputFiles();
+    addInputFile(file);
+}
 
-public:
-    NewRuleDialog(QWidget* parent = nullptr);
-    ~NewRuleDialog();
+void BinaryFileRule::setOutputFile(const std::string& file)
+{
+    clearOutputFiles();
+    addOutputFile(file);
+}
 
-    const std::string& selectedClass() const;
+bool BinaryFileRule::build(BuildManager* buildManager)
+{
+    return true;
+}
 
-private:
-    std::unordered_map<QListWidgetItem*, std::string> m_ClassNames;
+void BinaryFileRule::load(TiXmlElement* element)
+{
+    BuildRule::load(element);
+}
 
-    Q_SLOT void on_uiBuilderList_itemSelectionChanged();
-    Q_SLOT void on_uiBuilderList_itemDoubleClicked(QListWidgetItem* item);
-};
+void BinaryFileRule::save(TiXmlElement* element, const std::function<std::string(const std::string&)>& remapFileName)
+{
+    BuildRule::save(element, remapFileName);
+}
+
+void BinaryFileRule::calcSettingsHash(MD4_CTX*) const
+{
+}

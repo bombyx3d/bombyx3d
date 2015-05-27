@@ -20,16 +20,19 @@
  * THE SOFTWARE.
  */
 #include "BuildRule.h"
+#include "../rules/BinaryFileRule.h"
 #include <sstream>
 #include <unordered_map>
 #include <functional>
 
 const std::string BuildRule::NAME_ATTRIBUTE = "name";
+const std::string BuildRule::ID_ATTRIBUTE = "id";
 const std::string BuildRule::INPUT_FILE_ELEMENT = "InputFile";
 const std::string BuildRule::OUTPUT_FILE_ELEMENT = "OutputFile";
 
-BuildRule::BuildRule(Listener* listener)
-    : m_Listener(listener)
+BuildRule::BuildRule(uint32_t id, Listener* listener)
+    : m_ID(id)
+    , m_Listener(listener)
 {
     if (m_Listener)
         m_Listener->onRuleCreated(this);
@@ -79,9 +82,13 @@ void BuildRule::load(TiXmlElement* element)
     m_InputFiles.clear();
     m_OutputFiles.clear();
 
-    TiXmlAttribute* attribute = element->GetAttribute(NAME_ATTRIBUTE);
-    if (attribute)
-        m_Name = attribute->ValueStr();
+    TiXmlAttribute* idAttribute = element->GetAttribute(ID_ATTRIBUTE);
+    if (idAttribute)
+        m_ID = uint32_t(std::stoul(idAttribute->ValueStr()));
+
+    TiXmlAttribute* nameAttribute = element->GetAttribute(NAME_ATTRIBUTE);
+    if (nameAttribute)
+        m_Name = nameAttribute->ValueStr();
 
     for (TiXmlElement* e = element->FirstChildElement(INPUT_FILE_ELEMENT); e;
         e = e->NextSiblingElement(INPUT_FILE_ELEMENT))
@@ -100,10 +107,16 @@ void BuildRule::load(TiXmlElement* element)
             text = "";
         m_OutputFiles.push_back(element->GetDocument()->ValueStr() + text);
     }
+
+    notifyListener();
 }
 
 void BuildRule::save(TiXmlElement* element, const std::function<std::string(const std::string&)>& remapFileName)
 {
+    std::stringstream ss;
+    ss << m_ID;
+    element->SetAttribute(ID_ATTRIBUTE, ss.str());
+
     element->SetAttribute(NAME_ATTRIBUTE, m_Name);
 
     for (const auto& inputFile : m_InputFiles) {
@@ -123,13 +136,16 @@ void BuildRule::save(TiXmlElement* element, const std::function<std::string(cons
     }
 }
 
-BuildRulePtr BuildRule::createBuildRule(const std::string& name, Listener* listener)
+BuildRulePtr BuildRule::createBuildRule(const std::string& className, uint32_t id, Listener* listener)
 {
-    static std::unordered_map<std::string, std::function<BuildRulePtr(Listener*)>> rules = {
+    #define RULE(X) { X::CLASS_NAME, [](uint32_t i, Listener* l) -> BuildRulePtr { return std::make_shared<X>(i, l); }}
+
+    static const std::unordered_map<std::string, std::function<BuildRulePtr(uint32_t, Listener*)>> rules = {
+        RULE(BinaryFileRule)
     };
 
-    auto it = rules.find(name);
-    return (it != rules.end() ? it->second(listener) : nullptr);
+    auto it = rules.find(className);
+    return (it != rules.end() ? it->second(id, listener) : nullptr);
 }
 
 void BuildRule::notifyListener()

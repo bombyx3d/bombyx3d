@@ -25,6 +25,8 @@ set(source_files
     project/BuildRule.h
     project/BuildProject.cpp
     project/BuildProject.h
+    rules/BinaryFileRule.cpp
+    rules/BinaryFileRule.h
     zip/ZipExtraField.cpp
     zip/ZipExtraField.h
     zip/ZipReader.cpp

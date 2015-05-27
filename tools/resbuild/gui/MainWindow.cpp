@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow()
 {
+    m_Project.reset();
 }
 
 void MainWindow::build(bool draft)
@@ -92,6 +93,8 @@ void MainWindow::on_uiNewFileButton_clicked()
         return;
 
     uiRuleList->clear();
+    m_ListWidgetItems.clear();
+    m_ListWidgetRules.clear();
 
     m_Project.reset(new BuildProject(this));
     m_FileName = path;
@@ -111,18 +114,22 @@ void MainWindow::on_uiOpenFileButton_clicked()
         return;
 
     uiRuleList->clear();
+    m_ListWidgetItems.clear();
+    m_ListWidgetRules.clear();
 
     m_Project.reset(new BuildProject(this));
     m_FileName = path;
 
     m_LoadingProject = true;
     try {
-        m_Project->load(m_FileName.toLocal8Bit().constData());
+        m_Project->load(m_FileName.toLocal8Bit().constData(), this);
     } catch (const std::exception& e) {
         QMessageBox::critical(this, tr("Error"), tr("Unable to load file \"%1\": %2")
             .arg(m_FileName).arg(QString::fromUtf8(e.what())));
         m_Project.reset();
         uiRuleList->clear();
+        m_ListWidgetItems.clear();
+        m_ListWidgetRules.clear();
     }
     m_LoadingProject = false;
 
@@ -164,11 +171,11 @@ void MainWindow::on_uiAddRuleButton_clicked()
 
     NewRuleDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
-        /*
-        Builder::FactoryPtr factory = dialog.selectedFactory();
-        if (factory)
-            m_Project->createRule(factory->createBuilder());
-        */
+        std::string className = dialog.selectedClass();
+        BuildRulePtr rule = BuildRule::createBuildRule(className, m_Project->nextRuleID(), this);
+        rule->setName(tr("Rule %1").arg(rule->id()).toUtf8().constData());
+        if (rule)
+            m_Project->addRule(rule);
     }
 
     updateUI();
@@ -189,10 +196,11 @@ void MainWindow::on_uiRemoveRuleButton_clicked()
     if (r == QMessageBox::No)
         return;
 
-    /*
-    for (int i = 0; i < selectedRules.count(); i++)
-        m_Project->removeRule(selectedRules[i]);
-    */
+    for (int i = 0; i < selectedRules.count(); i++) {
+        auto it = m_ListWidgetRules.find(selectedRules[i]);
+        if (it != m_ListWidgetRules.end())
+            m_Project->removeRule(it->second);
+    }
 
     updateUI();
 }
@@ -261,6 +269,7 @@ void MainWindow::onRuleCreated(BuildRule* rule)
 {
     QListWidgetItem* item = new QListWidgetItem(QString::fromUtf8(rule->name().c_str()), uiRuleList);
     m_ListWidgetItems.insert({ rule, item });
+    m_ListWidgetRules.insert({ item, rule });
 
     if (!m_BuildProgress && !m_LoadingProject)
         uiRuleList->setCurrentItem(item);
@@ -270,7 +279,13 @@ void MainWindow::onRuleCreated(BuildRule* rule)
 
 void MainWindow::onRuleModified(BuildRule* rule)
 {
-    m_ProjectModified = true;
+    auto it = m_ListWidgetItems.find(rule);
+    if (it != m_ListWidgetItems.end()) {
+        auto item = it->second;
+        item->setText(QString::fromUtf8(rule->name().c_str()));
+        m_ProjectModified = true;
+    }
+
     updateUI();
 }
 
@@ -278,9 +293,11 @@ void MainWindow::onRuleDestroyed(BuildRule* rule)
 {
     auto it = m_ListWidgetItems.find(rule);
     if (it != m_ListWidgetItems.end()) {
+        m_ListWidgetRules.erase(it->second);
         delete it->second;
         m_ListWidgetItems.erase(it);
     }
+
     updateUI();
 }
 
