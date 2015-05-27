@@ -44,18 +44,10 @@ void MainWindow::build(bool draft)
         return;
 
     QDir targetPath = QFileInfo(m_FileName).absoluteDir();
-    QString projectName = QFileInfo(m_FileName).fileName();
+    QString projectName = QFileInfo(m_FileName).completeBaseName();
+    std::string outputFile = targetPath.absoluteFilePath(QString("%1.pak").arg(projectName)).toUtf8().constData();
 
-    /*
-    BuildDirectoryPtr buildDirectory = std::make_shared<BuildDirectory>();
-    QString errorMessage = tr("Unknown error.");
-    if (!buildDirectory->init(targetPath, projectName, &errorMessage)) {
-        QMessageBox::critical(this, tr("Error"), errorMessage);
-        return;
-    }
-    */
-
-    m_BuildProgress = new BuildProgressWidget(m_Project, this);
+    m_BuildProgress = new BuildProgressWidget(outputFile, m_Project, this);
     connect(m_BuildProgress, SIGNAL(buildWindowClosed()), this, SLOT(buildWindowClosed()));
     m_BuildProgress->setModal(true);
     m_BuildProgress->setWindowModality(Qt::ApplicationModal);
@@ -79,7 +71,7 @@ void MainWindow::buildWindowClosed()
 
 bool MainWindow::saveIfNeeded()
 {
-    if (m_Project /*&& m_Project->isModified()*/) {
+    if (m_Project && m_ProjectModified) {
         int r = QMessageBox::question(this, tr("Confirmation"), tr("Current file has been modified. Save?"),
             QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
         if (r == QMessageBox::Save)
@@ -101,22 +93,10 @@ void MainWindow::on_uiNewFileButton_clicked()
 
     uiRuleList->clear();
 
-    m_Project.reset(new BuildProject);
-    /*
-    connect(m_Project.get(), SIGNAL(updateUI()), SLOT(updateUI()));
-    connect(m_Project.get(), SIGNAL(ruleCreated(Rule*)), SLOT(onRuleCreated(Rule*)));
-    connect(m_Project.get(), SIGNAL(ruleDeleted(Rule*)), SLOT(onRuleDeleted(Rule*)));
-    */
+    m_Project.reset(new BuildProject(this));
     m_FileName = path;
 
-    /*
-    QString message = tr("Unknown error.");
-    if (!m_Project->save(m_FileName, &message)) {
-        QMessageBox::critical(this, tr("Error"), tr("Unable to create file \"%1\": %2").arg(m_FileName).arg(message));
-        m_Project.reset();
-        uiRuleList->clear();
-    }
-    */
+    on_uiSaveFileButton_clicked();
 
     updateUI();
 }
@@ -132,26 +112,22 @@ void MainWindow::on_uiOpenFileButton_clicked()
 
     uiRuleList->clear();
 
-    /*
-    m_Project.reset(new Project);
-    connect(m_Project.get(), SIGNAL(updateUI()), SLOT(updateUI()));
-    connect(m_Project.get(), SIGNAL(ruleCreated(Rule*)), SLOT(onRuleCreated(Rule*)));
-    connect(m_Project.get(), SIGNAL(ruleDeleted(Rule*)), SLOT(onRuleDeleted(Rule*)));
+    m_Project.reset(new BuildProject(this));
     m_FileName = path;
 
     m_LoadingProject = true;
-    QString message = tr("Unknown error.");
-    bool result = m_Project->load(m_FileName, &message);
-    m_LoadingProject = false;
-
-    if (!result) {
-        QMessageBox::critical(this, tr("Error"), tr("Unable to load file \"%1\": %2").arg(m_FileName).arg(message));
+    try {
+        m_Project->load(m_FileName.toLocal8Bit().constData());
+    } catch (const std::exception& e) {
+        QMessageBox::critical(this, tr("Error"), tr("Unable to load file \"%1\": %2")
+            .arg(m_FileName).arg(QString::fromUtf8(e.what())));
         m_Project.reset();
         uiRuleList->clear();
     }
-    */
+    m_LoadingProject = false;
 
     uiRuleList->setCurrentItem(uiRuleList->count() > 0 ? uiRuleList->item(0) : nullptr);
+    m_ProjectModified = false;
 
     updateUI();
 }
@@ -161,15 +137,21 @@ bool MainWindow::on_uiSaveFileButton_clicked()
     if (!m_Project)
         return true;
 
-    /*
-    QString message = tr("Unknown error.");
-    if (!m_Project->save(m_FileName, &message)) {
+    try {
+        QDir targetPath = QFileInfo(m_FileName).absolutePath();
+        m_Project->save(m_FileName.toLocal8Bit().constData(), [targetPath](const std::string& fileName) -> std::string {
+            QString name = QString::fromUtf8(fileName.c_str());
+            name = targetPath.relativeFilePath(name);
+            return name.toUtf8().constData();
+        });
+    } catch (const std::exception& e) {
         updateUI();
-        QMessageBox::critical(this, tr("Error"), tr("Unable to write file \"%1\": %2").arg(m_FileName).arg(message));
+        QMessageBox::critical(this, tr("Error"), tr("Unable to write file \"%1\": %2")
+            .arg(m_FileName).arg(QString::fromUtf8(e.what())));
         return false;
     }
-    */
 
+    m_ProjectModified = false;
     updateUI();
 
     return true;
@@ -268,28 +250,46 @@ void MainWindow::on_uiRuleList_itemSelectionChanged()
     updateUI();
 }
 
-/*
-void MainWindow::onRuleCreated(Rule* rule)
+void MainWindow::onProjectModified(BuildProject* project)
 {
-    if (!rule->listWidgetItem)
-        rule->listWidgetItem = new QListWidgetItem(rule->builder()->icon(), rule->name(), uiRuleList);
-    if (!m_BuildProgress && !m_LoadingProject)
-        uiRuleList->setCurrentItem(rule->listWidgetItem);
+    if (m_Project.get() == project)
+        m_ProjectModified = true;
+    updateUI();
 }
 
-void MainWindow::onRuleDeleted(Rule* rule)
+void MainWindow::onRuleCreated(BuildRule* rule)
 {
-    delete rule->listWidgetItem;
-    rule->listWidgetItem = nullptr;
+    QListWidgetItem* item = new QListWidgetItem(QString::fromUtf8(rule->name().c_str()), uiRuleList);
+    m_ListWidgetItems.insert({ rule, item });
+
+    if (!m_BuildProgress && !m_LoadingProject)
+        uiRuleList->setCurrentItem(item);
+
+    updateUI();
 }
-*/
+
+void MainWindow::onRuleModified(BuildRule* rule)
+{
+    m_ProjectModified = true;
+    updateUI();
+}
+
+void MainWindow::onRuleDestroyed(BuildRule* rule)
+{
+    auto it = m_ListWidgetItems.find(rule);
+    if (it != m_ListWidgetItems.end()) {
+        delete it->second;
+        m_ListWidgetItems.erase(it);
+    }
+    updateUI();
+}
 
 void MainWindow::updateUI()
 {
     QList<QListWidgetItem*> selectedRules = uiRuleList->selectedItems();
 
     uiRuleList->setEnabled(m_Project != nullptr);
-    uiSaveFileButton->setEnabled(m_Project != nullptr/* && m_Project->isModified()*/);
+    uiSaveFileButton->setEnabled(m_Project != nullptr && m_ProjectModified);
     uiAddRuleButton->setEnabled(m_Project != nullptr);
     uiRemoveRuleButton->setEnabled(m_Project != nullptr && selectedRules.count() > 0);
     uiDraftBuildButton->setEnabled(m_Project != nullptr);

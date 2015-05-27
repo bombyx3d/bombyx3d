@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  */
 #include "BuildProgressWidget.h"
+#include "../core/BuildManager.h"
 #include <exception>
 #include <atomic>
 #include <QFileInfo>
@@ -27,53 +28,57 @@
 #include <QMessageBox>
 #include <QThread>
 
-class BuildProgressWidget::BuildThread : public QThread//, private BuildState
+class BuildProgressWidget::Listener : public QObject, public BuildManager::Notifications
 {
     Q_OBJECT
 
-public:
-    explicit BuildThread(const BuildProjectPtr& project, BuildProgressWidget* widget)
-        : m_Widget(widget)
-        , m_Project(project)
-        , m_ShouldAbort(false)
-    {
-    }
-
-    void run() override
-    {
-        // FIXME
-
-        if (shouldAbort())
-            emit buildAborted();
-        else
-            emit buildSucceeded();
-
-        return;
-    }
-
-    bool shouldAbort() const /*final override*/ { return m_ShouldAbort.load(); }
-    void abort() { m_ShouldAbort.store(true); }
-
 signals:
-    void buildSucceeded();
-    void buildFailed();
-    void buildAborted();
+    void buildSucceeded() final override;
+    void buildFailed() final override;
+    void buildAborted() final override;
 
-    void setStatus(const QString& message) /*final override*/;
-    void setProgress(float progress);
+    void setStatus(const QString&);
+    void setProgress(double current, double maximum) final override;
 
-    void printInfo(const QString& message) /*final override*/;
-    void printWarning(const QString& message) /*final override*/;
-    void printError(const QString& message) /*final override*/;
+    void printVerbose(const QString&);
+    void printInfo(const QString&);
+    void printWarning(const QString&);
+    void printError(const QString&);
 
 private:
-    BuildProgressWidget* m_Widget;
-    BuildProjectPtr m_Project;
-    std::atomic<bool> m_ShouldAbort;
+    void printVerbose(const std::string& message) final override
+    {
+        printVerbose(QString::fromUtf8(message.c_str()));
+    }
+
+    void printInfo(const std::string& message) final override
+    {
+        printInfo(QString::fromUtf8(message.c_str()));
+    }
+
+    void printWarning(const std::string& message) final override
+    {
+        printWarning(QString::fromUtf8(message.c_str()));
+    }
+
+    void printError(const std::string& message) final override
+    {
+        printError(QString::fromUtf8(message.c_str()));
+    }
+
+    void setStatus(BuildManager::Status status) final override
+    {
+        switch (status)
+        {
+        case BuildManager::AnalyzingDependencies: setStatus(tr("Analyzing dependencies...")); break;
+        case BuildManager::CopyingUnmodifiedFiles: setStatus(tr("Copying unmodified files...")); break;
+        case BuildManager::Finishing: setStatus(tr("Finishing...")); break;
+        }
+    }
 };
 
 
-BuildProgressWidget::BuildProgressWidget(const BuildProjectPtr& project, QWidget* parent)
+BuildProgressWidget::BuildProgressWidget(const std::string& outputFile, const BuildProjectPtr& project, QWidget* parent)
     : QDialog(parent)
 {
     setupUi(this);
@@ -86,23 +91,25 @@ BuildProgressWidget::BuildProgressWidget(const BuildProjectPtr& project, QWidget
 
     adjustSize();
 
-    m_BuildThread = new BuildThread(project, this);
-    connect(m_BuildThread, SIGNAL(buildSucceeded()), SLOT(buildSucceeded()));
-    connect(m_BuildThread, SIGNAL(buildFailed()), SLOT(buildFailed()));
-    connect(m_BuildThread, SIGNAL(buildAborted()), SLOT(buildAborted()));
-    connect(m_BuildThread, SIGNAL(setStatus(const QString&)), SLOT(setStatusText(const QString&)));
-    connect(m_BuildThread, SIGNAL(setProgress(float)), SLOT(setProgress(float)));
-    connect(m_BuildThread, SIGNAL(printInfo(const QString&)), SLOT(printInfo(const QString&)));
-    connect(m_BuildThread, SIGNAL(printWarning(const QString&)), SLOT(printWarning(const QString&)));
-    connect(m_BuildThread, SIGNAL(printError(const QString&)), SLOT(printError(const QString&)));
-    m_BuildThread->start();
+    m_Listener.reset(new Listener);
+    connect(m_Listener.get(), SIGNAL(buildSucceeded()), SLOT(buildSucceeded()), Qt::QueuedConnection);
+    connect(m_Listener.get(), SIGNAL(buildFailed()), SLOT(buildFailed()), Qt::QueuedConnection);
+    connect(m_Listener.get(), SIGNAL(buildAborted()), SLOT(buildAborted()), Qt::QueuedConnection);
+    connect(m_Listener.get(), SIGNAL(setStatus(const QString&)), SLOT(setStatusText(const QString&)), Qt::QueuedConnection);
+    connect(m_Listener.get(), SIGNAL(setProgress(double, double)), SLOT(setProgress(double, double)), Qt::QueuedConnection);
+    connect(m_Listener.get(), SIGNAL(printInfo(const QString&)), SLOT(printInfo(const QString&)), Qt::QueuedConnection);
+    connect(m_Listener.get(), SIGNAL(printWarning(const QString&)), SLOT(printWarning(const QString&)), Qt::QueuedConnection);
+    connect(m_Listener.get(), SIGNAL(printError(const QString&)), SLOT(printError(const QString&)), Qt::QueuedConnection);
+
+    m_BuildManager = std::make_shared<BuildManager>();
+    m_BuildManager->startBuild(outputFile, project.get(), BuildManager::INCREMENTAL_DRAFT_BUILD, m_Listener.get());
 }
 
 BuildProgressWidget::~BuildProgressWidget()
 {
-    m_BuildThread->abort();
-    m_BuildThread->wait();
-    delete m_BuildThread;
+    m_BuildManager->requestAbort();
+    m_BuildManager->wait();
+    m_BuildManager.reset();
 }
 
 void BuildProgressWidget::closeEvent(QCloseEvent* event)
@@ -167,11 +174,15 @@ void BuildProgressWidget::setStatusText(const QString& message)
     }
 }
 
-void BuildProgressWidget::setProgress(float value)
+void BuildProgressWidget::setProgress(double value, double maximum)
 {
     if (uiAbortButton->isVisible() && uiAbortButton->isEnabled()) {
-        uiProgressBar->setRange(0, 100);
-        uiProgressBar->setValue(int(value * 100.0f));
+        if (maximum <= 0) {
+            uiProgressBar->setRange(0, 0);
+        } else {
+            uiProgressBar->setRange(0, 100);
+            uiProgressBar->setValue(int(value / maximum * 100));
+        }
     }
 }
 
@@ -206,7 +217,7 @@ void BuildProgressWidget::on_uiAbortButton_clicked()
         uiAbortButton->setEnabled(false);
         uiStatusLabel->setText(tr("Aborting..."));
         uiProgressBar->setRange(0, 0);
-        m_BuildThread->abort();
+        m_BuildManager->requestAbort();
     }
 }
 

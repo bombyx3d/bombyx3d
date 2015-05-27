@@ -25,6 +25,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <functional>
 
 class BuildProject
 {
@@ -48,6 +49,7 @@ public:
     void addRule(const BuildRulePtr& rule);
 
     void load(const std::string& file, BuildRule::Listener* ruleListener = nullptr);
+    void save(const std::string& file, const std::function<std::string(const std::string&)>& remapFileName);
 
 private:
     Listener* m_Listener;

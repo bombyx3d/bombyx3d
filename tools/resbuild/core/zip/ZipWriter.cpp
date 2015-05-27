@@ -41,7 +41,7 @@ ZipWriter::~ZipWriter()
 bool ZipWriter::open(const std::string& fileName)
 {
     m_FileName = fileName;
-    m_ZipFile = zipOpen64(fileName.c_str(), APPEND_STATUS_ADDINZIP);
+    m_ZipFile = zipOpen64(fileName.c_str(), APPEND_STATUS_CREATE);
     return m_ZipFile != nullptr;
 }
 

@@ -23,12 +23,14 @@
 #pragma once
 #include "ui_MainWindow.h"
 #include "../core/project/BuildProject.h"
+#include "../core/project/BuildRule.h"
 #include <memory>
+#include <unordered_map>
 #include <QWidget>
 
 class BuildProgressWidget;
 
-class MainWindow : public QWidget, private Ui_MainWindow
+class MainWindow : public QWidget, private Ui_MainWindow, public BuildProject::Listener, public BuildRule::Listener
 {
     Q_OBJECT
 
@@ -45,8 +47,10 @@ private:
     BuildProjectPtr m_Project;
     BuildProgressWidget* m_BuildProgress = nullptr;
     bool m_LoadingProject = false;
+    bool m_ProjectModified = false;
     QWidget* m_CurrentEditor = nullptr;
     QString m_FileName;
+    std::unordered_map<BuildRule*, QListWidgetItem*> m_ListWidgetItems;
 
     Q_SLOT void buildWindowClosed();
 
@@ -65,10 +69,10 @@ private:
 
     Q_SLOT void on_uiRuleList_itemSelectionChanged();
 
-    /*
-    Q_SLOT void onRuleCreated(Rule* rule);
-    Q_SLOT void onRuleDeleted(Rule* rule);
-    */
+    void onProjectModified(BuildProject* project) final override;
+    void onRuleCreated(BuildRule* rule) final override;
+    void onRuleModified(BuildRule* rule) final override;
+    void onRuleDestroyed(BuildRule* rule) final override;
 
     Q_SLOT void updateUI();
 };

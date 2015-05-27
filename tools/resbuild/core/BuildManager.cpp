@@ -269,6 +269,7 @@ void BuildManager::managementThread()
 
         if (zipReader.isOpen())
             zipReader.close();
+        zipWriter.close();
 
         remove(m_OutputFile.c_str());
 

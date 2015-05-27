@@ -24,7 +24,7 @@ set(source_files
     project/BuildRule.cpp
     project/BuildRule.h
     project/BuildProject.cpp
-    project/BuildProject.cpp
+    project/BuildProject.h
     zip/ZipExtraField.cpp
     zip/ZipExtraField.h
     zip/ZipReader.cpp

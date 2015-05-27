@@ -22,6 +22,7 @@
 
 #pragma once
 #include <memory>
+#include <functional>
 #include <string>
 #include <vector>
 #include <cstdint>
@@ -40,7 +41,9 @@ public:
     {
     public:
         virtual ~Listener() = default;
+        virtual void onRuleCreated(BuildRule*) {}
         virtual void onRuleModified(BuildRule*) {}
+        virtual void onRuleDestroyed(BuildRule*) {}
     };
 
     static const std::string NAME_ATTRIBUTE;
@@ -49,6 +52,8 @@ public:
 
     explicit BuildRule(Listener* listener = nullptr);
     virtual ~BuildRule();
+
+    virtual const std::string& className() const = 0;
 
     const std::string& name() const { return m_Name; }
     void setName(const std::string& name);
@@ -59,6 +64,8 @@ public:
     std::string settingsHash() const;
 
     virtual void load(TiXmlElement* element);
+    virtual void save(TiXmlElement* element, const std::function<std::string(const std::string&)>& remapFileName);
+    
     virtual bool build(BuildManager* buildManager) = 0;
 
     static BuildRulePtr createBuildRule(const std::string& name, Listener* listener = nullptr);

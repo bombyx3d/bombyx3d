@@ -22,7 +22,9 @@
 
 #pragma once
 #include "ui_BuildProgressWidget.h"
+#include "../core/BuildManager.h"
 #include "../core/project/BuildProject.h"
+#include <memory>
 #include <QDialog>
 
 class BuildProgressWidget : public QDialog, private Ui_BuildProgressWidget
@@ -30,7 +32,7 @@ class BuildProgressWidget : public QDialog, private Ui_BuildProgressWidget
     Q_OBJECT
 
 public:
-    explicit BuildProgressWidget(const BuildProjectPtr& project, QWidget* parent = nullptr);
+    BuildProgressWidget(const std::string& outputFile, const BuildProjectPtr& project, QWidget* parent = nullptr);
     ~BuildProgressWidget();
 
 signals:
@@ -40,9 +42,10 @@ protected:
     void closeEvent(QCloseEvent* event) override;
 
 private:
-    class BuildThread;
+    class Listener;
 
-    BuildThread* m_BuildThread;
+    std::unique_ptr<Listener> m_Listener;
+    BuildManagerPtr m_BuildManager;
     bool m_CloseAfterAbort = false;
     bool m_HasWarnings = false;
 
@@ -51,7 +54,7 @@ private:
     Q_SLOT void buildAborted();
 
     Q_SLOT void setStatusText(const QString& message);
-    Q_SLOT void setProgress(float value);
+    Q_SLOT void setProgress(double value, double maximum);
 
     Q_SLOT void printInfo(const QString& message);
     Q_SLOT void printWarning(const QString& message);

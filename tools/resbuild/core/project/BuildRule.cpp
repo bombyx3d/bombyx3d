@@ -31,10 +31,14 @@ const std::string BuildRule::OUTPUT_FILE_ELEMENT = "OutputFile";
 BuildRule::BuildRule(Listener* listener)
     : m_Listener(listener)
 {
+    if (m_Listener)
+        m_Listener->onRuleCreated(this);
 }
 
 BuildRule::~BuildRule()
 {
+    if (m_Listener)
+        m_Listener->onRuleDestroyed(this);
 }
 
 void BuildRule::setName(const std::string& name)
@@ -95,6 +99,27 @@ void BuildRule::load(TiXmlElement* element)
         if (!text)
             text = "";
         m_OutputFiles.push_back(element->GetDocument()->ValueStr() + text);
+    }
+}
+
+void BuildRule::save(TiXmlElement* element, const std::function<std::string(const std::string&)>& remapFileName)
+{
+    element->SetAttribute(NAME_ATTRIBUTE, m_Name);
+
+    for (const auto& inputFile : m_InputFiles) {
+        TiXmlElement* fileElement = new TiXmlElement(INPUT_FILE_ELEMENT);
+        element->LinkEndChild(fileElement);
+
+        TiXmlText* text = new TiXmlText(remapFileName(inputFile));
+        fileElement->LinkEndChild(text);
+    }
+
+    for (const auto& outputFile : m_OutputFiles) {
+        TiXmlElement* fileElement = new TiXmlElement(OUTPUT_FILE_ELEMENT);
+        element->LinkEndChild(fileElement);
+
+        TiXmlText* text = new TiXmlText(outputFile);
+        fileElement->LinkEndChild(text);
     }
 }
 

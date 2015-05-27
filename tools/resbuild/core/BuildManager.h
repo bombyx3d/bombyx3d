@@ -98,3 +98,5 @@ private:
     BuildManager(const BuildManager&) = delete;
     BuildManager& operator=(const BuildManager&) = delete;
 };
+
+using BuildManagerPtr = std::shared_ptr<BuildManager>;

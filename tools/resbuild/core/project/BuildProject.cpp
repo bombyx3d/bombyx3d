@@ -21,8 +21,11 @@
  */
 #include "BuildProject.h"
 #include <tinyxml.h>
+#include <sys/stat.h>
 #include <sstream>
 #include <stdexcept>
+#include <cstdio>
+#include <cerrno>
 
 const std::string BuildProject::ROOT_ELEMENT = "ResBuildProject";
 const std::string BuildProject::RULE_ELEMENT = "Rule";
@@ -100,5 +103,50 @@ void BuildProject::load(const std::string& file, BuildRule::Listener* ruleListen
 
         rule->load(element);
         m_Rules.emplace_back(std::move(rule));
+    }
+}
+
+void BuildProject::save(const std::string& file, const std::function<std::string(const std::string&)>& remapFileName)
+{
+    TiXmlDocument doc;
+
+    doc.LinkEndChild(new TiXmlDeclaration("1.0", "utf-8", ""));
+
+    TiXmlElement* rootElement = new TiXmlElement(ROOT_ELEMENT);
+    doc.LinkEndChild(rootElement);
+
+    for (const auto& rule : m_Rules) {
+        TiXmlElement* ruleElement = new TiXmlElement(RULE_ELEMENT);
+        rootElement->LinkEndChild(ruleElement);
+
+        ruleElement->SetAttribute(CLASS_ATTRIBUTE, rule->className());
+        rule->save(ruleElement, remapFileName);
+    }
+
+    struct stat st;
+    bool oldFileExists = stat(file.c_str(), &st) == 0;
+
+    if (!oldFileExists) {
+        if (!doc.SaveFile(file)) {
+            std::stringstream ss;
+            ss << "Unable to write file \"" << file << "\".";
+            throw std::runtime_error(ss.str());
+        }
+    } else {
+        std::string backupFile = file + "~";
+        remove(backupFile.c_str());
+
+        if (rename(file.c_str(), backupFile.c_str()) < 0) {
+            int err = errno;
+            std::stringstream ss;
+            ss << "Unable to rename file \"" << file << "\" to \"" << backupFile << "\".";
+            throw std::runtime_error(ss.str());
+        }   
+
+        if (!doc.SaveFile(file)) {
+            std::stringstream ss;
+            ss << "Unable to write file \"" << file << "\" (old file was renamed to \"" << backupFile << "\").";
+            throw std::runtime_error(ss.str());
+        }
     }
 }
