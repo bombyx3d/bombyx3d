@@ -32,7 +32,7 @@ endif()
 file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" *.c *.h)
 z_set_source_groups(${source_files})
 
-add_library(libsqlite3 STATIC sqlite3.c sqlite3.h sqlite3ext.h)
+add_library(libsqlite3 STATIC EXCLUDE_FROM_ALL sqlite3.c sqlite3.h sqlite3ext.h)
 set_target_properties(libsqlite3 PROPERTIES OUTPUT_NAME "sqlite3")
 target_include_directories(libsqlite3 BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_link_libraries(libsqlite3 ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS})

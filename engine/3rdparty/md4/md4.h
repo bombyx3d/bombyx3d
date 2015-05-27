@@ -28,6 +28,10 @@
 #elif !defined(_MD4_H)
 #define _MD4_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Any 32-bit or wider unsigned integer data type will do */
 typedef unsigned int MD4_u32plus;
 
@@ -41,5 +45,9 @@ typedef struct {
 extern void MD4_Init(MD4_CTX *ctx);
 extern void MD4_Update(MD4_CTX *ctx, const void *data, unsigned long size);
 extern void MD4_Final(unsigned char *result, MD4_CTX *ctx);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

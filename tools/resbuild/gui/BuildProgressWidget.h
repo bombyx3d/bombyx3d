@@ -22,8 +22,7 @@
 
 #pragma once
 #include "ui_BuildProgressWidget.h"
-#include "Project.h"
-#include "BuildDirectory.h"
+#include "../core/project/BuildProject.h"
 #include <QDialog>
 
 class BuildProgressWidget : public QDialog, private Ui_BuildProgressWidget
@@ -31,7 +30,7 @@ class BuildProgressWidget : public QDialog, private Ui_BuildProgressWidget
     Q_OBJECT
 
 public:
-    explicit BuildProgressWidget(const BuildDirectoryPtr& buildDir, const Project* project, QWidget* parent = nullptr);
+    explicit BuildProgressWidget(const BuildProjectPtr& project, QWidget* parent = nullptr);
     ~BuildProgressWidget();
 
 signals:
@@ -44,7 +43,6 @@ private:
     class BuildThread;
 
     BuildThread* m_BuildThread;
-    BuildDirectoryPtr m_BuildDirectory;
     bool m_CloseAfterAbort = false;
     bool m_HasWarnings = false;
 

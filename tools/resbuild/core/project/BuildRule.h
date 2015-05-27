@@ -26,27 +26,50 @@
 #include <vector>
 #include <cstdint>
 #include <md4.h>
+#include <tinyxml.h>
 
 class BuildManager;
+
+class BuildRule;
+using BuildRulePtr = std::shared_ptr<BuildRule>;
 
 class BuildRule
 {
 public:
-    BuildRule();
+    class Listener
+    {
+    public:
+        virtual ~Listener() = default;
+        virtual void onRuleModified(BuildRule*) {}
+    };
+
+    static const std::string NAME_ATTRIBUTE;
+    static const std::string INPUT_FILE_ELEMENT;
+    static const std::string OUTPUT_FILE_ELEMENT;
+
+    explicit BuildRule(Listener* listener = nullptr);
     virtual ~BuildRule();
 
     const std::string& name() const { return m_Name; }
-    void setName(const std::string& name) { m_Name = name; }
+    void setName(const std::string& name);
 
     const std::vector<std::string>& inputFiles() const { return m_InputFiles; }
     const std::vector<std::string>& outputFiles() const { return m_OutputFiles; }
 
     std::string settingsHash() const;
 
+    virtual void load(TiXmlElement* element);
     virtual bool build(BuildManager* buildManager) = 0;
 
+    static BuildRulePtr createBuildRule(const std::string& name, Listener* listener = nullptr);
+
 protected:
+    void notifyListener();
+
+    virtual void clearInputFiles();
     virtual void addInputFile(const std::string& file);
+
+    virtual void clearOutputFiles();
     virtual void addOutputFile(const std::string& file);
 
     virtual void calcSettingsHash(MD4_CTX* context) const = 0;
@@ -56,9 +79,11 @@ protected:
     static void hashStringVector(MD4_CTX* context, const std::vector<std::string>& vec);
 
 private:
+    Listener* m_Listener;
     std::string m_Name;
     std::vector<std::string> m_InputFiles;
     std::vector<std::string> m_OutputFiles;
-};
 
-typedef std::shared_ptr<BuildRule> BuildRulePtr;
+    BuildRule(const BuildRule&) = delete;
+    BuildRule& operator=(const BuildRule&) = delete;
+};

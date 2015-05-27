@@ -37,7 +37,6 @@ set(CMAKE_AUTORCC YES)
 set(CMAKE_INCLUDE_CURRENT_DIR YES)
 
 set(ui_files
-    builders/BinaryFileBuilder.ui
     BuildProgressWidget.ui
     MainWindow.ui
     NewRuleDialog.ui
@@ -46,12 +45,6 @@ set(ui_files
 set(source_files
     ${ui_files}
     res/resources.qrc
-    builders/BinaryFileBuilder.cpp
-    builders/BinaryFileBuilder.h
-    BuildDirectory.cpp
-    BuildDirectory.h
-    Builder.cpp
-    Builder.h
     BuildProgressWidget.cpp
     BuildProgressWidget.h
     FileUtil.cpp
@@ -61,10 +54,6 @@ set(source_files
     NewRuleDialog.cpp
     NewRuleDialog.h
     main.cpp
-    Project.cpp
-    Project.h
-    Rule.cpp
-    Rule.h
 )
 
 compile_ui_files(compiled_ui_files ${ui_files})
@@ -75,4 +64,4 @@ z_set_source_groups(${source_files})
 add_executable(ResBuildGui ${compiled_ui_files} ${source_files})
 
 set_target_properties(ResBuildGui PROPERTIES CXX_STANDARD 11)
-target_link_libraries(ResBuildGui libresbuild libsqlite3 ${QT_LIBRARIES})
+target_link_libraries(ResBuildGui libresbuild ${QT_LIBRARIES})

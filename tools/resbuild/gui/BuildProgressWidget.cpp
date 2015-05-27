@@ -20,21 +20,20 @@
  * THE SOFTWARE.
  */
 #include "BuildProgressWidget.h"
-#include "Builder.h"
 #include <exception>
 #include <atomic>
+#include <QFileInfo>
 #include <QCloseEvent>
 #include <QMessageBox>
 #include <QThread>
 
-class BuildProgressWidget::BuildThread : public QThread, private BuildState
+class BuildProgressWidget::BuildThread : public QThread//, private BuildState
 {
     Q_OBJECT
 
 public:
-    explicit BuildThread(const BuildDirectoryPtr& buildDir, const Project* project, BuildProgressWidget* widget)
+    explicit BuildThread(const BuildProjectPtr& project, BuildProgressWidget* widget)
         : m_Widget(widget)
-        , m_BuildDirectory(buildDir)
         , m_Project(project)
         , m_ShouldAbort(false)
     {
@@ -42,41 +41,7 @@ public:
 
     void run() override
     {
-        try {
-            std::vector<Rule*> rulesToBuild;
-            rulesToBuild.reserve(m_Project->rules().size());
-
-            for (const auto& rule : m_Project->rules()) {
-                if (shouldAbort())
-                    break;
-
-                QList<QString> outputFiles = rule->builder()->outputFiles();
-                QList<QFileInfo> inputFiles = rule->builder()->inputFiles();
-                if (m_BuildDirectory->shouldBuild(inputFiles, outputFiles))
-                    rulesToBuild.push_back(rule.get());
-            }
-
-            double count = float(rulesToBuild.size());
-            double index = 0;
-            for (const auto& rule : rulesToBuild) {
-                if (shouldAbort())
-                    break;
-
-                ++index;
-                emit setStatus(tr("Building \"%1\"...").arg(rule->name()));
-                emit setProgress(float(index / count));
-
-                if (!rule->builder()->build(this)) {
-                    printError(tr("Unable to build rule \"%1\".").arg(rule->name()));
-                    emit buildFailed();
-                    return;
-                }
-            }
-        } catch (const std::exception& e) {
-            printError(QString::fromLocal8Bit(e.what()));
-            emit buildFailed();
-            return;
-        }
+        // FIXME
 
         if (shouldAbort())
             emit buildAborted();
@@ -86,7 +51,7 @@ public:
         return;
     }
 
-    bool shouldAbort() const final override { return m_ShouldAbort.load(); }
+    bool shouldAbort() const /*final override*/ { return m_ShouldAbort.load(); }
     void abort() { m_ShouldAbort.store(true); }
 
 signals:
@@ -94,24 +59,22 @@ signals:
     void buildFailed();
     void buildAborted();
 
-    void setStatus(const QString& message) final override;
+    void setStatus(const QString& message) /*final override*/;
     void setProgress(float progress);
 
-    void printInfo(const QString& message) final override;
-    void printWarning(const QString& message) final override;
-    void printError(const QString& message) final override;
+    void printInfo(const QString& message) /*final override*/;
+    void printWarning(const QString& message) /*final override*/;
+    void printError(const QString& message) /*final override*/;
 
 private:
     BuildProgressWidget* m_Widget;
-    BuildDirectoryPtr m_BuildDirectory;
-    const Project* m_Project;
+    BuildProjectPtr m_Project;
     std::atomic<bool> m_ShouldAbort;
 };
 
 
-BuildProgressWidget::BuildProgressWidget(const BuildDirectoryPtr& buildDir, const Project* project, QWidget* parent)
+BuildProgressWidget::BuildProgressWidget(const BuildProjectPtr& project, QWidget* parent)
     : QDialog(parent)
-    , m_BuildDirectory(buildDir)
 {
     setupUi(this);
 
@@ -123,7 +86,7 @@ BuildProgressWidget::BuildProgressWidget(const BuildDirectoryPtr& buildDir, cons
 
     adjustSize();
 
-    m_BuildThread = new BuildThread(buildDir, project, this);
+    m_BuildThread = new BuildThread(project, this);
     connect(m_BuildThread, SIGNAL(buildSucceeded()), SLOT(buildSucceeded()));
     connect(m_BuildThread, SIGNAL(buildFailed()), SLOT(buildFailed()));
     connect(m_BuildThread, SIGNAL(buildAborted()), SLOT(buildAborted()));

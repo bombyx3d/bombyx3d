@@ -21,8 +21,15 @@
  */
 #include "BuildRule.h"
 #include <sstream>
+#include <unordered_map>
+#include <functional>
 
-BuildRule::BuildRule()
+const std::string BuildRule::NAME_ATTRIBUTE = "name";
+const std::string BuildRule::INPUT_FILE_ELEMENT = "InputFile";
+const std::string BuildRule::OUTPUT_FILE_ELEMENT = "OutputFile";
+
+BuildRule::BuildRule(Listener* listener)
+    : m_Listener(listener)
 {
 }
 
@@ -30,14 +37,12 @@ BuildRule::~BuildRule()
 {
 }
 
-void BuildRule::addInputFile(const std::string& file)
+void BuildRule::setName(const std::string& name)
 {
-    m_InputFiles.emplace_back(file);
-}
-
-void BuildRule::addOutputFile(const std::string& file)
-{
-    m_OutputFiles.emplace_back(file);
+    if (m_Name != name) {
+        m_Name = name;
+        notifyListener();
+    }
 }
 
 std::string BuildRule::settingsHash() const
@@ -62,6 +67,78 @@ std::string BuildRule::settingsHash() const
     }
 
     return std::string(result, sizeof(result));
+}
+
+void BuildRule::load(TiXmlElement* element)
+{
+    m_Name.clear();
+    m_InputFiles.clear();
+    m_OutputFiles.clear();
+
+    TiXmlAttribute* attribute = element->GetAttribute(NAME_ATTRIBUTE);
+    if (attribute)
+        m_Name = attribute->ValueStr();
+
+    for (TiXmlElement* e = element->FirstChildElement(INPUT_FILE_ELEMENT); e;
+        e = e->NextSiblingElement(INPUT_FILE_ELEMENT))
+    {
+        const char* text = e->GetText();
+        if (!text)
+            text = "";
+        m_InputFiles.push_back(element->GetDocument()->ValueStr() + text);
+    }
+
+    for (TiXmlElement* e = element->FirstChildElement(OUTPUT_FILE_ELEMENT); e;
+        e = e->NextSiblingElement(OUTPUT_FILE_ELEMENT))
+    {
+        const char* text = e->GetText();
+        if (!text)
+            text = "";
+        m_OutputFiles.push_back(element->GetDocument()->ValueStr() + text);
+    }
+}
+
+BuildRulePtr BuildRule::createBuildRule(const std::string& name, Listener* listener)
+{
+    static std::unordered_map<std::string, std::function<BuildRulePtr(Listener*)>> rules = {
+    };
+
+    auto it = rules.find(name);
+    return (it != rules.end() ? it->second(listener) : nullptr);
+}
+
+void BuildRule::notifyListener()
+{
+    if (m_Listener)
+        m_Listener->onRuleModified(this);
+}
+
+void BuildRule::clearInputFiles()
+{
+    if (!m_InputFiles.empty()) {
+        m_InputFiles.clear();
+        notifyListener();
+    }
+}
+
+void BuildRule::addInputFile(const std::string& file)
+{
+    m_InputFiles.emplace_back(file);
+    notifyListener();
+}
+
+void BuildRule::clearOutputFiles()
+{
+    if (!m_OutputFiles.empty()) {
+        m_OutputFiles.clear();
+        notifyListener();
+    }
+}
+
+void BuildRule::addOutputFile(const std::string& file)
+{
+    m_OutputFiles.emplace_back(file);
+    notifyListener();
 }
 
 void BuildRule::hashSizeT(MD4_CTX* context, size_t value)

@@ -22,7 +22,6 @@
 #include "MainWindow.h"
 #include "BuildProgressWidget.h"
 #include "NewRuleDialog.h"
-#include "Builder.h"
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QFileDialog>
@@ -47,14 +46,16 @@ void MainWindow::build(bool draft)
     QDir targetPath = QFileInfo(m_FileName).absoluteDir();
     QString projectName = QFileInfo(m_FileName).fileName();
 
+    /*
     BuildDirectoryPtr buildDirectory = std::make_shared<BuildDirectory>();
     QString errorMessage = tr("Unknown error.");
     if (!buildDirectory->init(targetPath, projectName, &errorMessage)) {
         QMessageBox::critical(this, tr("Error"), errorMessage);
         return;
     }
+    */
 
-    m_BuildProgress = new BuildProgressWidget(buildDirectory, m_Project.get(), this);
+    m_BuildProgress = new BuildProgressWidget(m_Project, this);
     connect(m_BuildProgress, SIGNAL(buildWindowClosed()), this, SLOT(buildWindowClosed()));
     m_BuildProgress->setModal(true);
     m_BuildProgress->setWindowModality(Qt::ApplicationModal);
@@ -78,7 +79,7 @@ void MainWindow::buildWindowClosed()
 
 bool MainWindow::saveIfNeeded()
 {
-    if (m_Project && m_Project->isModified()) {
+    if (m_Project /*&& m_Project->isModified()*/) {
         int r = QMessageBox::question(this, tr("Confirmation"), tr("Current file has been modified. Save?"),
             QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
         if (r == QMessageBox::Save)
@@ -100,18 +101,22 @@ void MainWindow::on_uiNewFileButton_clicked()
 
     uiRuleList->clear();
 
-    m_Project.reset(new Project);
+    m_Project.reset(new BuildProject);
+    /*
     connect(m_Project.get(), SIGNAL(updateUI()), SLOT(updateUI()));
     connect(m_Project.get(), SIGNAL(ruleCreated(Rule*)), SLOT(onRuleCreated(Rule*)));
     connect(m_Project.get(), SIGNAL(ruleDeleted(Rule*)), SLOT(onRuleDeleted(Rule*)));
+    */
     m_FileName = path;
 
+    /*
     QString message = tr("Unknown error.");
     if (!m_Project->save(m_FileName, &message)) {
         QMessageBox::critical(this, tr("Error"), tr("Unable to create file \"%1\": %2").arg(m_FileName).arg(message));
         m_Project.reset();
         uiRuleList->clear();
     }
+    */
 
     updateUI();
 }
@@ -127,6 +132,7 @@ void MainWindow::on_uiOpenFileButton_clicked()
 
     uiRuleList->clear();
 
+    /*
     m_Project.reset(new Project);
     connect(m_Project.get(), SIGNAL(updateUI()), SLOT(updateUI()));
     connect(m_Project.get(), SIGNAL(ruleCreated(Rule*)), SLOT(onRuleCreated(Rule*)));
@@ -143,6 +149,7 @@ void MainWindow::on_uiOpenFileButton_clicked()
         m_Project.reset();
         uiRuleList->clear();
     }
+    */
 
     uiRuleList->setCurrentItem(uiRuleList->count() > 0 ? uiRuleList->item(0) : nullptr);
 
@@ -154,12 +161,14 @@ bool MainWindow::on_uiSaveFileButton_clicked()
     if (!m_Project)
         return true;
 
+    /*
     QString message = tr("Unknown error.");
     if (!m_Project->save(m_FileName, &message)) {
         updateUI();
         QMessageBox::critical(this, tr("Error"), tr("Unable to write file \"%1\": %2").arg(m_FileName).arg(message));
         return false;
     }
+    */
 
     updateUI();
 
@@ -173,9 +182,11 @@ void MainWindow::on_uiAddRuleButton_clicked()
 
     NewRuleDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
+        /*
         Builder::FactoryPtr factory = dialog.selectedFactory();
         if (factory)
             m_Project->createRule(factory->createBuilder());
+        */
     }
 
     updateUI();
@@ -196,8 +207,10 @@ void MainWindow::on_uiRemoveRuleButton_clicked()
     if (r == QMessageBox::No)
         return;
 
+    /*
     for (int i = 0; i < selectedRules.count(); i++)
         m_Project->removeRule(selectedRules[i]);
+    */
 
     updateUI();
 }
@@ -232,6 +245,7 @@ void MainWindow::on_uiRuleList_itemSelectionChanged()
     if (!m_BuildProgress && !m_LoadingProject) {
         QList<QListWidgetItem*> selectedRules = uiRuleList->selectedItems();
         if (selectedRules.count() == 1) {
+            /*
             Rule* rule = m_Project->ruleForItem(selectedRules[0]);
             if (rule) {
                 m_CurrentEditor = rule->createEditor(uiContentsArea);
@@ -247,12 +261,14 @@ void MainWindow::on_uiRuleList_itemSelectionChanged()
                     }
                 }
             }
+            */
         }
     }
 
     updateUI();
 }
 
+/*
 void MainWindow::onRuleCreated(Rule* rule)
 {
     if (!rule->listWidgetItem)
@@ -266,13 +282,14 @@ void MainWindow::onRuleDeleted(Rule* rule)
     delete rule->listWidgetItem;
     rule->listWidgetItem = nullptr;
 }
+*/
 
 void MainWindow::updateUI()
 {
     QList<QListWidgetItem*> selectedRules = uiRuleList->selectedItems();
 
     uiRuleList->setEnabled(m_Project != nullptr);
-    uiSaveFileButton->setEnabled(m_Project != nullptr && m_Project->isModified());
+    uiSaveFileButton->setEnabled(m_Project != nullptr/* && m_Project->isModified()*/);
     uiAddRuleButton->setEnabled(m_Project != nullptr);
     uiRemoveRuleButton->setEnabled(m_Project != nullptr && selectedRules.count() > 0);
     uiDraftBuildButton->setEnabled(m_Project != nullptr);

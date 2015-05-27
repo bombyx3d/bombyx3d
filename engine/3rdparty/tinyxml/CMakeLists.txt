@@ -20,22 +20,15 @@
 # THE SOFTWARE.
 #
 
-set(source_files
-    project/BuildRule.cpp
-    project/BuildRule.h
-    project/BuildProject.cpp
-    project/BuildProject.cpp
-    zip/ZipExtraField.cpp
-    zip/ZipExtraField.h
-    zip/ZipReader.cpp
-    zip/ZipReader.h
-    zip/ZipWriter.cpp
-    zip/ZipWriter.h
-    BuildManager.cpp
-    BuildManager.h
-)
+cmake_minimum_required(VERSION 3.2)
+project(tinyxml)
 
-z_set_source_groups(${source_files})
-add_library(libresbuild STATIC EXCLUDE_FROM_ALL ${source_files})
-set_target_properties(libresbuild PROPERTIES CXX_STANDARD 11)
-target_link_libraries(libresbuild libtinyxml libzip libunzip libmd4)
+if(MSVC)
+    add_definitions(/wd4458)
+endif()
+
+file(GLOB root_files *.cpp *.h)
+source_group("Source Files" FILES ${root_files})
+
+add_library(libtinyxml STATIC ${root_files})
+target_include_directories(libtinyxml BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

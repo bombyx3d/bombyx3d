@@ -23,17 +23,38 @@
 #pragma once
 #include "BuildRule.h"
 #include <vector>
+#include <string>
+#include <memory>
 
 class BuildProject
 {
 public:
-    BuildProject();
+    class Listener
+    {
+    public:
+        virtual ~Listener() = default;
+        virtual void onProjectModified(BuildProject*) {}
+    };
+
+    static const std::string ROOT_ELEMENT;
+    static const std::string RULE_ELEMENT;
+    static const std::string CLASS_ATTRIBUTE;
+
+    explicit BuildProject(Listener* listener = nullptr);
     ~BuildProject();
 
     const std::vector<BuildRulePtr>& rules() const { return m_Rules; }
 
     void addRule(const BuildRulePtr& rule);
 
+    void load(const std::string& file, BuildRule::Listener* ruleListener = nullptr);
+
 private:
+    Listener* m_Listener;
     std::vector<BuildRulePtr> m_Rules;
+
+    BuildProject(const BuildProject&) = delete;
+    BuildProject& operator=(const BuildProject&) = delete;
 };
+
+using BuildProjectPtr = std::shared_ptr<BuildProject>;

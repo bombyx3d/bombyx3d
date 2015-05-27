@@ -29,16 +29,19 @@ NewRuleDialog::NewRuleDialog(QWidget* parent)
     setupUi(this);
     on_uiBuilderList_itemSelectionChanged();
 
+    /*
     for (const auto& factory : Builder::factories()) {
         auto item = new QListWidgetItem(factory->builderIcon, factory->builderName, uiBuilderList);
         m_Factories.emplace(std::make_pair(item, factory));
     }
+    */
 }
 
 NewRuleDialog::~NewRuleDialog()
 {
 }
 
+/*
 Builder::FactoryPtr NewRuleDialog::selectedFactory() const
 {
     QList<QListWidgetItem*> selectedItems = uiBuilderList->selectedItems();
@@ -48,6 +51,7 @@ Builder::FactoryPtr NewRuleDialog::selectedFactory() const
     auto it = m_Factories.find(selectedItems[0]);
     return (it != m_Factories.end() ? it->second : Builder::FactoryPtr());
 }
+*/
 
 void NewRuleDialog::on_uiBuilderList_itemSelectionChanged()
 {

@@ -22,8 +22,7 @@
 
 #pragma once
 #include "ui_NewRuleDialog.h"
-#include "Builder.h"
-#include <unordered_map>
+//#include <unordered_map>
 #include <QDialog>
 
 class NewRuleDialog : public QDialog, private Ui_NewRuleDialog
@@ -34,10 +33,10 @@ public:
     NewRuleDialog(QWidget* parent = nullptr);
     ~NewRuleDialog();
 
-    Builder::FactoryPtr selectedFactory() const;
+    //Builder::FactoryPtr selectedFactory() const;
 
 private:
-    std::unordered_map<QListWidgetItem*, Builder::FactoryPtr> m_Factories;
+    //std::unordered_map<QListWidgetItem*, Builder::FactoryPtr> m_Factories;
 
     Q_SLOT void on_uiBuilderList_itemSelectionChanged();
     Q_SLOT void on_uiBuilderList_itemDoubleClicked(QListWidgetItem* item);

@@ -22,7 +22,7 @@
 
 #pragma once
 #include "ui_MainWindow.h"
-#include "Project.h"
+#include "../core/project/BuildProject.h"
 #include <memory>
 #include <QWidget>
 
@@ -42,7 +42,7 @@ protected:
     void closeEvent(QCloseEvent* event) override;
 
 private:
-    std::unique_ptr<Project> m_Project;
+    BuildProjectPtr m_Project;
     BuildProgressWidget* m_BuildProgress = nullptr;
     bool m_LoadingProject = false;
     QWidget* m_CurrentEditor = nullptr;
@@ -65,8 +65,10 @@ private:
 
     Q_SLOT void on_uiRuleList_itemSelectionChanged();
 
+    /*
     Q_SLOT void onRuleCreated(Rule* rule);
     Q_SLOT void onRuleDeleted(Rule* rule);
+    */
 
     Q_SLOT void updateUI();
 };
