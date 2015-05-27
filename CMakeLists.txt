@@ -20,7 +20,7 @@
 # THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.2)
 
 include(engine/cmake/Engine.cmake)
 add_subdirectory(tools)
