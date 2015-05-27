@@ -37,4 +37,5 @@ set(source_files
 
 z_set_source_groups(${source_files})
 add_library(libresbuild STATIC EXCLUDE_FROM_ALL ${source_files})
+set_target_properties(libresbuild PROPERTIES CXX_STANDARD 11)
 target_link_libraries(libresbuild libzip libunzip libmd4)

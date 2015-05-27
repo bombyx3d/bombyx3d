@@ -24,6 +24,7 @@
 #include <atomic>
 #include <thread>
 #include <memory>
+#include <string>
 
 class BuildProject;
 
