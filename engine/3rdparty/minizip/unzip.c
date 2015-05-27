@@ -295,19 +295,19 @@ local ZPOS64_T unz64local_SearchCentralDir(const zlib_filefunc64_32_def* pzlib_f
     ZPOS64_T file_size;
     ZPOS64_T back_read = 4;
     ZPOS64_T max_back = 0xffff; /* maximum size of global comment */
-    ZPOS64_T pos_found = 0;
+    ZPOS64_T pos_found = -1;
     uLong read_size;
     ZPOS64_T read_pos;
     int i;
 
     buf = (unsigned char*)ALLOC(BUFREADCOMMENT + 4);
     if (buf == NULL)
-        return 0;
+        return -1;
 
     if (ZSEEK64(*pzlib_filefunc_def, filestream, 0, ZLIB_FILEFUNC_SEEK_END) != 0)
     {
         TRYFREE(buf);
-        return 0;
+        return -1;
     }
     
     file_size = ZTELL64(*pzlib_filefunc_def, filestream);
@@ -341,7 +341,7 @@ local ZPOS64_T unz64local_SearchCentralDir(const zlib_filefunc64_32_def* pzlib_f
                 break;
             }
 
-        if (pos_found != 0)
+        if (pos_found != -1)
             break;
     }
     TRYFREE(buf);
@@ -420,7 +420,7 @@ local unzFile unzOpenInternal(const void *path, zlib_filefunc64_32_def* pzlib_fi
     /* Use unz64local_SearchCentralDir first. Only based on the result
        is it necessary to locate the unz64local_SearchCentralDir64 */
     central_pos = unz64local_SearchCentralDir(&us.z_filefunc, us.filestream);
-    if (central_pos)
+    if (central_pos >= 0)
     {
         if (ZSEEK64(us.z_filefunc, us.filestream, central_pos, ZLIB_FILEFUNC_SEEK_SET) != 0)
             err = UNZ_ERRNO;
