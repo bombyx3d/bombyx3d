@@ -168,11 +168,11 @@ namespace Z
             GL::Sizei sourceLength = 0;
             gl::GetShaderSource(shader, bufferLength, &sourceLength, shaderSource.data());
 
-            const char* p = shaderSource.data();
-            const char* end = p + sourceLength;
+            const char* start = shaderSource.data();
+            const char* end = start + sourceLength;
             bool printLineNumber = true;
             int lineNumber = 0;
-            for (; p < end; ++p) {
+            for (const char* p = start; p < end; ++p) {
                 if (printLineNumber) {
                     ss << std::setw(4) << ++lineNumber << std::setw(0) << ": ";
                     printLineNumber = false;
@@ -183,7 +183,7 @@ namespace Z
                     printLineNumber = true;
             }
 
-            if (end > p && end[-1] != '\n')
+            if (end > start && end[-1] != '\n')
                 ss << '\n';
         }
 
@@ -195,8 +195,31 @@ namespace Z
         Z_LOG(source);
     }
 
+    bool GLProgram::load(const std::string& file)
+    {
+        FileReaderPtr reader = FileSystem::defaultFileSystem()->openFile(file);
+        if (!reader)
+            return false;
+        return load(reader);
+    }
+
+    bool GLProgram::load(const FileReaderPtr& fileReader)
+    {
+        FileInputStream stream(fileReader);
+        return load(&stream);
+    }
+
+    bool GLProgram::load(const InputStreamPtr& inputStream)
+    {
+        return load(inputStream.get());
+    }
+
     bool GLProgram::load(InputStream* input)
     {
+        Z_CHECK(input != nullptr);
+        if (!input)
+            return false;
+
         Z_LOG("Loading OpenGL program \"" << input->name() << "\".");
 
         std::vector<std::string> vertex;

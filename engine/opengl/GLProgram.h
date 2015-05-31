@@ -22,6 +22,7 @@
 
 #pragma once
 #include "api/opengl.h"
+#include "io/files/FileReader.h"
 #include "io/streams/InputStream.h"
 #include <memory>
 
@@ -47,12 +48,14 @@ namespace Z
 
         void printSource() const;
 
+        bool load(const std::string& file);
+        bool load(const FileReaderPtr& fileReader);
+        bool load(const InputStreamPtr& inputStream);
         bool load(InputStream* input);
+
         bool loadSource(const std::string& vertex, const std::string& fragment);
 
         bool link();
-
-        bool enumerateStandardUniforms();
 
     private:
         GL::UInt m_Handle = 0;

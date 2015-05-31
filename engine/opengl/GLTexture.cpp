@@ -100,6 +100,11 @@ namespace Z
 
     bool GLTexture::load(InputStream* inputStream)
     {
+        Z_CHECK(inputStream != nullptr);
+        if (!inputStream)
+            return false;
+
+        Z_LOG("Loading texture \"" << inputStream->name() << "\".");
         std::vector<char> data = inputStream->readAll();
 
         ZTexHeader* header = reinterpret_cast<ZTexHeader*>(data.data());

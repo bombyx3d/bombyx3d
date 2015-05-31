@@ -38,7 +38,7 @@ namespace Z
         GL::UInt handle() const { return m_Handle; }
 
         bool bind(GL::Enum type = GL::Enum(0));
-        bool bind(GL3::Enum type = GL3::Enum(0)) { return bind(GL::Enum(type)); }
+        bool bind(GL3::Enum type) { return bind(GL::Enum(type)); }
         void unbind();
         static void unbindAll();
 
