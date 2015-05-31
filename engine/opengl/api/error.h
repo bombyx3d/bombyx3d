@@ -39,6 +39,7 @@
  #define Z_CHECK_GL_ERROR7(name, p1, p2, p3, p4, p5, p6, p7)
  #define Z_CHECK_GL_ERROR8(name, p1, p2, p3, p4, p5, p6, p7, p8)
  #define Z_CHECK_GL_ERROR9(name, p1, p2, p3, p4, p5, p6, p7, p8, p9)
+ #define Z_CHECK_GL_ERROR10(name, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10)
  #define Z_CHECK_GLCLEAR_ERROR(name, p)
 #else
  #define Z_CHECK_GL_LOCATION(name, var, location) { \
@@ -60,6 +61,7 @@
  #define Z_CHECK_GL_ERROR7(name, p1, p2, p3, p4, p5, p6, p7) Z_CHECK_GL_ERROR_(name, p1 << ", " << p2 << ", " << p3 << ", " << p4 << ", " << p5 << ", " << p6 << ", " << p7)
  #define Z_CHECK_GL_ERROR8(name, p1, p2, p3, p4, p5, p6, p7, p8) Z_CHECK_GL_ERROR_(name, p1 << ", " << p2 << ", " << p3 << ", " << p4 << ", " << p5 << ", " << p6 << ", " << p7 << ", " << p8)
  #define Z_CHECK_GL_ERROR9(name, p1, p2, p3, p4, p5, p6, p7, p8, p9) Z_CHECK_GL_ERROR_(name, p1 << ", " << p2 << ", " << p3 << ", " << p4 << ", " << p5 << ", " << p6 << ", " << p7 << ", " << p8 << ", " << p9)
+ #define Z_CHECK_GL_ERROR10(name, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) Z_CHECK_GL_ERROR_(name, p1 << ", " << p2 << ", " << p3 << ", " << p4 << ", " << p5 << ", " << p6 << ", " << p7 << ", " << p8 << ", " << p9 << ", " << p10)
  #define Z_CHECK_GLCLEAR_ERROR(name, p) Z_CHECK_GL_ERROR_(name, gl::DecodeGLClearMask_(p))
  namespace std {
      ostream& operator<<(ostream& s, GL::Enum value);

@@ -215,3 +215,13 @@ bool gl::IsExtensionSupported(GLExtension extension)
     Z_ASSERT(false);
     return false;
 }
+
+void gl3::BindTexture(GL3::Enum target, GL::UInt texture)
+{
+    gl::BindTexture(GL::Enum(target), texture);
+}
+
+void gl3::GetIntegerv(GL3::Enum pname, GL::Int* params)
+{
+    gl::GetIntegerv(GL::Enum(pname), params);
+}

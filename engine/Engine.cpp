@@ -21,6 +21,7 @@
  */
 #include "Engine.h"
 #include "Game.h"
+#include "opengl/api/opengl.h"
 #include "utility/debug.h"
 
 namespace Z
@@ -55,6 +56,7 @@ namespace Z
     {
         (void)width;
         (void)height;
+        gl::InitWrappers();
         return m_Game->initialize();
     }
 

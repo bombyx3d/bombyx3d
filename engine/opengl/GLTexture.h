@@ -32,12 +32,15 @@ namespace Z
     class GLTexture
     {
     public:
-        explicit GLTexture(GL::Enum type = GL::TEXTURE_2D);
+        GLTexture();
         ~GLTexture();
 
         GL::UInt handle() const { return m_Handle; }
 
-        bool bind();
+        bool bind(GL::Enum type = GL::Enum(0));
+        bool bind(GL3::Enum type = GL3::Enum(0)) { return bind(GL::Enum(type)); }
+        void unbind();
+        static void unbindAll();
 
         bool load(const std::string& file);
         bool load(const FileReaderPtr& fileReader);
@@ -56,7 +59,7 @@ namespace Z
 
     private:
         GL::UInt m_Handle = 0;
-        GL::Enum m_Type = GL::TEXTURE_2D;
+        GL::Enum m_Type = GL::Enum(0);
         GL::Enum m_MinFilter = GL::LINEAR;
         GL::Enum m_MagFilter = GL::LINEAR;
         GL::Enum m_WrapS = GL::CLAMP_TO_EDGE;

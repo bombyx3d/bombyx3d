@@ -296,3 +296,9 @@ namespace gl
     bool IsExtensionSupported(const char* name);
     bool IsExtensionSupported(GLExtension extension);
 }
+
+namespace gl3
+{
+    void BindTexture(GL3::Enum target, GL::UInt texture);
+    void GetIntegerv(GL3::Enum pname, GL::Int* params);
+}

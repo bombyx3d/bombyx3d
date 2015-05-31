@@ -27,8 +27,7 @@
 
 namespace Z
 {
-    GLTexture::GLTexture(GL::Enum type)
-        : m_Type(type)
+    GLTexture::GLTexture()
     {
         gl::GenTextures(1, &m_Handle);
     }
@@ -38,21 +37,46 @@ namespace Z
         gl::DeleteTextures(1, &m_Handle);
     }
 
-    bool GLTexture::bind()
+    bool GLTexture::bind(GL::Enum type)
     {
         if (m_Handle == 0)
             return false;
 
-        gl::BindTexture(m_Type, m_Handle);
+        if (type == 0) {
+            if (m_Type == 0)
+                return false;
+            type = m_Type;
+        } else if (m_Type != type) {
+            m_Type = type;
+            m_Dirty = true;
+        }
+
+        gl::BindTexture(type, m_Handle);
         if (m_Dirty) {
-            gl::TexParameteri(m_Type, GL::TEXTURE_MIN_FILTER, m_MinFilter);
-            gl::TexParameteri(m_Type, GL::TEXTURE_MAG_FILTER, m_MagFilter);
-            gl::TexParameteri(m_Type, GL::TEXTURE_WRAP_S, m_WrapS);
-            gl::TexParameteri(m_Type, GL::TEXTURE_WRAP_T, m_WrapT);
+            gl::TexParameteri(type, GL::TEXTURE_MIN_FILTER, m_MinFilter);
+            gl::TexParameteri(type, GL::TEXTURE_MAG_FILTER, m_MagFilter);
+            gl::TexParameteri(type, GL::TEXTURE_WRAP_S, m_WrapS);
+            gl::TexParameteri(type, GL::TEXTURE_WRAP_T, m_WrapT);
             m_Dirty = false;
         }
 
         return true;
+    }
+
+    void GLTexture::unbind()
+    {
+        if (m_Type != 0)
+            gl::BindTexture(m_Type, 0);
+    }
+
+    void GLTexture::unbindAll()
+    {
+        gl::BindTexture(GL::TEXTURE_2D, 0);
+        gl::BindTexture(GL::TEXTURE_CUBE_MAP, 0);
+        if (gl::Supports2DArrayTextures())
+            gl3::BindTexture(GL3::TEXTURE_2D_ARRAY, 0);
+        if (gl::Supports3DTextures())
+            gl3::BindTexture(GL3::TEXTURE_3D, 0);
     }
 
     bool GLTexture::load(const std::string& file)
@@ -326,21 +350,30 @@ namespace Z
     bool GLTexture::loadUncompressedImage(const std::string& name, uint32_t target, size_t level, uint32_t internalFormat,
         uint32_t width, uint32_t height, uint32_t depth, uint32_t format, uint32_t type, const void* data)
     {
+        gl::PixelStorei(GL::UNPACK_ALIGNMENT, 1);
+
         switch (target)
         {
         case GL::TEXTURE_2D:
+            bind(GL::Enum(target));
+            gl::TexImage2D(GL::Enum(target), GL::Int(level), GL::Enum(internalFormat),
+                GL::Sizei(width), GL::Sizei(height), 0, GL::Enum(format), GL::Enum(type), data);
+            return true;
+
         case GL::TEXTURE_CUBE_MAP_POSITIVE_X:
         case GL::TEXTURE_CUBE_MAP_NEGATIVE_X:
         case GL::TEXTURE_CUBE_MAP_POSITIVE_Y:
         case GL::TEXTURE_CUBE_MAP_NEGATIVE_Y:
         case GL::TEXTURE_CUBE_MAP_POSITIVE_Z:
         case GL::TEXTURE_CUBE_MAP_NEGATIVE_Z:
+            bind(GL::TEXTURE_CUBE_MAP);
             gl::TexImage2D(GL::Enum(target), GL::Int(level), GL::Enum(internalFormat),
                 GL::Sizei(width), GL::Sizei(height), 0, GL::Enum(format), GL::Enum(type), data);
             return true;
 
-        case GL::TEXTURE_3D:
-        case GL::TEXTURE_2D_ARRAY:
+        case GL3::TEXTURE_3D:
+        case GL3::TEXTURE_2D_ARRAY:
+            bind(GL3::Enum(target));
             gl3::TexImage3D(GL::Enum(target), GL::Int(level), GL::Enum(internalFormat),
                 GL::Sizei(width), GL::Sizei(height), GL::Sizei(depth), 0, GL::Enum(format), GL::Enum(type), data);
             return true;
@@ -357,18 +390,25 @@ namespace Z
         switch (target)
         {
         case GL::TEXTURE_2D:
+            bind(GL::Enum(target));
+            gl::CompressedTexImage2D(GL::Enum(target), GL::Int(level), GL::Enum(internalFormat),
+                GL::Sizei(width), GL::Sizei(height), 0, GL::Sizei(dataSize), data);
+            return true;
+
         case GL::TEXTURE_CUBE_MAP_POSITIVE_X:
         case GL::TEXTURE_CUBE_MAP_NEGATIVE_X:
         case GL::TEXTURE_CUBE_MAP_POSITIVE_Y:
         case GL::TEXTURE_CUBE_MAP_NEGATIVE_Y:
         case GL::TEXTURE_CUBE_MAP_POSITIVE_Z:
         case GL::TEXTURE_CUBE_MAP_NEGATIVE_Z:
+            bind(GL::TEXTURE_CUBE_MAP);
             gl::CompressedTexImage2D(GL::Enum(target), GL::Int(level), GL::Enum(internalFormat),
                 GL::Sizei(width), GL::Sizei(height), 0, GL::Sizei(dataSize), data);
             return true;
 
-        case GL::TEXTURE_3D:
-        case GL::TEXTURE_2D_ARRAY:
+        case GL3::TEXTURE_3D:
+        case GL3::TEXTURE_2D_ARRAY:
+            bind(GL3::Enum(target));
             gl3::CompressedTexImage3D(GL::Enum(target), GL::Int(level), GL::Enum(internalFormat),
                 GL::Sizei(width), GL::Sizei(height), GL::Sizei(depth), 0, GL::Sizei(dataSize), data);
             return true;
