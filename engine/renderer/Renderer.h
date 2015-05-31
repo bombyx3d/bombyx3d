@@ -23,6 +23,8 @@
 #pragma once
 #include "Texture.h"
 #include "Shader.h"
+#include "utility/MatrixStack.h"
+#include <glm/glm.hpp>
 #include <unordered_map>
 #include <string>
 #include <memory>
@@ -34,8 +36,12 @@ namespace Z
     public:
         static const std::string DEFAULT_TEXTURED_2D_SHADER;
 
-        Renderer();
+        Renderer(int viewportWidth, int viewportHeight);
         ~Renderer();
+
+        int viewportWidth() const { return m_ViewportWidth; }
+        int viewportHeight() const { return m_ViewportHeight; }
+        void setViewportSize(int viewportWidth, int viewportHeight);
 
         void beginFrame();
         void endFrame();
@@ -43,13 +49,26 @@ namespace Z
         void suspend();
         void resume();
 
+        void begin2D(float zNear = -1.0f, float zFar = 1.0f);
+        void end2D();
+
+        const MatrixStack& projectionStack() const { return m_ProjectionStack; }
+        MatrixStack& projectionStack() { return m_ProjectionStack; }
+
+        const MatrixStack& modelViewStack() const { return m_ModelViewStack; }
+        MatrixStack& modelViewStack() { return m_ModelViewStack; }
+
         TexturePtr loadTexture(const std::string& name);
         ShaderPtr loadShader(const std::string& name);
 
     private:
         bool m_Suspended = false;
+        int m_ViewportWidth;
+        int m_ViewportHeight;
         std::unordered_map<std::string, std::weak_ptr<Texture>> m_Textures;
         std::unordered_map<std::string, std::weak_ptr<Shader>> m_Shaders;
+        MatrixStack m_ProjectionStack;
+        MatrixStack m_ModelViewStack;
 
         void unloadAllResources();
 

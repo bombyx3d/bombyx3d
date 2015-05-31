@@ -200,7 +200,7 @@ namespace gl
     void GetTexParameteriv(GL::Enum target, GL::Enum pname, GL::Int* params);
     void GetUniformfv(GL::UInt program, GL::Int location, GL::Float* params);
     void GetUniformiv(GL::UInt program, GL::Int location, GL::Int* params);
-    int GetUniformLocation(GL::UInt program, const GL::Char* name);
+    int GetUniformLocation(GL::UInt program, const GL::Char* name, bool ignoreFailure = false);
     void GetVertexAttribfv(GL::UInt index, GL::Enum pname, GL::Float* params);
     void GetVertexAttribiv(GL::UInt index, GL::Enum pname, GL::Int* params);
     void GetVertexAttribPointerv(GL::UInt index, GL::Enum pname, void** pointer);

@@ -44,7 +44,7 @@
 #else
  #define Z_CHECK_GL_LOCATION(name, var, location) { \
         if (location < 0) \
-            Z_LOG(#name << "(\"" << var << "\") returned " << location << '.'); \
+            Z_LOG(#name << "(\"" << (var) << "\") returned " << (location) << '.'); \
     }
  #define Z_CHECK_GL_ERROR_(name, params) { \
         GL::Enum err = gl::GetError(); \

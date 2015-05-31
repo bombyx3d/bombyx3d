@@ -37,10 +37,13 @@ namespace Z
         GL::UInt handle() const { return m_Handle; }
 
         bool use() const;
+        static void unbindAll();
 
         void bindAttribLocation(int index, const char* name) { gl::BindAttribLocation(m_Handle, index, name); }
         int getAttribLocation(const char* name) const { return gl::GetAttribLocation(m_Handle, name); }
-        int getUniformLocation(const char* name) const { return gl::GetUniformLocation(m_Handle, name); }
+
+        int getUniformLocation(const char* name, bool ignoreFailure = false) const
+            { return gl::GetUniformLocation(m_Handle, name, ignoreFailure); }
 
         virtual InputStreamPtr openIncludeFile(std::string filename, const std::string& parentFileName) const;
         virtual bool parseProgramSource(InputStream* input, std::vector<std::string>& vertex,

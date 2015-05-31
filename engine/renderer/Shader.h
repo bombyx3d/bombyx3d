@@ -39,6 +39,19 @@ namespace Z
             TexCoord0Attribute,
         };
 
+        static const std::string PROJECTION_MATRIX_UNIFORM_NAME;
+        static const std::string MODELVIEW_MATRIX_UNIFORM_NAME;
+        static const std::string TEXTURE0_UNIFORM_NAME;
+
+        enum Uniform
+        {
+            ProjectionMatrixUniform = 0,
+            ModelViewMatrixUniform,
+            Texture0Uniform,
+
+            NUM_STANDARD_UNIFORMS
+        };
+
         Shader();
         virtual ~Shader();
 
@@ -49,14 +62,20 @@ namespace Z
 
         int getUniformLocation(const char* name) const;
         int getUniformLocation(const std::string& name) const;
+        bool hasUniform(Uniform uniform) const;
+        int getUniformLocation(Uniform uniform) const;
 
         virtual void reload() = 0;
         void unload();
 
+        static const std::string& standardUniformName(Uniform uniform);
+
     protected:
         GLProgramPtr m_GLProgram;
+        int m_UniformLocations[NUM_STANDARD_UNIFORMS];
 
         void bindAttributes();
+        void enumerateStandardUniforms();
     };
 
     class ShaderFromStaticMemory : public Shader

@@ -52,6 +52,11 @@ namespace Z
         return false;
     }
 
+    void GLProgram::unbindAll()
+    {
+        gl::UseProgram(0);
+    }
+
     InputStreamPtr GLProgram::openIncludeFile(std::string filename, const std::string& parentFileName) const
     {
         FileReaderPtr file;

@@ -13,10 +13,13 @@ varying vec2 v_texcoord0;
 attribute vec2 a_position;
 attribute vec2 a_texcoord0;
 
+uniform mat4 u_projection;
+uniform mat4 u_modelview;
+
 void main()
 {
     v_texcoord0 = a_texcoord0;
-    gl_Position = vec4(a_position, 0.0, 1.0);
+    gl_Position = u_projection * u_modelview * vec4(a_position, 0.0, 1.0);
 }
 
 %fragment

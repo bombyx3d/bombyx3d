@@ -19,76 +19,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Engine.h"
-#include "Game.h"
-#include "opengl/api/opengl.h"
+#include "MatrixStack.h"
 #include "utility/debug.h"
+#include <algorithm>
 
 namespace Z
 {
-    Engine* Engine::m_Instance;
-
-    Engine::Engine()
+    MatrixStack::MatrixStack(size_t initialReserve)
     {
-        Z_ASSERT(m_Instance == nullptr);
-        m_Instance = this;
-        m_Game.reset(Game::create());
+        m_Matrices.reserve(std::max(size_t(1), initialReserve));
+        reset();
     }
 
-    Engine::~Engine()
+    MatrixStack::~MatrixStack()
     {
-        Z_ASSERT(m_Instance == this);
-        m_Game.reset();
-        m_Instance = nullptr;
     }
 
-    PlatformCallbacks* Engine::create()
+    void MatrixStack::reset()
     {
-        return new Engine;
+        m_Matrices.resize(1);
+        m_Matrices.back() = glm::mat4(1.0f);
     }
 
-    const PlatformInitOptions* Engine::getInitOptions() const
+    const glm::mat4& MatrixStack::top() const
     {
-        return m_Game.get();
+        Z_ASSERT(!m_Matrices.empty());
+        return m_Matrices.back();
     }
 
-    bool Engine::onInitialize(int width, int height)
+    void MatrixStack::replaceTop(const glm::mat4& matrix)
     {
-        gl::InitWrappers();
-        m_Renderer.reset(new Renderer(width, height));
-        return m_Game->initialize();
+        Z_ASSERT(!m_Matrices.empty());
+        m_Matrices.back() = matrix;
     }
 
-    void Engine::onShutdown()
+    void MatrixStack::pushApply(const glm::mat4& matrix)
     {
-        m_Game->shutdown();
-        m_Renderer.reset();
+        Z_ASSERT(!m_Matrices.empty());
+        m_Matrices.back() *= matrix;
     }
 
-    void Engine::onSuspend()
+    void MatrixStack::pushReplace(const glm::mat4& matrix)
     {
-        if (m_Renderer)
-            m_Renderer->suspend();
+        m_Matrices.emplace_back(matrix);
     }
 
-    void Engine::onResume()
+    void MatrixStack::pop()
     {
-        if (m_Renderer)
-            m_Renderer->resume();
-    }
-
-    void Engine::onViewportSizeChanged(int width, int height)
-    {
-        if (m_Renderer)
-            m_Renderer->setViewportSize(width, height);
-    }
-
-    void Engine::onPaintEvent(double time)
-    {
-        if (m_Renderer) {
-            m_Renderer->beginFrame();
-            m_Game->runFrame(time);
-            m_Renderer->endFrame();
-        }
+        Z_CHECK(m_Matrices.size() > 1);
+        if (m_Matrices.size() > 1)
+            m_Matrices.pop_back();
     }
 }

@@ -24,6 +24,7 @@
 #include "Renderer.h"
 #include "utility/debug.h"
 #include <memory>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "shaders/textured2d.glsl.h"
 
@@ -43,7 +44,11 @@ namespace Z
 
     const std::string Renderer::DEFAULT_TEXTURED_2D_SHADER = BUILTIN_PREFIX TEXTURED2D_GLSL;
 
-    Renderer::Renderer()
+    Renderer::Renderer(int viewportWidth, int viewportHeight)
+        : m_ViewportWidth(viewportWidth)
+        , m_ViewportHeight(viewportHeight)
+        , m_ProjectionStack(4)
+        , m_ModelViewStack(32)
     {
     }
 
@@ -52,12 +57,23 @@ namespace Z
         unloadAllResources();
     }
 
+    void Renderer::setViewportSize(int viewportWidth, int viewportHeight)
+    {
+        m_ViewportWidth = viewportWidth;
+        m_ViewportHeight = viewportHeight;
+    }
+
     void Renderer::beginFrame()
     {
+        gl::Viewport(0, 0, m_ViewportWidth, m_ViewportHeight);
+        m_ProjectionStack.reset();
+        m_ModelViewStack.reset();
     }
 
     void Renderer::endFrame()
     {
+        GLProgram::unbindAll();
+        GLTexture::unbindAll();
     }
 
     void Renderer::suspend()
@@ -74,6 +90,18 @@ namespace Z
             m_Suspended = false;
             // FIXME
         }
+    }
+
+    void Renderer::begin2D(float zNear, float zFar)
+    {
+        float w = float(m_ViewportWidth);
+        float h = float(m_ViewportHeight);
+        m_ProjectionStack.pushReplace(glm::ortho(0.0f, w, h, 0.0f, zNear, zFar));
+    }
+
+    void Renderer::end2D()
+    {
+        m_ProjectionStack.pop();
     }
 
     TexturePtr Renderer::loadTexture(const std::string& name)

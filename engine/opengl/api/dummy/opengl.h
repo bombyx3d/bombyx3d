@@ -544,10 +544,11 @@ void gl::GetUniformiv(GL::UInt program, GL::Int location, GL::Int* params)
     (void)params;
 }
 
-int gl::GetUniformLocation(GL::UInt program, const GL::Char* name)
+int gl::GetUniformLocation(GL::UInt program, const GL::Char* name, bool ignoreFailure)
 {
     (void)program;
     (void)name;
+    (void)ignoreFailure;
     return -1;
 }
 

@@ -531,11 +531,13 @@ void gl::GetUniformiv(GL::UInt program, GL::Int location, GL::Int* params)
     Z_CHECK_GL_ERROR3(glGetUniformiv, program, location, params);
 }
 
-int gl::GetUniformLocation(GL::UInt program, const GL::Char* name)
+int gl::GetUniformLocation(GL::UInt program, const GL::Char* name, bool ignoreFailure)
 {
     int location = g_OpenGLFunctions.glGetUniformLocation(program, name);
     Z_CHECK_GL_ERROR2(glGetUniformLocation, program, name);
-    Z_CHECK_GL_LOCATION(glGetUniformLocation, name, location)
+    if (!ignoreFailure) {
+        Z_CHECK_GL_LOCATION(glGetUniformLocation, name, location)
+    }
     return location;
 }
 
