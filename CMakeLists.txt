@@ -23,7 +23,6 @@
 cmake_minimum_required(VERSION 3.2)
 
 include(engine/cmake/Engine.cmake)
-add_subdirectory(tools)
 
 file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     *.cpp
