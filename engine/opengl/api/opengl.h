@@ -283,6 +283,14 @@ namespace gl3
 
 namespace gl
 {
+    const char* GetVersionString();
+    void GetVersionNumber(int* major, int* minor, int* release = nullptr, bool* es = nullptr);
+
+    bool isOpenGLES(int major = 0, int minor = 0);
+    bool isDesktopOpenGL(int major = 0, int minor = 0, int release = 0);
+    bool Supports2DArrayTextures();
+    bool Supports3DTextures();
+
     GL::Int GetInteger(GL::Enum param);
     void EnableOrDisable(GL::Enum cap, bool flag);
     bool IsExtensionSupported(const char* name);
