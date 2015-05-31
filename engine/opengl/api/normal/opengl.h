@@ -951,3 +951,27 @@ void gl::Viewport(GL::Int x, GL::Int y, GL::Sizei width, GL::Sizei height)
     glViewport(x, y, width, height);
     Z_CHECK_GL_ERROR4(glViewport, x, y, width, height);
 }
+
+void gl3::TexImage3D(GL::Enum target, GL::Int level, GL::Int internalformat, GL::Sizei width, GL::Sizei height,
+    GL::Sizei depth, GL::Int border, GL::Enum format, GL::Enum type, const void *pixels)
+{
+    if (!glTexImage3D) {
+        Z_LOG("glTexImage3D: not supported.");
+    } else {
+        glTexImage3D(target, level, internalformat, width, height, depth, border, format, type, pixels);
+        Z_CHECK_GL_ERROR10(glTexImage3D, target, level, internalformat, width, height, depth, border, format,
+            type, pixels);
+    }
+}
+
+void gl3::CompressedTexImage3D(GL::Enum target, GL::Int level, GL::Enum internalformat, GL::Sizei width,
+    GL::Sizei height, GL::Sizei depth, GL::Int border, GL::Sizei imageSize, const void *data)
+{
+    if (!glCompressedTexImage3D) {
+        Z_LOG("glCompressedTexImage3D: not supported.");
+    } else {
+        glCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data);
+        Z_CHECK_GL_ERROR9(glCompressedTexImage3D, target, level, internalformat, width, height, depth, border,
+            imageSize, data);
+    }
+}

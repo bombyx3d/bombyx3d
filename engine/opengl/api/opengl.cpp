@@ -20,6 +20,8 @@
  * THE SOFTWARE.
  */
 #include "opengl.h"
+#include "utility/debug.h"
+#include <string>
 
 #ifdef Z_TARGET_QT5
  #include "qt5/opengl.h"
@@ -28,6 +30,22 @@
 #else
  #include "dummy/opengl.h"
 #endif
+
+#undef GL_3DFX_texture_compression_FXT1
+#undef GL_ARB_texture_compression_bptc
+#undef GL_EXT_texture_compression_latc
+#undef GL_NV_texture_compression_latc
+#undef GL_EXT_texture_compression_rgtc
+#undef GL_ARB_texture_compression_rgtc
+#undef GL_ANGLE_texture_compression_dxt1
+#undef GL_ANGLE_texture_compression_dxt3
+#undef GL_ANGLE_texture_compression_dxt5
+#undef GL_EXT_texture_compression_dxt1
+#undef GL_EXT_texture_compression_s3tc
+#undef GL_KHR_texture_compression_astc_ldr
+#undef GL_KHR_texture_compression_astc_hdr
+#undef GL_OES_compressed_ETC1_RGB8_texture
+#undef GL_IMG_texture_compression_pvrtc
 
 GL::Int gl::GetInteger(GL::Enum param)
 {
@@ -42,4 +60,54 @@ void gl::EnableOrDisable(GL::Enum cap, bool flag)
         gl::Enable(cap);
     else
         gl::Disable(cap);
+}
+
+bool gl::IsExtensionSupported(const char* name)
+{
+    const char* extensions = gl::GetString(GL::EXTENSIONS);
+    if (!extensions) {
+        Z_LOG("Checking for OpenGL extension " << name << ": NOT FOUND.");
+        return false;
+    }
+
+    size_t nameLength = strlen(name);
+    const char* start = extensions;
+    for (;;) {
+        const char* p = strstr(start, name);
+        if (!p)
+            break;
+
+        if ((p == extensions || p[-1] == ' ') && (p[nameLength] == ' ' || p[nameLength] == 0)) {
+            Z_LOG("Checking for OpenGL extension " << name << ": found.");
+            return true;
+        }
+
+        start = p + nameLength;
+        while (*start && *start != ' ')
+            ++start;
+    }
+
+    Z_LOG("Checking for OpenGL extension " << name << ": NOT FOUND.");
+    return false;
+}
+
+bool gl::IsExtensionSupported(GLExtension extension)
+{
+    #define Z_GL_EXTENSION_(X) static char X##_supported = -1;
+    #include "extensions.h"
+    #undef Z_GL_EXTENSION_
+
+    switch (extension)
+    {
+    #define Z_GL_EXTENSION_(X) \
+        case X: \
+            if (X##_supported == -1) \
+                X##_supported = char(gl::IsExtensionSupported(#X) ? 1 : 0); \
+            return X##_supported;
+    #include "extensions.h"
+    #undef Z_GL_EXTENSION_
+    }
+
+    Z_ASSERT(false);
+    return false;
 }

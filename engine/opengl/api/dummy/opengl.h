@@ -1017,3 +1017,32 @@ void gl::Viewport(GL::Int x, GL::Int y, GL::Sizei width, GL::Sizei height)
     (void)width;
     (void)height;
 }
+
+void gl3::TexImage3D(GL::Enum target, GL::Int level, GL::Int internalformat, GL::Sizei width, GL::Sizei height,
+    GL::Sizei depth, GL::Int border, GL::Enum format, GL::Enum type, const void *pixels)
+{
+    (void)target;
+    (void)level;
+    (void)internalformat;
+    (void)width;
+    (void)height;
+    (void)depth;
+    (void)border;
+    (void)format;
+    (void)type;
+    (void)pixels;
+}
+
+void gl3::CompressedTexImage3D(GL::Enum target, GL::Int level, GL::Enum internalformat, GL::Sizei width,
+    GL::Sizei height, GL::Sizei depth, GL::Int border, GL::Sizei imageSize, const void *data)
+{
+    (void)target;
+    (void)level;
+    (void)internalformat;
+    (void)width;
+    (void)height;
+    (void)depth;
+    (void)border;
+    (void)imageSize;
+    (void)data;
+}

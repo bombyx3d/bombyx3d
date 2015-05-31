@@ -61,7 +61,19 @@ namespace GL
         #define Z_GL_CONSTANT_(X, Y) X = Y,
         #include "constants.h"
         #undef Z_GL_CONSTANT_
-        BLEND_EQUATION = BLEND_EQUATION_RGB
+        BLEND_EQUATION = BLEND_EQUATION_RGB,
+        COMPRESSED_RGB_S3TC_DXT1_ANGLE = COMPRESSED_RGB_S3TC_DXT1_EXT,
+        COMPRESSED_RGBA_S3TC_DXT1_ANGLE = COMPRESSED_RGBA_S3TC_DXT1_EXT,
+        COMPRESSED_RGBA_S3TC_DXT3_ANGLE = COMPRESSED_RGBA_S3TC_DXT3_EXT,
+        COMPRESSED_RGBA_S3TC_DXT5_ANGLE = COMPRESSED_RGBA_S3TC_DXT5_EXT,
+        COMPRESSED_RED_RGTC1_ARB = COMPRESSED_RED_RGTC1_EXT,
+        COMPRESSED_SIGNED_RED_RGTC1_ARB = COMPRESSED_RED_RGTC1_EXT,
+        COMPRESSED_RED_GREEN_RGTC2_ARB = COMPRESSED_RED_RGTC1_EXT,
+        COMPRESSED_SIGNED_RED_GREEN_RGTC2_ARB = COMPRESSED_RED_RGTC1_EXT,
+        COMPRESSED_LUMINANCE_LATC1_NV = COMPRESSED_LUMINANCE_LATC1_EXT,
+        COMPRESSED_SIGNED_LUMINANCE_LATC1_NV = COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT,
+        COMPRESSED_LUMINANCE_ALPHA_LATC2_NV = COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT,
+        COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_NV = COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT,
     };
 
     typedef void Void;
@@ -81,6 +93,13 @@ namespace GL
     typedef ptrdiff_t Intptr;
     typedef ptrdiff_t Sizeiptr;
 }
+
+enum GLExtension
+{
+    #define Z_GL_EXTENSION_(X) X,
+    #include "extensions.h"
+    #undef Z_GL_EXTENSION_
+};
 
 namespace gl
 {
@@ -241,7 +260,20 @@ namespace gl
     void VertexAttribPointer(GL::UInt indx, GL::Int size, GL::Enum type, GL::Boolean norm, GL::Sizei stride,
         const void* ptr);
     void Viewport(GL::Int x, GL::Int y, GL::Sizei width, GL::Sizei height);
+}
 
+namespace gl3
+{
+    void TexImage3D(GL::Enum target, GL::Int level, GL::Int internalformat, GL::Sizei width, GL::Sizei height,
+        GL::Sizei depth, GL::Int border, GL::Enum format, GL::Enum type, const void *pixels);
+    void CompressedTexImage3D(GL::Enum target, GL::Int level, GL::Enum internalformat, GL::Sizei width,
+        GL::Sizei height, GL::Sizei depth, GL::Int border, GL::Sizei imageSize, const void *data);
+}
+
+namespace gl
+{
     GL::Int GetInteger(GL::Enum param);
     void EnableOrDisable(GL::Enum cap, bool flag);
+    bool IsExtensionSupported(const char* name);
+    bool IsExtensionSupported(GLExtension extension);
 }

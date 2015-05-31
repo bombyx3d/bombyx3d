@@ -42,6 +42,7 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     opengl/api/qt5/*.h
     opengl/api/*.cpp
     opengl/api/*.h
+    opengl/formats/*.h
     opengl/*.cpp
     opengl/*.h
     utility/*.cpp
