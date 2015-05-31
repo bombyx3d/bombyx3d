@@ -27,13 +27,29 @@
 #include <mutex>
 #include <thread>
 
+#ifdef _WIN32
+ #define STDCALL __stdcall
+#else
+ #define STDCALL
+#endif
+
+typedef void (STDCALL * PFNGLTEXIMAGE3DPROC)(GLenum target, GLint level, GLint internalformat,
+    GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const void *pixels);
+typedef void (STDCALL * PFNGLCOMPRESSEDTEXIMAGE3DPROC)(GLenum target, GLint level, GLenum internalformat,
+    GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const void *data);
+
 static QGLFunctions g_OpenGLFunctions;
+static PFNGLTEXIMAGE3DPROC g_TexImage3D;
+static PFNGLCOMPRESSEDTEXIMAGE3DPROC g_CompressedTexImage3D;
 static std::once_flag g_Init;
 
 void gl::InitWrappers()
 {
     std::call_once(g_Init, [](){
-        g_OpenGLFunctions.initializeGLFunctions();
+        auto context = QGLContext::currentContext();
+        g_OpenGLFunctions.initializeGLFunctions(context);
+        g_TexImage3D = (PFNGLTEXIMAGE3DPROC)context->getProcAddress("glTexImage3D");
+        g_CompressedTexImage3D = (PFNGLCOMPRESSEDTEXIMAGE3DPROC)context->getProcAddress("glCompressedTexImage3D");
     });
 }
 
@@ -928,33 +944,25 @@ void gl::Viewport(GL::Int x, GL::Int y, GL::Sizei width, GL::Sizei height)
 void gl3::TexImage3D(GL::Enum target, GL::Int level, GL::Int internalformat, GL::Sizei width, GL::Sizei height,
     GL::Sizei depth, GL::Int border, GL::Enum format, GL::Enum type, const void *pixels)
 {
-    Z_ASSERT(false);
-    // FIXME
-    /*
-    if (!g_OpenGLFunctions.glTexImage3D) {
+    if (!g_TexImage3D) {
         Z_LOG("glTexImage3D: not supported.");
     } else {
-        g_OpenGLFunctions.glTexImage3D(target, level, internalformat, width, height, depth, border, format,
+        g_TexImage3D(target, level, internalformat, width, height, depth, border, format,
             type, pixels);
         Z_CHECK_GL_ERROR10(glTexImage3D, target, level, internalformat, width, height, depth, border, format,
             type, pixels);
     }
-    */
 }
 
 void gl3::CompressedTexImage3D(GL::Enum target, GL::Int level, GL::Enum internalformat, GL::Sizei width,
     GL::Sizei height, GL::Sizei depth, GL::Int border, GL::Sizei imageSize, const void *data)
 {
-    Z_ASSERT(false);
-    // FIXME
-    /*
-    if (!g_OpenGLFunctions.glCompressedTexImage3D) {
+    if (!g_CompressedTexImage3D) {
         Z_LOG("glCompressedTexImage3D: not supported.");
     } else {
-        g_OpenGLFunctions.glCompressedTexImage3D(target, level, internalformat, width, height, depth, border,
+        g_CompressedTexImage3D(target, level, internalformat, width, height, depth, border,
             imageSize, data);
         Z_CHECK_GL_ERROR9(glCompressedTexImage3D, target, level, internalformat, width, height, depth, border,
             imageSize, data);
     }
-    */
 }
