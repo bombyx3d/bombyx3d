@@ -60,6 +60,7 @@ namespace GL
         LINES = 0x0001,
         #define Z_GL_CONSTANT_(X, Y) X = Y,
         #include "constants.h"
+        #include "constants_ext.h"
         #undef Z_GL_CONSTANT_
         BLEND_EQUATION = BLEND_EQUATION_RGB,
         COMPRESSED_RGB_S3TC_DXT1_ANGLE = COMPRESSED_RGB_S3TC_DXT1_EXT,
@@ -92,6 +93,16 @@ namespace GL
     typedef float Clampf;
     typedef ptrdiff_t Intptr;
     typedef ptrdiff_t Sizeiptr;
+}
+
+namespace GL3
+{
+    enum Enum
+    {
+        #define Z_GL_CONSTANT_(X, Y) X = Y,
+        #include "constants3.h"
+        #undef Z_GL_CONSTANT_
+    };
 }
 
 enum GLExtension

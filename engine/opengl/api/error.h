@@ -63,6 +63,7 @@
  #define Z_CHECK_GLCLEAR_ERROR(name, p) Z_CHECK_GL_ERROR_(name, gl::DecodeGLClearMask_(p))
  namespace std {
      ostream& operator<<(ostream& s, GL::Enum value);
+     ostream& operator<<(ostream& s, GL3::Enum value);
      ostream& operator<<(ostream& s, GL::Boolean value);
  }
  namespace gl {

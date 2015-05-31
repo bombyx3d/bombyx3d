@@ -34,6 +34,24 @@ namespace std
         case GL::TRUE: break;
         #define Z_GL_CONSTANT_(X, Y) case Y: s << "GL_" << #X; return s;
         #include "constants.h"
+        #include "constants_ext.h"
+        #include "constants3.h"
+        #undef Z_GL_CONSTANT_
+        }
+        s << static_cast<int>(value);
+        return s;
+    }
+
+    ostream& operator<<(ostream& s, GL3::Enum value)
+    {
+        switch (value)
+        {
+        case GL::FALSE: break;
+        case GL::TRUE: break;
+        #define Z_GL_CONSTANT_(X, Y) case Y: s << "GL_" << #X; return s;
+        #include "constants.h"
+        #include "constants_ext.h"
+        #include "constants3.h"
         #undef Z_GL_CONSTANT_
         }
         s << static_cast<int>(value);
