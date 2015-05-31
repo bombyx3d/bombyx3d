@@ -27,6 +27,16 @@ include(cmake/Engine.cmake)
 
 add_subdirectory(3rdparty)
 
+file(GLOB glm_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+    3rdparty/glm/glm/*.hpp
+    3rdparty/glm/glm/detail/*.hpp
+    3rdparty/glm/glm/detail/*.inl
+    3rdparty/glm/glm/gtc/*.hpp
+    3rdparty/glm/glm/gtc/*.inl
+    3rdparty/glm/glm/gtx/*.hpp
+    3rdparty/glm/glm/gtx/*.inl
+)
+
 file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     cmake/*.cmake
     io/files/*.cpp
@@ -57,8 +67,11 @@ file(GLOB shader_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     renderer/shaders/*.glsl
 )
 
+z_set_source_groups(${glm_files})
 z_set_source_groups(${source_files})
 z_set_source_groups(${shader_files})
+
+set_source_files_properties(${glm_files} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/shaders")
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
