@@ -56,21 +56,29 @@ namespace Z
     {
         (void)width;
         (void)height;
+
         gl::InitWrappers();
+        m_Renderer.reset(new Renderer);
+
         return m_Game->initialize();
     }
 
     void Engine::onShutdown()
     {
         m_Game->shutdown();
+        m_Renderer.reset();
     }
 
     void Engine::onSuspend()
     {
+        if (m_Renderer)
+            m_Renderer->suspend();
     }
 
     void Engine::onResume()
     {
+        if (m_Renderer)
+            m_Renderer->resume();
     }
 
     void Engine::onViewportSizeChanged(int width, int height)
@@ -81,6 +89,10 @@ namespace Z
 
     void Engine::onPaintEvent(double time)
     {
-        m_Game->runFrame(time);
+        if (m_Renderer) {
+            m_Renderer->beginFrame();
+            m_Game->runFrame(time);
+            m_Renderer->endFrame();
+        }
     }
 }

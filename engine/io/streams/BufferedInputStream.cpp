@@ -72,6 +72,13 @@ namespace Z
         return empty;
     }
 
+    FileReader* BufferedInputStream::associatedFile() const
+    {
+        if (m_Stream)
+            return m_Stream->associatedFile();
+        return nullptr;
+    }
+
     bool BufferedInputStream::atEnd() const
     {
         if (!m_Stream)

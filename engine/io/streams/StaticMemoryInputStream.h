@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,38 +21,31 @@
  */
 
 #pragma once
-#include "utility/debug.h"
-#include "platform/PlatformCallbacks.h"
-#include "renderer/Renderer.h"
-#include <memory>
+#include "InputStream.h"
+#include "io/files/StaticMemoryFile.h"
+#include <string>
 
 namespace Z
 {
-    class Game;
-
-    class Engine : private PlatformCallbacks
+    class StaticMemoryInputStream : public InputStream, public StaticMemoryFile
     {
     public:
-        static PlatformCallbacks* create();
-        static Engine& instance() { Z_ASSERT(m_Instance != nullptr); return *m_Instance; }
+        StaticMemoryInputStream(const void* data, size_t size, const std::string& name = "<memory>");
+        ~StaticMemoryInputStream() = default;
 
-        Renderer& renderer() { Z_ASSERT(m_Renderer != nullptr); return *m_Renderer; }
+        const std::string& name() const override;
+        FileReader* associatedFile() const override;
+
+        bool atEnd() const override;
+        uint64_t bytesAvailable() const override;
+
+        size_t read(void* buffer, size_t size) override;
+        bool skip(size_t count) override;
 
     private:
-        static Engine* m_Instance;
-        std::unique_ptr<Renderer> m_Renderer;
-        std::unique_ptr<Game> m_Game;
-
-        Engine();
-        ~Engine();
-
-        const PlatformInitOptions* getInitOptions() const final override;
-
-        bool onInitialize(int width, int height) final override;
-        void onShutdown() final override;
-        void onSuspend() final override;
-        void onResume() final override;
-        void onViewportSizeChanged(int width, int height) final override;
-        void onPaintEvent(double time) final override;
+        size_t m_Offset;
+        size_t m_BytesLeft;
     };
+
+    using StaticMemoryInputStreamPtr = std::shared_ptr<StaticMemoryInputStream>;
 }

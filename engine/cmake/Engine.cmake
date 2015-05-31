@@ -31,6 +31,7 @@ if(NOT __Z_ENGINE_CMAKE_INCLUDED)
     include("${path}/Qt5.cmake")
     include("${path}/OpenGL.cmake")
     include("${path}/TargetPlatform.cmake")
+    include("${path}/FileToC.cmake")
 
     if(MSVC)
         add_definitions(-D_CRT_SECURE_NO_DEPRECATE)

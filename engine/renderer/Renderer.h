@@ -1,5 +1,5 @@
-﻿/*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+/*
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,38 +21,39 @@
  */
 
 #pragma once
-#include "utility/debug.h"
-#include "platform/PlatformCallbacks.h"
-#include "renderer/Renderer.h"
+#include "Texture.h"
+#include "Shader.h"
+#include <unordered_map>
+#include <string>
 #include <memory>
 
 namespace Z
 {
-    class Game;
-
-    class Engine : private PlatformCallbacks
+    class Renderer
     {
     public:
-        static PlatformCallbacks* create();
-        static Engine& instance() { Z_ASSERT(m_Instance != nullptr); return *m_Instance; }
+        static const std::string DEFAULT_TEXTURED_2D_SHADER;
 
-        Renderer& renderer() { Z_ASSERT(m_Renderer != nullptr); return *m_Renderer; }
+        Renderer();
+        ~Renderer();
+
+        void beginFrame();
+        void endFrame();
+
+        void suspend();
+        void resume();
+
+        TexturePtr loadTexture(const std::string& name);
+        ShaderPtr loadShader(const std::string& name);
 
     private:
-        static Engine* m_Instance;
-        std::unique_ptr<Renderer> m_Renderer;
-        std::unique_ptr<Game> m_Game;
+        bool m_Suspended = false;
+        std::unordered_map<std::string, std::weak_ptr<Texture>> m_Textures;
+        std::unordered_map<std::string, std::weak_ptr<Shader>> m_Shaders;
 
-        Engine();
-        ~Engine();
+        void unloadAllResources();
 
-        const PlatformInitOptions* getInitOptions() const final override;
-
-        bool onInitialize(int width, int height) final override;
-        void onShutdown() final override;
-        void onSuspend() final override;
-        void onResume() final override;
-        void onViewportSizeChanged(int width, int height) final override;
-        void onPaintEvent(double time) final override;
+        Renderer(const Renderer&) = delete;
+        Renderer& operator=(const Renderer&) = delete;
     };
 }

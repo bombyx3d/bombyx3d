@@ -32,22 +32,9 @@
  #include "dummy/opengl.h"
 #endif
 
-#undef GL_3DFX_texture_compression_FXT1
-#undef GL_ARB_texture_compression_bptc
-#undef GL_EXT_texture_compression_latc
-#undef GL_NV_texture_compression_latc
-#undef GL_EXT_texture_compression_rgtc
-#undef GL_ARB_texture_compression_rgtc
-#undef GL_ANGLE_texture_compression_dxt1
-#undef GL_ANGLE_texture_compression_dxt3
-#undef GL_ANGLE_texture_compression_dxt5
-#undef GL_EXT_texture_compression_dxt1
-#undef GL_EXT_texture_compression_s3tc
-#undef GL_KHR_texture_compression_astc_ldr
-#undef GL_KHR_texture_compression_astc_hdr
-#undef GL_OES_compressed_ETC1_RGB8_texture
-#undef GL_IMG_texture_compression_pvrtc
-#undef GL_EXT_texture_array
+#define Z_GL_EXTENSION_(X)
+#include "extensions.h"
+#undef Z_GL_EXTENSION_
 
 static const char* g_OpenGLVersion;
 static bool g_IsOpenGLES;

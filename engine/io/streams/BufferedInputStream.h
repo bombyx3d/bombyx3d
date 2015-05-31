@@ -38,6 +38,7 @@ namespace Z
         ~BufferedInputStream() = default;
 
         const std::string& name() const override;
+        FileReader* associatedFile() const override;
 
         bool atEnd() const override;
         uint64_t bytesAvailable() const override;

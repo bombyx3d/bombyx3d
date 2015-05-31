@@ -1,5 +1,5 @@
-﻿/*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+/*
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,40 +19,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "utility/debug.h"
-#include "platform/PlatformCallbacks.h"
-#include "renderer/Renderer.h"
-#include <memory>
+#include "Texture.h"
 
 namespace Z
 {
-    class Game;
-
-    class Engine : private PlatformCallbacks
+    Texture::Texture()
     {
-    public:
-        static PlatformCallbacks* create();
-        static Engine& instance() { Z_ASSERT(m_Instance != nullptr); return *m_Instance; }
+    }
 
-        Renderer& renderer() { Z_ASSERT(m_Renderer != nullptr); return *m_Renderer; }
+    Texture::~Texture()
+    {
+    }
 
-    private:
-        static Engine* m_Instance;
-        std::unique_ptr<Renderer> m_Renderer;
-        std::unique_ptr<Game> m_Game;
+    bool Texture::bind()
+    {
+        if (!m_GLTexture)
+            return false;
+        return m_GLTexture->bind();
+    }
 
-        Engine();
-        ~Engine();
+    void Texture::unload()
+    {
+        m_GLTexture.reset();
+    }
 
-        const PlatformInitOptions* getInitOptions() const final override;
-
-        bool onInitialize(int width, int height) final override;
-        void onShutdown() final override;
-        void onSuspend() final override;
-        void onResume() final override;
-        void onViewportSizeChanged(int width, int height) final override;
-        void onPaintEvent(double time) final override;
-    };
+    void TextureFromFile::reload()
+    {
+        m_GLTexture.reset(new GLTexture);
+        m_GLTexture->load(m_FileName);
+    }
 }
