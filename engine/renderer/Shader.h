@@ -40,7 +40,7 @@ namespace Z
         };
 
         Shader();
-        ~Shader();
+        virtual ~Shader();
 
         bool use();
 

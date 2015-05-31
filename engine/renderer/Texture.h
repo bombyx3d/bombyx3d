@@ -30,7 +30,7 @@ namespace Z
     {
     public:
         Texture();
-        ~Texture();
+        virtual ~Texture();
 
         bool bind();
 
