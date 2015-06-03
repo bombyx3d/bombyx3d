@@ -23,9 +23,18 @@
 #pragma once
 #include "platform/PlatformInitOptions.h"
 
+#ifdef NDEBUG
+ #undef Z_DEBUG_ASSETS_PATH
+#endif
+#ifndef Z_DEBUG_ASSETS_PATH
+ #define Z_DEBUG_ASSETS_PATH nullptr
+#endif
+
 #define Z_GAME_CLASS(CLASS) \
     ::Z::Game* ::Z::Game::create() { \
-        return new ::CLASS; \
+        ::Z::Game* game = new ::CLASS; \
+        game->setAssetsLocationHint(Z_DEBUG_ASSETS_PATH); \
+        return game; \
     }
 
 namespace Z
@@ -46,5 +55,11 @@ namespace Z
         virtual bool initialize() = 0;
         virtual void shutdown() = 0;
         virtual void runFrame(double time) = 0;
+
+    private:
+        const char* m_AssetsLocationHint = nullptr;
+
+        void setAssetsLocationHint(const char* hint);
+        virtual const char* assetsLocationHint() const final override;
     };
 }

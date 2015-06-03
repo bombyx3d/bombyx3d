@@ -42,4 +42,14 @@ namespace Z
     {
         return 8;
     }
+
+    void Game::setAssetsLocationHint(const char* hint)
+    {
+        m_AssetsLocationHint = hint;
+    }
+
+    const char* Game::assetsLocationHint() const
+    {
+        return m_AssetsLocationHint;
+    }
 }

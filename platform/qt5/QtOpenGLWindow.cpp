@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  */
 #include "QtOpenGLWindow.h"
+#include "QtFileSystem.h"
 #include "platform/PlatformInitOptions.h"
 #include "utility/debug.h"
 #include <QMessageBox>
@@ -35,6 +36,12 @@ namespace Z
         , m_RenderThread(this)
     {
         const PlatformInitOptions* initOptions = m_RenderThread.callbacks()->getInitOptions();
+
+        const char* assetsLocation = initOptions->assetsLocationHint();
+        if (assetsLocation)
+            FileSystem::defaultFileSystem()->add(std::make_shared<QtFileSystem>(assetsLocation));
+        FileSystem::defaultFileSystem()->add(std::make_shared<QtFileSystem>(qApp->applicationDirPath()));
+        FileSystem::defaultFileSystem()->add(std::make_shared<QtFileSystem>(":/"));
 
         QRect desktopGeometry = QDesktopWidget().availableGeometry();
         int windowWidth = initOptions->preferredDisplayWidth();

@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "QtFileSystem.h"
 #include "QtOpenGLWindow.h"
 #include <QApplication>
 
@@ -29,10 +28,6 @@ int main(int argc, char** argv)
 {
     QCoreApplication::setAttribute(Qt::AA_X11InitThreads);
     QApplication app(argc, argv);
-
-    FileSystem::defaultFileSystem()->add(std::make_shared<QtFileSystem>(app.applicationDirPath()));
-    FileSystem::defaultFileSystem()->add(std::make_shared<QtFileSystem>(":/"));
-    FileSystem::defaultFileSystem()->add(std::make_shared<QtFileSystem>("."));
 
     QtOpenGLWindow window;
     window.show();

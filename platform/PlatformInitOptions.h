@@ -30,6 +30,8 @@ namespace Z
         PlatformInitOptions() = default;
         virtual ~PlatformInitOptions() = default;
 
+        virtual const char* assetsLocationHint() const = 0;
+
         virtual int preferredDisplayWidth() const = 0;
         virtual int preferredDisplayHeight() const = 0;
         virtual int preferredDepthBufferBits() const = 0;
