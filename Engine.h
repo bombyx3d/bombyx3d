@@ -52,6 +52,12 @@ namespace Z
         void onShutdown() final override;
         void onSuspend() final override;
         void onResume() final override;
+
+        void onPointerPressed(int id, float x, float y) final override;
+        void onPointerMoved(int id, float x, float y) final override;
+        void onPointerReleased(int id, float x, float y) final override;
+        void onPointerCancelled(int id, float x, float y) final override;
+
         void onViewportSizeChanged(int width, int height) final override;
         void onPaintEvent(double time) final override;
     };

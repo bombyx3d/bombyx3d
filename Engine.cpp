@@ -77,6 +77,22 @@ namespace Z
             m_Renderer->resume();
     }
 
+    void Engine::onPointerPressed(int id, float x, float y)
+    {
+    }
+
+    void Engine::onPointerMoved(int id, float x, float y)
+    {
+    }
+
+    void Engine::onPointerReleased(int id, float x, float y)
+    {
+    }
+
+    void Engine::onPointerCancelled(int id, float x, float y)
+    {
+    }
+
     void Engine::onViewportSizeChanged(int width, int height)
     {
         if (m_Renderer)

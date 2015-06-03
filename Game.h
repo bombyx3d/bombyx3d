@@ -56,6 +56,11 @@ namespace Z
         virtual void shutdown() = 0;
         virtual void runFrame(double time) = 0;
 
+        virtual void onPointerPressed(int id, float x, float y);
+        virtual void onPointerMoved(int id, float x, float y);
+        virtual void onPointerReleased(int id, float x, float y);
+        virtual void onPointerCancelled(int id, float x, float y);
+
     private:
         const char* m_AssetsLocationHint = nullptr;
 

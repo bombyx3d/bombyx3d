@@ -43,6 +43,34 @@ namespace Z
         return 8;
     }
 
+    void Game::onPointerPressed(int id, float x, float y)
+    {
+        (void)id;
+        (void)x;
+        (void)y;
+    }
+
+    void Game::onPointerMoved(int id, float x, float y)
+    {
+        (void)id;
+        (void)x;
+        (void)y;
+    }
+
+    void Game::onPointerReleased(int id, float x, float y)
+    {
+        (void)id;
+        (void)x;
+        (void)y;
+    }
+
+    void Game::onPointerCancelled(int id, float x, float y)
+    {
+        (void)id;
+        (void)x;
+        (void)y;
+    }
+
     void Game::setAssetsLocationHint(const char* hint)
     {
         m_AssetsLocationHint = hint;

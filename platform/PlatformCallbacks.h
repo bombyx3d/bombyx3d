@@ -38,6 +38,12 @@ namespace Z
         virtual void onShutdown() = 0;
         virtual void onSuspend() = 0;
         virtual void onResume() = 0;
+
+        virtual void onPointerPressed(int id, float x, float y) = 0;
+        virtual void onPointerMoved(int id, float x, float y) = 0;
+        virtual void onPointerReleased(int id, float x, float y) = 0;
+        virtual void onPointerCancelled(int id, float x, float y) = 0;
+
         virtual void onViewportSizeChanged(int width, int height) = 0;
         virtual void onPaintEvent(double time) = 0;
     };

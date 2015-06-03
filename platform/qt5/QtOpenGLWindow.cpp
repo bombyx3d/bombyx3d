@@ -129,8 +129,7 @@ namespace Z
             float x = e->pos().x();
             float y = e->pos().y();
             m_RenderThread.post([this, x, y]() {
-                //FIXME
-                //m_RenderThread.delegate()->onPointerPressed(0, x, y);
+                m_RenderThread.callbacks()->onPointerPressed(0, x, y);
             });
         }
     }
@@ -141,8 +140,7 @@ namespace Z
             float x = e->pos().x();
             float y = e->pos().y();
             m_RenderThread.post([this, x, y]() {
-                //FIXME
-                //m_RenderThread.delegate()->onPointerMoved(0, x, y);
+                m_RenderThread.callbacks()->onPointerMoved(0, x, y);
             });
         }
     }
@@ -153,8 +151,7 @@ namespace Z
             float x = e->pos().x();
             float y = e->pos().y();
             m_RenderThread.post([this, x, y]() {
-                //FIXME
-                //m_RenderThread.delegate()->onPointerReleased(0, x, y);
+                m_RenderThread.callbacks()->onPointerReleased(0, x, y);
             });
         }
     }
@@ -165,7 +162,7 @@ namespace Z
             int key = keyEvent->key();
             m_RenderThread.post([this, key]() {
                 //FIXME
-                //m_RenderThread.delegate()->onKeyPressed(key);
+                //m_RenderThread.callbacks()->onKeyPressed(key);
             });
         }
     }
@@ -176,7 +173,7 @@ namespace Z
             int key = keyEvent->key();
             m_RenderThread.post([this, key]() {
                 //FIXME
-                //m_RenderThread.delegate()->onKeyReleased(key);
+                //m_RenderThread.callbacks()->onKeyReleased(key);
             });
         }
     }
