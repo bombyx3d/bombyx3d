@@ -21,12 +21,30 @@
  */
 
 #pragma once
-#include "engine/Game.h"
+#include "platform/PlatformInitOptions.h"
 
-class Game : public Z::Game
+#define Z_GAME_CLASS(CLASS) \
+    ::Z::Game* ::Z::Game::create() { \
+        return new ::CLASS; \
+    }
+
+namespace Z
 {
-public:
-    bool initialize() final override;
-    void shutdown() final override;
-    void runFrame(double time) final override;
-};
+    class Game : public PlatformInitOptions
+    {
+    public:
+        Game() = default;
+        virtual ~Game() = default;
+
+        static Game* create();
+
+        virtual int preferredDisplayWidth() const override;
+        virtual int preferredDisplayHeight() const override;
+        virtual int preferredDepthBufferBits() const override;
+        virtual int preferredStencilBufferBits() const override;
+
+        virtual bool initialize() = 0;
+        virtual void shutdown() = 0;
+        virtual void runFrame(double time) = 0;
+    };
+}

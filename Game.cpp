@@ -21,18 +21,25 @@
  */
 #include "Game.h"
 
-Z_GAME_CLASS(Game)
-
-bool Game::initialize()
+namespace Z
 {
-    return true;
-}
+    int Game::preferredDisplayWidth() const
+    {
+        return 1024;
+    }
 
-void Game::shutdown()
-{
-}
+    int Game::preferredDisplayHeight() const
+    {
+        return 768;
+    }
 
-void Game::runFrame(double time)
-{
-    (void)time;
+    int Game::preferredDepthBufferBits() const
+    {
+        return 16;
+    }
+
+    int Game::preferredStencilBufferBits() const
+    {
+        return 8;
+    }
 }
