@@ -47,6 +47,9 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     io/zip/*.h
     io/*.cpp
     io/*.h
+    mechanics/match3/Match3Field.cpp
+    mechanics/match3/Match3Field.h
+    mechanics/match3/Match3Listener.h
     opengl/api/dummy/*.h
     opengl/api/normal/*.h
     opengl/api/qt5/*.h
