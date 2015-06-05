@@ -363,6 +363,11 @@ namespace Z
             bind(GL::Enum(target));
             gl::TexImage2D(GL::Enum(target), GL::Int(level), GL::Enum(internalFormat),
                 GL::Sizei(width), GL::Sizei(height), 0, GL::Enum(format), GL::Enum(type), data);
+            if (level == 0) {
+                m_Width = int(width);
+                m_Height = int(height);
+                m_Depth = 1;
+            }
             return true;
 
         case GL::TEXTURE_CUBE_MAP_POSITIVE_X:
@@ -374,6 +379,11 @@ namespace Z
             bind(GL::TEXTURE_CUBE_MAP);
             gl::TexImage2D(GL::Enum(target), GL::Int(level), GL::Enum(internalFormat),
                 GL::Sizei(width), GL::Sizei(height), 0, GL::Enum(format), GL::Enum(type), data);
+            if (level == 0) {
+                m_Width = int(width);
+                m_Height = int(height);
+                m_Depth = 6;
+            }
             return true;
 
         case GL3::TEXTURE_3D:
@@ -381,6 +391,11 @@ namespace Z
             bind(GL3::Enum(target));
             gl3::TexImage3D(GL::Enum(target), GL::Int(level), GL::Enum(internalFormat),
                 GL::Sizei(width), GL::Sizei(height), GL::Sizei(depth), 0, GL::Enum(format), GL::Enum(type), data);
+            if (level == 0) {
+                m_Width = int(width);
+                m_Height = int(height);
+                m_Depth = int(depth);
+            }
             return true;
         }
 
@@ -398,6 +413,11 @@ namespace Z
             bind(GL::Enum(target));
             gl::CompressedTexImage2D(GL::Enum(target), GL::Int(level), GL::Enum(internalFormat),
                 GL::Sizei(width), GL::Sizei(height), 0, GL::Sizei(dataSize), data);
+            if (level == 0) {
+                m_Width = int(width);
+                m_Height = int(height);
+                m_Depth = 1;
+            }
             return true;
 
         case GL::TEXTURE_CUBE_MAP_POSITIVE_X:
@@ -409,6 +429,11 @@ namespace Z
             bind(GL::TEXTURE_CUBE_MAP);
             gl::CompressedTexImage2D(GL::Enum(target), GL::Int(level), GL::Enum(internalFormat),
                 GL::Sizei(width), GL::Sizei(height), 0, GL::Sizei(dataSize), data);
+            if (level == 0) {
+                m_Width = int(width);
+                m_Height = int(height);
+                m_Depth = 6;
+            }
             return true;
 
         case GL3::TEXTURE_3D:
@@ -416,6 +441,11 @@ namespace Z
             bind(GL3::Enum(target));
             gl3::CompressedTexImage3D(GL::Enum(target), GL::Int(level), GL::Enum(internalFormat),
                 GL::Sizei(width), GL::Sizei(height), GL::Sizei(depth), 0, GL::Sizei(dataSize), data);
+            if (level == 0) {
+                m_Width = int(width);
+                m_Height = int(height);
+                m_Depth = int(depth);
+            }
             return true;
         }
 

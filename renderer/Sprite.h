@@ -21,42 +21,29 @@
  */
 
 #pragma once
-#include "opengl/GLTexture.h"
+#include "Texture.h"
+#include "math/AffineTransform.h"
+#include <glm/glm.hpp>
+#include <string>
 #include <memory>
 
 namespace Z
 {
-    class Texture
+    class Sprite
     {
     public:
-        Texture();
-        virtual ~Texture();
+        Sprite();
+        explicit Sprite(const TexturePtr& texture);
+        virtual ~Sprite();
 
-        int width() const { return m_Width; }
-        int height() const { return m_Height; }
-        int depth() const { return m_Depth; }
-
-        bool bind();
-
-        virtual void reload() = 0;
-        void unload();
+        void draw(const AffineTransform&) const;
 
     protected:
-        GLTexturePtr m_GLTexture;
-        int m_Width = 0;
-        int m_Height = 0;
-        int m_Depth = 0;
+        TexturePtr m_Texture;
+        glm::vec2 m_Center;
+        glm::vec2 m_Size;
+        glm::vec2 m_TexCoords[4];
     };
 
-    class TextureFromFile : public Texture
-    {
-    public:
-        explicit TextureFromFile(const std::string& fileName) : m_FileName(fileName) {}
-        void reload() override;
-
-    private:
-        std::string m_FileName;
-    };
-
-    using TexturePtr = std::shared_ptr<Texture>;
+    using SpritePtr = std::shared_ptr<Sprite>;
 }

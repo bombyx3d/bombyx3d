@@ -47,5 +47,8 @@ namespace Z
     {
         m_GLTexture.reset(new GLTexture);
         m_GLTexture->load(m_FileName);
+        m_Width = m_GLTexture->width();
+        m_Height = m_GLTexture->height();
+        m_Depth = m_GLTexture->depth();
     }
 }

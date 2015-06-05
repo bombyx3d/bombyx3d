@@ -37,6 +37,10 @@ namespace Z
 
         GL::UInt handle() const { return m_Handle; }
 
+        int width() const { return m_Width; }
+        int height() const { return m_Height; }
+        int depth() const { return m_Depth; }
+
         bool bind(GL::Enum type = GL::Enum(0));
         bool bind(GL3::Enum type) { return bind(GL::Enum(type)); }
         void unbind();
@@ -64,6 +68,9 @@ namespace Z
         GL::Enum m_MagFilter = GL::LINEAR;
         GL::Enum m_WrapS = GL::CLAMP_TO_EDGE;
         GL::Enum m_WrapT = GL::CLAMP_TO_EDGE;
+        int m_Width = 0;
+        int m_Height = 0;
+        int m_Depth = 0;
         bool m_Dirty = true;
 
         static bool validateUncompressedDataSize(const std::string& name, uint32_t format, uint32_t type,

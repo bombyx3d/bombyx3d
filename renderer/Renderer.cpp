@@ -223,6 +223,12 @@ namespace Z
         return shader;
     }
 
+    SpritePtr Renderer::createSpriteFromTexture(const std::string& name)
+    {
+        TexturePtr texture = loadTexture(name);
+        return std::make_shared<Sprite>(texture);
+    }
+
     bool Renderer::useShader(const ShaderPtr& shader)
     {
         m_Flags |= ProjectionUniformDirty | ModelViewUniformDirty | Texture0UniformDirty;

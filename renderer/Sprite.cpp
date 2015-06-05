@@ -19,44 +19,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "opengl/GLTexture.h"
-#include <memory>
+#include "Sprite.h"
 
 namespace Z
 {
-    class Texture
+    Sprite::Sprite()
+        : m_Center(0.0f)
+        , m_Size(0.0f)
     {
-    public:
-        Texture();
-        virtual ~Texture();
+        memset(m_TexCoords, 0, sizeof(m_TexCoords));
+    }
 
-        int width() const { return m_Width; }
-        int height() const { return m_Height; }
-        int depth() const { return m_Depth; }
-
-        bool bind();
-
-        virtual void reload() = 0;
-        void unload();
-
-    protected:
-        GLTexturePtr m_GLTexture;
-        int m_Width = 0;
-        int m_Height = 0;
-        int m_Depth = 0;
-    };
-
-    class TextureFromFile : public Texture
+    Sprite::Sprite(const TexturePtr& texture)
     {
-    public:
-        explicit TextureFromFile(const std::string& fileName) : m_FileName(fileName) {}
-        void reload() override;
+        m_Size = glm::vec2(float(texture->width()), float(texture->height()));
+        m_Center = m_Size * 0.5f;
+        m_TexCoords[0] = glm::vec2(0.0f, 0.0f);
+        m_TexCoords[1] = glm::vec2(1.0f, 0.0f);
+        m_TexCoords[2] = glm::vec2(0.0f, 1.0f);
+        m_TexCoords[3] = glm::vec2(1.0f, 1.0f);
+    }
 
-    private:
-        std::string m_FileName;
-    };
-
-    using TexturePtr = std::shared_ptr<Texture>;
+    Sprite::~Sprite()
+    {
+    }
 }

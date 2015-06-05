@@ -23,6 +23,7 @@
 #pragma once
 #include "Texture.h"
 #include "Shader.h"
+#include "Sprite.h"
 #include "utility/MatrixStack.h"
 #include <glm/glm.hpp>
 #include <unordered_map>
@@ -70,6 +71,8 @@ namespace Z
 
         TexturePtr loadTexture(const std::string& name);
         ShaderPtr loadShader(const std::string& name);
+
+        SpritePtr createSpriteFromTexture(const std::string& name);
 
     private:
         enum {
