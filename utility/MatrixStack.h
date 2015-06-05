@@ -23,13 +23,16 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <vector>
+#include <functional>
 
 namespace Z
 {
     class MatrixStack
     {
     public:
-        explicit MatrixStack(size_t initialReserve = 1);
+        using ModificationListener = std::function<void()>;
+
+        explicit MatrixStack(size_t initialReserve = 1, const ModificationListener& listener = ModificationListener());
         ~MatrixStack();
 
         void reset();
@@ -43,5 +46,8 @@ namespace Z
 
     private:
         std::vector<glm::mat4> m_Matrices;
+        ModificationListener m_Listener;
+
+        void invokeListener();
     };
 }

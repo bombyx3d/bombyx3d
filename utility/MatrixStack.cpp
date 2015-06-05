@@ -25,10 +25,12 @@
 
 namespace Z
 {
-    MatrixStack::MatrixStack(size_t initialReserve)
+    MatrixStack::MatrixStack(size_t initialReserve, const ModificationListener& listener)
+        : m_Listener(listener)
     {
         m_Matrices.reserve(std::max(size_t(1), initialReserve));
-        reset();
+        m_Matrices.resize(1);
+        m_Matrices.back() = glm::mat4(1.0f);
     }
 
     MatrixStack::~MatrixStack()
@@ -39,6 +41,7 @@ namespace Z
     {
         m_Matrices.resize(1);
         m_Matrices.back() = glm::mat4(1.0f);
+        invokeListener();
     }
 
     const glm::mat4& MatrixStack::top() const
@@ -51,23 +54,34 @@ namespace Z
     {
         Z_ASSERT(!m_Matrices.empty());
         m_Matrices.back() = matrix;
+        invokeListener();
     }
 
     void MatrixStack::pushApply(const glm::mat4& matrix)
     {
         Z_ASSERT(!m_Matrices.empty());
         m_Matrices.back() *= matrix;
+        invokeListener();
     }
 
     void MatrixStack::pushReplace(const glm::mat4& matrix)
     {
         m_Matrices.emplace_back(matrix);
+        invokeListener();
     }
 
     void MatrixStack::pop()
     {
         Z_CHECK(m_Matrices.size() > 1);
-        if (m_Matrices.size() > 1)
+        if (m_Matrices.size() > 1) {
             m_Matrices.pop_back();
+            invokeListener();
+        }
+    }
+
+    void MatrixStack::invokeListener()
+    {
+        if (m_Listener)
+            m_Listener();
     }
 }

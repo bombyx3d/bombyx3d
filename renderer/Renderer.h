@@ -34,6 +34,7 @@ namespace Z
     class Renderer
     {
     public:
+        static const std::string DEFAULT_DUMMY_SHADER;
         static const std::string DEFAULT_TEXTURED_2D_SHADER;
 
         Renderer(int viewportWidth, int viewportHeight);
@@ -48,6 +49,7 @@ namespace Z
 
         void suspend();
         void resume();
+        bool isSuspended() const { return (m_Flags & Suspended) != 0; }
 
         void begin2D(float zNear = -1.0f, float zFar = 1.0f);
         void end2D();
@@ -58,18 +60,37 @@ namespace Z
         const MatrixStack& modelViewStack() const { return m_ModelViewStack; }
         MatrixStack& modelViewStack() { return m_ModelViewStack; }
 
+        const ShaderPtr& dummyShader();
+        const ShaderPtr& currentShader() const { return m_CurrentShader; }
+        bool setShader(const ShaderPtr& shader);
+        void uploadUniforms();
+
+        const TexturePtr& currentTexture0() const { return m_CurrentTexture0; }
+        bool setTexture0(const TexturePtr& texture);
+
         TexturePtr loadTexture(const std::string& name);
         ShaderPtr loadShader(const std::string& name);
 
     private:
-        bool m_Suspended = false;
+        enum {
+            Suspended               = 0x00000001,
+            ProjectionUniformDirty  = 0x00000002,
+            ModelViewUniformDirty   = 0x00000004,
+            Texture0UniformDirty    = 0x00000008,
+        };
+
         int m_ViewportWidth;
         int m_ViewportHeight;
         std::unordered_map<std::string, std::weak_ptr<Texture>> m_Textures;
         std::unordered_map<std::string, std::weak_ptr<Shader>> m_Shaders;
         MatrixStack m_ProjectionStack;
         MatrixStack m_ModelViewStack;
+        ShaderPtr m_DummyShader;
+        ShaderPtr m_CurrentShader;
+        TexturePtr m_CurrentTexture0;
+        mutable int m_Flags;
 
+        bool useShader(const ShaderPtr& shader);
         void unloadAllResources();
 
         Renderer(const Renderer&) = delete;

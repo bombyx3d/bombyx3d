@@ -1,5 +1,7 @@
 // Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
 
+%fragment
+
 #ifdef GL_ES
 precision mediump float;
 #endif

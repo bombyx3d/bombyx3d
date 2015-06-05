@@ -77,7 +77,7 @@ namespace Z
         Z_CHECK(uniform >= 0 && uniform < NUM_STANDARD_UNIFORMS);
         if (uniform < 0 || uniform >= NUM_STANDARD_UNIFORMS)
             return false;
-        return m_UniformLocations[uniform] > 0;
+        return m_UniformLocations[uniform] >= 0;
     }
 
     int Shader::getUniformLocation(Uniform uniform) const

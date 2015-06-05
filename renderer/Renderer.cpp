@@ -47,8 +47,9 @@ namespace Z
     Renderer::Renderer(int viewportWidth, int viewportHeight)
         : m_ViewportWidth(viewportWidth)
         , m_ViewportHeight(viewportHeight)
-        , m_ProjectionStack(4)
-        , m_ModelViewStack(32)
+        , m_ProjectionStack(4, [this](){ m_Flags |= ProjectionUniformDirty; })
+        , m_ModelViewStack(32, [this](){ m_Flags |= ModelViewUniformDirty; })
+        , m_Flags(0)
     {
     }
 
@@ -66,6 +67,15 @@ namespace Z
     void Renderer::beginFrame()
     {
         gl::Viewport(0, 0, m_ViewportWidth, m_ViewportHeight);
+
+        m_CurrentTexture0 = nullptr;
+        gl::ActiveTexture(GL::TEXTURE0);
+        GLTexture::unbindAll();
+
+        m_CurrentShader = dummyShader();
+        m_Flags |= ProjectionUniformDirty | ModelViewUniformDirty | Texture0UniformDirty;
+        GLProgram::unbindAll();
+
         m_ProjectionStack.reset();
         m_ModelViewStack.reset();
     }
@@ -73,21 +83,26 @@ namespace Z
     void Renderer::endFrame()
     {
         GLProgram::unbindAll();
+
+        gl::ActiveTexture(GL::TEXTURE0);
         GLTexture::unbindAll();
+
+        m_CurrentShader.reset();
+        m_CurrentTexture0.reset();
     }
 
     void Renderer::suspend()
     {
-        if (!m_Suspended) {
-            m_Suspended = true;
+        if (!isSuspended()) {
+            m_Flags |= Suspended;
             unloadAllResources();
         }
     }
 
     void Renderer::resume()
     {
-        if (m_Suspended) {
-            m_Suspended = false;
+        if (isSuspended()) {
+            m_Flags &= ~Suspended;
             // FIXME
         }
     }
@@ -104,13 +119,78 @@ namespace Z
         m_ProjectionStack.pop();
     }
 
+    const ShaderPtr& Renderer::dummyShader()
+    {
+        if (!m_DummyShader)
+            m_DummyShader = std::make_shared<DummyShader>();
+        return m_DummyShader;
+    }
+
+    bool Renderer::setShader(const ShaderPtr& shader)
+    {
+        Z_CHECK(shader != nullptr);
+        if (!shader)
+            return false;
+
+        if (m_CurrentShader != shader) {
+            if (!useShader(shader)) {
+                useShader(m_CurrentShader);
+                return false;
+            }
+            m_CurrentShader = shader;
+        }
+
+        return true;
+    }
+
+    void Renderer::uploadUniforms()
+    {
+        if (m_Flags & ProjectionUniformDirty) {
+            if (m_CurrentShader->hasUniform(Shader::ProjectionMatrixUniform)) {
+                auto location = m_CurrentShader->getUniformLocation(Shader::ProjectionMatrixUniform);
+                gl::UniformMatrix4fv(location, 1, GL::FALSE, &projectionStack().top()[0][0]);
+            }
+            m_Flags &= ~ProjectionUniformDirty;
+        }
+
+        if (m_Flags & ModelViewUniformDirty) {
+            if (m_CurrentShader->hasUniform(Shader::ModelViewMatrixUniform)) {
+                auto location = m_CurrentShader->getUniformLocation(Shader::ModelViewMatrixUniform);
+                gl::UniformMatrix4fv(location, 1, GL::FALSE, &modelViewStack().top()[0][0]);
+            }
+            m_Flags &= ~ModelViewUniformDirty;
+        }
+
+        if (m_Flags & Texture0UniformDirty) {
+            if (m_CurrentShader->hasUniform(Shader::Texture0Uniform)) {
+                auto location = m_CurrentShader->getUniformLocation(Shader::Texture0Uniform);
+                gl::Uniform1i(location, 0);
+            }
+            m_Flags &= ~Texture0UniformDirty;
+        }
+    }
+
+    bool Renderer::setTexture0(const TexturePtr& texture)
+    {
+        if (m_CurrentTexture0 != texture) {
+            gl::ActiveTexture(GL::TEXTURE0);
+            if (!texture)
+                GLTexture::unbindAll();
+            else if (!texture->bind())
+                return false;
+            m_CurrentTexture0 = texture;
+            m_Flags |= Texture0UniformDirty;
+        }
+        return true;
+    }
+
     TexturePtr Renderer::loadTexture(const std::string& name)
     {
         auto& ref = m_Textures[name];
         TexturePtr texture = ref.lock();
         if (!texture) {
             texture = std::make_shared<TextureFromFile>(name);
-            if (!m_Suspended)
+            if (!isSuspended())
                 texture->reload();
             ref = texture;
         }
@@ -131,16 +211,22 @@ namespace Z
                         (textured2d_glsl, textured2d_glsl_size, builtinShaderName);
                 } else {
                     Z_LOG("There is no builtin shader named \"" << builtinShaderName << "\".");
-                    shader = std::make_shared<DummyShader>();
+                    shader = m_DummyShader;
                 }
             }
 
-            if (!m_Suspended)
+            if (!isSuspended())
                 shader->reload();
 
             ref = shader;
         }
         return shader;
+    }
+
+    bool Renderer::useShader(const ShaderPtr& shader)
+    {
+        m_Flags |= ProjectionUniformDirty | ModelViewUniformDirty | Texture0UniformDirty;
+        return shader->use();
     }
 
     void Renderer::unloadAllResources()
