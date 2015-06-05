@@ -22,7 +22,7 @@
 
 #pragma once
 #include "CanvasElement.h"
-#include "opengl/api/opengl.h"
+#include "renderer/opengl/api/opengl.h"
 #include <glm/glm.hpp>
 #include <memory>
 

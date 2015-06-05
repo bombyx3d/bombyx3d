@@ -21,7 +21,7 @@
  */
 #include "GLTexture.h"
 #include "io/streams/FileInputStream.h"
-#include "formats/ztex.h"
+#include "renderer/formats/ztex.h"
 #include "utility/debug.h"
 #include <iomanip>
 

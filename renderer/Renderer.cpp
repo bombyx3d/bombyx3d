@@ -51,6 +51,7 @@ namespace Z
         , m_ModelViewStack(32, [this](){ m_Flags |= ModelViewUniformDirty; })
         , m_Flags(0)
     {
+        gl::InitWrappers();
     }
 
     Renderer::~Renderer()

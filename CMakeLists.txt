@@ -54,14 +54,14 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     mechanics/match3/Match3Field.cpp
     mechanics/match3/Match3Field.h
     mechanics/match3/Match3Listener.h
-    opengl/api/dummy/*.h
-    opengl/api/normal/*.h
-    opengl/api/qt5/*.h
-    opengl/api/*.cpp
-    opengl/api/*.h
-    opengl/formats/*.h
-    opengl/*.cpp
-    opengl/*.h
+    renderer/formats/*.h
+    renderer/opengl/api/dummy/*.h
+    renderer/opengl/api/normal/*.h
+    renderer/opengl/api/qt5/*.h
+    renderer/opengl/api/*.cpp
+    renderer/opengl/api/*.h
+    renderer/opengl/*.cpp
+    renderer/opengl/*.h
     renderer/*.cpp
     renderer/*.h
     utility/*.cpp
