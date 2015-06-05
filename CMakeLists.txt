@@ -38,6 +38,8 @@ file(GLOB glm_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
 file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+    canvas/*.cpp
+    canvas/*.h
     cmake/*.cmake
     io/files/*.cpp
     io/files/*.h
@@ -47,6 +49,8 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     io/zip/*.h
     io/*.cpp
     io/*.h
+    math/*.cpp
+    math/*.h
     mechanics/match3/Match3Field.cpp
     mechanics/match3/Match3Field.h
     mechanics/match3/Match3Listener.h
