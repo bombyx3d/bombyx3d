@@ -61,6 +61,9 @@ namespace Z
         const MatrixStack& modelViewStack() const { return m_ModelViewStack; }
         MatrixStack& modelViewStack() { return m_ModelViewStack; }
 
+        void setClearColor(const glm::vec4& color);
+        void clear(GL::Bitfield bits);
+
         const ShaderPtr& dummyShader();
         const ShaderPtr& currentShader() const { return m_CurrentShader; }
         bool setShader(const ShaderPtr& shader);

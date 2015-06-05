@@ -119,6 +119,16 @@ namespace Z
         m_ProjectionStack.pop();
     }
 
+    void Renderer::setClearColor(const glm::vec4& color)
+    {
+        gl::ClearColor(color.r, color.g, color.b, color.a);
+    }
+
+    void Renderer::clear(GL::Bitfield bits)
+    {
+        gl::Clear(bits);
+    }
+
     const ShaderPtr& Renderer::dummyShader()
     {
         if (!m_DummyShader)

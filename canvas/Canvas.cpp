@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  */
 #include "Canvas.h"
+#include "Engine.h"
 #include "utility/debug.h"
 
 namespace Z
@@ -45,8 +46,8 @@ namespace Z
     void Canvas::draw() const
     {
         if (m_ClearBits != 0) {
-            gl::ClearColor(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a);
-            gl::Clear(m_ClearBits);
+            Engine::instance().renderer().setClearColor(m_ClearColor);
+            Engine::instance().renderer().clear(m_ClearBits);
         }
 
         if (m_RootElement)
