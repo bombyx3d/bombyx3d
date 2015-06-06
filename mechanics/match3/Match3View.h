@@ -21,41 +21,46 @@
  */
 
 #pragma once
-#include <unordered_set>
+#include "canvas/CanvasElement.h"
+#include "canvas/CanvasSprite.h"
+#include "Match3Field.h"
+#include "Match3SpriteFactory.h"
+#include "Match3Listener.h"
 #include <memory>
-#include <cstdint>
 
 namespace Z
 {
-    class Match3Listener;
-
-    class Match3Field
+    class Match3View : public CanvasElement, private Match3Listener
     {
     public:
-        Match3Field(int width, int height, int8_t numUniqueElements);
-        ~Match3Field();
+        explicit Match3View(Match3SpriteFactory* factory);
+        ~Match3View();
 
-        int width() const { return m_Width; }
-        int height() const { return m_Height; }
+        void setCellSpacing(float spacing);
 
-        int8_t& elementAt(int x, int y);
-        int8_t elementAt(int x, int y) const;
+        void setCellSize(float w, float h) { m_CellWidth = w; m_CellHeight = h; m_CustomCellSize = true; }
+        void resetCellSize();
 
-        bool cellWillMatch(int x, int y, int8_t with);
+        void setField(const Match3FieldPtr& field);
 
-        void addListener(Match3Listener* listener);
-        void removeListener(Match3Listener* listener);
+        void update(double time) override;
 
     private:
-        int m_Width;
-        int m_Height;
-        int8_t m_NumUniqueElements;
-        int8_t* m_Elements;
-        std::unordered_set<Match3Listener*> m_Listeners;
+        Match3FieldPtr m_Field;
+        Match3SpriteFactory* m_SpriteFactory;
+        std::vector<CanvasSpritePtr> m_Sprites;
+        float m_CellWidth;
+        float m_CellHeight;
+        float m_CellSpacing;
+        bool m_ShouldRepositionSprites;
+        bool m_CustomCellSize;
 
-        Match3Field(const Match3Field&) = delete;
-        Match3Field& operator=(const Match3Field&) = delete;
+        void calcCellSize();
+        void repositionSprites();
+
+        void createSpritesForElements();
+        void destroySprites();
     };
 
-    using Match3FieldPtr = std::shared_ptr<Match3Field>;
+    using Match3ViewPtr = std::shared_ptr<Match3View>;
 }

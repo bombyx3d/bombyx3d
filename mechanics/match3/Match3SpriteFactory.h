@@ -21,41 +21,14 @@
  */
 
 #pragma once
-#include <unordered_set>
-#include <memory>
-#include <cstdint>
+#include "renderer/Sprite.h"
 
 namespace Z
 {
-    class Match3Listener;
-
-    class Match3Field
+    class Match3SpriteFactory
     {
     public:
-        Match3Field(int width, int height, int8_t numUniqueElements);
-        ~Match3Field();
-
-        int width() const { return m_Width; }
-        int height() const { return m_Height; }
-
-        int8_t& elementAt(int x, int y);
-        int8_t elementAt(int x, int y) const;
-
-        bool cellWillMatch(int x, int y, int8_t with);
-
-        void addListener(Match3Listener* listener);
-        void removeListener(Match3Listener* listener);
-
-    private:
-        int m_Width;
-        int m_Height;
-        int8_t m_NumUniqueElements;
-        int8_t* m_Elements;
-        std::unordered_set<Match3Listener*> m_Listeners;
-
-        Match3Field(const Match3Field&) = delete;
-        Match3Field& operator=(const Match3Field&) = delete;
+        virtual ~Match3SpriteFactory() = default;
+        virtual SpritePtr spriteForElement(uint8_t index) = 0;
     };
-
-    using Match3FieldPtr = std::shared_ptr<Match3Field>;
 }
