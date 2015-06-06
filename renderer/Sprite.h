@@ -38,6 +38,8 @@ namespace Z
         explicit Sprite(const TexturePtr& texture, const ShaderPtr& shader = ShaderPtr());
         virtual ~Sprite();
 
+        glm::vec2 size() const { return m_Position.bottomRight - m_Position.topLeft; }
+
         void draw() const;
 
     protected:

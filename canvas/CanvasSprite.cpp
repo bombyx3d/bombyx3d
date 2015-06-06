@@ -20,12 +20,14 @@
  * THE SOFTWARE.
  */
 #include "CanvasSprite.h"
+#include "Engine.h"
 
 namespace Z
 {
     CanvasSprite::CanvasSprite(const SpritePtr& sprite)
         : m_Sprite(sprite)
     {
+        setSize(m_Sprite->size());
     }
 
     CanvasSprite::~CanvasSprite()
@@ -34,7 +36,11 @@ namespace Z
 
     void CanvasSprite::draw() const
     {
-        if (m_Sprite)
+        if (m_Sprite) {
+            auto& renderer = Engine::instance().renderer();
+            renderer.modelViewStack().pushTranslate(0.5f * m_Sprite->size());
             m_Sprite->draw();
+            renderer.modelViewStack().pop();
+        }
     }
 }
