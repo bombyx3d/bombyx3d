@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  */
 #include "CanvasElement.h"
+#include "Engine.h"
 #include "utility/debug.h"
 
 namespace Z
@@ -149,8 +150,12 @@ namespace Z
 
     void CanvasElement::drawIfVisible() const
     {
-        if (isVisible())
+        if (isVisible()) {
+            auto& renderer = Engine::instance().renderer();
+            renderer.modelViewStack().pushApply(localTransform());
             draw();
+            renderer.modelViewStack().pop();
+        }
     }
 
     CanvasElementPtr CanvasElement::sendPointerPressEvent(int id, const glm::vec2& pos)
@@ -190,10 +195,8 @@ namespace Z
 
     void CanvasElement::draw() const
     {
-        for (const auto& child : m_Children) {
-            if (child->isVisible())
-                child->draw();
-        }
+        for (const auto& child : m_Children)
+            child->drawIfVisible();
     }
 
     void CanvasElement::onSizeChanged()

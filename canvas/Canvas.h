@@ -28,9 +28,6 @@
 
 namespace Z
 {
-    class Canvas;
-    using CanvasPtr = std::shared_ptr<Canvas>;
-
     class Canvas
     {
     public:
@@ -64,4 +61,6 @@ namespace Z
         Canvas(const Canvas&) = delete;
         Canvas& operator=(const Canvas&) = delete;
     };
+
+    using CanvasPtr = std::shared_ptr<Canvas>;
 }

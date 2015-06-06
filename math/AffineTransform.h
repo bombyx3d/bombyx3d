@@ -76,6 +76,7 @@ namespace Z
 
         AffineTransform inverse() const;
 
+        glm::mat4 toMat4() const;
         glm::vec2 transform(const glm::vec2& vector) const;
     };
 }

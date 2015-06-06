@@ -225,6 +225,16 @@ namespace Z
         return t;
     }
 
+    glm::mat4 AffineTransform::toMat4() const
+    {
+        return glm::mat4(
+              a ,   b , 0.0f, 0.0f,
+              c ,   d , 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+             tx ,  ty , 0.0f, 1.0f
+        );
+    }
+
     glm::vec2 AffineTransform::transform(const glm::vec2& vector) const
     {
         return glm::vec2(

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,41 +21,23 @@
  */
 
 #pragma once
-#include "math/AffineTransform.h"
-#include <glm/glm.hpp>
-#include <vector>
-#include <functional>
+#include "CanvasElement.h"
+#include "renderer/Sprite.h"
 
 namespace Z
 {
-    class MatrixStack
+    class CanvasSprite : public CanvasElement
     {
     public:
-        using ModificationListener = std::function<void()>;
+        explicit CanvasSprite(const SpritePtr& sprite);
+         ~CanvasSprite();
 
-        explicit MatrixStack(size_t initialReserve = 1, const ModificationListener& listener = ModificationListener());
-        ~MatrixStack();
-
-        void reset();
-
-        const glm::mat4& top() const;
-
-        void replaceTop(const glm::mat4& matrix);
-        void pushReplace(const glm::mat4& matrix);
-
-        void pushApply(const glm::mat4& matrix);
-        void pushApply(const AffineTransform& transform);
-
-        void pushTranslate(float x, float y, float z = 0.0f);
-        void pushTranslate(const glm::vec2& translate);
-        void pushTranslate(const glm::vec3& translate);
-
-        void pop();
+    protected:
+        void draw() const override;
 
     private:
-        std::vector<glm::mat4> m_Matrices;
-        ModificationListener m_Listener;
-
-        void invokeListener();
+        SpritePtr m_Sprite;
     };
+
+    using CanvasSpritePtr = std::shared_ptr<CanvasSprite>;
 }

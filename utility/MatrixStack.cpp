@@ -21,6 +21,7 @@
  */
 #include "MatrixStack.h"
 #include "utility/debug.h"
+#include <glm/gtc/matrix_transform.hpp>
 #include <algorithm>
 
 namespace Z
@@ -57,16 +58,43 @@ namespace Z
         invokeListener();
     }
 
-    void MatrixStack::pushApply(const glm::mat4& matrix)
-    {
-        Z_ASSERT(!m_Matrices.empty());
-        m_Matrices.back() *= matrix;
-        invokeListener();
-    }
-
     void MatrixStack::pushReplace(const glm::mat4& matrix)
     {
         m_Matrices.emplace_back(matrix);
+        invokeListener();
+    }
+
+    void MatrixStack::pushApply(const glm::mat4& matrix)
+    {
+        Z_ASSERT(!m_Matrices.empty());
+        m_Matrices.emplace_back(m_Matrices.back() * matrix);
+        invokeListener();
+    }
+
+    void MatrixStack::pushApply(const AffineTransform& transform)
+    {
+        // FIXME: optimize
+        pushApply(transform.toMat4());
+    }
+
+    void MatrixStack::pushTranslate(float x, float y, float z)
+    {
+        Z_ASSERT(!m_Matrices.empty());
+        m_Matrices.emplace_back(glm::translate(m_Matrices.back(), glm::vec3(x, y, z)));
+        invokeListener();
+    }
+
+    void MatrixStack::pushTranslate(const glm::vec2& translate)
+    {
+        Z_ASSERT(!m_Matrices.empty());
+        m_Matrices.emplace_back(glm::translate(m_Matrices.back(), glm::vec3(translate, 0.0f)));
+        invokeListener();
+    }
+
+    void MatrixStack::pushTranslate(const glm::vec3& translate)
+    {
+        Z_ASSERT(!m_Matrices.empty());
+        m_Matrices.emplace_back(glm::translate(m_Matrices.back(), translate));
         invokeListener();
     }
 
