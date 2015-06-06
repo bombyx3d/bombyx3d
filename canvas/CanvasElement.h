@@ -88,6 +88,10 @@ namespace Z
         void setVisible(bool flag = true) { m_Flags = (flag ? m_Flags | Visible : m_Flags &~ Visible); }
         bool isVisible() const { return (m_Flags & Visible) != 0; }
 
+        void setDrawDebugBorder(bool flag = true)
+            { m_Flags = (flag ? m_Flags | DrawDebugBorder : m_Flags &~ DrawDebugBorder); }
+        bool isDrawDebugBorder() const { return (m_Flags & DrawDebugBorder) != 0; }
+
         void installEventFilter(const EventFilterPtr& eventFilter);
         void removeEventFilter(const EventFilterPtr& eventFilter);
 
@@ -116,6 +120,7 @@ namespace Z
             InverseWorldTransformDirty  = 0x00000008,
             InSizeChanged               = 0x00000010,
             Visible                     = 0x00000020,
+            DrawDebugBorder             = 0x00000040,
         };
 
         CanvasElement* m_Parent;

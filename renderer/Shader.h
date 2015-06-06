@@ -31,11 +31,13 @@ namespace Z
     {
     public:
         static const std::string POSITION_ATTRIBUTE_NAME;
+        static const std::string COLOR_ATTRIBUTE_NAME;
         static const std::string TEXCOORD0_ATTRIBUTE_NAME;
 
         enum Attribute
         {
             PositionAttribute = 0,
+            ColorAttribute,
             TexCoord0Attribute,
         };
 

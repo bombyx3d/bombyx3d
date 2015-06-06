@@ -28,6 +28,7 @@
 namespace Z
 {
     const std::string Shader::POSITION_ATTRIBUTE_NAME = "a_position";
+    const std::string Shader::COLOR_ATTRIBUTE_NAME = "a_color";
     const std::string Shader::TEXCOORD0_ATTRIBUTE_NAME = "a_texcoord0";
 
     const std::string Shader::PROJECTION_MATRIX_UNIFORM_NAME = "u_projection";
@@ -113,6 +114,7 @@ namespace Z
     {
         Z_ASSERT(m_GLProgram);
         m_GLProgram->bindAttribLocation(PositionAttribute, POSITION_ATTRIBUTE_NAME.c_str());
+        m_GLProgram->bindAttribLocation(ColorAttribute, COLOR_ATTRIBUTE_NAME.c_str());
         m_GLProgram->bindAttribLocation(TexCoord0Attribute, TEXCOORD0_ATTRIBUTE_NAME.c_str());
     }
 

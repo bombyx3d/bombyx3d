@@ -26,6 +26,7 @@
 #include <memory>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "shaders/colored2d.glsl.h"
 #include "shaders/textured2d.glsl.h"
 
 namespace Z
@@ -40,8 +41,10 @@ namespace Z
     }
 
     #define BUILTIN_PREFIX "builtin:"
+    #define COLORED2D_GLSL "colored2d.glsl"
     #define TEXTURED2D_GLSL "textured2d.glsl"
 
+    const std::string Renderer::DEFAULT_COLORED_2D_SHADER = BUILTIN_PREFIX COLORED2D_GLSL;
     const std::string Renderer::DEFAULT_TEXTURED_2D_SHADER = BUILTIN_PREFIX TEXTURED2D_GLSL;
 
     Renderer::Renderer(int viewportWidth, int viewportHeight)
@@ -216,10 +219,17 @@ namespace Z
             if (name.substr(0, sizeof(BUILTIN_PREFIX) - 1) != BUILTIN_PREFIX)
                 shader = std::make_shared<ShaderFromFile>(name);
             else {
+                struct ShaderSource { const void* data; size_t size; };
+                static const std::unordered_map<std::string, ShaderSource> builtinShaders = {
+                    { COLORED2D_GLSL, { colored2d_glsl, colored2d_glsl_size } },
+                    { TEXTURED2D_GLSL, { textured2d_glsl, textured2d_glsl_size } },
+                };
+
                 std::string builtinShaderName = name.substr(sizeof(BUILTIN_PREFIX) - 1);
-                if (builtinShaderName == TEXTURED2D_GLSL) {
+                auto it = builtinShaders.find(builtinShaderName);
+                if (it != builtinShaders.end()) {
                     shader = std::make_shared<ShaderFromStaticMemory>
-                        (textured2d_glsl, textured2d_glsl_size, builtinShaderName);
+                        (it->second.data, it->second.size, builtinShaderName);
                 } else {
                     Z_LOG("There is no builtin shader named \"" << builtinShaderName << "\".");
                     shader = m_DummyShader;
@@ -247,25 +257,40 @@ namespace Z
         return std::make_shared<Sprite>(texture, shader);
     }
 
-    void Renderer::drawQuad(const Quad& position)
+    void Renderer::drawRect(const Quad& rect, const glm::vec4& color)
+    {
+        uploadUniforms();
+
+        const glm::vec2 quads[] = { rect.topLeft, rect.topRight, rect.bottomRight, rect.bottomLeft };
+        gl::EnableVertexAttribArray(Shader::PositionAttribute);
+        gl::VertexAttribPointer(Shader::PositionAttribute, 2, GL::FLOAT, GL::FALSE, 0, &quads[0].x);
+
+        gl::VertexAttrib4fv(Shader::ColorAttribute, &color.x);
+
+        gl::DrawArrays(GL::LINE_LOOP, 0, 4);
+
+        gl::DisableVertexAttribArray(Shader::PositionAttribute);
+    }
+
+    void Renderer::drawQuad(const Quad& rect)
     {
         uploadUniforms();
 
         gl::EnableVertexAttribArray(Shader::PositionAttribute);
-        gl::VertexAttribPointer(Shader::PositionAttribute, 2, GL::FLOAT, GL::FALSE, 0, &position.topLeft.x);
+        gl::VertexAttribPointer(Shader::PositionAttribute, 2, GL::FLOAT, GL::FALSE, 0, &rect.topLeft.x);
 
         gl::DrawArrays(GL::TRIANGLE_STRIP, 0, 4);
 
         gl::DisableVertexAttribArray(Shader::PositionAttribute);
     }
 
-    void Renderer::drawQuad(const Quad& position, const Quad& texCoord)
+    void Renderer::drawQuad(const Quad& rect, const Quad& texCoord)
     {
         uploadUniforms();
 
         gl::EnableVertexAttribArray(Shader::PositionAttribute);
         gl::EnableVertexAttribArray(Shader::TexCoord0Attribute);
-        gl::VertexAttribPointer(Shader::PositionAttribute, 2, GL::FLOAT, GL::FALSE, 0, &position.topLeft.x);
+        gl::VertexAttribPointer(Shader::PositionAttribute, 2, GL::FLOAT, GL::FALSE, 0, &rect.topLeft.x);
         gl::VertexAttribPointer(Shader::TexCoord0Attribute, 2, GL::FLOAT, GL::FALSE, 0, &texCoord.topLeft.x);
 
         gl::DrawArrays(GL::TRIANGLE_STRIP, 0, 4);

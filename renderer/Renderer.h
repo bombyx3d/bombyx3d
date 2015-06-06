@@ -36,6 +36,7 @@ namespace Z
     class Renderer
     {
     public:
+        static const std::string DEFAULT_COLORED_2D_SHADER;
         static const std::string DEFAULT_TEXTURED_2D_SHADER;
 
         Renderer(int viewportWidth, int viewportHeight);
@@ -78,8 +79,9 @@ namespace Z
         SpritePtr createSpriteFromTexture(const std::string& name);
         SpritePtr createSpriteFromTextureAndShader(const std::string& textureName, const std::string& shaderName);
 
-        void drawQuad(const Quad& position);
-        void drawQuad(const Quad& position, const Quad& texCoord);
+        void drawRect(const Quad& rect, const glm::vec4& color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+        void drawQuad(const Quad& rect);
+        void drawQuad(const Quad& rect, const Quad& texCoord);
 
     private:
         enum {

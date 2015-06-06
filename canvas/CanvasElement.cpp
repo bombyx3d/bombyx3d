@@ -154,7 +154,17 @@ namespace Z
         if (isVisible()) {
             auto& renderer = Engine::instance().renderer();
             renderer.modelViewStack().pushApply(localTransform());
+
             draw();
+
+            if (m_Flags & DrawDebugBorder) {
+                auto currentShader = renderer.currentShader();
+                static auto debugShader = renderer.loadShader(Renderer::DEFAULT_COLORED_2D_SHADER);
+                renderer.setShader(debugShader);
+                renderer.drawRect(Quad::fromTopLeftAndSize(glm::vec2(0.0f, 0.0f), m_Size));
+                renderer.setShader(currentShader);
+            }
+
             renderer.modelViewStack().pop();
         }
     }
