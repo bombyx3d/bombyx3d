@@ -24,6 +24,7 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "Sprite.h"
+#include "math/Quad.h"
 #include "utility/MatrixStack.h"
 #include <glm/glm.hpp>
 #include <unordered_map>
@@ -35,7 +36,6 @@ namespace Z
     class Renderer
     {
     public:
-        static const std::string DEFAULT_DUMMY_SHADER;
         static const std::string DEFAULT_TEXTURED_2D_SHADER;
 
         Renderer(int viewportWidth, int viewportHeight);
@@ -76,6 +76,10 @@ namespace Z
         ShaderPtr loadShader(const std::string& name);
 
         SpritePtr createSpriteFromTexture(const std::string& name);
+        SpritePtr createSpriteFromTextureAndShader(const std::string& textureName, const std::string& shaderName);
+
+        void drawQuad(const Quad& position);
+        void drawQuad(const Quad& position, const Quad& texCoord);
 
     private:
         enum {

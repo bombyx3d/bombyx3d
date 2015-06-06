@@ -20,27 +20,37 @@
  * THE SOFTWARE.
  */
 #include "Sprite.h"
+#include "Engine.h"
 
 namespace Z
 {
     Sprite::Sprite()
-        : m_Center(0.0f)
-        , m_Size(0.0f)
     {
-        memset(m_TexCoords, 0, sizeof(m_TexCoords));
+        m_Position = Quad::allZero();
+        m_TexCoords = Quad::fromZeroToOne();
     }
 
-    Sprite::Sprite(const TexturePtr& texture)
+    Sprite::Sprite(const TexturePtr& texture, const ShaderPtr& shader)
+        : m_Texture(texture)
+        , m_Shader(shader)
     {
-        m_Size = glm::vec2(float(texture->width()), float(texture->height()));
-        m_Center = m_Size * 0.5f;
-        m_TexCoords[0] = glm::vec2(0.0f, 0.0f);
-        m_TexCoords[1] = glm::vec2(1.0f, 0.0f);
-        m_TexCoords[2] = glm::vec2(0.0f, 1.0f);
-        m_TexCoords[3] = glm::vec2(1.0f, 1.0f);
+        if (!m_Shader)
+            m_Shader = Engine::instance().renderer().loadShader(Renderer::DEFAULT_TEXTURED_2D_SHADER);
+
+        glm::vec2 size = glm::vec2(float(texture->width()), float(texture->height()));
+        m_Position.setCenterAndSize(glm::vec2(0.0f, 0.0f), size);
+        m_TexCoords.setTopLeftAndBottomRight(0.0f, 0.0f, 1.0f, 1.0f);
     }
 
     Sprite::~Sprite()
     {
+    }
+
+    void Sprite::draw() const
+    {
+        auto& renderer = Engine::instance().renderer();
+        renderer.setShader(m_Shader);
+        renderer.setTexture0(m_Texture);
+        renderer.drawQuad(m_Position, m_TexCoords);
     }
 }

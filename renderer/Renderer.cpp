@@ -240,6 +240,40 @@ namespace Z
         return std::make_shared<Sprite>(texture);
     }
 
+    SpritePtr Renderer::createSpriteFromTextureAndShader(const std::string& textureName, const std::string& shaderName)
+    {
+        TexturePtr texture = loadTexture(textureName);
+        ShaderPtr shader = loadShader(shaderName);
+        return std::make_shared<Sprite>(texture, shader);
+    }
+
+    void Renderer::drawQuad(const Quad& position)
+    {
+        uploadUniforms();
+
+        gl::EnableVertexAttribArray(Shader::PositionAttribute);
+        gl::VertexAttribPointer(Shader::PositionAttribute, 2, GL::FLOAT, GL::FALSE, 0, &position.topLeft.x);
+
+        gl::DrawArrays(GL::TRIANGLE_STRIP, 0, 4);
+
+        gl::DisableVertexAttribArray(Shader::PositionAttribute);
+    }
+
+    void Renderer::drawQuad(const Quad& position, const Quad& texCoord)
+    {
+        uploadUniforms();
+
+        gl::EnableVertexAttribArray(Shader::PositionAttribute);
+        gl::EnableVertexAttribArray(Shader::TexCoord0Attribute);
+        gl::VertexAttribPointer(Shader::PositionAttribute, 2, GL::FLOAT, GL::FALSE, 0, &position.topLeft.x);
+        gl::VertexAttribPointer(Shader::TexCoord0Attribute, 2, GL::FLOAT, GL::FALSE, 0, &texCoord.topLeft.x);
+
+        gl::DrawArrays(GL::TRIANGLE_STRIP, 0, 4);
+
+        gl::DisableVertexAttribArray(Shader::PositionAttribute);
+        gl::DisableVertexAttribArray(Shader::TexCoord0Attribute);
+    }
+
     bool Renderer::useShader(const ShaderPtr& shader)
     {
         m_Flags |= ProjectionUniformDirty | ModelViewUniformDirty | Texture0UniformDirty;

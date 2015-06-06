@@ -22,6 +22,8 @@
 
 #pragma once
 #include "Texture.h"
+#include "Shader.h"
+#include "math/Quad.h"
 #include "math/AffineTransform.h"
 #include <glm/glm.hpp>
 #include <string>
@@ -33,16 +35,16 @@ namespace Z
     {
     public:
         Sprite();
-        explicit Sprite(const TexturePtr& texture);
+        explicit Sprite(const TexturePtr& texture, const ShaderPtr& shader = ShaderPtr());
         virtual ~Sprite();
 
-        void draw(const AffineTransform&) const;
+        void draw() const;
 
     protected:
         TexturePtr m_Texture;
-        glm::vec2 m_Center;
-        glm::vec2 m_Size;
-        glm::vec2 m_TexCoords[4];
+        ShaderPtr m_Shader;
+        Quad m_Position;
+        Quad m_TexCoords;
     };
 
     using SpritePtr = std::shared_ptr<Sprite>;
