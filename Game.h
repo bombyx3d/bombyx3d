@@ -22,6 +22,7 @@
 
 #pragma once
 #include "platform/PlatformInitOptions.h"
+#include <glm/glm.hpp>
 
 #ifdef NDEBUG
  #undef Z_DEBUG_ASSETS_PATH
@@ -56,10 +57,10 @@ namespace Z
         virtual void shutdown() = 0;
         virtual void runFrame(double time) = 0;
 
-        virtual void onPointerPressed(int id, float x, float y);
-        virtual void onPointerMoved(int id, float x, float y);
-        virtual void onPointerReleased(int id, float x, float y);
-        virtual void onPointerCancelled(int id, float x, float y);
+        virtual void onPointerPressed(int id, const glm::vec2& pos);
+        virtual void onPointerMoved(int id, const glm::vec2& pos);
+        virtual void onPointerReleased(int id, const glm::vec2& pos);
+        virtual void onPointerCancelled(int id, const glm::vec2& pos);
 
     private:
         const char* m_AssetsLocationHint = nullptr;

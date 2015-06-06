@@ -43,32 +43,28 @@ namespace Z
         return 8;
     }
 
-    void Game::onPointerPressed(int id, float x, float y)
+    void Game::onPointerPressed(int id, const glm::vec2& pos)
     {
         (void)id;
-        (void)x;
-        (void)y;
+        (void)pos;
     }
 
-    void Game::onPointerMoved(int id, float x, float y)
+    void Game::onPointerMoved(int id, const glm::vec2& pos)
     {
         (void)id;
-        (void)x;
-        (void)y;
+        (void)pos;
     }
 
-    void Game::onPointerReleased(int id, float x, float y)
+    void Game::onPointerReleased(int id, const glm::vec2& pos)
     {
         (void)id;
-        (void)x;
-        (void)y;
+        (void)pos;
     }
 
-    void Game::onPointerCancelled(int id, float x, float y)
+    void Game::onPointerCancelled(int id, const glm::vec2& pos)
     {
         (void)id;
-        (void)x;
-        (void)y;
+        (void)pos;
     }
 
     void Game::setAssetsLocationHint(const char* hint)

@@ -46,6 +46,17 @@ namespace Z
         return new Engine;
     }
 
+    void Engine::cancelAllActiveTouches()
+    {
+        while (!m_ActiveTouches.empty()) {
+            auto it = m_ActiveTouches.begin();
+            int id = it->first;
+            glm::vec2 pos = it->second;
+            m_ActiveTouches.erase(it);
+            m_Game->onPointerCancelled(id, pos);
+        }
+    }
+
     const PlatformInitOptions* Engine::getInitOptions() const
     {
         return m_Game.get();
@@ -65,6 +76,7 @@ namespace Z
 
     void Engine::onSuspend()
     {
+        cancelAllActiveTouches();
         if (m_Renderer)
             m_Renderer->suspend();
     }
@@ -73,22 +85,58 @@ namespace Z
     {
         if (m_Renderer)
             m_Renderer->resume();
+        cancelAllActiveTouches();
     }
 
     void Engine::onPointerPressed(int id, float x, float y)
     {
+        if (!m_Renderer->isSuspended()) {
+            glm::vec2 pos(x, y);
+            auto r = m_ActiveTouches.insert(std::make_pair(id, pos));
+            if (!r.second) {
+                Z_LOG("Got onPointerPressed for pointer that was already pressed.");
+
+                glm::vec2 oldPos = r.first->second;
+                m_Game->onPointerCancelled(id, oldPos);
+
+                m_ActiveTouches[id] = pos;
+            }
+            m_Game->onPointerPressed(id, pos);
+        }
     }
 
     void Engine::onPointerMoved(int id, float x, float y)
     {
+        if (!m_Renderer->isSuspended()) {
+            auto it = m_ActiveTouches.find(id);
+            if (it != m_ActiveTouches.end()) {
+                glm::vec2 pos(x, y);
+                it->second = pos;
+                m_Game->onPointerMoved(id, pos);
+            }
+        }
     }
 
     void Engine::onPointerReleased(int id, float x, float y)
     {
+        if (!m_Renderer->isSuspended()) {
+            auto it = m_ActiveTouches.find(id);
+            if (it != m_ActiveTouches.end()) {
+                m_ActiveTouches.erase(it);
+                m_Game->onPointerReleased(id, glm::vec2(x, y));
+            }
+        }
     }
 
     void Engine::onPointerCancelled(int id, float x, float y)
     {
+        if (!m_Renderer->isSuspended()) {
+            auto it = m_ActiveTouches.find(id);
+            if (it != m_ActiveTouches.end()) {
+                m_ActiveTouches.erase(it);
+                m_Game->onPointerCancelled(id, glm::vec2(x, y));
+            }
+        }
     }
 
     void Engine::onViewportSizeChanged(int width, int height)

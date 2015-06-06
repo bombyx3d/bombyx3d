@@ -25,6 +25,7 @@
 #include "platform/PlatformCallbacks.h"
 #include "renderer/Renderer.h"
 #include <memory>
+#include <unordered_map>
 
 namespace Z
 {
@@ -33,15 +34,21 @@ namespace Z
     class Engine : private PlatformCallbacks
     {
     public:
+        using TouchMap = std::unordered_map<int, glm::vec2>;
+
         static PlatformCallbacks* create();
         static Engine& instance() { Z_ASSERT(m_Instance != nullptr); return *m_Instance; }
 
         Renderer& renderer() { Z_ASSERT(m_Renderer != nullptr); return *m_Renderer; }
 
+        const TouchMap& activeTouches() const { return m_ActiveTouches; }
+        void cancelAllActiveTouches();
+
     private:
         static Engine* m_Instance;
         std::unique_ptr<Renderer> m_Renderer;
         std::unique_ptr<Game> m_Game;
+        TouchMap m_ActiveTouches;
 
         Engine();
         ~Engine();

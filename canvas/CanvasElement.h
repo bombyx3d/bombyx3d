@@ -26,6 +26,7 @@
 #include <list>
 #include <functional>
 #include <memory>
+#include <vector>
 
 namespace Z
 {
@@ -35,6 +36,17 @@ namespace Z
     class CanvasElement : public std::enable_shared_from_this<CanvasElement>
     {
     public:
+        class EventFilter
+        {
+        public:
+            virtual ~EventFilter() = default;
+            virtual bool filterPointerPressEvent(const CanvasElementPtr&, int, const glm::vec2&) { return false; }
+            virtual bool filterPointerMoveEvent(const CanvasElementPtr&, int, const glm::vec2&) { return false; }
+            virtual bool filterPointerReleaseEvent(const CanvasElementPtr&, int, const glm::vec2&) { return false; }
+            virtual bool filterPointerCancelEvent(const CanvasElementPtr&, int, const glm::vec2&) { return false; }
+        };
+        using EventFilterPtr = std::shared_ptr<EventFilter>;
+
         CanvasElement();
         virtual ~CanvasElement();
 
@@ -76,7 +88,12 @@ namespace Z
         void setVisible(bool flag = true) { m_Flags = (flag ? m_Flags | Visible : m_Flags &~ Visible); }
         bool isVisible() const { return (m_Flags & Visible) != 0; }
 
+        void installEventFilter(const EventFilterPtr& eventFilter);
+        void removeEventFilter(const EventFilterPtr& eventFilter);
+
     protected:
+        using EventFilterVisitor = std::function<bool(const EventFilterPtr&)>;
+
         virtual void draw() const;
 
         virtual void onSizeChanged();
@@ -88,6 +105,8 @@ namespace Z
 
         virtual void invalidateLocalTransform();
         virtual void invalidateWorldTransform();
+
+        bool filterEvent(const EventFilterVisitor& callback);
 
     private:
         enum Flag {
@@ -102,6 +121,7 @@ namespace Z
         CanvasElement* m_Parent;
         std::list<CanvasElementPtr> m_Children;
         std::list<CanvasElementPtr>::iterator m_SelfRef;
+        std::vector<std::weak_ptr<EventFilter>> m_EventFilters;
         mutable AffineTransform m_LocalTransform;
         mutable AffineTransform m_InverseLocalTransform;
         mutable AffineTransform m_WorldTransform;

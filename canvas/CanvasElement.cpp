@@ -31,7 +31,8 @@ namespace Z
         , m_Size(0.0f)
         , m_Scale(1.0f)
         , m_Rotation(0.0f)
-        , m_Flags(Visible)
+        , m_Flags(LocalTransformDirty | InverseLocalTransformDirty | WorldTransformDirty
+            | InverseWorldTransformDirty | Visible)
     {
         m_LocalTransform.setIdentity();
     }
@@ -163,6 +164,11 @@ namespace Z
         if (isVisible()) {
             glm::vec2 point = inverseLocalTransform().transform(pos);
 
+            if (filterEvent([this, id, &point](const EventFilterPtr& filter) -> bool {
+                    return filter->filterPointerPressEvent(shared_from_this(), id, point);
+                }))
+                return shared_from_this();
+
             for (auto it = m_Children.rbegin(); it != m_Children.rend(); ++it) {
                 CanvasElementPtr result = (*it)->sendPointerPressEvent(id, point);
                 if (result)
@@ -178,19 +184,53 @@ namespace Z
     void CanvasElement::sendPointerMoveEvent(int id, const glm::vec2& pos)
     {
         glm::vec2 point = inverseWorldTransform().transform(pos);
+
+        if (filterEvent([this, id, &point](const EventFilterPtr& filter) -> bool {
+                return filter->filterPointerMoveEvent(shared_from_this(), id, point);
+            }))
+            return;
+
         onPointerMoved(id, point);
     }
 
     void CanvasElement::sendPointerReleaseEvent(int id, const glm::vec2& pos)
     {
         glm::vec2 point = inverseWorldTransform().transform(pos);
+
+        if (filterEvent([this, id, &point](const EventFilterPtr& filter) -> bool {
+                return filter->filterPointerReleaseEvent(shared_from_this(), id, point);
+            }))
+            return;
+
         onPointerReleased(id, point);
     }
 
     void CanvasElement::sendPointerCancelEvent(int id, const glm::vec2& pos)
     {
         glm::vec2 point = inverseWorldTransform().transform(pos);
+
+        if (filterEvent([this, id, &point](const EventFilterPtr& filter) -> bool {
+                return filter->filterPointerCancelEvent(shared_from_this(), id, point);
+            }))
+            return;
+
         onPointerCancelled(id, point);
+    }
+
+    void CanvasElement::installEventFilter(const EventFilterPtr& eventFilter)
+    {
+        m_EventFilters.emplace_back(eventFilter);
+    }
+
+    void CanvasElement::removeEventFilter(const EventFilterPtr& eventFilter)
+    {
+        for (auto it = m_EventFilters.begin(); it != m_EventFilters.end(); ) {
+            auto filter = it->lock();
+            if (filter && filter != eventFilter)
+                ++it;
+            else
+                it = m_EventFilters.erase(it);
+        }
     }
 
     void CanvasElement::draw() const
@@ -233,5 +273,31 @@ namespace Z
             for (const auto& child : m_Children)
                 child->invalidateWorldTransform();
         }
+    }
+
+    bool CanvasElement::filterEvent(const EventFilterVisitor& callback)
+    {
+        if (m_EventFilters.empty())
+            return false;
+
+        std::vector<EventFilterPtr> eventFilters;
+        eventFilters.reserve(m_EventFilters.size());
+
+        for (auto it = m_EventFilters.begin(); it != m_EventFilters.end(); ) {
+            auto filter = it->lock();
+            if (!filter)
+                it = m_EventFilters.erase(it);
+            else {
+                ++it;
+                eventFilters.emplace_back(std::move(filter));
+            }
+        }
+
+        for (const auto& filter: eventFilters) {
+            if (callback(filter))
+                return true;
+        }
+
+        return false;
     }
 }
