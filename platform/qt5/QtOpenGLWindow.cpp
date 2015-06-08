@@ -125,7 +125,7 @@ namespace Z
 
     void QtOpenGLWindow::mousePressEvent(QMouseEvent* e)
     {
-        if (m_Initialized) {
+        if (m_Initialized && e->button() == Qt::LeftButton) {
             float x = e->pos().x();
             float y = e->pos().y();
             m_RenderThread.post([this, x, y]() {
@@ -147,7 +147,7 @@ namespace Z
 
     void QtOpenGLWindow::mouseReleaseEvent(QMouseEvent* e)
     {
-        if (m_Initialized) {
+        if (m_Initialized && e->button() == Qt::LeftButton) {
             float x = e->pos().x();
             float y = e->pos().y();
             m_RenderThread.post([this, x, y]() {
