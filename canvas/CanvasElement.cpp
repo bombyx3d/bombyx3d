@@ -243,6 +243,11 @@ namespace Z
         }
     }
 
+    bool CanvasElement::localPointInside(const glm::vec2& localPoint) const
+    {
+        return (localPoint.x >= 0 && localPoint.y >= 0 && localPoint.x < m_Size.x && localPoint.y < m_Size.y);
+    }
+
     void CanvasElement::draw() const
     {
         for (const auto& child : m_Children)

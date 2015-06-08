@@ -33,6 +33,40 @@ namespace Z
     class Match3View : public CanvasElement, private Match3Listener
     {
     public:
+        class Item : public CanvasElement
+        {
+        public:
+            Item(Match3View* view, int x, int y, const SpritePtr& sprite);
+
+            const CanvasSpritePtr& sprite() const { return m_Sprite; }
+
+            int x() const { return m_X; }
+            int y() const { return m_Y; }
+
+            bool onPointerPressed(int id, const glm::vec2& pos) override;
+            void onPointerMoved(int id, const glm::vec2& pos) override;
+            void onPointerReleased(int id, const glm::vec2& pos) override;
+            void onPointerCancelled(int id, const glm::vec2& pos) override;
+
+            void update(double time) override;
+
+        private:
+            CanvasSpritePtr m_Sprite;
+            Match3View* m_View;
+            std::shared_ptr<Item> m_SwappingWithItem;
+            glm::vec2 m_DragTargetPosition;
+            glm::vec2 m_DragAnchor;
+            int m_LastDragDirectionX;
+            int m_LastDragDirectionY;
+            int m_X;
+            int m_Y;
+
+            void cancelDrag(bool animated);
+
+            friend class Match3View;
+        };
+        using ItemPtr = std::shared_ptr<Item>;
+
         explicit Match3View(Match3SpriteFactory* factory);
         ~Match3View();
 
@@ -45,21 +79,36 @@ namespace Z
 
         void update(double time) override;
 
+        bool isValidItemXY(int x, int y) const;
+        const ItemPtr& itemAt(int x, int y);
+        const ItemPtr& itemAtPoint(const glm::vec2& position);
+
+        const ItemPtr& selectedItem() const { return m_SelectedItem; }
+        void selectItem(int x, int y);
+        void deselectSelectedItem();
+
+    protected:
+        virtual void selectItem(const ItemPtr& item);
+        virtual void deselectItem(const ItemPtr& item);
+
     private:
         Match3FieldPtr m_Field;
         Match3SpriteFactory* m_SpriteFactory;
-        std::vector<CanvasSpritePtr> m_Sprites;
+        std::vector<ItemPtr> m_Items;
+        ItemPtr m_SelectedItem;
         float m_CellWidth;
         float m_CellHeight;
         float m_CellSpacing;
-        bool m_ShouldSetSpritesPositions;
+        bool m_ShouldSetItemsPositions;
         bool m_CustomCellSize;
 
         void calcCellSize();
-        void setSpritesPositions();
+        void setItemsPositions();
 
-        void createSpritesForElements();
-        void destroySprites();
+        void createItems();
+        void destroyItems();
+
+        friend class Item;
     };
 
     using Match3ViewPtr = std::shared_ptr<Match3View>;

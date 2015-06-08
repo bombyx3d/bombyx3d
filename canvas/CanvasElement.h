@@ -95,6 +95,8 @@ namespace Z
         void installEventFilter(const EventFilterPtr& eventFilter);
         void removeEventFilter(const EventFilterPtr& eventFilter);
 
+        bool localPointInside(const glm::vec2& localPoint) const;
+
     protected:
         using EventFilterVisitor = std::function<bool(const EventFilterPtr&)>;
 
