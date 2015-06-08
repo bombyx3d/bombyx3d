@@ -26,12 +26,12 @@ namespace Z
 {
     AffineTransform::AffineTransform(const AffineTransform& t1, const AffineTransform& t2)
     {
-        a = t1.a * t2.a + t1.b * t2.c;
-        b = t1.a * t2.b + t1.b * t2.d;
-        c = t1.c * t2.a + t1.d * t2.c;
-        d = t1.c * t2.b + t1.d * t2.d;
-        tx = t1.tx * t2.a + t1.ty * t2.c + t2.tx;
-        ty = t1.tx * t2.b + t1.ty * t2.d + t2.ty;
+        a = t2.a * t1.a + t2.b * t1.c;
+        b = t2.a * t1.b + t2.b * t1.d;
+        c = t2.c * t1.a + t2.d * t1.c;
+        d = t2.c * t1.b + t2.d * t1.d;
+        tx = t2.tx * t1.a + t2.ty * t1.c + t1.tx;
+        ty = t2.tx * t1.b + t2.ty * t1.d + t1.ty;
     }
 
     AffineTransform& AffineTransform::setIdentity()
