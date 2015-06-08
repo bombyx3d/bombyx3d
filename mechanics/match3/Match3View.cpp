@@ -30,7 +30,7 @@ namespace Z
         , m_CellWidth(0.0f)
         , m_CellHeight(0.0f)
         , m_CellSpacing(0.0f)
-        , m_ShouldRepositionSprites(false)
+        , m_ShouldSetSpritesPositions(false)
         , m_CustomCellSize(false)
     {
         Z_ASSERT(factory != nullptr);
@@ -46,7 +46,7 @@ namespace Z
     {
         if (m_CellSpacing != spacing) {
             m_CellSpacing = spacing;
-            m_ShouldRepositionSprites = true;
+            m_ShouldSetSpritesPositions = true;
         }
     }
 
@@ -78,9 +78,9 @@ namespace Z
 
     void Match3View::update(double time)
     {
-        if (m_ShouldRepositionSprites) {
-            repositionSprites();
-            m_ShouldRepositionSprites = false;
+        if (m_ShouldSetSpritesPositions) {
+            setSpritesPositions();
+            m_ShouldSetSpritesPositions = false;
         }
 
         CanvasElement::update(time);
@@ -99,12 +99,12 @@ namespace Z
             if (m_CellWidth != cellWidth || m_CellHeight != cellHeight) {
                 m_CellWidth = cellWidth;
                 m_CellHeight = cellHeight;
-                m_ShouldRepositionSprites = true;
+                m_ShouldSetSpritesPositions = true;
             }
         }
     }
 
-    void Match3View::repositionSprites()
+    void Match3View::setSpritesPositions()
     {
         if (!m_Field) {
             Z_CHECK(m_Sprites.size() == 0);
@@ -144,7 +144,7 @@ namespace Z
                     }
                 }
             }
-            m_ShouldRepositionSprites = true;
+            m_ShouldSetSpritesPositions = true;
         }
     }
 

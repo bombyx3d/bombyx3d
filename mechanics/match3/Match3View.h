@@ -52,11 +52,11 @@ namespace Z
         float m_CellWidth;
         float m_CellHeight;
         float m_CellSpacing;
-        bool m_ShouldRepositionSprites;
+        bool m_ShouldSetSpritesPositions;
         bool m_CustomCellSize;
 
         void calcCellSize();
-        void repositionSprites();
+        void setSpritesPositions();
 
         void createSpritesForElements();
         void destroySprites();
