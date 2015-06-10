@@ -32,6 +32,8 @@ namespace Z
         explicit CanvasSprite(const SpritePtr& sprite);
          ~CanvasSprite();
 
+         const SpritePtr& sprite() const { return m_Sprite; }
+
     protected:
         void draw() const override;
 

@@ -21,6 +21,7 @@
  */
 
 #pragma once
+#include <functional>
 #include <unordered_set>
 #include <memory>
 #include <cstdint>
@@ -41,6 +42,8 @@ namespace Z
         int8_t& elementAt(int x, int y);
         int8_t elementAt(int x, int y) const;
 
+        bool swapItems(int x1, int y1, int x2, int y2, bool notifyListenerOnFailure);
+
         bool cellWillMatch(int x, int y, int8_t with);
 
         void addListener(Match3Listener* listener);
@@ -52,6 +55,8 @@ namespace Z
         int8_t m_NumUniqueElements;
         int8_t* m_Elements;
         std::unordered_set<Match3Listener*> m_Listeners;
+
+        void forEachListener(const std::function<void(Match3Listener*)>& iterator);
 
         Match3Field(const Match3Field&) = delete;
         Match3Field& operator=(const Match3Field&) = delete;

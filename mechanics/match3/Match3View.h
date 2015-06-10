@@ -27,6 +27,8 @@
 #include "Match3SpriteFactory.h"
 #include "Match3Listener.h"
 #include <memory>
+#include <functional>
+#include <deque>
 
 namespace Z
 {
@@ -42,6 +44,7 @@ namespace Z
 
             int x() const { return m_X; }
             int y() const { return m_Y; }
+            void setXY(int x, int y) { m_X = x; m_Y = y; }
 
             bool onPointerPressed(int id, const glm::vec2& pos) override;
             void onPointerMoved(int id, const glm::vec2& pos) override;
@@ -60,6 +63,7 @@ namespace Z
             int m_LastDragDirectionY;
             int m_X;
             int m_Y;
+            bool m_Dragging;
 
             void cancelDrag(bool animated);
 
@@ -75,6 +79,7 @@ namespace Z
         void setCellSize(float w, float h) { m_CellWidth = w; m_CellHeight = h; m_CustomCellSize = true; }
         void resetCellSize();
 
+        const Match3FieldPtr& field() const { return m_Field; }
         void setField(const Match3FieldPtr& field);
 
         void update(double time) override;
@@ -95,6 +100,7 @@ namespace Z
         Match3FieldPtr m_Field;
         Match3SpriteFactory* m_SpriteFactory;
         std::vector<ItemPtr> m_Items;
+        std::deque<std::function<bool(double)>> m_Animations;
         ItemPtr m_SelectedItem;
         float m_CellWidth;
         float m_CellHeight;
@@ -107,6 +113,11 @@ namespace Z
 
         void createItems();
         void destroyItems();
+
+        void cancelItemsDrag();
+
+        void onItemsSwapped(int x1, int y1, int x2, int y2) override;
+        bool animateSpritePosition(const CanvasSpritePtr& sprite, const glm::vec2& targetPosition, double time);
 
         friend class Item;
     };

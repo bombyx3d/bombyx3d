@@ -29,5 +29,8 @@ namespace Z
     {
     public:
         virtual ~Match3Listener() = default;
+
+        virtual void onItemsSwapped(int x1, int y1, int x2, int y2) { (void)x1; (void)y1; (void)x2; (void)y2; }
+        virtual void onItemsSwapFailed() {}
     };
 }
