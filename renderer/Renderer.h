@@ -65,6 +65,10 @@ namespace Z
         void setClearColor(const glm::vec4& color);
         void clear(GL::Bitfield bits);
 
+        void pushApplyColor(const glm::vec4& color);
+        void pushReplaceColor(const glm::vec4& color);
+        void popColor();
+
         const ShaderPtr& dummyShader();
         const ShaderPtr& currentShader() const { return m_CurrentShader; }
         bool setShader(const ShaderPtr& shader);
@@ -88,13 +92,20 @@ namespace Z
             Suspended               = 0x00000001,
             ProjectionUniformDirty  = 0x00000002,
             ModelViewUniformDirty   = 0x00000004,
-            Texture0UniformDirty    = 0x00000008,
+            ColorUniformDirty       = 0x00000008,
+            Texture0UniformDirty    = 0x00000010,
+
+            AllUniformsDirty        = ProjectionUniformDirty \
+                                    | ModelViewUniformDirty \
+                                    | ColorUniformDirty \
+                                    | Texture0UniformDirty
         };
 
         int m_ViewportWidth;
         int m_ViewportHeight;
         std::unordered_map<std::string, std::weak_ptr<Texture>> m_Textures;
         std::unordered_map<std::string, std::weak_ptr<Shader>> m_Shaders;
+        std::vector<glm::vec4> m_ColorStack;
         MatrixStack m_ProjectionStack;
         MatrixStack m_ModelViewStack;
         ShaderPtr m_DummyShader;

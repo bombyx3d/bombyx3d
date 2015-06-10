@@ -26,7 +26,9 @@ void main()
 
 %fragment
 
+uniform vec4 u_color;
+
 void main()
 {
-    gl_FragColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);//v_color;
+    gl_FragColor = u_color * v_color;
 }

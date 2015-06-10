@@ -27,6 +27,7 @@ namespace Z
 {
     CanvasElement::CanvasElement()
         : m_Parent(nullptr)
+        , m_Color(1.0f, 1.0f, 1.0f, 1.0f)
         , m_Position(0.0f)
         , m_Size(0.0f)
         , m_Scale(1.0f)
@@ -154,6 +155,7 @@ namespace Z
         if (isVisible()) {
             auto& renderer = Engine::instance().renderer();
             renderer.modelViewStack().pushApply(localTransform());
+            renderer.pushApplyColor(m_Color);
 
             draw();
 
@@ -165,6 +167,7 @@ namespace Z
                 renderer.setShader(currentShader);
             }
 
+            renderer.popColor();
             renderer.modelViewStack().pop();
         }
     }

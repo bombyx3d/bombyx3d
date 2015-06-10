@@ -43,12 +43,14 @@ namespace Z
 
         static const std::string PROJECTION_MATRIX_UNIFORM_NAME;
         static const std::string MODELVIEW_MATRIX_UNIFORM_NAME;
+        static const std::string COLOR_UNIFORM_NAME;
         static const std::string TEXTURE0_UNIFORM_NAME;
 
         enum Uniform
         {
             ProjectionMatrixUniform = 0,
             ModelViewMatrixUniform,
+            ColorUniform,
             Texture0Uniform,
 
             NUM_STANDARD_UNIFORMS

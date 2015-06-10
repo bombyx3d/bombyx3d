@@ -117,7 +117,14 @@ namespace Z
         void cancelItemsDrag();
 
         void onItemsSwapped(int x1, int y1, int x2, int y2) override;
+        void onItemRespawned(int x, int y) override;
+        void onItemFallen(int x, int oldY, int newY) override;
+        void onChainsMatched(const std::vector<Match3Field::Chain>& chains);
+
         bool animateSpritePosition(const CanvasSpritePtr& sprite, const glm::vec2& targetPosition, double time);
+        bool animateSpriteFade(const CanvasSpritePtr& sprite, double time);
+
+        void validateSprites() const;
 
         friend class Item;
     };

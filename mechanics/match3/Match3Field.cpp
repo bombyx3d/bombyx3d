@@ -22,6 +22,8 @@
 #include "Match3Field.h"
 #include "Match3Listener.h"
 #include "utility/debug.h"
+#include <map>
+#include <cstring>
 #include <random>
 
 namespace Z
@@ -179,6 +181,176 @@ namespace Z
         }
 
         return false;
+    }
+
+    int Match3Field::horizontalMatchLengthFrom(int x, int y) const
+    {
+        if (x + 2 >= m_Width)
+            return 0;
+
+        int8_t x0 = m_Elements[y * m_Width + (x + 0)];
+        int8_t x1 = m_Elements[y * m_Width + (x + 1)];
+        int8_t x2 = m_Elements[y * m_Width + (x + 2)];
+        if (x0 < 0 || x1 != x0 || x2 != x0)
+            return 0;
+
+        int count = 3;
+        for (; x + count < m_Width; count++) {
+            if (m_Elements[y * m_Width + (x + count)] != x0)
+                break;
+        }
+
+        return count;
+    }
+
+    int Match3Field::verticalMatchLengthFrom(int x, int y) const
+    {
+        if (y + 2 >= m_Height)
+            return 0;
+
+        int8_t y0 = m_Elements[(y + 0) * m_Width + x];
+        int8_t y1 = m_Elements[(y + 1) * m_Width + x];
+        int8_t y2 = m_Elements[(y + 2) * m_Width + x];
+        if (y0 < 0 || y1 != y0 || y2 != y0)
+            return 0;
+
+        int count = 3;
+        for (; y + count < m_Height; count++) {
+            if (m_Elements[(y + count) * m_Width + x] != y0)
+                break;
+        }
+
+        return count;
+    }
+
+    bool Match3Field::killAllMatches()
+    {
+        std::vector<Chain> chains;
+
+        std::unique_ptr<size_t[]> chainIndices(new size_t[m_Width * m_Height]);
+        memset(chainIndices.get(), size_t(-1), m_Width * m_Height * sizeof(*chainIndices.get()));
+
+        for (int y = 0; y < m_Height; y++) {
+            for (int x = 0; x < m_Width; x++) {
+
+                int horizontalMatch = horizontalMatchLengthFrom(x, y);
+                int verticalMatch = verticalMatchLengthFrom(x, y);
+                if (!horizontalMatch && !verticalMatch)
+                    continue;
+
+                int8_t item = m_Elements[y * m_Width + x];
+                size_t chainIndex = 0;
+                Chain* chain = nullptr;
+
+                for (int xx = 0; xx < horizontalMatch; xx++) {
+                    size_t index = chainIndices[y * m_Width + (x + xx)];
+                    if (index != size_t(-1)) {
+                        chainIndex = index;
+                      #if !Z_ASSERTIONS_ENABLED
+                        chain = &chains[index];
+                        break;
+                      #else
+                        if (!chain)
+                            chain = &chains[index];
+                        else
+                            Z_CHECK(chain == &chains[index]);
+                        Z_CHECK(chain->element == item);
+                      #endif
+                    }
+                }
+                if (!chain) {
+                    for (int yy = 0; yy < verticalMatch; yy++) {
+                        size_t index = chainIndices[(y + yy) * m_Width + x];
+                        if (index != size_t(-1)) {
+                            chainIndex = index;
+                          #if !Z_ASSERTIONS_ENABLED
+                            chain = &chains[index];
+                            break;
+                          #else
+                            if (!chain)
+                                chain = &chains[index];
+                            else
+                                Z_CHECK(chain == &chains[index]);
+                            Z_CHECK(chain->element == item);
+                          #endif
+                        }
+                    }
+                }
+                if (!chain) {
+                    chainIndex = chains.size();
+                    chains.emplace_back();
+                    chain = &chains.back();
+                    chain->element = item;
+                }
+
+                for (int xx = 0; xx < horizontalMatch; xx++) {
+                    size_t& index = chainIndices[y * m_Width + (x + xx)];
+                    if (index == size_t(-1)) {
+                        index = chainIndex;
+                        chain->cells.emplace_back(x + xx, y);
+                    }
+                }
+
+                for (int yy = 0; yy < verticalMatch; yy++) {
+                    size_t& index = chainIndices[(y + yy) * m_Width + x];
+                    if (index == size_t(-1)) {
+                        index = chainIndex;
+                        chain->cells.emplace_back(x, y + yy);
+                    }
+                }
+            }
+        }
+
+        forEachListener([&chains](Match3Listener* listener) {
+            listener->onChainsMatched(chains);
+        });
+
+        // FIXME
+        std::stringstream ss;
+        ss << "-------------------------------\n";
+        for (int y = 0; y < m_Height; y++) {
+            for (int x = 0; x < m_Width; x++) {
+                if (chainIndices[y * m_Width + x] == size_t(-1))
+                    ss << '.';
+                else
+                    ss << 'x';
+            }
+            ss << '\n';
+        }
+        ss << "-------------------------------\n";
+        Z_LOG(ss.str());
+
+        std::default_random_engine generator;
+        std::uniform_int_distribution<int> distribution(0, m_NumUniqueElements - 1);
+
+        for (int y = 0; y < m_Height; y++) {
+            for (int x = 0; x < m_Width; x++) {
+                if (chainIndices[y * m_Width + x] == size_t(-1))
+                    continue;
+
+                for (int yy = y; yy >= 0; yy--) {
+
+                    int newOffset = yy * m_Width + x;
+                    Z_CHECK(m_Elements[newOffset] >= 0);
+
+                    int oldOffset = (yy - 1) * m_Width + x;
+                    if (yy > 0 && m_Elements[oldOffset] >= 0) {
+                        m_Elements[newOffset] = m_Elements[oldOffset];
+                        forEachListener([x, yy](Match3Listener* listener) {
+                        printf("FALL %d -> %d\n", yy - 1, yy);
+                            listener->onItemFallen(x, yy - 1, yy);
+                        });
+                    } else {
+                        m_Elements[newOffset] = distribution(generator);
+                        forEachListener([x, yy](Match3Listener* listener) {
+                            listener->onItemRespawned(x, yy);
+                        });
+                    }
+                }
+            }
+        }
+
+        return !chains.empty();
     }
 
     void Match3Field::addListener(Match3Listener* listener)

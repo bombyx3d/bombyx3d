@@ -32,5 +32,10 @@ namespace Z
 
         virtual void onItemsSwapped(int x1, int y1, int x2, int y2) { (void)x1; (void)y1; (void)x2; (void)y2; }
         virtual void onItemsSwapFailed() {}
+
+        virtual void onChainsMatched(const std::vector<Match3Field::Chain>& chains) { (void)chains; }
+
+        virtual void onItemRespawned(int x, int y) { (void)x; (void)y; }
+        virtual void onItemFallen(int x, int oldY, int newY) { (void)x; (void)oldY; (void)newY; }
     };
 }

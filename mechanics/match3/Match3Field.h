@@ -21,6 +21,7 @@
  */
 
 #pragma once
+#include <glm/glm.hpp>
 #include <functional>
 #include <unordered_set>
 #include <memory>
@@ -33,6 +34,12 @@ namespace Z
     class Match3Field
     {
     public:
+        struct Chain
+        {
+            int8_t element;
+            std::vector<glm::ivec2> cells;
+        };
+
         Match3Field(int width, int height, int8_t numUniqueElements);
         ~Match3Field();
 
@@ -42,9 +49,12 @@ namespace Z
         int8_t& elementAt(int x, int y);
         int8_t elementAt(int x, int y) const;
 
+        bool cellWillMatch(int x, int y, int8_t with);
         bool swapItems(int x1, int y1, int x2, int y2, bool notifyListenerOnFailure);
 
-        bool cellWillMatch(int x, int y, int8_t with);
+        int horizontalMatchLengthFrom(int x, int y) const;
+        int verticalMatchLengthFrom(int x, int y) const;
+        bool killAllMatches();
 
         void addListener(Match3Listener* listener);
         void removeListener(Match3Listener* listener);

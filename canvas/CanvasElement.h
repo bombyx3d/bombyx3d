@@ -68,6 +68,9 @@ namespace Z
         void setScale(float scale) { setScale(glm::vec2(scale)); }
         void setScale(float x, float y) { setScale(glm::vec2(x, y)); }
 
+        const glm::vec4& color() const { return m_Color; }
+        void setColor(const glm::vec4& color) { m_Color = color; }
+
         const AffineTransform& localTransform() const;
         const AffineTransform& worldTransform() const;
         const AffineTransform& inverseLocalTransform() const;
@@ -133,6 +136,7 @@ namespace Z
         mutable AffineTransform m_InverseLocalTransform;
         mutable AffineTransform m_WorldTransform;
         mutable AffineTransform m_InverseWorldTransform;
+        glm::vec4 m_Color;
         glm::vec2 m_Position;
         glm::vec2 m_Size;
         glm::vec2 m_Scale;

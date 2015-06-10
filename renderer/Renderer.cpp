@@ -77,11 +77,14 @@ namespace Z
         GLTexture::unbindAll();
 
         m_CurrentShader = dummyShader();
-        m_Flags |= ProjectionUniformDirty | ModelViewUniformDirty | Texture0UniformDirty;
+        m_Flags |= AllUniformsDirty;
         GLProgram::unbindAll();
 
         m_ProjectionStack.reset();
         m_ModelViewStack.reset();
+
+        m_ColorStack.resize(1);
+        m_ColorStack[0] = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     void Renderer::endFrame()
@@ -133,6 +136,36 @@ namespace Z
         gl::Clear(bits);
     }
 
+    void Renderer::pushApplyColor(const glm::vec4& color)
+    {
+        Z_ASSERT(!m_ColorStack.empty());
+        if (color == glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)) {
+            m_ColorStack.emplace_back(m_ColorStack.back());
+        } else {
+            m_ColorStack.emplace_back(m_ColorStack.back() * color);
+            m_Flags |= ColorUniformDirty;
+        }
+    }
+
+    void Renderer::pushReplaceColor(const glm::vec4& color)
+    {
+        Z_ASSERT(!m_ColorStack.empty());
+        if (color != m_ColorStack.back())
+            m_Flags |= ColorUniformDirty;
+        m_ColorStack.emplace_back(color);
+    }
+
+    void Renderer::popColor()
+    {
+        size_t colorStackSize = m_ColorStack.size();
+        Z_CHECK(colorStackSize > 1);
+        if (colorStackSize > 1) {
+            if (m_ColorStack[colorStackSize - 2] != m_ColorStack[colorStackSize - 1])
+                m_Flags |= ColorUniformDirty;
+            m_ColorStack.pop_back();
+        }
+    }
+
     const ShaderPtr& Renderer::dummyShader()
     {
         if (!m_DummyShader)
@@ -173,6 +206,15 @@ namespace Z
                 gl::UniformMatrix4fv(location, 1, GL::FALSE, &modelViewStack().top()[0][0]);
             }
             m_Flags &= ~ModelViewUniformDirty;
+        }
+
+        Z_ASSERT(!m_ColorStack.empty());
+        if (m_Flags & ColorUniformDirty) {
+            if (m_CurrentShader->hasUniform(Shader::ColorUniform)) {
+                auto location = m_CurrentShader->getUniformLocation(Shader::ColorUniform);
+                gl::Uniform4fv(location, 1, &m_ColorStack.back().x);
+            }
+            m_Flags &= ~ColorUniformDirty;
         }
 
         if (m_Flags & Texture0UniformDirty) {
@@ -279,6 +321,8 @@ namespace Z
         gl::EnableVertexAttribArray(Shader::PositionAttribute);
         gl::VertexAttribPointer(Shader::PositionAttribute, 2, GL::FLOAT, GL::FALSE, 0, &rect.topLeft.x);
 
+        gl::VertexAttrib4f(Shader::ColorAttribute, 1.0f, 1.0f, 1.0f, 1.0f);
+
         gl::DrawArrays(GL::TRIANGLE_STRIP, 0, 4);
 
         gl::DisableVertexAttribArray(Shader::PositionAttribute);
@@ -301,7 +345,7 @@ namespace Z
 
     bool Renderer::useShader(const ShaderPtr& shader)
     {
-        m_Flags |= ProjectionUniformDirty | ModelViewUniformDirty | Texture0UniformDirty;
+        m_Flags |= AllUniformsDirty;
         return shader->use();
     }
 

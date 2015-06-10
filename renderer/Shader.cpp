@@ -33,6 +33,7 @@ namespace Z
 
     const std::string Shader::PROJECTION_MATRIX_UNIFORM_NAME = "u_projection";
     const std::string Shader::MODELVIEW_MATRIX_UNIFORM_NAME = "u_modelview";
+    const std::string Shader::COLOR_UNIFORM_NAME = "u_color";
     const std::string Shader::TEXTURE0_UNIFORM_NAME = "u_texture0";
 
     Shader::Shader()
@@ -101,6 +102,7 @@ namespace Z
         {
         case ProjectionMatrixUniform: return PROJECTION_MATRIX_UNIFORM_NAME;
         case ModelViewMatrixUniform: return MODELVIEW_MATRIX_UNIFORM_NAME;
+        case ColorUniform: return COLOR_UNIFORM_NAME;
         case Texture0Uniform: return TEXTURE0_UNIFORM_NAME;
         case NUM_STANDARD_UNIFORMS: break;
         }

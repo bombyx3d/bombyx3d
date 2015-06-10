@@ -470,25 +470,129 @@ namespace Z
         m_Animations.push_back([this, sprite1, sprite2](double time) -> bool {
             bool done1 = !animateSpritePosition(sprite1, glm::vec2(0.0f), time);
             bool done2 = !animateSpritePosition(sprite2, glm::vec2(0.0f), time);
-            return done1 && done2;
+            if (done1 && done2) {
+                Z_CHECK(m_Field);
+                if (m_Field)
+                    m_Field->killAllMatches();
+                return true;
+            }
+            return false;
         });
 
-      #if Z_ASSERTIONS_ENABLED
-        int width = m_Field->width();
-        int height = m_Field->height();
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int8_t index = m_Field->elementAt(x, y);
-                auto item = m_Items[y * width + x];
-                if (index < 0) {
-                    Z_ASSERT(item == nullptr);
-                } else {
-                    Z_ASSERT(item != nullptr);
-                    Z_ASSERT(item->sprite()->sprite() == m_SpriteFactory->spriteForElement(index));
+        validateSprites();
+    }
+
+    void Match3View::onItemRespawned(int x, int y)
+    {
+        deselectSelectedItem();
+
+        Z_CHECK(m_Field);
+        if (!m_Field) {
+            cancelItemsDrag();
+            return;
+        }
+
+        Z_CHECK(isValidItemXY(x, y));
+        if (!isValidItemXY(x, y)) {
+            cancelItemsDrag();
+            return;
+        }
+
+        int8_t index = m_Field->elementAt(x, y);
+        Z_CHECK(index >= 0);
+        if (index >= 0) {
+            auto item = std::make_shared<Item>(this, x, y, m_SpriteFactory->spriteForElement(index));
+            addChild(item);
+
+            float posX = float(x) * (m_CellWidth + m_CellSpacing);
+            float posY = float(y) * (m_CellHeight + m_CellSpacing);
+            item->setPosition(posX, posY);
+
+            m_Items[y * m_Field->width() + x] = std::move(item);
+        }
+
+        cancelItemsDrag();
+        validateSprites();
+    }
+
+    void Match3View::onItemFallen(int x, int oldY, int newY)
+    {
+        deselectSelectedItem();
+
+        Z_CHECK(m_Field);
+        if (!m_Field) {
+            cancelItemsDrag();
+            return;
+        }
+
+        Z_CHECK(isValidItemXY(x, oldY));
+        if (!isValidItemXY(x, oldY)) {
+            cancelItemsDrag();
+            return;
+        }
+
+        Z_CHECK(isValidItemXY(x, newY));
+        if (!isValidItemXY(x, newY)) {
+            cancelItemsDrag();
+            return;
+        }
+
+        auto& oldItem = m_Items[oldY * m_Field->width() + x];
+        auto& newItem = m_Items[newY * m_Field->width() + x];
+
+        Z_ASSERT(oldItem != nullptr);
+        Z_ASSERT(newItem == nullptr);
+
+        std::swap(oldItem, newItem);
+        newItem->setXY(x, newY);
+
+        /*
+        m_Animations.push_back([this, sprite1, sprite2](double time) -> bool {
+            bool done1 = !animateSpritePosition(sprite1, glm::vec2(0.0f), time);
+            bool done2 = !animateSpritePosition(sprite2, glm::vec2(0.0f), time);
+            if (done1 && done2) {
+                Z_CHECK(m_Field);
+                if (m_Field)
+                    m_Field->killAllMatches();
+                return true;
+            }
+            return false;
+        });
+        */
+
+        cancelItemsDrag();
+    }
+
+    void Match3View::onChainsMatched(const std::vector<Match3Field::Chain>& chains)
+    {
+        Z_CHECK(m_Field);
+        if (!m_Field)
+            return;
+
+        std::vector<ItemPtr> items;
+        for (const auto& chain : chains) {
+            for (const auto& cell : chain.cells) {
+                auto item = itemAt(cell.x, cell.y);
+                Z_CHECK(item != nullptr);
+                if (item) {
+                    m_Items[cell.y * m_Field->width() + cell.x] = nullptr;
+                    items.emplace_back(std::move(item));
                 }
             }
         }
-      #endif
+
+        if (!items.empty()) {
+            m_Animations.push_back([this, items](double time) -> bool {
+                bool done = true;
+                for (const auto& item : items) {
+                    if (animateSpriteFade(item->sprite(), time))
+                        done = false;
+                    else
+                        item->removeFromParent();
+                }
+                return done;
+            });
+        }
     }
 
     bool Match3View::animateSpritePosition(const CanvasSpritePtr& sprite, const glm::vec2& targetPosition, double time)
@@ -502,5 +606,42 @@ namespace Z
             return true;
         }
         return false;
+    }
+
+    bool Match3View::animateSpriteFade(const CanvasSpritePtr& sprite, double time)
+    {
+        glm::vec4 c = sprite->color();
+        if (c.a != 0.0f) {
+            float delta = c.a;
+            if (delta < 0.1f)
+                sprite->setColor(glm::vec4(c.r, c.g, c.b, 0.0f));
+            else
+                sprite->setColor(glm::vec4(c.r, c.g, c.b, delta - 7.0f * float(time)));
+            return true;
+        }
+        return false;
+    }
+
+    void Match3View::validateSprites() const
+    {
+      #if Z_ASSERTIONS_ENABLED
+        if (m_Field) {
+            int width = m_Field->width();
+            int height = m_Field->height();
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    int8_t index = m_Field->elementAt(x, y);
+                    auto item = m_Items[y * width + x];
+                    if (index < 0) {
+                        Z_ASSERT(item == nullptr);
+                    } else {
+                        // FIXME
+                        //Z_ASSERT(item != nullptr);
+                        //Z_ASSERT(item->sprite()->sprite() == m_SpriteFactory->spriteForElement(index));
+                    }
+                }
+            }
+        }
+      #endif
     }
 }
