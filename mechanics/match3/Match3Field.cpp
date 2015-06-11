@@ -301,6 +301,9 @@ namespace Z
             }
         }
 
+        if (chains.empty())
+            return false;
+
         forEachListener([&chains](Match3Listener* listener) {
             listener->onChainsMatched(chains);
         });
@@ -323,34 +326,50 @@ namespace Z
         std::default_random_engine generator;
         std::uniform_int_distribution<int> distribution(0, m_NumUniqueElements - 1);
 
-        for (int y = 0; y < m_Height; y++) {
-            for (int x = 0; x < m_Width; x++) {
-                if (chainIndices[y * m_Width + x] == size_t(-1))
-                    continue;
+        std::vector<glm::ivec2> fallenItems;
+        std::vector<glm::ivec2> spawnedItems;
 
-                for (int yy = y; yy >= 0; yy--) {
+        bool hadFallenItems;
+        do {
+            hadFallenItems = false;
 
-                    int newOffset = yy * m_Width + x;
-                    Z_CHECK(m_Elements[newOffset] >= 0);
+            for (int y = m_Height - 1; y >= 0; y--) {
+                for (int x = 0; x < m_Width; x++) {
 
-                    int oldOffset = (yy - 1) * m_Width + x;
-                    if (yy > 0 && m_Elements[oldOffset] >= 0) {
-                        m_Elements[newOffset] = m_Elements[oldOffset];
-                        forEachListener([x, yy](Match3Listener* listener) {
-                        printf("FALL %d -> %d\n", yy - 1, yy);
-                            listener->onItemFallen(x, yy - 1, yy);
-                        });
-                    } else {
-                        m_Elements[newOffset] = distribution(generator);
-                        forEachListener([x, yy](Match3Listener* listener) {
-                            listener->onItemRespawned(x, yy);
-                        });
+                    int oldOffset = (y - 1) * m_Width + x;
+                    int newOffset = (y - 0) * m_Width + x;
+
+                    if (chainIndices[newOffset] != size_t(-1)) {
+                        if (y == 0 || m_Elements[oldOffset] < 0) {
+                            m_Elements[newOffset] = distribution(generator);
+                            chainIndices[newOffset] = size_t(-1);
+                            spawnedItems.emplace_back(x, y);
+                            hadFallenItems = true;
+                        } else if (chainIndices[oldOffset] == size_t(-1)) {
+                            m_Elements[newOffset] = m_Elements[oldOffset];
+                            chainIndices[oldOffset] = 0;
+                            chainIndices[newOffset] = size_t(-1);
+                            fallenItems.emplace_back(x, y - 1);
+                            hadFallenItems = true;
+                        }
                     }
                 }
             }
-        }
 
-        return !chains.empty();
+            if (hadFallenItems) {
+                forEachListener([&fallenItems, &spawnedItems](Match3Listener* listener) {
+                    listener->onMatchesKilled(fallenItems, spawnedItems);
+                });
+                fallenItems.clear();
+                spawnedItems.clear();
+            }
+        } while (hadFallenItems);
+
+        forEachListener([](Match3Listener* listener) {
+            listener->onAllMatchesKilled();
+        });
+
+        return true;
     }
 
     void Match3Field::addListener(Match3Listener* listener)

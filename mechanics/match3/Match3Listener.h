@@ -22,6 +22,7 @@
 
 #pragma once
 #include "Match3Field.h"
+#include <glm/glm.hpp>
 
 namespace Z
 {
@@ -35,7 +36,8 @@ namespace Z
 
         virtual void onChainsMatched(const std::vector<Match3Field::Chain>& chains) { (void)chains; }
 
-        virtual void onItemRespawned(int x, int y) { (void)x; (void)y; }
-        virtual void onItemFallen(int x, int oldY, int newY) { (void)x; (void)oldY; (void)newY; }
+        virtual void onMatchesKilled(const std::vector<glm::ivec2>& fallenItems,
+            const std::vector<glm::ivec2>& spawnedItems) { (void)fallenItems; (void)spawnedItems; }
+        virtual void onAllMatchesKilled() {}
     };
 }

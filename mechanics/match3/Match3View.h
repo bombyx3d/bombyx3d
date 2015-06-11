@@ -46,6 +46,9 @@ namespace Z
             int y() const { return m_Y; }
             void setXY(int x, int y) { m_X = x; m_Y = y; }
 
+            void setSpritePosition(float x, float y);
+            void setSpritePosition(const glm::vec2& pos);
+
             bool onPointerPressed(int id, const glm::vec2& pos) override;
             void onPointerMoved(int id, const glm::vec2& pos) override;
             void onPointerReleased(int id, const glm::vec2& pos) override;
@@ -117,11 +120,12 @@ namespace Z
         void cancelItemsDrag();
 
         void onItemsSwapped(int x1, int y1, int x2, int y2) override;
-        void onItemRespawned(int x, int y) override;
-        void onItemFallen(int x, int oldY, int newY) override;
-        void onChainsMatched(const std::vector<Match3Field::Chain>& chains);
+        void onMatchesKilled(const std::vector<glm::ivec2>& fallenItems,
+            const std::vector<glm::ivec2>& spawnedItems) override;
+        void onAllMatchesKilled() override;
+        void onChainsMatched(const std::vector<Match3Field::Chain>& chains) override;
 
-        bool animateSpritePosition(const CanvasSpritePtr& sprite, const glm::vec2& targetPosition, double time);
+        bool animateSpritePosition(const ItemPtr& item, const glm::vec2& targetPosition, double time);
         bool animateSpriteFade(const CanvasSpritePtr& sprite, double time);
 
         void validateSprites() const;

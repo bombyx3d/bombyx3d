@@ -39,6 +39,17 @@ namespace Z
         setSize(m_Sprite->size());
     }
 
+    void Match3View::Item::setSpritePosition(float x, float y)
+    {
+        setSpritePosition(glm::vec2(x, y));
+    }
+
+    void Match3View::Item::setSpritePosition(const glm::vec2& pos)
+    {
+        m_Sprite->setPosition(pos);
+        m_DragTargetPosition = pos;
+    }
+
     bool Match3View::Item::onPointerPressed(int id, const glm::vec2& pos)
     {
         if (id == 0 && localPointInside(pos)) {
@@ -166,7 +177,9 @@ namespace Z
     void Match3View::Item::update(double time)
     {
         CanvasElement::update(time);
-        m_View->animateSpritePosition(m_Sprite, m_DragTargetPosition, time);
+
+        ItemPtr self = std::static_pointer_cast<Match3View::Item>(shared_from_this());
+        m_View->animateSpritePosition(self, m_DragTargetPosition, time);
     }
 
     void Match3View::Item::cancelDrag(bool animated)
@@ -457,19 +470,18 @@ namespace Z
         item1->setPosition(posX1, posY1);
         item2->setPosition(posX2, posY2);
 
-        auto sprite1 = item1->sprite();
-        auto sprite2 = item2->sprite();
-
-        glm::vec2 sprite1Position = item2->localTransform().transform(sprite1->position());
-        glm::vec2 sprite2Position = item1->localTransform().transform(sprite2->position());
+        glm::vec2 sprite1Position = item2->localTransform().transform(item1->sprite()->position());
+        glm::vec2 sprite2Position = item1->localTransform().transform(item2->sprite()->position());
         cancelItemsDrag();
 
-        sprite1->setPosition(item1->inverseLocalTransform().transform(sprite1Position));
-        sprite2->setPosition(item2->inverseLocalTransform().transform(sprite2Position));
+        item1->setSpritePosition(item1->inverseLocalTransform().transform(sprite1Position));
+        item2->setSpritePosition(item2->inverseLocalTransform().transform(sprite2Position));
 
-        m_Animations.push_back([this, sprite1, sprite2](double time) -> bool {
-            bool done1 = !animateSpritePosition(sprite1, glm::vec2(0.0f), time);
-            bool done2 = !animateSpritePosition(sprite2, glm::vec2(0.0f), time);
+        m_Animations.push_back([this, item1, item2](double time) -> bool {
+            bool done1 = !animateSpritePosition(item1, glm::vec2(0.0f), time);
+            bool done2 = !animateSpritePosition(item2, glm::vec2(0.0f), time);
+            item1->m_DragTargetPosition = item1->sprite()->position();
+            item2->m_DragTargetPosition = item2->sprite()->position();
             if (done1 && done2) {
                 Z_CHECK(m_Field);
                 if (m_Field)
@@ -482,85 +494,83 @@ namespace Z
         validateSprites();
     }
 
-    void Match3View::onItemRespawned(int x, int y)
+    void Match3View::onMatchesKilled(const std::vector<glm::ivec2>& fallenItems,
+        const std::vector<glm::ivec2>& spawnedItems)
     {
         deselectSelectedItem();
 
         Z_CHECK(m_Field);
-        if (!m_Field) {
-            cancelItemsDrag();
+        if (!m_Field)
             return;
+
+        std::vector<ItemPtr> fallingItems;
+
+        for (const auto& item : fallenItems) {
+            Z_ASSERT(isValidItemXY(item.x, item.y + 0));
+            Z_ASSERT(isValidItemXY(item.x, item.y + 1));
+
+            auto& oldItem = m_Items[(item.y + 0) * m_Field->width() + item.x];
+            auto& newItem = m_Items[(item.y + 1) * m_Field->width() + item.x];
+
+            Z_ASSERT(oldItem != nullptr);
+            Z_ASSERT(newItem == nullptr);
+
+            std::swap(oldItem, newItem);
+            newItem->setXY(item.x, item.y + 1);
+
+            glm::vec2 spritePosition = newItem->localTransform().transform(newItem->sprite()->position());
+
+            float posX = float(item.x) * (m_CellWidth + m_CellSpacing);
+            float oldPosY = float(item.y + 0) * (m_CellHeight + m_CellSpacing);
+            float newPosY = float(item.y + 1) * (m_CellHeight + m_CellSpacing);
+            newItem->setPosition(posX, newPosY);
+            newItem->setSpritePosition(newItem->inverseLocalTransform().transform(spritePosition));
+
+            fallingItems.emplace_back(newItem);
         }
 
-        Z_CHECK(isValidItemXY(x, y));
-        if (!isValidItemXY(x, y)) {
-            cancelItemsDrag();
-            return;
+        for (const auto& it : spawnedItems) {
+            int8_t index = m_Field->elementAt(it.x, it.y);
+            Z_CHECK(index >= 0);
+            if (index >= 0) {
+                auto item = std::make_shared<Item>(this, it.x, it.y, m_SpriteFactory->spriteForElement(index));
+                addChild(item);
+
+                float posX = float(it.x) * (m_CellWidth + m_CellSpacing);
+                float posY = float(it.y) * (m_CellHeight + m_CellSpacing);
+                item->setPosition(posX, posY);
+                item->setSpritePosition(glm::vec2(0.0f, posY - m_CellHeight - m_CellSpacing));
+
+                auto& cell = m_Items[it.y * m_Field->width() + it.x];
+                Z_ASSERT(cell == nullptr);
+                cell = std::move(item);
+
+                fallingItems.emplace_back(cell);
+            }
         }
 
-        int8_t index = m_Field->elementAt(x, y);
-        Z_CHECK(index >= 0);
-        if (index >= 0) {
-            auto item = std::make_shared<Item>(this, x, y, m_SpriteFactory->spriteForElement(index));
-            addChild(item);
-
-            float posX = float(x) * (m_CellWidth + m_CellSpacing);
-            float posY = float(y) * (m_CellHeight + m_CellSpacing);
-            item->setPosition(posX, posY);
-
-            m_Items[y * m_Field->width() + x] = std::move(item);
-        }
-
-        cancelItemsDrag();
-        validateSprites();
+        m_Animations.push_back([this, fallingItems](double time) -> bool {
+            bool done = true;
+            for (const auto& item : fallingItems) {
+                bool itemDone = !animateSpritePosition(item, glm::vec2(0.0f), 2.0f * time);
+                item->m_DragTargetPosition = item->sprite()->position();
+                if (!itemDone)
+                    done = false;
+            }
+            return done;
+        });
     }
 
-    void Match3View::onItemFallen(int x, int oldY, int newY)
+    void Match3View::onAllMatchesKilled()
     {
-        deselectSelectedItem();
+        validateSprites();
 
-        Z_CHECK(m_Field);
-        if (!m_Field) {
-            cancelItemsDrag();
-            return;
-        }
-
-        Z_CHECK(isValidItemXY(x, oldY));
-        if (!isValidItemXY(x, oldY)) {
-            cancelItemsDrag();
-            return;
-        }
-
-        Z_CHECK(isValidItemXY(x, newY));
-        if (!isValidItemXY(x, newY)) {
-            cancelItemsDrag();
-            return;
-        }
-
-        auto& oldItem = m_Items[oldY * m_Field->width() + x];
-        auto& newItem = m_Items[newY * m_Field->width() + x];
-
-        Z_ASSERT(oldItem != nullptr);
-        Z_ASSERT(newItem == nullptr);
-
-        std::swap(oldItem, newItem);
-        newItem->setXY(x, newY);
-
-        /*
-        m_Animations.push_back([this, sprite1, sprite2](double time) -> bool {
-            bool done1 = !animateSpritePosition(sprite1, glm::vec2(0.0f), time);
-            bool done2 = !animateSpritePosition(sprite2, glm::vec2(0.0f), time);
-            if (done1 && done2) {
-                Z_CHECK(m_Field);
-                if (m_Field)
-                    m_Field->killAllMatches();
-                return true;
-            }
-            return false;
+        m_Animations.push_back([this](double time) -> bool {
+            Z_CHECK(m_Field);
+            if (m_Field)
+                m_Field->killAllMatches();
+            return true;
         });
-        */
-
-        cancelItemsDrag();
     }
 
     void Match3View::onChainsMatched(const std::vector<Match3Field::Chain>& chains)
@@ -595,14 +605,14 @@ namespace Z
         }
     }
 
-    bool Match3View::animateSpritePosition(const CanvasSpritePtr& sprite, const glm::vec2& targetPosition, double time)
+    bool Match3View::animateSpritePosition(const ItemPtr& item, const glm::vec2& targetPosition, double time)
     {
-        if (sprite->position() != targetPosition) {
-            glm::vec2 delta = targetPosition - sprite->position();
+        if (item->sprite()->position() != targetPosition) {
+            glm::vec2 delta = targetPosition - item->sprite()->position();
             if (fabs(delta.x) <= 1.0f && fabs(delta.y) <= 1.0f)
-                sprite->setPosition(targetPosition);
+                item->sprite()->setPosition(targetPosition);
             else
-                sprite->setPosition(sprite->position() + 10.0f * delta * float(time));
+                item->sprite()->setPosition(item->sprite()->position() + 10.0f * delta * float(time));
             return true;
         }
         return false;
@@ -635,9 +645,8 @@ namespace Z
                     if (index < 0) {
                         Z_ASSERT(item == nullptr);
                     } else {
-                        // FIXME
-                        //Z_ASSERT(item != nullptr);
-                        //Z_ASSERT(item->sprite()->sprite() == m_SpriteFactory->spriteForElement(index));
+                        Z_ASSERT(item != nullptr);
+                        Z_ASSERT(item->sprite()->sprite() == m_SpriteFactory->spriteForElement(index));
                     }
                 }
             }
