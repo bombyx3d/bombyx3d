@@ -23,8 +23,8 @@
 #pragma once
 #include "Texture.h"
 #include "Shader.h"
-#include "math/Quad.h"
-#include "math/AffineTransform.h"
+#include "core/math/Quad.h"
+#include "core/math/AffineTransform.h"
 #include <glm/glm.hpp>
 #include <string>
 #include <memory>
@@ -45,8 +45,8 @@ namespace Z
     protected:
         TexturePtr m_Texture;
         ShaderPtr m_Shader;
-        Quad m_Position;
-        Quad m_TexCoords;
+        Engine::Quad m_Position;
+        Engine::Quad m_TexCoords;
     };
 
     using SpritePtr = std::shared_ptr<Sprite>;

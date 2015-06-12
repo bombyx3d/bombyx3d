@@ -41,6 +41,8 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     canvas/*.cpp
     canvas/*.h
     cmake/*.cmake
+    core/math/*.cpp
+    core/math/*.h
     io/files/*.cpp
     io/files/*.h
     io/streams/*.cpp
@@ -49,8 +51,6 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     io/zip/*.h
     io/*.cpp
     io/*.h
-    math/*.cpp
-    math/*.h
     mechanics/match3/*.cpp
     mechanics/match3/*.h
     renderer/formats/*.h

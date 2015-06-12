@@ -26,8 +26,8 @@ namespace Z
 {
     Sprite::Sprite()
     {
-        m_Position = Quad::allZero();
-        m_TexCoords = Quad::fromZeroToOne();
+        m_Position = ::Engine::Quad::allZero();
+        m_TexCoords = ::Engine::Quad::fromZeroToOne();
     }
 
     Sprite::Sprite(const TexturePtr& texture, const ShaderPtr& shader)

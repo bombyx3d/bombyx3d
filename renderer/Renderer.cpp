@@ -299,7 +299,7 @@ namespace Z
         return std::make_shared<Sprite>(texture, shader);
     }
 
-    void Renderer::drawRect(const Quad& rect, const glm::vec4& color)
+    void Renderer::drawRect(const ::Engine::Quad& rect, const glm::vec4& color)
     {
         uploadUniforms();
 
@@ -314,7 +314,7 @@ namespace Z
         gl::DisableVertexAttribArray(Shader::PositionAttribute);
     }
 
-    void Renderer::drawQuad(const Quad& rect)
+    void Renderer::drawQuad(const ::Engine::Quad& rect)
     {
         uploadUniforms();
 
@@ -328,7 +328,7 @@ namespace Z
         gl::DisableVertexAttribArray(Shader::PositionAttribute);
     }
 
-    void Renderer::drawQuad(const Quad& rect, const Quad& texCoord)
+    void Renderer::drawQuad(const Engine::Quad& rect, const Engine::Quad& texCoord)
     {
         uploadUniforms();
 

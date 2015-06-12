@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "math/AffineTransform.h"
+#include "core/math/AffineTransform.h"
 #include <glm/glm.hpp>
 #include <vector>
 #include <functional>
@@ -44,7 +44,7 @@ namespace Z
         void pushReplace(const glm::mat4& matrix);
 
         void pushApply(const glm::mat4& matrix);
-        void pushApply(const AffineTransform& transform);
+        void pushApply(const Engine::AffineTransform& transform);
 
         void pushTranslate(float x, float y, float z = 0.0f);
         void pushTranslate(const glm::vec2& translate);

@@ -22,8 +22,13 @@
 #include "AffineTransform.h"
 #include <cmath>
 
-namespace Z
+namespace Engine
 {
+    AffineTransform::AffineTransform()
+    {
+        setIdentity();
+    }
+
     AffineTransform::AffineTransform(const AffineTransform& t1, const AffineTransform& t2)
     {
         a = t2.a * t1.a + t2.b * t1.c;
@@ -223,6 +228,15 @@ namespace Z
         t.ty = det * (b * tx - a * ty);
 
         return t;
+    }
+
+    glm::mat3 AffineTransform::toMat3() const
+    {
+        return glm::mat3(
+              a ,   b , 0.0f,
+              c ,   d , 0.0f,
+             tx ,  ty , 1.0f
+        );
     }
 
     glm::mat4 AffineTransform::toMat4() const

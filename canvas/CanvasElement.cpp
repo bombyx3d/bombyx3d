@@ -82,7 +82,7 @@ namespace Z
         }
     }
 
-    const AffineTransform& CanvasElement::localTransform() const
+    const ::Engine::AffineTransform& CanvasElement::localTransform() const
     {
         if (m_Flags & LocalTransformDirty) {
             m_LocalTransform.setTranslationRotationScale(m_Position, m_Rotation, m_Scale);
@@ -91,7 +91,7 @@ namespace Z
         return m_LocalTransform;
     }
 
-    const AffineTransform& CanvasElement::inverseLocalTransform() const
+    const ::Engine::AffineTransform& CanvasElement::inverseLocalTransform() const
     {
         if (m_Flags & InverseLocalTransformDirty) {
             m_InverseLocalTransform = localTransform().inverse();
@@ -100,19 +100,19 @@ namespace Z
         return m_InverseLocalTransform;
     }
 
-    const AffineTransform& CanvasElement::worldTransform() const
+    const ::Engine::AffineTransform& CanvasElement::worldTransform() const
     {
         if (m_Flags & WorldTransformDirty) {
             if (!m_Parent)
                 m_WorldTransform = m_LocalTransform;
             else
-                m_WorldTransform = AffineTransform(m_Parent->worldTransform(), m_LocalTransform);
+                m_WorldTransform = ::Engine::AffineTransform(m_Parent->worldTransform(), m_LocalTransform);
             m_Flags &= ~WorldTransformDirty;
         }
         return m_WorldTransform;
     }
 
-    const AffineTransform& CanvasElement::inverseWorldTransform() const
+    const ::Engine::AffineTransform& CanvasElement::inverseWorldTransform() const
     {
         if (m_Flags & InverseWorldTransformDirty) {
             m_InverseWorldTransform = worldTransform().inverse();
@@ -163,7 +163,7 @@ namespace Z
                 auto currentShader = renderer.currentShader();
                 static auto debugShader = renderer.loadShader(Renderer::DEFAULT_COLORED_2D_SHADER);
                 renderer.setShader(debugShader);
-                renderer.drawRect(Quad::fromTopLeftAndSize(glm::vec2(0.0f, 0.0f), m_Size));
+                renderer.drawRect(::Engine::Quad::fromTopLeftAndSize(glm::vec2(0.0f, 0.0f), m_Size));
                 renderer.setShader(currentShader);
             }
 

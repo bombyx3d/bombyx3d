@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "math/AffineTransform.h"
+#include "core/math/AffineTransform.h"
 #include <glm/glm.hpp>
 #include <list>
 #include <functional>
@@ -71,10 +71,10 @@ namespace Z
         const glm::vec4& color() const { return m_Color; }
         void setColor(const glm::vec4& color) { m_Color = color; }
 
-        const AffineTransform& localTransform() const;
-        const AffineTransform& worldTransform() const;
-        const AffineTransform& inverseLocalTransform() const;
-        const AffineTransform& inverseWorldTransform() const;
+        const ::Engine::AffineTransform& localTransform() const;
+        const ::Engine::AffineTransform& worldTransform() const;
+        const ::Engine::AffineTransform& inverseLocalTransform() const;
+        const ::Engine::AffineTransform& inverseWorldTransform() const;
 
         void addChild(const CanvasElementPtr& child);
         void removeFromParent();
@@ -132,10 +132,10 @@ namespace Z
         std::list<CanvasElementPtr> m_Children;
         std::list<CanvasElementPtr>::iterator m_SelfRef;
         std::vector<std::weak_ptr<EventFilter>> m_EventFilters;
-        mutable AffineTransform m_LocalTransform;
-        mutable AffineTransform m_InverseLocalTransform;
-        mutable AffineTransform m_WorldTransform;
-        mutable AffineTransform m_InverseWorldTransform;
+        mutable ::Engine::AffineTransform m_LocalTransform;
+        mutable ::Engine::AffineTransform m_InverseLocalTransform;
+        mutable ::Engine::AffineTransform m_WorldTransform;
+        mutable ::Engine::AffineTransform m_InverseWorldTransform;
         glm::vec4 m_Color;
         glm::vec2 m_Position;
         glm::vec2 m_Size;

@@ -24,7 +24,7 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "Sprite.h"
-#include "math/Quad.h"
+#include "core/math/Quad.h"
 #include "utility/MatrixStack.h"
 #include <glm/glm.hpp>
 #include <unordered_map>
@@ -83,9 +83,9 @@ namespace Z
         SpritePtr createSpriteFromTexture(const std::string& name);
         SpritePtr createSpriteFromTextureAndShader(const std::string& textureName, const std::string& shaderName);
 
-        void drawRect(const Quad& rect, const glm::vec4& color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-        void drawQuad(const Quad& rect);
-        void drawQuad(const Quad& rect, const Quad& texCoord);
+        void drawRect(const Engine::Quad& rect, const glm::vec4& color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+        void drawQuad(const Engine::Quad& rect);
+        void drawQuad(const Engine::Quad& rect, const Engine::Quad& texCoord);
 
     private:
         enum {
