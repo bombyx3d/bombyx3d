@@ -41,8 +41,10 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     canvas/*.cpp
     canvas/*.h
     cmake/*.cmake
+    core/interfaces/*.h
     core/math/*.cpp
     core/math/*.h
+    core/*.h
     io/files/*.cpp
     io/files/*.h
     io/streams/*.cpp

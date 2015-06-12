@@ -35,11 +35,11 @@ namespace Engine
      * also possible.
      *
      * Affine transformation is represented by a 3x3 matrix:
-     * ```
+     * @code{.unparsed}
      * | a  b  0|
      * | c  d  0|
      * |tx ty  1|
-     * ```
+     * @endcode
      */
     class AffineTransform
     {
