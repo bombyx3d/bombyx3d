@@ -21,6 +21,7 @@
 #
 
 cmake_minimum_required(VERSION 3.2)
+project(Engine)
 
 set(__Z_ENGINE_DONT_ADD_SUBDIRECTORY TRUE)
 include(cmake/Engine.cmake)
@@ -102,3 +103,5 @@ z_target_link_opengl(libengine)
 
 add_subdirectory(platform)
 target_link_libraries(libengine libplatform)
+
+add_subdirectory(doc)

@@ -306,7 +306,7 @@ namespace Engine
          * Applies scale to the given transformation.
          * @param T Input transformation.
          * @param x Scale by X.
-         * @param x Scale by Y.
+         * @param y Scale by Y.
          * @return New transformation.
          */
         static AffineTransform scale(const AffineTransform& T, float x, float y)
