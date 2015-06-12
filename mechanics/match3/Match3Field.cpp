@@ -230,6 +230,39 @@ namespace Z
         std::unique_ptr<size_t[]> chainIndices(new size_t[m_Width * m_Height]);
         memset(chainIndices.get(), size_t(-1), m_Width * m_Height * sizeof(*chainIndices.get()));
 
+        std::function<void(Chain*, size_t, int, int, int, int)> addCellsToChain;
+        addCellsToChain = [this, &addCellsToChain, &chainIndices]
+            (Chain* chain, size_t chainIndex, int startX, int startY, int horzMatch, int vertMatch)
+        {
+            for (int xx = 0; xx < horzMatch; xx++) {
+                size_t& index = chainIndices[startY * m_Width + (startX + xx)];
+                if (index == size_t(-1)) {
+                    index = chainIndex;
+                    chain->cells.emplace_back(startX + xx, startY);
+                }
+
+                if (xx > 0) {
+                    int vertMatch2 = verticalMatchLengthFrom(startX + xx, startY);
+                    if (vertMatch2)
+                        addCellsToChain(chain, chainIndex, startX + xx, startY, 0, vertMatch2);
+                }
+            }
+
+            for (int yy = 0; yy < vertMatch; yy++) {
+                size_t& index = chainIndices[(startY + yy) * m_Width + startX];
+                if (index == size_t(-1)) {
+                    index = chainIndex;
+                    chain->cells.emplace_back(startX, startY + yy);
+                }
+
+                if (yy > 0) {
+                    int horzMatch2 = horizontalMatchLengthFrom(startX, startY + yy);
+                    if (horzMatch2)
+                        addCellsToChain(chain, chainIndex, startX, startY + yy, horzMatch2, 0);
+                }
+            }
+        };
+
         for (int y = 0; y < m_Height; y++) {
             for (int x = 0; x < m_Width; x++) {
 
@@ -246,9 +279,9 @@ namespace Z
                     size_t index = chainIndices[y * m_Width + (x + xx)];
                     if (index != size_t(-1)) {
                         chainIndex = index;
-                      #if !Z_ASSERTIONS_ENABLED
                         chain = &chains[index];
                         break;
+                        /*
                       #else
                         if (!chain)
                             chain = &chains[index];
@@ -256,6 +289,7 @@ namespace Z
                             Z_CHECK(chain == &chains[index]);
                         Z_CHECK(chain->element == item);
                       #endif
+                        */
                     }
                 }
                 if (!chain) {
@@ -263,9 +297,9 @@ namespace Z
                         size_t index = chainIndices[(y + yy) * m_Width + x];
                         if (index != size_t(-1)) {
                             chainIndex = index;
-                          #if !Z_ASSERTIONS_ENABLED
                             chain = &chains[index];
                             break;
+                            /*
                           #else
                             if (!chain)
                                 chain = &chains[index];
@@ -273,6 +307,7 @@ namespace Z
                                 Z_CHECK(chain == &chains[index]);
                             Z_CHECK(chain->element == item);
                           #endif
+                            */
                         }
                     }
                 }
@@ -283,21 +318,7 @@ namespace Z
                     chain->element = item;
                 }
 
-                for (int xx = 0; xx < horizontalMatch; xx++) {
-                    size_t& index = chainIndices[y * m_Width + (x + xx)];
-                    if (index == size_t(-1)) {
-                        index = chainIndex;
-                        chain->cells.emplace_back(x + xx, y);
-                    }
-                }
-
-                for (int yy = 0; yy < verticalMatch; yy++) {
-                    size_t& index = chainIndices[(y + yy) * m_Width + x];
-                    if (index == size_t(-1)) {
-                        index = chainIndex;
-                        chain->cells.emplace_back(x, y + yy);
-                    }
-                }
+                addCellsToChain(chain, chainIndex, x, y, horizontalMatch, verticalMatch);
             }
         }
 
@@ -308,20 +329,24 @@ namespace Z
             listener->onChainsMatched(chains);
         });
 
-        // FIXME
+        /*
         std::stringstream ss;
         ss << "-------------------------------\n";
         for (int y = 0; y < m_Height; y++) {
             for (int x = 0; x < m_Width; x++) {
-                if (chainIndices[y * m_Width + x] == size_t(-1))
+                size_t index = chainIndices[y * m_Width + x];
+                if (index == size_t(-1))
                     ss << '.';
-                else
-                    ss << 'x';
+                else {
+                    const char* symbol = "xoi@#~=+?????????????????????????";
+                    ss << symbol[index];
+                }
             }
             ss << '\n';
         }
         ss << "-------------------------------\n";
         Z_LOG(ss.str());
+        */
 
         std::default_random_engine generator;
         std::uniform_int_distribution<int> distribution(0, m_NumUniqueElements - 1);
