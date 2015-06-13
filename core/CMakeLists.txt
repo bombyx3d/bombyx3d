@@ -20,32 +20,45 @@
 # THE SOFTWARE.
 #
 
-if(NOT WIN32)
-    find_package(Doxygen)
-else()
-    set(DOXYGEN_EXECUTABLE "${Engine_SOURCE_DIR}/tools/win32/doxygen.cmd")
-    set(DOXYGEN_FOUND TRUE)
-    set(DOXYGEN_VERSION "1.8.8")
-    set(DOXYGEN_DOT_EXECUTABLE "${Engine_SOURCE_DIR}/tools/win32/dot.exe")
-    set(DOXYGEN_DOT_FOUND TRUE)
-    set(DOXYGEN_DOT_PATH "${Engine_SOURCE_DIR}/tools/win32")
-endif()
+cmake_minimum_required(VERSION 3.2)
+project(EngineCore)
 
-if(DOXYGEN_FOUND AND DOXYGEN_DOT_FOUND)
+file(GLOB glm_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+    3rdparty/glm/glm/*.hpp
+    3rdparty/glm/glm/detail/*.hpp
+    3rdparty/glm/glm/detail/*.inl
+    3rdparty/glm/glm/gtc/*.hpp
+    3rdparty/glm/glm/gtc/*.inl
+    3rdparty/glm/glm/gtx/*.hpp
+    3rdparty/glm/glm/gtx/*.inl
+)
 
-    add_custom_target(doc
-        COMMAND
-            "${DOXYGEN_EXECUTABLE}" "${Engine_SOURCE_DIR}/Doxyfile"
-        DEPENDS
-            "${Engine_SOURCE_DIR}/Doxyfile"
-            "${Engine_SOURCE_DIR}/README.md"
-            "${EngineCore_SOURCE_DIR}/doc/Logging.dox"
-        WORKING_DIRECTORY
-            "${Engine_SOURCE_DIR}"
-        COMMENT
-            "Generating documentation"
-        SOURCES
-            "${Engine_SOURCE_DIR}/Doxyfile"
-    )
+file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+    interfaces/*.cpp
+    interfaces/*.h
+    io/files/*.cpp
+    io/files/*.h
+    io/streams/*.cpp
+    io/streams/*.h
+    io/*.cpp
+    io/*.h
+    math/*.cpp
+    math/*.h
+    private/*.cpp
+    private/*.h
+    utility/*.cpp
+    utility/*.h
+)
 
-endif()
+set_source_files_properties(${glm_files} PROPERTIES HEADER_FILE_ONLY TRUE)
+
+z_set_source_groups(${glm_files})
+z_set_source_groups(${source_files})
+add_library(libEngineCore STATIC ${glm_files} ${source_files})
+
+target_include_directories(libEngineCore BEFORE PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glm"
+    "${CMAKE_CURRENT_SOURCE_DIR}/.."
+)
+
+set_target_properties(libEngineCore PROPERTIES OUTPUT_NAME "EngineCore" CXX_STANDARD 11)

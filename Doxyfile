@@ -103,7 +103,7 @@ INPUT                  = core/interfaces \
                          core/io \
                          core/math \
                          core/utility \
-                         doc/Logging.dox \
+                         core/doc/Logging.dox \
                          README.md
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.h

@@ -27,35 +27,12 @@ set(__Z_ENGINE_DONT_ADD_SUBDIRECTORY TRUE)
 include(cmake/Engine.cmake)
 
 add_subdirectory(3rdparty)
-
-file(GLOB glm_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-    3rdparty/glm/glm/*.hpp
-    3rdparty/glm/glm/detail/*.hpp
-    3rdparty/glm/glm/detail/*.inl
-    3rdparty/glm/glm/gtc/*.hpp
-    3rdparty/glm/glm/gtc/*.inl
-    3rdparty/glm/glm/gtx/*.hpp
-    3rdparty/glm/glm/gtx/*.inl
-)
+add_subdirectory(core)
 
 file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     canvas/*.cpp
     canvas/*.h
     cmake/*.cmake
-    core/interfaces/*.cpp
-    core/interfaces/*.h
-    core/io/files/*.cpp
-    core/io/files/*.h
-    core/io/streams/*.cpp
-    core/io/streams/*.h
-    core/io/*.cpp
-    core/io/*.h
-    core/math/*.cpp
-    core/math/*.h
-    core/private/*.cpp
-    core/private/*.h
-    core/utility/*.cpp
-    core/utility/*.h
     io/zip/*.cpp
     io/zip/*.h
     mechanics/match3/*.cpp
@@ -80,11 +57,8 @@ file(GLOB shader_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     renderer/shaders/*.glsl
 )
 
-z_set_source_groups(${glm_files})
 z_set_source_groups(${source_files})
 z_set_source_groups(${shader_files})
-
-set_source_files_properties(${glm_files} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/shaders")
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
@@ -101,7 +75,7 @@ endforeach()
 add_library(libengine STATIC ${source_files} ${shader_files})
 
 set_target_properties(libengine PROPERTIES OUTPUT_NAME "engine" CXX_STANDARD 11)
-target_link_libraries(libengine libjpeg libglew libunzip)
+target_link_libraries(libengine libjpeg libglew libunzip libEngineCore)
 z_target_link_qt5(libengine)
 z_target_link_opengl(libengine)
 
