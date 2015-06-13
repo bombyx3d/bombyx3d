@@ -23,20 +23,6 @@
 
 namespace Engine
 {
-    ICore* ICore::m_Instance;
-
-    ICore::ICore()
-    {
-        Z_CHECK(m_Instance == nullptr);
-        m_Instance = this;
-    }
-
-    ICore::~ICore()
-    {
-        Z_CHECK(m_Instance == this);
-        m_Instance = nullptr;
-    }
-
     void* ICore::queryInterface(TypeID typeID)
     {
         if (typeID == typeOf<ICore>())

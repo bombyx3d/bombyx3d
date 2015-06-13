@@ -30,32 +30,20 @@ namespace Engine
      /** Interface to the engine core. */
     class ICore : public IUnknown
     {
-    public:
+        Z_SINGLETON_INTERFACE(ICore)
+
+      #ifdef DOXYGEN
         /**
          * Retrieves reference to the instance of the engine core.
          * @return Reference to the instance of the engine code.
          */
-        static ICore& instance()
-        {
-            Z_ASSERT(m_Instance != nullptr);
-            return *m_Instance;
-        }
+        static ICore& instance();
+      #endif
 
         /**
          * Retrieves a reference to the file system.
          * @return Reference to the file system.
          */
         virtual IFileSystem& fileSystem() = 0;
-
-        /** @cond */
-        ICore();
-        ~ICore();
-        _Z_DECLARE_QUERY_INTERFACE_METHODS()
-        /** @endcond */
-
-    private:
-        static ICore* m_Instance;           /**< Instance of the engine core. */
-
-        Z_DISABLE_COPY(ICore)
     };
 }

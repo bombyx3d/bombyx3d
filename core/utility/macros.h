@@ -21,6 +21,7 @@
  */
 
 #pragma once
+#include "core/utility/debug.h"
 
 /**
  * Deletes copy and move constructors and assignment operators in the class or struct.
@@ -73,6 +74,8 @@
  *     // ...
  * };
  * @endcode
+ *
+ * @see @ref Z_INTERFACE, @ref Z_SINGLETON_INTERFACE.
  */
 #define Z_IMPLEMENTATION(NAME) \
     Z_DISABLE_COPY(NAME) \
@@ -96,6 +99,8 @@
  *     // ...
  * };
  * @endcode
+ *
+ * @see @ref Z_SINGLETON_INTERFACE, @ref Z_IMPLEMENTATION.
  */
 #define Z_INTERFACE(NAME) \
     Z_DISABLE_COPY(NAME) \
@@ -103,6 +108,49 @@
         /** @cond */ \
         NAME() = default; \
         virtual ~NAME() = default; \
+        /** @endcond */ \
+        _Z_DECLARE_QUERY_INTERFACE_METHODS()
+
+/**
+ * Helper macro for singleton interfaces.
+ * Use this macro to add constructor, destructor and `instance` method to the interface.
+ *
+ * @param NAME Name of the interface.
+ *
+ * @note This macro resets class' current protection level to `public`.
+ *
+ * Example usage:
+ * @code{.cpp}
+ * class ISingletonInterface : public IUnknown
+ * {
+ *     Z_SINGLETON_INTERFACE(ISingletonInterface)
+ *
+ *     // ...
+ * };
+ * @endcode
+ */
+#define Z_SINGLETON_INTERFACE(NAME) \
+    Z_DISABLE_COPY(NAME) \
+    private: \
+        /** @cond */ \
+        static NAME*& instancePtr() { \
+            static NAME* instance;\
+            return instance; \
+        } \
+    public: \
+        NAME() { \
+            Z_CHECK(NAME::instancePtr() == nullptr); \
+            NAME::instancePtr() = this; \
+        } \
+        virtual ~NAME() { \
+            Z_CHECK(NAME::instancePtr() == this); \
+            NAME::instancePtr() = nullptr; \
+        } \
+        static ICore& instance() \
+        { \
+            Z_ASSERT(NAME::instancePtr() != nullptr); \
+            return *NAME::instancePtr(); \
+        } \
         /** @endcond */ \
         _Z_DECLARE_QUERY_INTERFACE_METHODS()
 
