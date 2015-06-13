@@ -26,6 +26,7 @@
 #include <unordered_set>
 #include <memory>
 #include <cstdint>
+#include <vector>
 
 namespace Z
 {

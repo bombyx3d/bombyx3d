@@ -168,7 +168,7 @@ namespace Z
 
     bool GLTexture::isUncompressedFormatSupported(GL::Enum format, GL::Enum type)
     {
-        switch (format)
+        switch (long(format))
         {
         case GL::ALPHA:
         case GL::RGB:
@@ -183,7 +183,7 @@ namespace Z
 
     bool GLTexture::isCompressedFormatSupported(GL::Enum format)
     {
-        switch (format)
+        switch (long(format))
         {
         case GL::COMPRESSED_RGB_PVRTC_4BPPV1_IMG:
         case GL::COMPRESSED_RGB_PVRTC_2BPPV1_IMG:

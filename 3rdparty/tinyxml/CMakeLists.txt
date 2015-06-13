@@ -31,4 +31,5 @@ file(GLOB root_files *.cpp *.h)
 source_group("Source Files" FILES ${root_files})
 
 add_library(libtinyxml STATIC ${root_files})
+set_target_properties(libtinyxml PROPERTIES OUTPUT_NAME "tinyxml")
 target_include_directories(libtinyxml BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

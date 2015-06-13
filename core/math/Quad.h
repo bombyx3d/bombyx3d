@@ -194,7 +194,7 @@ namespace Engine
          */
         Quad& setCenterAndSize(const glm::vec2& c, const glm::vec2& s)
         {
-            glm::vec2& halfSize = s * 0.5f;
+            glm::vec2 halfSize = s * 0.5f;
             setTopLeftAndBottomRight(c - halfSize, c + halfSize);
             return *this;
         }

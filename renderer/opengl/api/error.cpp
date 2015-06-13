@@ -28,7 +28,7 @@ namespace std
 {
     ostream& operator<<(ostream& s, GL::Enum value)
     {
-        switch (value)
+        switch (long(value))
         {
         case GL::FALSE: break;
         case GL::TRUE: break;
@@ -44,7 +44,7 @@ namespace std
 
     ostream& operator<<(ostream& s, GL3::Enum value)
     {
-        switch (value)
+        switch (long(value))
         {
         case GL::FALSE: break;
         case GL::TRUE: break;

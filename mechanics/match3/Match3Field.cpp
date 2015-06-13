@@ -228,7 +228,7 @@ namespace Z
         std::vector<Chain> chains;
 
         std::unique_ptr<size_t[]> chainIndices(new size_t[m_Width * m_Height]);
-        memset(chainIndices.get(), size_t(-1), m_Width * m_Height * sizeof(*chainIndices.get()));
+        memset(chainIndices.get(), -1, m_Width * m_Height * sizeof(*chainIndices.get()));
 
         std::function<void(Chain*, size_t, int, int, int, int)> addCellsToChain;
         addCellsToChain = [this, &addCellsToChain, &chainIndices]
