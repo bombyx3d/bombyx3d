@@ -36,9 +36,5 @@ namespace Engine
          * @return Name of the stream.
          */
         virtual const std::string& name() const = 0;
-
-        /** @cond */
-        void* queryInterface(TypeID typeID) override;
-        /** @endcond */
     };
 }

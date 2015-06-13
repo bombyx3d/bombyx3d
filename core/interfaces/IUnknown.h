@@ -32,6 +32,7 @@ namespace Engine
     {
         Z_INTERFACE(IUnknown)
 
+      #ifdef DOXYGEN
         /**
          * Queries a pointer to the specified interface.
          * @param typeID Type ID for the interface.
@@ -50,5 +51,6 @@ namespace Engine
         {
             return reinterpret_cast<TYPE*>(queryInterface(typeOf<TYPE>()));
         }
+      #endif
     };
 }

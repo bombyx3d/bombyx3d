@@ -81,9 +81,5 @@ namespace Engine
          * @return `true` if the specified amount of bytes have been skipped, otherwise returns `false`.
          */
         virtual bool skip(size_t bytesToSkip) = 0;
-
-        /** @cond */
-        void* queryInterface(TypeID typeID) override;
-        /** @endcond */
     };
 }

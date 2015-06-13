@@ -31,11 +31,6 @@ namespace Engine
     class ICore : public IUnknown
     {
     public:
-        /** @cond */
-        ICore();
-        ~ICore();
-        /** @endcond */
-
         /**
          * Retrieves reference to the instance of the engine core.
          * @return Reference to the instance of the engine code.
@@ -53,7 +48,9 @@ namespace Engine
         virtual IFileSystem& fileSystem() = 0;
 
         /** @cond */
-        void* queryInterface(TypeID typeID) override;
+        ICore();
+        ~ICore();
+        _Z_DECLARE_QUERY_INTERFACE_METHODS()
         /** @endcond */
 
     private:

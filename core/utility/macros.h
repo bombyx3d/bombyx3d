@@ -48,16 +48,48 @@
         NAME& operator=(NAME&&) = delete; \
     /** @endcond */
 
+/** @cond */
+#define _Z_DECLARE_QUERY_INTERFACE_METHODS() \
+    /** @cond */ \
+    virtual void* queryInterface(TypeID typeID); \
+    template <class TYPE> TYPE* queryInterface() \
+        { return reinterpret_cast<TYPE*>(queryInterface(typeOf<TYPE>())); } \
+    /** @endcond */
+/** @endcond */
+
+/**
+ * Helper macro for interface implementations.
+ *
+ * @param NAME Name of the implementation class.
+ *
+ * @note This macro resets class' current protection level to `public`.
+ *
+ * Example usage:
+ * @code{.cpp}
+ * class UnknownImpl : public IUnknown
+ * {
+ *     Z_IMPLEMENTATION(UnknownImpl)
+ *
+ *     // ...
+ * };
+ * @endcode
+ */
+#define Z_IMPLEMENTATION(NAME) \
+    Z_DISABLE_COPY(NAME) \
+    public: \
+        _Z_DECLARE_QUERY_INTERFACE_METHODS()
+
 /**
  * Helper macro for interfaces.
- *
  * Use this macro to add dummy constructor and destructor to the interface.
  *
  * @param NAME Name of the interface.
  *
+ * @note This macro resets class' current protection level to `public`.
+ *
  * Example usage:
  * @code{.cpp}
- * struct IInterface : public IUnknown
+ * class IInterface : public IUnknown
  * {
  *     Z_INTERFACE(IInterface)
  *
@@ -67,11 +99,12 @@
  */
 #define Z_INTERFACE(NAME) \
     Z_DISABLE_COPY(NAME) \
-    /** @cond */ \
     public: \
+        /** @cond */ \
         NAME() = default; \
         virtual ~NAME() = default; \
-    /** @endcond */
+        /** @endcond */ \
+        _Z_DECLARE_QUERY_INTERFACE_METHODS()
 
 /**
  * @def Z_THREADLOCAL

@@ -31,6 +31,8 @@ namespace Engine
     class FileInputStream : public IInputStream
     {
     public:
+        Z_IMPLEMENTATION(FileInputStream)
+
         /**
          * Constructor.
          * @param reader File reader.
@@ -68,7 +70,6 @@ namespace Engine
         uint64_t bytesAvailable() const override;
         size_t read(void* buffer, size_t size) override;
         bool skip(size_t count) override;
-        void* queryInterface(TypeID typeID) override;
         /** @endcond */
 
     private:

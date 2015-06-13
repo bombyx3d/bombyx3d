@@ -31,6 +31,8 @@ namespace Engine
     class StaticMemoryInputStream : public IInputStream, public StaticMemoryFile
     {
     public:
+        Z_IMPLEMENTATION(StaticMemoryInputStream)
+
         /**
          * Constructor.
          * @param data Pointer to the data.
@@ -42,14 +44,11 @@ namespace Engine
         /** Destructor. */
         ~StaticMemoryInputStream() = default;
 
-        /** @cond */
         const std::string& name() const override;
         bool atEnd() const override;
         uint64_t bytesAvailable() const override;
         size_t read(void* buffer, size_t size) override;
         bool skip(size_t count) override;
-        void* queryInterface(TypeID typeID) override;
-        /** @endcond */
 
     private:
         size_t m_Offset;            /**< Current offset from the beginning of stream. */

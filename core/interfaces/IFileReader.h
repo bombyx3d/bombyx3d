@@ -53,9 +53,5 @@ namespace Engine
          * @return `true` on success, otherwise returns `false`.
          */
         virtual bool read(uint64_t offset, void* buffer, size_t bytesToRead) = 0;
-
-        /** @cond */
-        void* queryInterface(TypeID typeID) override;
-        /** @endcond */
     };
 }

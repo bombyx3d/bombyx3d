@@ -31,6 +31,8 @@ namespace Engine
     class BufferedInputStream : public IInputStream
     {
     public:
+        Z_IMPLEMENTATION(BufferedInputStream)
+
         /** Default size of buffer. */
         static const size_t DEFAULT_BUFFER_SIZE = 65536;
 
@@ -69,7 +71,6 @@ namespace Engine
         uint64_t bytesAvailable() const override;
         size_t read(void* buffer, size_t size) override;
         bool skip(size_t count) override;
-        void* queryInterface(TypeID typeID) override;
         /** @endcond */
 
     private:
@@ -78,8 +79,5 @@ namespace Engine
         size_t m_BufferSize;                    /**< Buffer size. */
         size_t m_BufferStart = 0;               /**< Current starting position in the buffer. */
         size_t m_BufferEnd = 0;                 /**< Current ending position in the buffer. */
-
-        BufferedInputStream(const BufferedInputStream&) = delete;
-        BufferedInputStream& operator=(const BufferedInputStream&) = delete;
     };
 }

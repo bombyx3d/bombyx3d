@@ -31,6 +31,8 @@ namespace Engine
     class MemoryFile : public IFileReader
     {
     public:
+        Z_IMPLEMENTATION(MemoryFile)
+
         /**
          * Constructor.
          * @param fileName File name.
@@ -78,7 +80,6 @@ namespace Engine
         const std::string& name() const override;
         uint64_t size() const override;
         bool read(uint64_t offset, void* buffer, size_t bytesToRead) override;
-        void* queryInterface(TypeID typeID) override;
         /** @endcond */
 
     private:

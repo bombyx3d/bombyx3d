@@ -31,6 +31,8 @@ namespace Engine
     class Core : public ICore
     {
     public:
+        Z_IMPLEMENTATION(Core)
+
         /**
          * Constructor.
          * @param fileSystemList Pointer to the list of native filesystems.

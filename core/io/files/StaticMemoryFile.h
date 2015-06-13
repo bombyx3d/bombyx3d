@@ -31,6 +31,8 @@ namespace Engine
     class StaticMemoryFile : public IFileReader
     {
     public:
+        Z_IMPLEMENTATION(StaticMemoryFile)
+
         /**
          * Constructor.
          * @param data Pointer to the data.
@@ -46,7 +48,6 @@ namespace Engine
         const std::string& name() const override;
         uint64_t size() const override;
         bool read(uint64_t offset, void* buffer, size_t size) override;
-        void* queryInterface(TypeID typeID) override;
         /** @endcond */
 
     private:

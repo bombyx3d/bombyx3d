@@ -32,6 +32,8 @@ namespace Engine
     class FileSystemList : public IFileSystem
     {
     public:
+        Z_IMPLEMENTATION(FileSystemList)
+
         /** Constructor. */
         FileSystemList();
 
@@ -60,7 +62,6 @@ namespace Engine
         /** @cond */
         bool fileExists(const std::string& path) override;
         Ptr<IFileReader> openFile(const std::string& path) override;
-        void* queryInterface(TypeID typeID) override;
         /** @endcond */
 
     private:

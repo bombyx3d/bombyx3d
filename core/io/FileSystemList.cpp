@@ -91,13 +91,6 @@ namespace Engine
         return nullptr;
     }
 
-    void* FileSystemList::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<FileSystemList>())
-            return this;
-        return IFileSystem::queryInterface(typeID);
-    }
-
     FileSystemList::ArrayPtr FileSystemList::cachedFileSystems()
     {
         ArrayPtr fileSystems = m_CachedFileSystems;
@@ -112,5 +105,12 @@ namespace Engine
     void FileSystemList::invalidateCache()
     {
         m_CachedFileSystems.reset();
+    }
+
+    void* FileSystemList::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<FileSystemList>())
+            return this;
+        return IFileSystem::queryInterface(typeID);
     }
 }

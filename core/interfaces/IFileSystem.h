@@ -46,9 +46,5 @@ namespace Engine
          * @return Pointer to an instance of @ref Engine::IFileReader or `nullptr` if file does not exist.
          */
         virtual Ptr<IFileReader> openFile(const std::string& path) = 0;
-
-        /** @cond */
-        void* queryInterface(TypeID typeID) override;
-        /** @endcond */
     };
 }
