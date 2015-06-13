@@ -25,8 +25,8 @@
 
 namespace Engine
 {
-    /** Interface to the engine core. */
-    class ICore
+     /** Interface to the engine core. */
+    class ICore : public IUnknown
     {
         ENGINE_INTERFACE(ICore)
     };

@@ -1,5 +1,5 @@
-﻿/*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
+/*
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,37 +21,20 @@
  */
 
 #pragma once
+#include "core/core.h"
+#include <string>
 
-/** Namespace containing all engine code. */
 namespace Engine
 {
-    /**
-     * Helper macro for interfaces.
-     *
-     * Use this macro to add dummy constructor and destructor for the interface.
-     *
-     * Example usage:
-     * @code{.cpp}
-     * struct IInterface
-     * {
-     *     ENGINE_INTERFACE(IInterface)
-     * };
-     * @endcode
-     */
-    #define ENGINE_INTERFACE(NAME) \
-        /** @cond */ \
-        protected: \
-            NAME() = default; \
-            virtual ~NAME() = default; \
-        private: \
-            NAME(const NAME&) = delete; \
-            NAME(NAME&&) = delete; \
-            NAME& operator=(const NAME&) = delete; \
-            NAME& operator=(NAME&&) = delete; \
-        public: \
-        /** @endcond */
-}
+    /** Base class for input and output streams. */
+    class IStream : public IUnknown
+    {
+        ENGINE_INTERFACE(IStream)
 
-#include "interfaces/IUnknown.h"
-#include "interfaces/IStream.h"
-#include "interfaces/ICore.h"
+        /**
+         * Retrieves name of the stream.
+         * @return Name of the stream.
+         */
+        virtual const std::string& name() const = 0;
+    };
+}
