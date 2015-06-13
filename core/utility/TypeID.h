@@ -74,10 +74,10 @@ namespace std
 {
     template <> struct hash<Engine::TypeID>
     {
-        size_t operator()(TypeID value) const
+        size_t operator()(Engine::TypeID value) const
         {
-            return hash<void*>(value.opaque);
+            return hash<const void*>()(value.opaque);
         }
-    }
+    };
 }
 /** @endcond */

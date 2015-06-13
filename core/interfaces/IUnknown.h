@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "core/core.h"
+#include "core/macros.h"
 #include "core/utility/TypeID.h"
 #include <string>
 

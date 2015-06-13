@@ -21,14 +21,37 @@
  */
 
 #pragma once
+#include "core/interfaces/IFileReader.h"
 #include <string>
+#include <vector>
 
-namespace Z
+namespace Engine
 {
-    class Stream
+    /** An implementation of @ref Engine::IFileReader based on static data. */
+    class StaticMemoryFile : public IFileReader
     {
     public:
-        virtual ~Stream() = default;
-        virtual const std::string& name() const = 0;
+        /**
+         * Constructor.
+         * @param data Pointer to the data.
+         * @param length Length of the data.
+          *@param fileName File name.
+          */
+        StaticMemoryFile(const void* data, size_t length, const std::string& fileName = "<memory>");
+
+        /** Destructor. */
+        ~StaticMemoryFile();
+
+        /** @cond */
+        const std::string& name() const override;
+        uint64_t size() const override;
+        bool read(uint64_t offset, void* buffer, size_t size) override;
+        void* queryInterface(TypeID typeID) override;
+        /** @endcond */
+
+    private:
+        std::string m_Name;         /**< File name. */
+        const char* m_Data;         /**< Pointer to the data. */
+        size_t m_Length;            /**< Size of the data. */
     };
 }

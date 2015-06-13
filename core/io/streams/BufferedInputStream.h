@@ -21,37 +21,63 @@
  */
 
 #pragma once
-#include "InputStream.h"
+#include "core/core.h"
+#include "core/interfaces/IInputStream.h"
 #include <memory>
 
-namespace Z
+namespace Engine
 {
-    class BufferedInputStream : public InputStream
+    /** Wrapper over @ref Engine::IInputStream with buffered I/O. */
+    class BufferedInputStream : public IInputStream
     {
     public:
+        /** Default size of buffer. */
         static const size_t DEFAULT_BUFFER_SIZE = 65536;
 
-        BufferedInputStream(const InputStreamPtr& stream);
-        BufferedInputStream(InputStreamPtr&& stream);
-        BufferedInputStream(const InputStreamPtr& stream, size_t bufferSize);
-        BufferedInputStream(InputStreamPtr&& stream, size_t bufferSize);
+        /**
+         * Constructor.
+         * @param stream Source stream.
+         */
+        BufferedInputStream(const Ptr<IInputStream>& stream);
+
+        /**
+         * Constructor.
+         * @param stream Source stream.
+         */
+        BufferedInputStream(Ptr<IInputStream>&& stream);
+
+        /**
+         * Constructor.
+         * @param stream Source stream.
+         * @param bufferSize Size of buffer.
+         */
+        BufferedInputStream(const Ptr<IInputStream>& stream, size_t bufferSize);
+
+        /**
+         * Constructor.
+         * @param stream Source stream.
+         * @param bufferSize Size of buffer.
+         */
+        BufferedInputStream(Ptr<IInputStream>&& stream, size_t bufferSize);
+
+        /** Destructor. */
         ~BufferedInputStream() = default;
 
+        /** @cond */
         const std::string& name() const override;
-        FileReader* associatedFile() const override;
-
         bool atEnd() const override;
         uint64_t bytesAvailable() const override;
-
         size_t read(void* buffer, size_t size) override;
         bool skip(size_t count) override;
+        void* queryInterface(TypeID typeID) override;
+        /** @endcond */
 
     private:
-        InputStreamPtr m_Stream;
-        std::unique_ptr<uint8_t[]> m_Buffer;
-        size_t m_BufferSize;
-        size_t m_BufferStart = 0;
-        size_t m_BufferEnd = 0;
+        Ptr<IInputStream> m_Stream;             /**< Pointer to the source stream. */
+        std::unique_ptr<uint8_t[]> m_Buffer;    /**< Buffer. */
+        size_t m_BufferSize;                    /**< Buffer size. */
+        size_t m_BufferStart = 0;               /**< Current starting position in the buffer. */
+        size_t m_BufferEnd = 0;                 /**< Current ending position in the buffer. */
 
         BufferedInputStream(const BufferedInputStream&) = delete;
         BufferedInputStream& operator=(const BufferedInputStream&) = delete;

@@ -19,32 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "ICore.h"
 
-#pragma once
-#include "Stream.h"
-#include <string>
-#include <vector>
-#include <memory>
-#include <cstdint>
-
-namespace Z
+namespace Engine
 {
-    class FileReader;
-
-    class InputStream : public Stream
+    void* ICore::queryInterface(TypeID typeID)
     {
-    public:
-        virtual bool atEnd() const = 0;
-        virtual uint64_t bytesAvailable() const = 0;
-        virtual size_t read(void* buffer, size_t size) = 0;
-        virtual bool skip(size_t count) = 0;
-
-        virtual FileReader* associatedFile() const { return nullptr; }
-
-        bool readAtMost(void* buffer, size_t size, size_t* bytesRead);
-        std::string readLine(bool includeEolMarker);
-        std::vector<char> readAll();
-    };
-
-    using InputStreamPtr = std::shared_ptr<InputStream>;
+        if (typeID == typeOf<ICore>())
+            return this;
+        return IUnknown::queryInterface(typeID);
+    }
 }

@@ -32,13 +32,13 @@ namespace Z
         {
             uint64_t offset;
             uint64_t size;
-            FileReader* reader;
+            IFileReader* reader;
             int error;
         };
 
         static voidpf ZCALLBACK ioOpen(voidpf opaque, const void* filename, int mode)
         {
-            FileReader* reader = reinterpret_cast<FileReader*>(opaque);
+            IFileReader* reader = reinterpret_cast<IFileReader*>(opaque);
             if (!reader)
                 return nullptr;
 
@@ -150,7 +150,7 @@ namespace Z
             return stream->error;
         }
 
-        static unzFile openZip(const FileReaderPtr& reader, const unz64_file_pos* filepos = nullptr)
+        static unzFile openZip(const Ptr<IFileReader>& reader, const unz64_file_pos* filepos = nullptr)
         {
             if (!reader)
                 return nullptr;
@@ -170,7 +170,7 @@ namespace Z
         }
     }
 
-    ZipFileSystem::ZipFileSystem(const FileReaderPtr& zipFile)
+    ZipFileSystem::ZipFileSystem(const Ptr<IFileReader>& zipFile)
         : m_ZipReader(zipFile)
     {
         m_ZipFile = openZip(m_ZipReader);
@@ -178,7 +178,7 @@ namespace Z
             Z_LOG("Unable to open ZIP archive \"" << (m_ZipReader ? m_ZipReader->name() : std::string("(null)")) << "\".");
     }
 
-    ZipFileSystem::ZipFileSystem(FileReaderPtr&& zipFile)
+    ZipFileSystem::ZipFileSystem(Ptr<IFileReader>&& zipFile)
         : m_ZipReader(std::move(zipFile))
     {
         m_ZipFile = openZip(m_ZipReader);
@@ -204,32 +204,32 @@ namespace Z
         return (r == UNZ_OK);
     }
 
-    FileReaderPtr ZipFileSystem::openFile(const std::string& path)
+    Ptr<IFileReader> ZipFileSystem::openFile(const std::string& path)
     {
         std::lock_guard<decltype(m_Mutex)> lock(m_Mutex);
 
         if (!m_ZipFile) {
             Z_LOG("ZIP archive is not open.");
-            return FileReaderPtr();
+            return Ptr<IFileReader>();
         }
 
         int r = unzLocateFile(m_ZipFile, path.c_str(), nullptr);
         if (r != UNZ_OK) {
             Z_LOG("Unable to find file \"" << path << "\" in ZIP archive \"" << m_ZipReader->name() << "\".");
-            return FileReaderPtr();
+            return Ptr<IFileReader>();
         }
 
         unz64_file_pos pos;
         r = unzGetFilePos64(m_ZipFile, &pos);
         if (r != UNZ_OK) {
             Z_LOG("Unable to seek to file \"" << path << "\" in ZIP archive \"" << m_ZipReader->name() << "\".");
-            return FileReaderPtr();
+            return Ptr<IFileReader>();
         }
 
         unzFile file = openZip(m_ZipReader, &pos);
         if (file == nullptr) {
             Z_LOG("Unable to open file \"" << path << "\" in ZIP archive \"" << m_ZipReader->name() << "\".");
-            return FileReaderPtr();
+            return Ptr<IFileReader>();
         }
 
         return std::make_shared<ZipFileReader>(path, m_ZipReader, file);

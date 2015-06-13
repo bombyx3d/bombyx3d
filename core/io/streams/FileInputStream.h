@@ -21,34 +21,58 @@
  */
 
 #pragma once
-#include "InputStream.h"
-#include "io/files/FileReader.h"
+#include "core/interfaces/IInputStream.h"
+#include "core/interfaces/IFileReader.h"
 
-namespace Z
+namespace Engine
 {
-    class FileInputStream : public InputStream
+    /** An @ref Engine::IInputStream implemented as a wrapper for an instance of @ref Engine::IFileReader. */
+    class FileInputStream : public IInputStream
     {
     public:
-        FileInputStream(const FileReaderPtr& reader);
-        FileInputStream(FileReaderPtr&& reader);
-        FileInputStream(const FileReaderPtr& reader, uint64_t offset, uint64_t size);
-        FileInputStream(FileReaderPtr&& reader, uint64_t offset, uint64_t size);
+        /**
+         * Constructor.
+         * @param reader File reader.
+         */
+        explicit FileInputStream(const Ptr<IFileReader>& reader);
+
+        /**
+         * Constructor.
+         * @param reader File reader.
+         */
+        explicit FileInputStream(Ptr<IFileReader>&& reader);
+
+        /**
+         * Constructor.
+         * @param reader File reader.
+         * @param offset Starting offset in file.
+         * @param limit Limit in bytes.
+         */
+        FileInputStream(const Ptr<IFileReader>& reader, uint64_t offset, uint64_t limit);
+
+        /**
+         * Constructor.
+         * @param reader File reader.
+         * @param offset Starting offset in file.
+         * @param limit Limit in bytes.
+         */
+        FileInputStream(Ptr<IFileReader>&& reader, uint64_t offset, uint64_t limit);
+
+        /** Destructor. */
         ~FileInputStream() = default;
 
+        /** @cond */
         const std::string& name() const override;
-        FileReader* associatedFile() const override { return m_Reader.get(); }
-
         bool atEnd() const override;
         uint64_t bytesAvailable() const override;
-
         size_t read(void* buffer, size_t size) override;
         bool skip(size_t count) override;
+        void* queryInterface(TypeID typeID) override;
+        /** @endcond */
 
     private:
-        FileReaderPtr m_Reader;
-        uint64_t m_Offset;
-        uint64_t m_BytesLeft;
+        Ptr<IFileReader> m_Reader;      /**< File reader. */
+        uint64_t m_Offset;              /**< Current offset from the beginning of stream. */
+        uint64_t m_BytesLeft;           /**< Number of bytes left in stream. */
     };
-
-    using FileInputStreamPtr = std::shared_ptr<FileInputStream>;
 }

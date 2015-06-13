@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "core/core.h"
+#include "IUnknown.h"
 
 namespace Engine
 {
@@ -29,5 +29,9 @@ namespace Engine
     class ICore : public IUnknown
     {
         ENGINE_INTERFACE(ICore)
+
+        /** @cond */
+        void* queryInterface(TypeID typeID) override;
+        /** @endcond */
     };
 }

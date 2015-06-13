@@ -24,24 +24,18 @@
 #include "StaticMemoryInputStream.h"
 #include <string>
 
-namespace Z
+namespace Engine
 {
-    StaticMemoryInputStream::StaticMemoryInputStream(const void* data, size_t size, const std::string& name)
-        : InputStream()
-        , StaticMemoryFile(data, size, name)
+    StaticMemoryInputStream::StaticMemoryInputStream(const void* data, size_t length, const std::string& fileName)
+        : StaticMemoryFile(data, length, fileName)
         , m_Offset(0)
-        , m_BytesLeft(size)
+        , m_BytesLeft(length)
     {
     }
 
     const std::string& StaticMemoryInputStream::name() const
     {
         return StaticMemoryFile::name();
-    }
-
-    FileReader* StaticMemoryInputStream::associatedFile() const
-    {
-        return const_cast<StaticMemoryInputStream*>(this);
     }
 
     bool StaticMemoryInputStream::atEnd() const
@@ -89,5 +83,17 @@ namespace Z
         m_BytesLeft -= count;
 
         return true;
+    }
+
+    void* StaticMemoryInputStream::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<StaticMemoryInputStream>())
+            return this;
+
+        void* stream = IInputStream::queryInterface(typeID);
+        if (stream)
+            return stream;
+
+        return StaticMemoryFile::queryInterface(typeID);
     }
 }

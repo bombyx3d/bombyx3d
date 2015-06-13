@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "io/files/FileReader.h"
+#include "core/interfaces/IFileReader.h"
 #include <string>
 #include <mutex>
 #include <memory>
@@ -29,7 +29,9 @@
 
 namespace Z
 {
-    class QtFileReader : public FileReader
+    using namespace Engine;
+
+    class QtFileReader : public IFileReader
     {
     public:
         QtFileReader(const std::string& name, std::unique_ptr<QFile>&& file);

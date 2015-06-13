@@ -19,38 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "InputStream.h"
+#include "IInputStream.h"
 #include "utility/debug.h"
 #include <sstream>
 #include <algorithm>
 
-namespace Z
+namespace Engine
 {
-    bool InputStream::readAtMost(void* buffer, size_t size, size_t* bytesRead)
-    {
-        Z_ASSERT(bytesRead != nullptr);
-
-        unsigned char* p = reinterpret_cast<unsigned char*>(buffer);
-        *bytesRead = 0;
-
-        while (size > 0) {
-            if (atEnd())
-                break;
-
-            uint64_t haveBytes = bytesAvailable();
-            size_t bytesToRead = size_t(std::min(uint64_t(size), haveBytes));
-            if (!read(p, bytesToRead))
-                return false;
-
-            p += bytesToRead;
-            *bytesRead += bytesToRead;
-            size -= bytesToRead;
-        }
-
-        return true;
-    }
-
-    std::string InputStream::readLine(bool includeEolMarker)
+    std::string IInputStream::readLine(bool includeEolMarker)
     {
         std::stringstream ss;
 
@@ -81,7 +57,7 @@ namespace Z
         return str;
     }
 
-    std::vector<char> InputStream::readAll()
+    std::vector<char> IInputStream::readAll()
     {
         std::vector<char> result;
 
@@ -103,5 +79,12 @@ namespace Z
         }
 
         return result;
+    }
+
+    void* IInputStream::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<IInputStream>())
+            return this;
+        return IStream::queryInterface(typeID);
     }
 }

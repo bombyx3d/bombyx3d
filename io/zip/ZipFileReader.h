@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "io/files/FileReader.h"
+#include "core/interfaces/IFileReader.h"
 #include <string>
 #include <mutex>
 #include <memory>
@@ -29,11 +29,12 @@
 namespace Z
 {
     class ZipFileSystem;
+    using namespace Engine;
 
-    class ZipFileReader : public FileReader
+    class ZipFileReader : public IFileReader
     {
     public:
-        ZipFileReader(const std::string& name, const FileReaderPtr& reader, void* handle);
+        ZipFileReader(const std::string& name, const Ptr<IFileReader>& reader, void* handle);
         ~ZipFileReader();
 
         const std::string& name() const override;
@@ -45,7 +46,7 @@ namespace Z
         std::mutex m_Mutex;
         std::string m_Name;
         void* m_Handle;
-        FileReaderPtr m_ZipReader;
+        Ptr<IFileReader> m_ZipReader;
         uint64_t m_Size;
         uint64_t m_Offset;
         bool m_IsOpen;

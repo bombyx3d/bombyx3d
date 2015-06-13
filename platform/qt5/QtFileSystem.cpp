@@ -66,14 +66,14 @@ namespace Z
         return QFile(absoluteFilePath(path)).exists();
     }
 
-    FileReaderPtr QtFileSystem::openFile(const std::string& path)
+    Ptr<IFileReader> QtFileSystem::openFile(const std::string& path)
     {
         std::unique_ptr<QFile> file(new QFile(absoluteFilePath(path)));
 
         if (!file->open(QFile::ReadOnly)) {
             Z_LOG("Unable to open file \"" << zqUtf8Printable(file->fileName()) << "\": "
                 << zqUtf8Printable(file->errorString()) << ".");
-            return FileReaderPtr();
+            return nullptr;
         }
 
         return std::make_shared<QtFileReader>(path, std::move(file));

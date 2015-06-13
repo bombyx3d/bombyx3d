@@ -24,9 +24,9 @@
 #include <cstring>
 #include <algorithm>
 
-namespace Z
+namespace Engine
 {
-    BufferedInputStream::BufferedInputStream(const InputStreamPtr& stream)
+    BufferedInputStream::BufferedInputStream(const Ptr<IInputStream>& stream)
         : m_Stream(stream)
         , m_BufferSize(DEFAULT_BUFFER_SIZE)
     {
@@ -34,7 +34,7 @@ namespace Z
             m_Buffer.reset(new uint8_t[m_BufferSize]);
     }
 
-    BufferedInputStream::BufferedInputStream(InputStreamPtr&& stream)
+    BufferedInputStream::BufferedInputStream(Ptr<IInputStream>&& stream)
         : m_Stream(std::move(stream))
         , m_BufferSize(DEFAULT_BUFFER_SIZE)
     {
@@ -42,7 +42,7 @@ namespace Z
             m_Buffer.reset(new uint8_t[m_BufferSize]);
     }
 
-    BufferedInputStream::BufferedInputStream(const InputStreamPtr& stream, size_t bufferSize)
+    BufferedInputStream::BufferedInputStream(const Ptr<IInputStream>& stream, size_t bufferSize)
         : m_Stream(stream)
         , m_BufferSize(bufferSize)
     {
@@ -53,7 +53,7 @@ namespace Z
             m_Buffer.reset(new uint8_t[m_BufferSize]);
     }
 
-    BufferedInputStream::BufferedInputStream(InputStreamPtr&& stream, size_t bufferSize)
+    BufferedInputStream::BufferedInputStream(Ptr<IInputStream>&& stream, size_t bufferSize)
         : m_Stream(std::move(stream)),
           m_BufferSize(bufferSize)
     {
@@ -70,13 +70,6 @@ namespace Z
             return m_Stream->name();
         static const std::string empty;
         return empty;
-    }
-
-    FileReader* BufferedInputStream::associatedFile() const
-    {
-        if (m_Stream)
-            return m_Stream->associatedFile();
-        return nullptr;
     }
 
     bool BufferedInputStream::atEnd() const
@@ -156,5 +149,20 @@ namespace Z
 
         m_BufferStart = m_BufferEnd;
         return m_Stream->skip(count - bytesBuffered);
+    }
+
+    void* BufferedInputStream::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<BufferedInputStream>())
+            return this;
+
+        void* stream = IInputStream::queryInterface(typeID);
+        if (stream)
+            return stream;
+
+        if (m_Stream)
+            return m_Stream->queryInterface(typeID);
+
+        return nullptr;
     }
 }

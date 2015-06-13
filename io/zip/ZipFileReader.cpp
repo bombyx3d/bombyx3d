@@ -26,7 +26,7 @@
 
 namespace Z
 {
-    ZipFileReader::ZipFileReader(const std::string& name, const FileReaderPtr& reader, void* handle)
+    ZipFileReader::ZipFileReader(const std::string& name, const Ptr<IFileReader>& reader, void* handle)
         : m_Name(name)
         , m_Handle(handle)
         , m_ZipReader(reader)

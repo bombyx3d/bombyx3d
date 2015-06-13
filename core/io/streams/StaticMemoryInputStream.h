@@ -21,31 +21,38 @@
  */
 
 #pragma once
-#include "InputStream.h"
-#include "io/files/StaticMemoryFile.h"
+#include "core/interfaces/IInputStream.h"
+#include "core/io/files/StaticMemoryFile.h"
 #include <string>
 
-namespace Z
+namespace Engine
 {
-    class StaticMemoryInputStream : public InputStream, public StaticMemoryFile
+    /** An implementation of @ref Engine::IInputStream based on static data. */
+    class StaticMemoryInputStream : public IInputStream, public StaticMemoryFile
     {
     public:
-        StaticMemoryInputStream(const void* data, size_t size, const std::string& name = "<memory>");
+        /**
+         * Constructor.
+         * @param data Pointer to the data.
+         * @param length Length of the data.
+         * @param fileName File name.
+         */
+        StaticMemoryInputStream(const void* data, size_t length, const std::string& fileName = "<memory>");
+
+        /** Destructor. */
         ~StaticMemoryInputStream() = default;
 
+        /** @cond */
         const std::string& name() const override;
-        FileReader* associatedFile() const override;
-
         bool atEnd() const override;
         uint64_t bytesAvailable() const override;
-
         size_t read(void* buffer, size_t size) override;
         bool skip(size_t count) override;
+        void* queryInterface(TypeID typeID) override;
+        /** @endcond */
 
     private:
-        size_t m_Offset;
-        size_t m_BytesLeft;
+        size_t m_Offset;            /**< Current offset from the beginning of stream. */
+        size_t m_BytesLeft;         /**< Number of bytes left left in stream. */
     };
-
-    using StaticMemoryInputStreamPtr = std::shared_ptr<StaticMemoryInputStream>;
 }

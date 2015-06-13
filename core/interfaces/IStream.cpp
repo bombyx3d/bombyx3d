@@ -19,22 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "IStream.h"
 
-#pragma once
-#include <string>
-#include <memory>
-#include <cstdint>
-
-namespace Z
+namespace Engine
 {
-    class FileReader
+    void* IStream::queryInterface(TypeID typeID)
     {
-    public:
-        virtual ~FileReader() = default;
-        virtual const std::string& name() const = 0;
-        virtual uint64_t size() const = 0;
-        virtual bool read(uint64_t offset, void* buffer, size_t size) = 0;
-    };
-
-    using FileReaderPtr = std::shared_ptr<FileReader>;
+        if (typeID == typeOf<IStream>())
+            return this;
+        return IUnknown::queryInterface(typeID);
+    }
 }

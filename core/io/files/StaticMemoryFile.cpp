@@ -19,71 +19,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "StdioFileReader.h"
+#include "StaticMemoryFile.h"
 #include "utility/debug.h"
-#include <cerrno>
 #include <cstring>
 
-namespace Z
+namespace Engine
 {
-    StdioFileReader::StdioFileReader(const std::string& name, FILE* handle)
+    StaticMemoryFile::StaticMemoryFile(const void* data, size_t length, const std::string& name)
         : m_Name(name)
-        , m_Handle(handle)
-        , m_Offset(0)
+        , m_Data(reinterpret_cast<const char*>(data))
+        , m_Length(length)
     {
-        fseek(m_Handle, 0, SEEK_END);
-        long size = ftell(m_Handle);
-        rewind(m_Handle);
-
-        m_Size = (size >= 0 ? uint64_t(size) : 0);
+        Z_ASSERT(length == 0 || data != nullptr);
     }
 
-    StdioFileReader::~StdioFileReader()
+    StaticMemoryFile::~StaticMemoryFile()
     {
-        fclose(m_Handle);
     }
 
-    const std::string& StdioFileReader::name() const
+    const std::string& StaticMemoryFile::name() const
     {
         return m_Name;
     }
 
-    uint64_t StdioFileReader::size() const
+    uint64_t StaticMemoryFile::size() const
     {
-        return m_Size;
+        return m_Length;
     }
 
-    bool StdioFileReader::read(uint64_t offset, void* buffer, size_t size)
+    bool StaticMemoryFile::read(uint64_t offset, void* buffer, size_t size)
     {
-        std::lock_guard<decltype(m_Mutex)> guard(m_Mutex);
-
-        if (offset != m_Offset)
-        {
-            if (fseek(m_Handle, long(offset), SEEK_SET) != 0)
-            {
-                int err = errno;
-                Z_LOG("Seek failed in file \"" << m_Name << "\": " << strerror(err));
-                return false;
-            }
-            m_Offset = offset;
-        }
-
-        size_t bytesRead = fread(buffer, 1, size, m_Handle);
-        if (ferror(m_Handle))
-        {
-            int err = errno;
-            Z_LOG("Error reading file \"" << m_Name << "\": " << strerror(err));
-            return false;
-        }
-
-        m_Offset += bytesRead;
-
-        if (bytesRead != size)
-        {
+        if (offset + size > m_Length) {
             Z_LOG("Incomplete read in file \"" << m_Name << "\".");
             return false;
         }
 
+        memcpy(buffer, m_Data + offset, size);
+
         return true;
+    }
+
+    void* StaticMemoryFile::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<StaticMemoryFile>())
+            return this;
+        return IFileReader::queryInterface(typeID);
     }
 }

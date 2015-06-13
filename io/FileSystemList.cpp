@@ -47,13 +47,13 @@ namespace Z
         return false;
     }
 
-    FileReaderPtr FileSystemList::openFile(const std::string& path)
+    Ptr<IFileReader> FileSystemList::openFile(const std::string& path)
     {
         auto fileSystems = cachedFileSystems();
         for (auto fileSystem : *fileSystems) {
             if (!fileSystem->fileExists(path))
                 continue;
-            FileReaderPtr reader = fileSystem->openFile(path);
+            Engine::Ptr<Engine::IFileReader> reader = fileSystem->openFile(path);
             if (reader)
                 return reader;
         }

@@ -21,32 +21,41 @@
  */
 
 #pragma once
-#include "FileReader.h"
+#include "core/core.h"
 #include <string>
-#include <mutex>
-#include <cstdio>
+#include <memory>
+#include <cstdint>
 
-namespace Z
+namespace Engine
 {
-    class StdioFileReader : public FileReader
+    /** Base interface for file readers. */
+    class IFileReader : public IUnknown
     {
-    public:
-        StdioFileReader(const std::string& name, FILE* handle);
-        ~StdioFileReader();
+        ENGINE_INTERFACE(IFileReader)
 
-        const std::string& name() const override;
+        /**
+         * Retrieves name of file.
+         * @return Name of file.
+         */
+        virtual const std::string& name() const = 0;
 
-        uint64_t size() const override;
-        bool read(uint64_t offset, void* buffer, size_t size) override;
+        /**
+         * Retrieves size of file.
+         * @return Size of file in bytes.
+         */
+        virtual uint64_t size() const = 0;
 
-    private:
-        std::mutex m_Mutex;
-        std::string m_Name;
-        FILE* m_Handle;
-        uint64_t m_Size;
-        uint64_t m_Offset;
+        /**
+         * Reads data from file.
+         * @param offset Offset to read data from.
+         * @param buffer Pointer to the buffer where data should be read.
+         * @param bytesToRead Number of bytes to read.
+         * @return `true` on success, otherwise returns `false`.
+         */
+        virtual bool read(uint64_t offset, void* buffer, size_t bytesToRead) = 0;
 
-        StdioFileReader(const StdioFileReader&) = delete;
-        StdioFileReader& operator=(const StdioFileReader&) = delete;
+        /** @cond */
+        void* queryInterface(TypeID typeID) override;
+        /** @endcond */
     };
 }

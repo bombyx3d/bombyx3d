@@ -21,37 +21,17 @@
  */
 
 #pragma once
+#include <memory>
 
-/** Namespace containing all engine code. */
 namespace Engine
 {
-    /**
-     * Helper macro for interfaces.
-     *
-     * Use this macro to add dummy constructor and destructor for the interface.
-     *
-     * Example usage:
-     * @code{.cpp}
-     * struct IInterface
-     * {
-     *     ENGINE_INTERFACE(IInterface)
-     * };
-     * @endcode
-     */
-    #define ENGINE_INTERFACE(NAME) \
-        /** @cond */ \
-        protected: \
-            NAME() = default; \
-            virtual ~NAME() = default; \
-        private: \
-            NAME(const NAME&) = delete; \
-            NAME(NAME&&) = delete; \
-            NAME& operator=(const NAME&) = delete; \
-            NAME& operator=(NAME&&) = delete; \
-        public: \
-        /** @endcond */
+    /** An alias for `std::shared_ptr`. */
+    template <class TYPE> using Ptr = std::shared_ptr<TYPE>;
 }
 
+#include "macros.h"
 #include "interfaces/IUnknown.h"
 #include "interfaces/IStream.h"
+#include "interfaces/IInputStream.h"
+#include "interfaces/IFileReader.h"
 #include "interfaces/ICore.h"

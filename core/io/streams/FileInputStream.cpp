@@ -21,33 +21,33 @@
  */
 #include "FileInputStream.h"
 
-namespace Z
+namespace Engine
 {
-    FileInputStream::FileInputStream(const FileReaderPtr& reader)
+    FileInputStream::FileInputStream(const Ptr<IFileReader>& reader)
         : m_Reader(reader)
         , m_Offset(0)
         , m_BytesLeft(m_Reader ? m_Reader->size() : 0)
     {
     }
 
-    FileInputStream::FileInputStream(FileReaderPtr&& reader)
+    FileInputStream::FileInputStream(Ptr<IFileReader>&& reader)
         : m_Reader(std::move(reader))
         , m_Offset(0)
         , m_BytesLeft(m_Reader ? m_Reader->size() : 0)
     {
     }
 
-    FileInputStream::FileInputStream(const FileReaderPtr& reader, uint64_t offset, uint64_t size)
+    FileInputStream::FileInputStream(const Ptr<IFileReader>& reader, uint64_t offset, uint64_t limit)
         : m_Reader(reader)
         , m_Offset(offset)
-        , m_BytesLeft(m_Reader ? size : 0)
+        , m_BytesLeft(m_Reader ? limit : 0)
     {
     }
 
-    FileInputStream::FileInputStream(FileReaderPtr&& reader, uint64_t offset, uint64_t size)
+    FileInputStream::FileInputStream(Ptr<IFileReader>&& reader, uint64_t offset, uint64_t limit)
         : m_Reader(std::move(reader))
         , m_Offset(offset)
-        , m_BytesLeft(m_Reader ? size : 0)
+        , m_BytesLeft(m_Reader ? limit : 0)
     {
     }
 
@@ -107,5 +107,20 @@ namespace Z
         m_BytesLeft -= uint64_t(count);
 
         return true;
+    }
+
+    void* FileInputStream::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<FileInputStream>())
+            return this;
+
+        void* stream = IInputStream::queryInterface(typeID);
+        if (stream)
+            return stream;
+
+        if (m_Reader)
+            return m_Reader->queryInterface(typeID);
+
+        return nullptr;
     }
 }

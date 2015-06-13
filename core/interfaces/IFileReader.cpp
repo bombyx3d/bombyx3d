@@ -19,40 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "MemoryFile.h"
-#include "utility/debug.h"
-#include <cstring>
+#include "IFileReader.h"
 
-namespace Z
+namespace Engine
 {
-    MemoryFile::MemoryFile(const std::string& name)
-        : m_Name(name)
+    void* IFileReader::queryInterface(TypeID typeID)
     {
-    }
-
-    MemoryFile::~MemoryFile()
-    {
-    }
-
-    const std::string& MemoryFile::name() const
-    {
-        return m_Name;
-    }
-
-    uint64_t MemoryFile::size() const
-    {
-        return m_Data.size();
-    }
-
-    bool MemoryFile::read(uint64_t offset, void* buffer, size_t size)
-    {
-        if (offset + size > m_Data.size()) {
-            Z_LOG("Incomplete read in file \"" << m_Name << "\".");
-            return false;
-        }
-
-        memcpy(buffer, m_Data.data() + offset, size);
-
-        return true;
+        if (typeID == typeOf<IFileReader>())
+            return this;
+        return IUnknown::queryInterface(typeID);
     }
 }

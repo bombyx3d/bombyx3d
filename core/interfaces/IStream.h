@@ -21,12 +21,12 @@
  */
 
 #pragma once
-#include "core/core.h"
+#include "IUnknown.h"
 #include <string>
 
 namespace Engine
 {
-    /** Base class for input and output streams. */
+    /** Base interface for input and output streams. */
     class IStream : public IUnknown
     {
         ENGINE_INTERFACE(IStream)
@@ -36,5 +36,9 @@ namespace Engine
          * @return Name of the stream.
          */
         virtual const std::string& name() const = 0;
+
+        /** @cond */
+        void* queryInterface(TypeID typeID) override;
+        /** @endcond */
     };
 }

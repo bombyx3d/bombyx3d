@@ -28,6 +28,8 @@
 
 namespace Z
 {
+    using namespace Engine;
+
     class FileSystemList : public FileSystem
     {
     public:
@@ -35,7 +37,7 @@ namespace Z
         virtual ~FileSystemList();
 
         bool fileExists(const std::string& path) override;
-        FileReaderPtr openFile(const std::string& path) override;
+        Ptr<IFileReader> openFile(const std::string& path) override;
 
         void add(FileSystem* fileSystem);
         void add(const FileSystemPtr& fileSystem);

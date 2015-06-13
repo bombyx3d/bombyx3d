@@ -40,7 +40,7 @@ namespace Z
         static QString getStandardPath(QStandardPaths::StandardLocation location);
 
         bool fileExists(const std::string& path) final override;
-        FileReaderPtr openFile(const std::string& path) final override;
+        Ptr<IFileReader> openFile(const std::string& path) final override;
 
     private:
         QDir m_BaseDir;

@@ -21,7 +21,7 @@
  */
 #include "Shader.h"
 #include "opengl/api/error.h"
-#include "io/streams/StaticMemoryInputStream.h"
+#include "core/io/streams/StaticMemoryInputStream.h"
 #include "utility/debug.h"
 #include <cstring>
 

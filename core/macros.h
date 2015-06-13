@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+﻿/*
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,43 +19,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "StaticMemoryFile.h"
-#include "utility/debug.h"
-#include <cstring>
 
-namespace Z
-{
-    StaticMemoryFile::StaticMemoryFile(const void* data, size_t length, const std::string& name)
-        : m_Name(name)
-        , m_Data(reinterpret_cast<const char*>(data))
-        , m_Length(length)
-    {
-        Z_ASSERT(length == 0 || data != nullptr);
-    }
+#pragma once
 
-    StaticMemoryFile::~StaticMemoryFile()
-    {
-    }
-
-    const std::string& StaticMemoryFile::name() const
-    {
-        return m_Name;
-    }
-
-    uint64_t StaticMemoryFile::size() const
-    {
-        return m_Length;
-    }
-
-    bool StaticMemoryFile::read(uint64_t offset, void* buffer, size_t size)
-    {
-        if (offset + size > m_Length) {
-            Z_LOG("Incomplete read in file \"" << m_Name << "\".");
-            return false;
-        }
-
-        memcpy(buffer, m_Data + offset, size);
-
-        return true;
-    }
-}
+/**
+ * Helper macro for interfaces.
+ *
+ * Use this macro to add dummy constructor and destructor for the interface.
+ *
+ * Example usage:
+ * @code{.cpp}
+ * struct IInterface
+ * {
+ *     ENGINE_INTERFACE(IInterface)
+ * };
+ * @endcode
+ */
+#define ENGINE_INTERFACE(NAME) \
+    /** @cond */ \
+    protected: \
+        NAME() = default; \
+        virtual ~NAME() = default; \
+    private: \
+        NAME(const NAME&) = delete; \
+        NAME(NAME&&) = delete; \
+        NAME& operator=(const NAME&) = delete; \
+        NAME& operator=(NAME&&) = delete; \
+    public: \
+    /** @endcond */

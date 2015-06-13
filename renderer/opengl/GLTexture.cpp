@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 #include "GLTexture.h"
-#include "io/streams/FileInputStream.h"
+#include "core/io/streams/FileInputStream.h"
 #include "renderer/formats/ztex.h"
 #include "utility/debug.h"
 #include <iomanip>
@@ -81,24 +81,24 @@ namespace Z
 
     bool GLTexture::load(const std::string& file)
     {
-        FileReaderPtr reader = FileSystem::defaultFileSystem()->openFile(file);
+        Ptr<IFileReader> reader = FileSystem::defaultFileSystem()->openFile(file);
         if (!reader)
             return false;
         return load(reader);
     }
 
-    bool GLTexture::load(const FileReaderPtr& fileReader)
+    bool GLTexture::load(const Ptr<IFileReader>& fileReader)
     {
         FileInputStream stream(fileReader);
         return load(&stream);
     }
 
-    bool GLTexture::load(const InputStreamPtr& inputStream)
+    bool GLTexture::load(const Ptr<IInputStream>& inputStream)
     {
         return load(inputStream.get());
     }
 
-    bool GLTexture::load(InputStream* inputStream)
+    bool GLTexture::load(IInputStream* inputStream)
     {
         Z_CHECK(inputStream != nullptr);
         if (!inputStream)

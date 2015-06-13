@@ -23,12 +23,14 @@
 #pragma once
 #include "api/opengl.h"
 #include "io/FileSystem.h"
-#include "io/streams/InputStream.h"
-#include "io/files/FileReader.h"
+#include "core/interfaces/IInputStream.h"
+#include "core/interfaces/IFileReader.h"
 #include <memory>
 
 namespace Z
 {
+    using namespace Engine;
+
     class GLTexture
     {
     public:
@@ -47,9 +49,9 @@ namespace Z
         static void unbindAll();
 
         bool load(const std::string& file);
-        bool load(const FileReaderPtr& fileReader);
-        bool load(const InputStreamPtr& inputStream);
-        bool load(InputStream* inputStream);
+        bool load(const Ptr<IFileReader>& fileReader);
+        bool load(const Ptr<IInputStream>& inputStream);
+        bool load(IInputStream* inputStream);
 
         void setMinFilter(GL::Enum filter) { m_MinFilter = filter; m_Dirty = true; }
         void setMagFilter(GL::Enum filter) { m_MagFilter = filter; m_Dirty = true; }

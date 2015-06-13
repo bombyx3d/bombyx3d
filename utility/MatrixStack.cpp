@@ -71,7 +71,7 @@ namespace Z
         invokeListener();
     }
 
-    void MatrixStack::pushApply(const Engine::AffineTransform& transform)
+    void MatrixStack::pushApply(const AffineTransform& transform)
     {
         // FIXME: optimize
         pushApply(transform.toMat4());

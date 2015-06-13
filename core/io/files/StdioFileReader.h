@@ -21,25 +21,42 @@
  */
 
 #pragma once
-#include "FileReader.h"
+#include "core/interfaces/IFileReader.h"
 #include <string>
-#include <vector>
+#include <mutex>
+#include <cstdio>
 
-namespace Z
+namespace Engine
 {
-    class StaticMemoryFile : public FileReader
+    /** An implementation of @ref Engine::IFileReader using classic stdio `FILE*`. */
+    class StdioFileReader : public IFileReader
     {
     public:
-        StaticMemoryFile(const void* data, size_t length, const std::string& name = "<memory>");
-        ~StaticMemoryFile();
+        /**
+         * Constructor.
+         * @param fileName File name.
+         * @param fileHandle File handle. This class takes ownership of this handle and will close it as appropriate.
+         */
+        StdioFileReader(const std::string& fileName, FILE* fileHandle);
 
+        /** Destructor. */
+        ~StdioFileReader();
+
+        /** @cond */
         const std::string& name() const override;
         uint64_t size() const override;
-        bool read(uint64_t offset, void* buffer, size_t size) override;
+        bool read(uint64_t offset, void* buffer, size_t bytesToRead) override;
+        void* queryInterface(TypeID typeID) override;
+        /** @endcond */
 
     private:
-        std::string m_Name;
-        const char* m_Data;
-        size_t m_Length;
+        std::mutex m_Mutex;             /**< Mutex. */
+        std::string m_Name;             /**< File name. */
+        FILE* m_Handle;                 /**< File handle. */
+        uint64_t m_Size;                /**< File size. */
+        uint64_t m_Offset;              /**< Current position in the file. */
+
+        StdioFileReader(const StdioFileReader&) = delete;
+        StdioFileReader& operator=(const StdioFileReader&) = delete;
     };
 }

@@ -22,7 +22,7 @@
 
 #pragma once
 #include "io/FileSystem.h"
-#include "io/files/FileReader.h"
+#include "core/interfaces/IFileReader.h"
 #include <mutex>
 #include <string>
 #include <memory>
@@ -32,16 +32,16 @@ namespace Z
     class ZipFileSystem : public FileSystem
     {
     public:
-        explicit ZipFileSystem(const FileReaderPtr& zipFile);
-        explicit ZipFileSystem(FileReaderPtr&& zipFile);
+        explicit ZipFileSystem(const Ptr<IFileReader>& zipFile);
+        explicit ZipFileSystem(Ptr<IFileReader>&& zipFile);
         ~ZipFileSystem();
 
         bool fileExists(const std::string& path) final override;
-        FileReaderPtr openFile(const std::string& path) final override;
+        Ptr<IFileReader> openFile(const std::string& path) final override;
 
     private:
         std::mutex m_Mutex;
-        FileReaderPtr m_ZipReader;
+        Ptr<IFileReader> m_ZipReader;
         void* m_ZipFile;
 
         ZipFileSystem(const ZipFileSystem&) = delete;

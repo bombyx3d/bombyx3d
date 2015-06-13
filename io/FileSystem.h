@@ -21,12 +21,15 @@
  */
 
 #pragma once
-#include "io/files/FileReader.h"
+#include "core/core.h"
+#include "core/interfaces/IFileReader.h"
 #include <string>
 #include <memory>
 
 namespace Z
 {
+    using namespace Engine;
+
     class FileSystem;
     class FileSystemList;
     using FileSystemPtr = std::shared_ptr<FileSystem>;
@@ -38,7 +41,7 @@ namespace Z
         virtual ~FileSystem() = default;
 
         virtual bool fileExists(const std::string& path) = 0;
-        virtual FileReaderPtr openFile(const std::string& path) = 0;
+        virtual Ptr<IFileReader> openFile(const std::string& path) = 0;
 
         static const std::shared_ptr<FileSystemList>& defaultFileSystem() { return m_DefaultFileSystem; }
 

@@ -22,12 +22,14 @@
 
 #pragma once
 #include "api/opengl.h"
-#include "io/files/FileReader.h"
-#include "io/streams/InputStream.h"
+#include "core/interfaces/IFileReader.h"
+#include "core/interfaces/IInputStream.h"
 #include <memory>
 
 namespace Z
 {
+    using namespace Engine;
+
     class GLProgram
     {
     public:
@@ -45,16 +47,16 @@ namespace Z
         int getUniformLocation(const char* name, bool ignoreFailure = false) const
             { return gl::GetUniformLocation(m_Handle, name, ignoreFailure); }
 
-        virtual InputStreamPtr openIncludeFile(std::string filename, const std::string& parentFileName) const;
-        virtual bool parseProgramSource(InputStream* input, std::vector<std::string>& vertex,
+        virtual Ptr<IInputStream> openIncludeFile(std::string filename, const std::string& parentFileName) const;
+        virtual bool parseProgramSource(IInputStream* input, std::vector<std::string>& vertex,
             std::vector<std::string>& fragment, std::vector<std::string>* what = nullptr) const;
 
         void printSource() const;
 
         bool load(const std::string& file);
-        bool load(const FileReaderPtr& fileReader);
-        bool load(const InputStreamPtr& inputStream);
-        bool load(InputStream* input);
+        bool load(const Ptr<IFileReader>& fileReader);
+        bool load(const Ptr<IInputStream>& inputStream);
+        bool load(IInputStream* input);
 
         bool loadSource(const std::string& vertex, const std::string& fragment);
 

@@ -21,8 +21,8 @@
  */
 #include "GLProgram.h"
 #include "GLShader.h"
-#include "io/streams/FileInputStream.h"
-#include "io/files/FileReader.h"
+#include "core/io/streams/FileInputStream.h"
+#include "core/interfaces/IFileReader.h"
 #include "io/FileSystem.h"
 #include "utility/debug.h"
 #include "api/error.h"
@@ -57,9 +57,9 @@ namespace Z
         gl::UseProgram(0);
     }
 
-    InputStreamPtr GLProgram::openIncludeFile(std::string filename, const std::string& parentFileName) const
+    Ptr<IInputStream> GLProgram::openIncludeFile(std::string filename, const std::string& parentFileName) const
     {
-        FileReaderPtr file;
+        Ptr<IFileReader> file;
 
         size_t length = filename.length();
         if (length > 0 && filename[length - 1] == '\n')
@@ -85,7 +85,7 @@ namespace Z
         return std::make_shared<FileInputStream>(file);
     }
 
-    bool GLProgram::parseProgramSource(InputStream* input,
+    bool GLProgram::parseProgramSource(IInputStream* input,
         std::vector<std::string>& vertex, std::vector<std::string>& fragment,
         std::vector<std::string>* what) const
     {
@@ -202,24 +202,24 @@ namespace Z
 
     bool GLProgram::load(const std::string& file)
     {
-        FileReaderPtr reader = FileSystem::defaultFileSystem()->openFile(file);
+        Ptr<IFileReader> reader = FileSystem::defaultFileSystem()->openFile(file);
         if (!reader)
             return false;
         return load(reader);
     }
 
-    bool GLProgram::load(const FileReaderPtr& fileReader)
+    bool GLProgram::load(const Ptr<IFileReader>& fileReader)
     {
         FileInputStream stream(fileReader);
         return load(&stream);
     }
 
-    bool GLProgram::load(const InputStreamPtr& inputStream)
+    bool GLProgram::load(const Ptr<IInputStream>& inputStream)
     {
         return load(inputStream.get());
     }
 
-    bool GLProgram::load(InputStream* input)
+    bool GLProgram::load(IInputStream* input)
     {
         Z_CHECK(input != nullptr);
         if (!input)

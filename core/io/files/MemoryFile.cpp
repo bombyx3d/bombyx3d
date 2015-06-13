@@ -19,30 +19,53 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "MemoryFile.h"
+#include "utility/debug.h"
+#include <cstring>
 
-#pragma once
-#include "FileReader.h"
-#include <string>
-#include <vector>
-
-namespace Z
+namespace Engine
 {
-    class MemoryFile : public FileReader
+    MemoryFile::MemoryFile(const std::string& fileName)
+        : m_Name(fileName)
     {
-    public:
-        MemoryFile(const std::string& name = "<memory>");
-        ~MemoryFile();
+    }
 
-        std::vector<char>& data() { return m_Data; }
-        const std::vector<char>& data() const { return m_Data; }
-        const std::vector<char>& constData() const { return m_Data; }
+    MemoryFile::MemoryFile(std::vector<char>&& fileData, const std::string& fileName)
+        : m_Name(fileName)
+        , m_Data(std::move(fileData))
+    {
+    }
 
-        const std::string& name() const override;
-        uint64_t size() const override;
-        bool read(uint64_t offset, void* buffer, size_t size) override;
+    MemoryFile::~MemoryFile()
+    {
+    }
 
-    private:
-        std::string m_Name;
-        std::vector<char> m_Data;
-    };
+    const std::string& MemoryFile::name() const
+    {
+        return m_Name;
+    }
+
+    uint64_t MemoryFile::size() const
+    {
+        return m_Data.size();
+    }
+
+    bool MemoryFile::read(uint64_t offset, void* buffer, size_t bytesToRead)
+    {
+        if (offset + bytesToRead > m_Data.size()) {
+            Z_LOG("Incomplete read in file \"" << m_Name << "\".");
+            return false;
+        }
+
+        memcpy(buffer, m_Data.data() + offset, bytesToRead);
+
+        return true;
+    }
+
+    void* MemoryFile::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<MemoryFile>())
+            return this;
+        return IFileReader::queryInterface(typeID);
+    }
 }
