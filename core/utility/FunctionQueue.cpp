@@ -22,7 +22,7 @@
 #include "FunctionQueue.h"
 #include <new>
 
-namespace Z
+namespace Engine
 {
     void FunctionQueue::clear()
     {

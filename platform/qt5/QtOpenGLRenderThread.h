@@ -22,7 +22,7 @@
 
 #pragma once
 #include "platform/PlatformCallbacks.h"
-#include "utility/FunctionQueue.h"
+#include "core/utility/FunctionQueue.h"
 #include <atomic>
 #include <future>
 #include <cstdint>
@@ -32,6 +32,8 @@
 
 namespace Z
 {
+    using namespace Engine;
+
     class QtOpenGLRenderThread : public QThread, protected FunctionQueue
     {
         Q_OBJECT

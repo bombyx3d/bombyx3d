@@ -21,31 +21,54 @@
  */
 
 #pragma once
+#include "core/utility/macros.h"
 #include <deque>
 #include <mutex>
 #include <functional>
 
-namespace Z
+namespace Engine
 {
+    /** A FIFO queue of `std::function` objects. */
     class FunctionQueue
     {
     public:
+        /** Constructor. */
         FunctionQueue() = default;
+
+        /** Destructor. */
         ~FunctionQueue() = default;
 
+        /** Clears the queue. */
         void clear();
 
+        /**
+         * Enqueues function to the tail of the queue.
+         * @param function Function to enqueue.
+         */
         void post(const std::function<void()>& function);
+
+        /**
+         * Enqueues function to the tail of the queue.
+         * @param function Function to enqueue.
+         */
         void post(std::function<void()>&& function);
 
+        /**
+         * Dequeues and invokes one function from the head of the queue.
+         * @return `true` if function has been dequeued and invoked or `false` if queue was empty.
+         */
         bool processOne();
+
+        /**
+         * Dequeues and invokes all queued functions, one by one, in the order they were enqueued into this queue.
+         * If queue is empty, this method does nothing.
+         */
         void processAll();
 
     private:
-        std::mutex m_Mutex;
-        std::deque<std::function<void()>> m_Queue;
+        std::mutex m_Mutex;                             /**< Mutex. */
+        std::deque<std::function<void()>> m_Queue;      /**< Queue. */
 
-        FunctionQueue(const FunctionQueue&) = delete;
-        FunctionQueue& operator=(const FunctionQueue&) = delete;
+        Z_DISABLE_COPY(FunctionQueue)
     };
 }

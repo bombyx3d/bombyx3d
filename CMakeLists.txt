@@ -47,8 +47,6 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     renderer/opengl/*.h
     renderer/*.cpp
     renderer/*.h
-    utility/*.cpp
-    utility/*.h
     *.cpp
     *.h
 )

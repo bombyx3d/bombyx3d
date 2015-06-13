@@ -25,7 +25,7 @@
 #include "Shader.h"
 #include "Sprite.h"
 #include "core/math/Quad.h"
-#include "utility/MatrixStack.h"
+#include "core/utility/MatrixStack.h"
 #include <glm/glm.hpp>
 #include <unordered_map>
 #include <string>

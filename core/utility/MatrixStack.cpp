@@ -24,7 +24,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <algorithm>
 
-namespace Z
+namespace Engine
 {
     MatrixStack::MatrixStack(size_t initialReserve, const ModificationListener& listener)
         : m_Listener(listener)
