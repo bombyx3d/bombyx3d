@@ -34,11 +34,18 @@ endif()
 if(DOXYGEN_FOUND AND DOXYGEN_DOT_FOUND)
 
     add_custom_target(doc
-        COMMAND "${DOXYGEN_EXECUTABLE}" "${Engine_SOURCE_DIR}/Doxyfile"
-        DEPENDS "${Engine_SOURCE_DIR}/Doxyfile"
-        WORKING_DIRECTORY "${Engine_SOURCE_DIR}"
-        COMMENT "Generating documentation"
-        SOURCES "${Engine_SOURCE_DIR}/Doxyfile"
+        COMMAND
+            "${DOXYGEN_EXECUTABLE}" "${Engine_SOURCE_DIR}/Doxyfile"
+        DEPENDS
+            "${Engine_SOURCE_DIR}/Doxyfile"
+            "${Engine_SOURCE_DIR}/README.md"
+            "${CMAKE_CURRENT_SOURCE_DIR}/Logging.dox"
+        WORKING_DIRECTORY
+            "${Engine_SOURCE_DIR}"
+        COMMENT
+            "Generating documentation"
+        SOURCES
+            "${Engine_SOURCE_DIR}/Doxyfile"
     )
 
 endif()

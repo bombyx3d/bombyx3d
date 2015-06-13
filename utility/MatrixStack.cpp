@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 #include "MatrixStack.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <algorithm>
 

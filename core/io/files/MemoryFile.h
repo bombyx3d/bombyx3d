@@ -27,7 +27,7 @@
 
 namespace Engine
 {
-    /** An `std::vector`-based implementation of @ref Engine::IFileReader. */
+    /** An in-memory, `std::vector`-based implementation of @ref Engine::IFileReader. */
     class MemoryFile : public IFileReader
     {
     public:

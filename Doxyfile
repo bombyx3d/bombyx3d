@@ -99,12 +99,11 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = core/core.h \
-                         core/macros.h \
-                         core/interfaces \
+INPUT                  = core/interfaces \
                          core/io \
                          core/math \
                          core/utility \
+                         doc/Logging.dox \
                          README.md
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.h

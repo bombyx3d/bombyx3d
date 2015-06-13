@@ -48,13 +48,16 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     core/io/files/*.h
     core/io/streams/*.cpp
     core/io/streams/*.h
+    core/io/*.cpp
+    core/io/*.h
     core/math/*.cpp
     core/math/*.h
-    core/*.h
+    core/private/*.cpp
+    core/private/*.h
+    core/utility/*.cpp
+    core/utility/*.h
     io/zip/*.cpp
     io/zip/*.h
-    io/*.cpp
-    io/*.h
     mechanics/match3/*.cpp
     mechanics/match3/*.h
     renderer/formats/*.h

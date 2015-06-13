@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 #include "StaticMemoryFile.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 #include <cstring>
 
 namespace Engine

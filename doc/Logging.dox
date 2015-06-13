@@ -1,0 +1,25 @@
+﻿
+/**
+ * @page _logging Logging subsystem
+ * @brief
+ * @details
+ * You may use the @ref Z_LOG macro to write messages into the engine log:
+ *
+ * @code{.cpp}
+ * #include "engine/core/utility/debug.h"
+ *
+ * // ...
+ *
+ * int counter = 10;
+ * Z_LOG("Counter is " << 10);
+ * @endcode
+ *
+ * By default logging is enabled only in `Debug` builds (i.e. builds where the `NDEBUG` preprocessor symbol
+ * is not defined). You may enable logging in release builds too by defining preprocessor symbol `Z_ENABLE_LOGGING`.
+ *
+ * There is a special preprocessor symbol @ref Z_LOGGING_ENABLED which is always defined to `0` or `1`
+ * and may be used in \#`if` directives to determine whether current build has logging enabled or not.
+ *
+ * By default engine writes log messages to `std::cerr`, but this can be overriden using the
+ * @ref Engine::setDebugPrinter global function.
+ */

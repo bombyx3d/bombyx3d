@@ -23,27 +23,63 @@
 #pragma once
 
 /**
- * Helper macro for interfaces.
+ * Deletes copy and move constructors and assignment operators in the class or struct.
  *
- * Use this macro to add dummy constructor and destructor for the interface.
+ * @param NAME Name of the class or struct.
+ *
+ * @note This macro resets class' current protection level to `private`.
  *
  * Example usage:
  * @code{.cpp}
- * struct IInterface
+ * class MyClass
  * {
- *     ENGINE_INTERFACE(IInterface)
+ *     // ...
+ *
+ *     Z_DISABLE_COPY(MyClass)
  * };
  * @endcode
  */
-#define ENGINE_INTERFACE(NAME) \
+#define Z_DISABLE_COPY(NAME) \
     /** @cond */ \
-    protected: \
-        NAME() = default; \
-        virtual ~NAME() = default; \
     private: \
         NAME(const NAME&) = delete; \
         NAME(NAME&&) = delete; \
         NAME& operator=(const NAME&) = delete; \
         NAME& operator=(NAME&&) = delete; \
-    public: \
     /** @endcond */
+
+/**
+ * Helper macro for interfaces.
+ *
+ * Use this macro to add dummy constructor and destructor to the interface.
+ *
+ * @param NAME Name of the interface.
+ *
+ * Example usage:
+ * @code{.cpp}
+ * struct IInterface : public IUnknown
+ * {
+ *     Z_INTERFACE(IInterface)
+ *
+ *     // ...
+ * };
+ * @endcode
+ */
+#define Z_INTERFACE(NAME) \
+    Z_DISABLE_COPY(NAME) \
+    /** @cond */ \
+    public: \
+        NAME() = default; \
+        virtual ~NAME() = default; \
+    /** @endcond */
+
+/**
+ * @def Z_THREADLOCAL
+ * A _thread local_ storage class.
+ * Use this macro instead of `thread_local`, `__thread` or `__declspec(thread)`.
+ */
+#ifdef _MSC_VER
+ #define Z_THREADLOCAL __declspec(thread)
+#else
+ #define Z_THREADLOCAL __thread
+#endif

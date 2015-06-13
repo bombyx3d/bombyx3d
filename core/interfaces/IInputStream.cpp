@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 #include "IInputStream.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 #include <sstream>
 #include <algorithm>
 

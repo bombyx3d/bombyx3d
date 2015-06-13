@@ -22,7 +22,7 @@
 
 #pragma once
 #include "opengl.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 #include <sstream>
 #include <iostream>
 #include <string>

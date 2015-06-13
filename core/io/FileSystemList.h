@@ -21,38 +21,57 @@
  */
 
 #pragma once
-#include "FileSystem.h"
+#include "core/utility/Ptr.h"
+#include "core/interfaces/IFileSystem.h"
 #include <mutex>
 #include <vector>
-#include <memory>
 
-namespace Z
+namespace Engine
 {
-    using namespace Engine;
-
-    class FileSystemList : public FileSystem
+    /** A list of filesystems. */
+    class FileSystemList : public IFileSystem
     {
     public:
+        /** Constructor. */
         FileSystemList();
-        virtual ~FileSystemList();
 
+        /** Destructor. */
+        ~FileSystemList();
+
+        /**
+         * Adds filesystem to the list.
+         * @param fileSystem Pointer to the filesystem to add. This list will take ownership of the filesystem
+         * and will delete it when appropriate.
+         */
+        void add(IFileSystem* fileSystem);
+
+        /**
+         * Adds filesystem to the list.
+         * @param fileSystem Pointer to the filesystem to add.
+         */
+        void add(const Ptr<IFileSystem>& fileSystem);
+
+        /**
+         * Adds filesystem to the list.
+         * @param fileSystem Pointer to the filesystem to add.
+         */
+        void add(Ptr<IFileSystem>&& fileSystem);
+
+        /** @cond */
         bool fileExists(const std::string& path) override;
         Ptr<IFileReader> openFile(const std::string& path) override;
-
-        void add(FileSystem* fileSystem);
-        void add(const FileSystemPtr& fileSystem);
-        void add(FileSystemPtr&& fileSystem);
+        void* queryInterface(TypeID typeID) override;
+        /** @endcond */
 
     private:
-        using Array = std::vector<FileSystemPtr>;
+        using Array = std::vector<Ptr<IFileSystem>>;
+        using ArrayPtr = std::shared_ptr<Array>;
 
         std::mutex m_Mutex;
-        std::shared_ptr<Array> m_CachedFileSystems;
+        ArrayPtr m_CachedFileSystems;
         Array m_FileSystems;
 
-        std::shared_ptr<Array> cachedFileSystems();
+        ArrayPtr cachedFileSystems();
         void invalidateCache();
     };
-
-    using FileSystemListPtr = std::shared_ptr<FileSystemList>;
 }

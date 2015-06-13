@@ -22,6 +22,7 @@
 
 #pragma once
 #include "api/opengl.h"
+#include "core/utility/Ptr.h"
 #include "core/interfaces/IFileReader.h"
 #include "core/interfaces/IInputStream.h"
 #include <memory>

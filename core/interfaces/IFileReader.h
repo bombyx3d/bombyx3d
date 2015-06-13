@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "core/core.h"
+#include "core/interfaces/IUnknown.h"
 #include <string>
 #include <memory>
 #include <cstdint>
@@ -31,7 +31,7 @@ namespace Engine
     /** Base interface for file readers. */
     class IFileReader : public IUnknown
     {
-        ENGINE_INTERFACE(IFileReader)
+        Z_INTERFACE(IFileReader)
 
         /**
          * Retrieves name of file.

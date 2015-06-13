@@ -23,8 +23,9 @@
 #include "GLShader.h"
 #include "core/io/streams/FileInputStream.h"
 #include "core/interfaces/IFileReader.h"
-#include "io/FileSystem.h"
-#include "utility/debug.h"
+#include "core/interfaces/ICore.h"
+#include "core/interfaces/IFileSystem.h"
+#include "core/utility/debug.h"
 #include "api/error.h"
 #include <vector>
 #include <string>
@@ -71,15 +72,15 @@ namespace Z
             size_t index = parentFileName.rfind('/');
             std::string parentDir = (index == std::string::npos ? std::string() : parentFileName.substr(0, index + 1));
             std::string localFileName = parentDir + filename;
-            if (FileSystem::defaultFileSystem()->fileExists(localFileName)) {
+            if (ICore::instance().fileSystem().fileExists(localFileName)) {
                 Z_LOG(" - include file \"" << localFileName << "\".");
-                file = FileSystem::defaultFileSystem()->openFile(localFileName);
+                file = ICore::instance().fileSystem().openFile(localFileName);
             }
         }
 
         if (!file) {
             Z_LOG(" - include file \"" << filename << "\".");
-            file = FileSystem::defaultFileSystem()->openFile(filename);
+            file = ICore::instance().fileSystem().openFile(filename);
         }
 
         return std::make_shared<FileInputStream>(file);
@@ -202,7 +203,7 @@ namespace Z
 
     bool GLProgram::load(const std::string& file)
     {
-        Ptr<IFileReader> reader = FileSystem::defaultFileSystem()->openFile(file);
+        Ptr<IFileReader> reader = ICore::instance().fileSystem().openFile(file);
         if (!reader)
             return false;
         return load(reader);

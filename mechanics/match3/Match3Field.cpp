@@ -21,7 +21,7 @@
  */
 #include "Match3Field.h"
 #include "Match3Listener.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 #include <map>
 #include <cstring>
 #include <random>

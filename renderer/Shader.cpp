@@ -22,7 +22,7 @@
 #include "Shader.h"
 #include "opengl/api/error.h"
 #include "core/io/streams/StaticMemoryInputStream.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 #include <cstring>
 
 namespace Z

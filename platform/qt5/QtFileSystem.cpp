@@ -21,7 +21,7 @@
  */
 #include "QtFileSystem.h"
 #include "QtMacros.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 
 #if QT_VERSION < 0x050400
  #define AppDataLocation DataLocation

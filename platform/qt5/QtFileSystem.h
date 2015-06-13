@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "io/FileSystem.h"
+#include "core/interfaces/IFileSystem.h"
 #include "QtFileReader.h"
 #include <QDir>
 #include <QStandardPaths>
@@ -29,7 +29,7 @@
 
 namespace Z
 {
-    class QtFileSystem : public FileSystem
+    class QtFileSystem : public IFileSystem
     {
     public:
         explicit QtFileSystem(const QDir& baseDir);

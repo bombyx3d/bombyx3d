@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "io/FileSystem.h"
+#include "core/interfaces/IFileSystem.h"
 #include "core/interfaces/IFileReader.h"
 #include <mutex>
 #include <string>
@@ -29,7 +29,9 @@
 
 namespace Z
 {
-    class ZipFileSystem : public FileSystem
+    using namespace Engine;
+
+    class ZipFileSystem : public IFileSystem
     {
     public:
         explicit ZipFileSystem(const Ptr<IFileReader>& zipFile);

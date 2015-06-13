@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 #include "ZipFileReader.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 #include <unzip.h>
 #include <vector>
 

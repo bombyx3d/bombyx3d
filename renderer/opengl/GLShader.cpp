@@ -21,7 +21,7 @@
  */
 #include "GLShader.h"
 #include "api/error.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 #include <vector>
 #include <string>
 #include <sstream>

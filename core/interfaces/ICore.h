@@ -21,17 +21,44 @@
  */
 
 #pragma once
-#include "IUnknown.h"
+#include "core/interfaces/IUnknown.h"
+#include "core/interfaces/IFileSystem.h"
+#include "core/utility/debug.h"
 
 namespace Engine
 {
      /** Interface to the engine core. */
     class ICore : public IUnknown
     {
-        ENGINE_INTERFACE(ICore)
+    public:
+        /** @cond */
+        ICore();
+        ~ICore();
+        /** @endcond */
+
+        /**
+         * Retrieves reference to the instance of the engine core.
+         * @return Reference to the instance of the engine code.
+         */
+        static ICore& instance()
+        {
+            Z_ASSERT(m_Instance != nullptr);
+            return *m_Instance;
+        }
+
+        /**
+         * Retrieves a reference to the file system.
+         * @return Reference to the file system.
+         */
+        virtual IFileSystem& fileSystem() = 0;
 
         /** @cond */
         void* queryInterface(TypeID typeID) override;
         /** @endcond */
+
+    private:
+        static ICore* m_Instance;           /**< Instance of the engine core. */
+
+        Z_DISABLE_COPY(ICore)
     };
 }

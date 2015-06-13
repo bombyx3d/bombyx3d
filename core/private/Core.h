@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,9 +21,30 @@
  */
 
 #pragma once
+#include "core/utility/Ptr.h"
+#include "core/interfaces/ICore.h"
+#include "core/io/FileSystemList.h"
 
-#ifdef _MSC_VER
- #define Z_THREADLOCAL __declspec(thread)
-#else
- #define Z_THREADLOCAL __thread
-#endif
+namespace Engine
+{
+    /** Engine core. */
+    class Core : public ICore
+    {
+    public:
+        /**
+         * Constructor.
+         * @param fileSystemList Pointer to the list of native filesystems.
+         */
+        explicit Core(const Ptr<FileSystemList>& fileSystemList);
+
+        /** Destructor. */
+        ~Core();
+
+        /** @cond */
+        IFileSystem& fileSystem() override { return *m_FileSystem; }
+        /** @endcond */
+
+    private:
+        Ptr<FileSystemList> m_FileSystem;       /**< Instance of the file system. */
+    };
+}

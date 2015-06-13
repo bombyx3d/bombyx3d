@@ -21,7 +21,7 @@
  */
 #include "QtFileReader.h"
 #include "QtMacros.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 #include <cerrno>
 #include <cstring>
 

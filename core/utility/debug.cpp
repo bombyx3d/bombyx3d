@@ -25,7 +25,7 @@
 #include <iostream>
 #include <cstdlib>
 
-namespace Z
+namespace Engine
 {
     static std::function<void(const std::string&)> g_DebugPrinter;
 

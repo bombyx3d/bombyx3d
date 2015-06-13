@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 #include "GLBuffer.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 
 namespace Z
 {

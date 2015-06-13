@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,20 +18,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- */
-
-#pragma once
-#include <memory>
+*/
+#include "Core.h"
 
 namespace Engine
 {
-    /** An alias for `std::shared_ptr`. */
-    template <class TYPE> using Ptr = std::shared_ptr<TYPE>;
-}
+    Core::Core(const Ptr<FileSystemList>& fileSystemList)
+        : m_FileSystem(fileSystemList)
+    {
+    }
 
-#include "macros.h"
-#include "interfaces/IUnknown.h"
-#include "interfaces/IStream.h"
-#include "interfaces/IInputStream.h"
-#include "interfaces/IFileReader.h"
-#include "interfaces/ICore.h"
+    Core::~Core()
+    {
+        m_FileSystem.reset();
+    }
+}

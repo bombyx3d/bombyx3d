@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 #include "BufferedInputStream.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 #include <cstring>
 #include <algorithm>
 

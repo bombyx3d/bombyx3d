@@ -32,7 +32,7 @@ namespace Engine
     /** Base interface for input streams. */
     class IInputStream : public IStream
     {
-        ENGINE_INTERFACE(IInputStream)
+        Z_INTERFACE(IInputStream)
 
         /**
          * Checks whether end of stream has been reached.

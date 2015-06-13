@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 #include "opengl.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 #include <string>
 #include <cstring>
 

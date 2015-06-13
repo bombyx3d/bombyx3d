@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 #include "Match3View.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 #include <algorithm>
 
 namespace Z

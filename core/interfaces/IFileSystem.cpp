@@ -19,35 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "IFileSystem.h"
 
-#pragma once
-#include "core/core.h"
-#include "core/interfaces/IFileReader.h"
-#include <string>
-#include <memory>
-
-namespace Z
+namespace Engine
 {
-    using namespace Engine;
-
-    class FileSystem;
-    class FileSystemList;
-    using FileSystemPtr = std::shared_ptr<FileSystem>;
-
-    class FileSystem
+    void* IFileSystem::queryInterface(TypeID typeID)
     {
-    public:
-        FileSystem() = default;
-        virtual ~FileSystem() = default;
-
-        virtual bool fileExists(const std::string& path) = 0;
-        virtual Ptr<IFileReader> openFile(const std::string& path) = 0;
-
-        static const std::shared_ptr<FileSystemList>& defaultFileSystem() { return m_DefaultFileSystem; }
-
-    private:
-        static std::shared_ptr<FileSystemList> m_DefaultFileSystem;
-    };
+        if (typeID == typeOf<IFileSystem>())
+            return this;
+        return IUnknown::queryInterface(typeID);
+    }
 }
-
-#include "FileSystemList.h"

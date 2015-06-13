@@ -21,8 +21,9 @@
  */
 #include "GLTexture.h"
 #include "core/io/streams/FileInputStream.h"
+#include "core/interfaces/ICore.h"
 #include "renderer/formats/ztex.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 #include <iomanip>
 
 namespace Z
@@ -81,7 +82,7 @@ namespace Z
 
     bool GLTexture::load(const std::string& file)
     {
-        Ptr<IFileReader> reader = FileSystem::defaultFileSystem()->openFile(file);
+        Ptr<IFileReader> reader = ICore::instance().fileSystem().openFile(file);
         if (!reader)
             return false;
         return load(reader);

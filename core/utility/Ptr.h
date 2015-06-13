@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,12 +21,10 @@
  */
 
 #pragma once
-#include "core/interfaces/ICore.h"
+#include <memory>
 
 namespace Engine
 {
-    /** Engine core. */
-    class Core : public ICore
-    {
-    };
+    /** A shorter alias for `std::shared_ptr`. */
+    template <class TYPE> using Ptr = std::shared_ptr<TYPE>;
 }

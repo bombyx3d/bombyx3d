@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "IUnknown.h"
+#include "core/interfaces/IUnknown.h"
 #include <string>
 
 namespace Engine
@@ -29,7 +29,7 @@ namespace Engine
     /** Base interface for input and output streams. */
     class IStream : public IUnknown
     {
-        ENGINE_INTERFACE(IStream)
+        Z_INTERFACE(IStream)
 
         /**
          * Retrieves name of the stream.

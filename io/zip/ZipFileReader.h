@@ -21,6 +21,7 @@
  */
 
 #pragma once
+#include "core/utility/Ptr.h"
 #include "core/interfaces/IFileReader.h"
 #include <string>
 #include <mutex>

@@ -21,13 +21,13 @@
  */
 
 #pragma once
-#include "core/core.h"
+#include "core/utility/Ptr.h"
 #include "core/interfaces/IInputStream.h"
 #include <memory>
 
 namespace Engine
 {
-    /** Wrapper over @ref Engine::IInputStream with buffered I/O. */
+    /** Wrapper over @ref Engine::IInputStream providing buffered I/O. */
     class BufferedInputStream : public IInputStream
     {
     public:

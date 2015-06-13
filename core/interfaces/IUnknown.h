@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "core/macros.h"
+#include "core/utility/macros.h"
 #include "core/utility/TypeID.h"
 #include <string>
 
@@ -30,7 +30,7 @@ namespace Engine
     /** Base interface for all engine interfaces. */
     class IUnknown
     {
-        ENGINE_INTERFACE(IUnknown)
+        Z_INTERFACE(IUnknown)
 
         /**
          * Queries a pointer to the specified interface.

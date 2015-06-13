@@ -19,9 +19,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "FileSystem.h"
 
-namespace Z
+#pragma once
+#include "core/utility/Ptr.h"
+#include "core/interfaces/IUnknown.h"
+#include "core/interfaces/IFileReader.h"
+#include <string>
+
+namespace Engine
 {
-    std::shared_ptr<FileSystemList> FileSystem::m_DefaultFileSystem = std::make_shared<FileSystemList>();
+    /** Base interface for filesystems. */
+    class IFileSystem : public IUnknown
+    {
+        Z_INTERFACE(IFileSystem)
+
+        /**
+         * Checks whether the specified file exists.
+         * @param path Path to the file.
+         * @return `true` if file exists, otherwise returns `false`.
+         */
+        virtual bool fileExists(const std::string& path) = 0;
+
+        /**
+         * Opens an existing file.
+         * @param path Path to the file.
+         * @return Pointer to an instance of @ref Engine::IFileReader or `nullptr` if file does not exist.
+         */
+        virtual Ptr<IFileReader> openFile(const std::string& path) = 0;
+
+        /** @cond */
+        void* queryInterface(TypeID typeID) override;
+        /** @endcond */
+    };
 }

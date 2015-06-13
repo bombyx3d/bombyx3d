@@ -20,11 +20,11 @@
  * THE SOFTWARE.
  */
 #include "FileSystemList.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 #include <mutex>
 #include <vector>
 
-namespace Z
+namespace Engine
 {
     FileSystemList::FileSystemList()
     {
@@ -35,6 +35,35 @@ namespace Z
         std::lock_guard<decltype(m_Mutex)> lock(m_Mutex);
         m_CachedFileSystems.reset();
         m_FileSystems.clear();
+    }
+
+    void FileSystemList::add(IFileSystem* fileSystem)
+    {
+        Z_ASSERT(fileSystem != this);
+        Ptr<IFileSystem> ptr(fileSystem);
+        add(std::move(ptr));
+    }
+
+    void FileSystemList::add(const Ptr<IFileSystem>& fileSystem)
+    {
+        Z_CHECK(fileSystem != nullptr);
+        if (!fileSystem)
+            return;
+
+        std::lock_guard<decltype(m_Mutex)> lock(m_Mutex);
+        m_FileSystems.emplace_back(fileSystem);
+        invalidateCache();
+    }
+
+    void FileSystemList::add(Ptr<IFileSystem>&& fileSystem)
+    {
+        Z_CHECK(fileSystem != nullptr);
+        if (!fileSystem)
+            return;
+
+        std::lock_guard<decltype(m_Mutex)> lock(m_Mutex);
+        m_FileSystems.emplace_back(std::move(fileSystem));
+        invalidateCache();
     }
 
     bool FileSystemList::fileExists(const std::string& path)
@@ -53,7 +82,7 @@ namespace Z
         for (auto fileSystem : *fileSystems) {
             if (!fileSystem->fileExists(path))
                 continue;
-            Engine::Ptr<Engine::IFileReader> reader = fileSystem->openFile(path);
+            Ptr<IFileReader> reader = fileSystem->openFile(path);
             if (reader)
                 return reader;
         }
@@ -62,37 +91,16 @@ namespace Z
         return nullptr;
     }
 
-    void FileSystemList::add(FileSystem* fileSystem)
+    void* FileSystemList::queryInterface(TypeID typeID)
     {
-        FileSystemPtr ptr(fileSystem);
-        add(std::move(ptr));
+        if (typeID == typeOf<FileSystemList>())
+            return this;
+        return IFileSystem::queryInterface(typeID);
     }
 
-    void FileSystemList::add(const FileSystemPtr& fileSystem)
+    FileSystemList::ArrayPtr FileSystemList::cachedFileSystems()
     {
-        Z_CHECK(fileSystem != nullptr);
-        if (!fileSystem)
-            return;
-
-        std::lock_guard<decltype(m_Mutex)> lock(m_Mutex);
-        m_FileSystems.emplace_back(fileSystem);
-        invalidateCache();
-    }
-
-    void FileSystemList::add(FileSystemPtr&& fileSystem)
-    {
-        Z_CHECK(fileSystem != nullptr);
-        if (!fileSystem)
-            return;
-
-        std::lock_guard<decltype(m_Mutex)> lock(m_Mutex);
-        m_FileSystems.emplace_back(std::move(fileSystem));
-        invalidateCache();
-    }
-
-    std::shared_ptr<FileSystemList::Array> FileSystemList::cachedFileSystems()
-    {
-        std::shared_ptr<Array> fileSystems = m_CachedFileSystems;
+        ArrayPtr fileSystems = m_CachedFileSystems;
         if (!fileSystems) {
             std::lock_guard<decltype(m_Mutex)> lock(m_Mutex);
             fileSystems.reset(new Array(m_FileSystems));

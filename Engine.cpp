@@ -21,13 +21,14 @@
  */
 #include "Engine.h"
 #include "Game.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 
 namespace Z
 {
     Engine* Engine::m_Instance;
 
-    Engine::Engine()
+    Engine::Engine(const Ptr<FileSystemList>& fileSystemList)
+        : Core(fileSystemList)
     {
         Z_ASSERT(m_Instance == nullptr);
         m_Instance = this;
@@ -41,9 +42,9 @@ namespace Z
         m_Instance = nullptr;
     }
 
-    PlatformCallbacks* Engine::create()
+    PlatformCallbacks* Engine::create(const Ptr<FileSystemList>& fileSystemList)
     {
-        return new Engine;
+        return new Engine(fileSystemList);
     }
 
     void Engine::cancelAllActiveTouches()

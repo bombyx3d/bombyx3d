@@ -22,7 +22,7 @@
 
 #pragma once
 #include "Renderer.h"
-#include "utility/debug.h"
+#include "core/utility/debug.h"
 #include <memory>
 #include <glm/gtc/matrix_transform.hpp>
 

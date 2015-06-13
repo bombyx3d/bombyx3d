@@ -20,8 +20,11 @@
  * THE SOFTWARE.
  */
 #include "QtOpenGLRenderThread.h"
+#include "QtFileSystem.h"
 #include "Engine.h"
-#include "utility/debug.h"
+#include "platform/PlatformInitOptions.h"
+#include "core/utility/debug.h"
+#include <QApplication>
 #include <limits>
 
 namespace Z
@@ -52,7 +55,15 @@ namespace Z
         , m_Suspended(false)
         , m_ShuttingDown(false)
     {
-        m_Callbacks.reset(Engine::create());
+        Ptr<FileSystemList> fileSystemList = std::make_shared<FileSystemList>();
+
+        m_Callbacks.reset(Engine::create(fileSystemList));
+
+        const char* assetsLocation = m_Callbacks->getInitOptions()->assetsLocationHint();
+        if (assetsLocation)
+            fileSystemList->add(std::make_shared<QtFileSystem>(assetsLocation));
+        fileSystemList->add(std::make_shared<QtFileSystem>(qApp->applicationDirPath()));
+        fileSystemList->add(std::make_shared<QtFileSystem>(":/"));
     }
 
     QtOpenGLRenderThread::~QtOpenGLRenderThread()
