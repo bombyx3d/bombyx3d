@@ -39,7 +39,7 @@ if(NOT __Z_FIND_QT5_CMAKE_INCLUDED)
 
     macro(z_target_link_qt5 target)
         if(Z_QT5_FOUND)
-            target_link_libraries("${target}" Qt5::Core Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::OpenGL)
+            target_link_libraries("${target}" Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::OpenGL)
             if(MSVC)
                 target_compile_options("${target}" PRIVATE /wd4458)
             endif()
