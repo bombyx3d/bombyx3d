@@ -27,7 +27,7 @@ if(MSVC)
     add_definitions(/wd4244 /wd4267)
 endif()
 
-file(GLOB source_files *.c *.h)
+file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" *.c *.h)
 z_set_source_groups(${source_files})
 add_library(libbzip2 STATIC EXCLUDE_FROM_ALL ${source_files})
 

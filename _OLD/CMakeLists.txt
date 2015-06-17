@@ -23,7 +23,6 @@
 cmake_minimum_required(VERSION 3.2)
 
 add_subdirectory(3rdparty)
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 
 file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     canvas/*.cpp
@@ -67,6 +66,7 @@ endforeach()
 add_library(libengine STATIC EXCLUDE_FROM_ALL ${source_files} ${shader_files})
 
 set_target_properties(libengine PROPERTIES OUTPUT_NAME "engine" CXX_STANDARD 11)
+target_include_directories(libengine BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_link_libraries(libengine libjpeg libglew libunzip libEngineCore)
 z_target_link_qt5(libengine)
 z_target_link_opengl(libengine)

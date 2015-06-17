@@ -27,7 +27,7 @@ if(MSVC)
     add_definitions(/wd4458)
 endif()
 
-file(GLOB root_files *.cpp *.h)
+file(GLOB root_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" *.cpp *.h)
 z_set_source_groups(${root_files})
 add_library(libtinyxml STATIC EXCLUDE_FROM_ALL ${root_files})
 

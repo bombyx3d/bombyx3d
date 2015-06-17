@@ -28,7 +28,7 @@ if(MSVC)
     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
 endif()
 
-file(GLOB source_files *.c *.h)
+file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" *.c *.h)
 z_set_source_groups(${source_files})
 add_library(libz STATIC EXCLUDE_FROM_ALL ${source_files})
 
