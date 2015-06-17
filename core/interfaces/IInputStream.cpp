@@ -80,11 +80,4 @@ namespace Engine
 
         return result;
     }
-
-    void* IInputStream::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<IInputStream>())
-            return this;
-        return IStream::queryInterface(typeID);
-    }
 }

@@ -61,11 +61,4 @@ namespace Engine
 
         return true;
     }
-
-    void* MemoryFile::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<MemoryFile>())
-            return this;
-        return IFileReader::queryInterface(typeID);
-    }
 }

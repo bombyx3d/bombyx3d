@@ -82,16 +82,4 @@ namespace Engine
 
         return true;
     }
-
-    void* StaticMemoryInputStream::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<StaticMemoryInputStream>())
-            return this;
-
-        void* stream = IInputStream::queryInterface(typeID);
-        if (stream)
-            return stream;
-
-        return StaticMemoryFile::queryInterface(typeID);
-    }
 }

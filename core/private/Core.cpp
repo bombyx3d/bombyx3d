@@ -32,11 +32,4 @@ namespace Engine
     {
         m_FileSystem.reset();
     }
-
-    void* Core::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<Core>())
-            return this;
-        return ICore::queryInterface(typeID);
-    }
 }

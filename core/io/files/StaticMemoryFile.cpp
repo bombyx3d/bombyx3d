@@ -58,11 +58,4 @@ namespace Engine
 
         return true;
     }
-
-    void* StaticMemoryFile::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<StaticMemoryFile>())
-            return this;
-        return IFileReader::queryInterface(typeID);
-    }
 }

@@ -86,11 +86,4 @@ namespace Engine
 
         return true;
     }
-
-    void* StdioFileReader::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<StdioFileReader>())
-            return this;
-        return IFileReader::queryInterface(typeID);
-    }
 }

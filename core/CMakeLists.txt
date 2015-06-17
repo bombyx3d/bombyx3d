@@ -48,6 +48,7 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     private/*.h
     utility/*.cpp
     utility/*.h
+    common.cpp
 )
 
 set_source_files_properties(${glm_files} PROPERTIES HEADER_FILE_ONLY TRUE)
