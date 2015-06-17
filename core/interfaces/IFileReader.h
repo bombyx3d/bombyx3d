@@ -23,13 +23,12 @@
 #pragma once
 #include "core/interfaces/IUnknown.h"
 #include <string>
-#include <memory>
 #include <cstdint>
 
 namespace Engine
 {
     /** Base interface for file readers. */
-    class IFileReader : public IUnknown
+    class IFileReader : public virtual IUnknown
     {
         Z_INTERFACE(IFileReader)
 

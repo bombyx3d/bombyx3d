@@ -32,6 +32,8 @@ namespace Z
     class QtFileSystem : public IFileSystem
     {
     public:
+        Z_IMPLEMENTATION(QtFileSystem)
+
         explicit QtFileSystem(const QDir& baseDir);
         explicit QtFileSystem(const QString& baseDir);
 

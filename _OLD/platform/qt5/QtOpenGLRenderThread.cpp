@@ -55,15 +55,15 @@ namespace Z
         , m_Suspended(false)
         , m_ShuttingDown(false)
     {
-        Ptr<FileSystemList> fileSystemList = std::make_shared<FileSystemList>();
+        Ptr<FileSystemList> fileSystemList = new FileSystemList();
 
         m_Callbacks.reset(Engine::create(fileSystemList));
 
         const char* assetsLocation = m_Callbacks->getInitOptions()->assetsLocationHint();
         if (assetsLocation)
-            fileSystemList->add(std::make_shared<QtFileSystem>(assetsLocation));
-        fileSystemList->add(std::make_shared<QtFileSystem>(qApp->applicationDirPath()));
-        fileSystemList->add(std::make_shared<QtFileSystem>(":/"));
+            fileSystemList->add(new QtFileSystem(assetsLocation));
+        fileSystemList->add(new QtFileSystem(qApp->applicationDirPath()));
+        fileSystemList->add(new QtFileSystem(":/"));
     }
 
     QtOpenGLRenderThread::~QtOpenGLRenderThread()

@@ -30,6 +30,6 @@ namespace Engine
 
     Core::~Core()
     {
-        m_FileSystem.reset();
+        m_FileSystem.release();
     }
 }

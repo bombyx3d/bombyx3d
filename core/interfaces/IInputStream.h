@@ -24,7 +24,6 @@
 #include "core/interfaces/IStream.h"
 #include <string>
 #include <vector>
-#include <memory>
 #include <cstdint>
 
 namespace Engine

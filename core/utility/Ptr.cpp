@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+﻿/*
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,36 +19,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "Ptr.h"
+#include "core/interfaces/IUnknown.h"
 
-#pragma once
-#include "core/interfaces/IFileReader.h"
-#include <string>
-#include <mutex>
-#include <memory>
-#include <QFile>
-
-namespace Z
+namespace Engine
 {
-    using namespace Engine;
-
-    class QtFileReader : public IFileReader
+    namespace Internal
     {
-    public:
-        Z_IMPLEMENTATION(QtFileReader)
+        void IUnknownPtr::acquire(IUnknown* object)
+        {
+            if (object)
+                object->addRef();
+        }
 
-        QtFileReader(const std::string& name, std::unique_ptr<QFile>&& file);
-        ~QtFileReader();
-
-        const std::string& name() const override;
-
-        uint64_t size() const override;
-        bool read(uint64_t offset, void* buffer, size_t size) override;
-
-    private:
-        std::mutex m_Mutex;
-        std::string m_Name;
-        std::unique_ptr<QFile> m_File;
-        uint64_t m_Size;
-        uint64_t m_Offset;
-    };
+        void IUnknownPtr::release(IUnknown* object)
+        {
+            if (object)
+                object->releaseRef();
+        }
+    }
 }

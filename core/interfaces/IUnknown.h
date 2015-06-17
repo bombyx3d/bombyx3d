@@ -23,16 +23,30 @@
 #pragma once
 #include "core/utility/macros.h"
 #include "core/utility/TypeID.h"
+#include <atomic>
 #include <string>
+#include <cstdint>
 
 namespace Engine
 {
     /** Base interface for all engine interfaces. */
     class IUnknown
     {
-        Z_INTERFACE(IUnknown)
+    public:
+        /** @cond */
+        IUnknown();
+        virtual ~IUnknown();
+        /** @endcond */
 
-      #ifdef DOXYGEN
+        /** Increments reference counter for this object. */
+        void addRef() const;
+
+        /**
+         * Decrements reference counter for this object.
+         * When reference counter reaches zero, the object is deleted.
+         */
+        void releaseRef() const;
+
         /**
          * Queries a pointer to the specified interface.
          * @param typeID Type ID for the interface.
@@ -51,6 +65,15 @@ namespace Engine
         {
             return reinterpret_cast<TYPE*>(queryInterface(typeOf<TYPE>()));
         }
-      #endif
+
+        /** @cond */
+        void* operator new(size_t size);
+        void operator delete(void* ptr, size_t size);
+        /** @endcond */
+
+    private:
+        mutable volatile std::atomic_int m_ReferenceCount;
+
+        Z_DISABLE_COPY(IUnknown)
     };
 }

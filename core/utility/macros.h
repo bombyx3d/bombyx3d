@@ -104,11 +104,12 @@
  */
 #define Z_INTERFACE(NAME) \
     Z_DISABLE_COPY(NAME) \
-    public: \
+    protected: \
         /** @cond */ \
         NAME() = default; \
         virtual ~NAME() = default; \
         /** @endcond */ \
+    public: \
         _Z_DECLARE_QUERY_INTERFACE_METHODS()
 
 /**
@@ -137,7 +138,7 @@
             static NAME* instance;\
             return instance; \
         } \
-    public: \
+    protected: \
         NAME() { \
             Z_CHECK(NAME::instancePtr() == nullptr); \
             NAME::instancePtr() = this; \
@@ -146,6 +147,7 @@
             Z_CHECK(NAME::instancePtr() == this); \
             NAME::instancePtr() = nullptr; \
         } \
+    public: \
         static ICore& instance() \
         { \
             Z_ASSERT(NAME::instancePtr() != nullptr); \

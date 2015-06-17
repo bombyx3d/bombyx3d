@@ -83,7 +83,7 @@ namespace Z
             file = ICore::instance().fileSystem().openFile(filename);
         }
 
-        return std::make_shared<FileInputStream>(file);
+        return new FileInputStream(file);
     }
 
     bool GLProgram::parseProgramSource(IInputStream* input,
@@ -132,7 +132,7 @@ namespace Z
                     what = nullptr;
                 else if (line.substr(0, INCLUDE.length()) == INCLUDE) {
                     auto include = openIncludeFile(line.substr(INCLUDE.length()), input->name());
-                    success = parseProgramSource(include.get(), vertex, fragment, what) && success;
+                    success = parseProgramSource(include, vertex, fragment, what) && success;
                 } else {
                     Z_LOG(input->name() << "(" << lineNumber << "): invalid directive.");
                     what = nullptr;
@@ -217,7 +217,7 @@ namespace Z
 
     bool GLProgram::load(const Ptr<IInputStream>& inputStream)
     {
-        return load(inputStream.get());
+        return load(static_cast<IInputStream*>(inputStream));
     }
 
     bool GLProgram::load(IInputStream* input)

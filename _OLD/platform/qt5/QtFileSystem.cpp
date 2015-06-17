@@ -76,6 +76,6 @@ namespace Z
             return nullptr;
         }
 
-        return std::make_shared<QtFileReader>(path, std::move(file));
+        return new QtFileReader(path, std::move(file));
     }
 }

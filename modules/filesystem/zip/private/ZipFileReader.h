@@ -25,7 +25,6 @@
 #include "core/interfaces/IFileReader.h"
 #include <string>
 #include <mutex>
-#include <memory>
 
 namespace Engine
 {

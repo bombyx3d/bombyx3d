@@ -25,6 +25,7 @@
 #include "core/interfaces/IFileSystem.h"
 #include <mutex>
 #include <vector>
+#include <memory>
 
 namespace Engine
 {

@@ -164,7 +164,7 @@ namespace Engine
             io.zseek64_file = ioSeek;
             io.zclose_file = ioClose;
             io.zerror_file = ioTestError;
-            io.opaque = reader.get();
+            io.opaque = static_cast<IFileReader*>(reader);
 
             return unzOpen3_64(reader->name().c_str(), &io, filepos);
         }
@@ -232,6 +232,6 @@ namespace Engine
             return Ptr<IFileReader>();
         }
 
-        return std::make_shared<ZipFileReader>(path, m_ZipReader, file);
+        return new ZipFileReader(path, m_ZipReader, file);
     }
 }

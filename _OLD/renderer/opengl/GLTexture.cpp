@@ -96,7 +96,7 @@ namespace Z
 
     bool GLTexture::load(const Ptr<IInputStream>& inputStream)
     {
-        return load(inputStream.get());
+        return load(static_cast<IInputStream*>(inputStream));
     }
 
     bool GLTexture::load(IInputStream* inputStream)
