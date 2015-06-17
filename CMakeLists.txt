@@ -27,56 +27,7 @@ set(__Z_ENGINE_DONT_ADD_SUBDIRECTORY TRUE)
 include(cmake/Engine.cmake)
 
 add_subdirectory(3rdparty)
+add_subdirectory(_OLD)
 add_subdirectory(core)
 add_subdirectory(modules)
-
-file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-    canvas/*.cpp
-    canvas/*.h
-    cmake/*.cmake
-    mechanics/match3/*.cpp
-    mechanics/match3/*.h
-    renderer/formats/*.h
-    renderer/opengl/api/dummy/*.h
-    renderer/opengl/api/normal/*.h
-    renderer/opengl/api/qt5/*.h
-    renderer/opengl/api/*.cpp
-    renderer/opengl/api/*.h
-    renderer/opengl/*.cpp
-    renderer/opengl/*.h
-    renderer/*.cpp
-    renderer/*.h
-    *.cpp
-    *.h
-)
-
-file(GLOB shader_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-    renderer/shaders/*.glsl
-)
-
-z_set_source_groups(${source_files})
-z_set_source_groups(${shader_files})
-
-file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/shaders")
-include_directories("${CMAKE_CURRENT_BINARY_DIR}")
-foreach(shader_file ${shader_files})
-    get_filename_component(output_file "${shader_file}" NAME)
-    string(MAKE_C_IDENTIFIER "${output_file}" symbol_name)
-    set(output_file "${CMAKE_CURRENT_BINARY_DIR}/shaders/${output_file}.h")
-    set_source_files_properties("${output_file}" PROPERTIES GENERATED TRUE)
-    z_file_to_c(OUTPUT "${output_file}" INPUT "${shader_file}" SYMBOL "${symbol_name}" NAMESPACE Z)
-    list(APPEND source_files "${output_file}")
-    source_group("Generated Files" FILES "${output_file}")
-endforeach()
-
-add_library(libengine STATIC ${source_files} ${shader_files})
-
-set_target_properties(libengine PROPERTIES OUTPUT_NAME "engine" CXX_STANDARD 11)
-target_link_libraries(libengine libjpeg libglew libunzip libEngineCore)
-z_target_link_qt5(libengine)
-z_target_link_opengl(libengine)
-
-add_subdirectory(platform)
-target_link_libraries(libengine libplatform)
-
 add_subdirectory(doc)
