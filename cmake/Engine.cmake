@@ -47,7 +47,7 @@ if(NOT __Z_ENGINE_CMAKE_INCLUDED)
     include_directories("${engine_directory}")
     include_directories("${engine_directory}/3rdparty/glm")
 
-    if(NOT __Z_ENGINE_DONT_ADD_SUBDIRECTORY AND NOT TARGET engine)
+    if(NOT __Z_ENGINE_DONT_ADD_SUBDIRECTORY AND NOT TARGET libEngineCore)
         add_subdirectory("${engine_directory}" engine)
     endif()
 
