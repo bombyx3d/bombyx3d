@@ -22,7 +22,7 @@
 #include "QtFileReader.h"
 #include "QtFileSystem.h"
 
-namespace Engine
+namespace Z
 {
     void* QtFileReader::queryInterface(TypeID typeID)
     {
