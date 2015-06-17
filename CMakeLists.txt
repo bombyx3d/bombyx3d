@@ -28,13 +28,12 @@ include(cmake/Engine.cmake)
 
 add_subdirectory(3rdparty)
 add_subdirectory(core)
+add_subdirectory(modules)
 
 file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     canvas/*.cpp
     canvas/*.h
     cmake/*.cmake
-    io/zip/*.cpp
-    io/zip/*.h
     mechanics/match3/*.cpp
     mechanics/match3/*.h
     renderer/formats/*.h

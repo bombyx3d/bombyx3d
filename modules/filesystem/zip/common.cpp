@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,34 +19,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "private/ZipFileReader.h"
+#include "ZipFileSystem.h"
 
-#pragma once
-#include "core/interfaces/IFileSystem.h"
-#include "core/interfaces/IFileReader.h"
-#include <mutex>
-#include <string>
-#include <memory>
-
-namespace Z
+namespace Engine
 {
-    using namespace Engine;
-
-    class ZipFileSystem : public IFileSystem
+    void* ZipFileReader::queryInterface(TypeID typeID)
     {
-    public:
-        explicit ZipFileSystem(const Ptr<IFileReader>& zipFile);
-        explicit ZipFileSystem(Ptr<IFileReader>&& zipFile);
-        ~ZipFileSystem();
+        if (typeID == typeOf<ZipFileReader>())
+            return this;
+        return IFileReader::queryInterface(typeID);
+    }
 
-        bool fileExists(const std::string& path) final override;
-        Ptr<IFileReader> openFile(const std::string& path) final override;
-
-    private:
-        std::mutex m_Mutex;
-        Ptr<IFileReader> m_ZipReader;
-        void* m_ZipFile;
-
-        ZipFileSystem(const ZipFileSystem&) = delete;
-        ZipFileSystem& operator=(const ZipFileSystem&) = delete;
-    };
+    void* ZipFileSystem::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<ZipFileSystem>())
+            return this;
+        return IFileSystem::queryInterface(typeID);
+    }
 }

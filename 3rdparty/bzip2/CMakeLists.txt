@@ -21,16 +21,15 @@
 #
 
 cmake_minimum_required(VERSION 3.2)
-project(bzip2 C)
+project(libbzip2 C)
 
 if(MSVC)
     add_definitions(/wd4244 /wd4267)
 endif()
 
 file(GLOB source_files *.c *.h)
-source_group("Source Files" FILES ${source_files})
-
-add_library(libbzip2 STATIC ${source_files})
+z_set_source_groups(${source_files})
+add_library(libbzip2 STATIC EXCLUDE_FROM_ALL ${source_files})
 
 set_target_properties(libbzip2 PROPERTIES OUTPUT_NAME "bzip2")
 target_include_directories(libbzip2 BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

@@ -99,16 +99,20 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = core/interfaces \
+INPUT                  = core/3rdparty/glm/glm \
+                         core/doc/Logging.dox \
+                         core/interfaces \
                          core/io \
                          core/math \
                          core/utility \
-                         core/doc/Logging.dox \
+                         modules/filesystem/zip \
                          README.md
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.h
 RECURSIVE              = YES
-EXCLUDE                =
+EXCLUDE                = modules/filesystem/zip/3rdparty \
+                         modules/filesystem/zip/private \
+                         doc/.gitignore
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
 EXCLUDE_SYMBOLS        =

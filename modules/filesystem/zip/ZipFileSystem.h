@@ -21,40 +21,58 @@
  */
 
 #pragma once
-#include "core/utility/Ptr.h"
+#include "core/utility/macros.h"
+#include "core/interfaces/IFileSystem.h"
 #include "core/interfaces/IFileReader.h"
-#include <string>
 #include <mutex>
-#include <memory>
+#include <string>
 
-namespace Z
+/**
+ * @addtogroup Modules
+ * @{
+ * @addtogroup FileSystem
+ * @{
+ * @addtogroup Zip
+ * @{
+ */
+
+namespace Engine
 {
-    class ZipFileSystem;
-    using namespace Engine;
-
-    class ZipFileReader : public IFileReader
+     /** A read-only ZIP-file based implementation of @ref Engine::IFileSystem. */
+    class ZipFileSystem : public IFileSystem
     {
     public:
-        ZipFileReader(const std::string& name, const Ptr<IFileReader>& reader, void* handle);
-        ~ZipFileReader();
+        Z_IMPLEMENTATION(ZipFileSystem)
 
-        const std::string& name() const override;
+        /**
+         * Constructor.
+         * @param zipFile Pointer to the ZIP file.
+         */
+        explicit ZipFileSystem(const Ptr<IFileReader>& zipFile);
 
-        uint64_t size() const override;
-        bool read(uint64_t offset, void* buffer, size_t size) override;
+        /**
+         * Constructor.
+         * @param zipFile Pointer to the ZIP file.
+         */
+        explicit ZipFileSystem(Ptr<IFileReader>&& zipFile);
+
+        /** Destructor. */
+        ~ZipFileSystem();
+
+        /** @cond */
+        bool fileExists(const std::string& path) final override;
+        Ptr<IFileReader> openFile(const std::string& path) final override;
+        /** @endcond */
 
     private:
         std::mutex m_Mutex;
-        std::string m_Name;
-        void* m_Handle;
         Ptr<IFileReader> m_ZipReader;
-        uint64_t m_Size;
-        uint64_t m_Offset;
-        bool m_IsOpen;
-
-        bool reopen();
-
-        ZipFileReader(const ZipFileReader&) = delete;
-        ZipFileReader& operator=(const ZipFileReader&) = delete;
+        void* m_ZipFile;
     };
 }
+
+/**
+ * @}
+ * @}
+ * @}
+ */

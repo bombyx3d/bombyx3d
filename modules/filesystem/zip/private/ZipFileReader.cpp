@@ -20,11 +20,11 @@
  * THE SOFTWARE.
  */
 #include "ZipFileReader.h"
+#include "../3rdparty/minizip/unzip.h"
 #include "core/utility/debug.h"
-#include <unzip.h>
 #include <vector>
 
-namespace Z
+namespace Engine
 {
     ZipFileReader::ZipFileReader(const std::string& name, const Ptr<IFileReader>& reader, void* handle)
         : m_Name(name)

@@ -21,11 +21,20 @@
 #
 
 cmake_minimum_required(VERSION 3.2)
+project(ZipFileSystem)
 
-add_subdirectory(zlib)
-add_subdirectory(bzip2)
-add_subdirectory(glew)
-add_subdirectory(jpeglib)
-add_subdirectory(sqlite3)
-add_subdirectory(md4)
-add_subdirectory(tinyxml)
+add_subdirectory(3rdparty)
+
+set(source_files
+    private/ZipFileReader.cpp
+    private/ZipFileReader.h
+    common.cpp
+    ZipFileSystem.cpp
+    ZipFileSystem.h
+)
+
+z_set_source_groups(${source_files})
+add_library(libZipFileSystem STATIC EXCLUDE_FROM_ALL ${source_files})
+
+target_link_libraries(libZipFileSystem libEngineCore libunzip)
+set_target_properties(libZipFileSystem PROPERTIES OUTPUT_NAME "ZipFileSystem" CXX_STANDARD 11)

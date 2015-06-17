@@ -22,10 +22,4 @@
 
 cmake_minimum_required(VERSION 3.2)
 
-add_subdirectory(zlib)
-add_subdirectory(bzip2)
-add_subdirectory(glew)
-add_subdirectory(jpeglib)
-add_subdirectory(sqlite3)
-add_subdirectory(md4)
-add_subdirectory(tinyxml)
+add_subdirectory(filesystem)

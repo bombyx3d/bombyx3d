@@ -20,11 +20,11 @@
  * THE SOFTWARE.
  */
 #include "ZipFileSystem.h"
-#include "ZipFileReader.h"
+#include "private/ZipFileReader.h"
 #include "core/utility/debug.h"
 #include <unzip.h>
 
-namespace Z
+namespace Engine
 {
     namespace
     {

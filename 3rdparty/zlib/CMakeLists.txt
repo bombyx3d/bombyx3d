@@ -29,11 +29,8 @@ if(MSVC)
 endif()
 
 file(GLOB source_files *.c *.h)
-source_group("Source Files" FILES ${source_files})
-
-add_library(libz STATIC
-    ${source_files}
-)
+z_set_source_groups(${source_files})
+add_library(libz STATIC EXCLUDE_FROM_ALL ${source_files})
 
 set_target_properties(libz PROPERTIES OUTPUT_NAME "z")
 target_include_directories(libz BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
