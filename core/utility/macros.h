@@ -52,7 +52,7 @@
 /** @cond */
 #define _Z_DECLARE_QUERY_INTERFACE_METHODS() \
     /** @cond */ \
-    virtual void* queryInterface(TypeID typeID); \
+    virtual void* queryInterface(TypeID typeID) override; \
     template <class TYPE> TYPE* queryInterface() \
         { return reinterpret_cast<TYPE*>(queryInterface(typeOf<TYPE>())); } \
     /** @endcond */
@@ -148,7 +148,7 @@
             NAME::instancePtr() = nullptr; \
         } \
     public: \
-        static ICore& instance() \
+        static NAME& instance() \
         { \
             Z_ASSERT(NAME::instancePtr() != nullptr); \
             return *NAME::instancePtr(); \
