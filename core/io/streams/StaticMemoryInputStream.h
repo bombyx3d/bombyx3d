@@ -45,9 +45,13 @@ namespace Engine
         ~StaticMemoryInputStream() = default;
 
         const std::string& name() const override;
+        const void* rawDataPointer() const override;
+        size_t rawDataSize() const override;
         bool atEnd() const override;
         uint64_t bytesAvailable() const override;
+        uint64_t size() const override;
         size_t read(void* buffer, size_t size) override;
+        bool read(uint64_t offset, void* buffer, size_t bytesToRead) override;
         bool skip(size_t count) override;
 
     private:

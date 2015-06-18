@@ -20,10 +20,12 @@
  * THE SOFTWARE.
  */
 #include "interfaces/IUnknown.h"
+#include "interfaces/IBlob.h"
 #include "interfaces/ICore.h"
 #include "interfaces/IEvent.h"
 #include "interfaces/IFileReader.h"
 #include "interfaces/IFileSystem.h"
+#include "interfaces/IMemoryMappedFile.h"
 #include "interfaces/IStream.h"
 #include "interfaces/IInputStream.h"
 #include "io/FileSystemList.h"
@@ -40,6 +42,13 @@ namespace Engine
         if (typeID == typeOf<IUnknown>())
             return this;
         return nullptr;
+    }
+
+    void* IBlob::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<IBlob>())
+            return this;
+        return IUnknown::queryInterface(typeID);
     }
 
     void* ICore::queryInterface(TypeID typeID)
@@ -68,6 +77,18 @@ namespace Engine
         if (typeID == typeOf<IFileSystem>())
             return this;
         return IUnknown::queryInterface(typeID);
+    }
+
+    void* IMemoryMappedFile::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<IMemoryMappedFile>())
+            return this;
+
+        void* interface = IBlob::queryInterface(typeID);
+        if (interface)
+            return interface;
+
+        return IFileReader::queryInterface(typeID);
     }
 
     void* IStream::queryInterface(TypeID typeID)
@@ -102,14 +123,14 @@ namespace Engine
     {
         if (typeID == typeOf<MemoryFile>())
             return this;
-        return IFileReader::queryInterface(typeID);
+        return IMemoryMappedFile::queryInterface(typeID);
     }
 
     void* StaticMemoryFile::queryInterface(TypeID typeID)
     {
         if (typeID == typeOf<StaticMemoryFile>())
             return this;
-        return IFileReader::queryInterface(typeID);
+        return IMemoryMappedFile::queryInterface(typeID);
     }
 
     void* StdioFileReader::queryInterface(TypeID typeID)
@@ -124,9 +145,9 @@ namespace Engine
         if (typeID == typeOf<StaticMemoryInputStream>())
             return this;
 
-        void* stream = IInputStream::queryInterface(typeID);
-        if (stream)
-            return stream;
+        void* interface = IInputStream::queryInterface(typeID);
+        if (interface)
+            return interface;
 
         return StaticMemoryFile::queryInterface(typeID);
     }

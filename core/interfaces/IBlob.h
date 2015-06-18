@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,40 +21,25 @@
  */
 
 #pragma once
-#include "core/interfaces/IMemoryMappedFile.h"
-#include <string>
-#include <vector>
+#include "core/interfaces/IUnknown.h"
 
 namespace Engine
 {
-    /** A "file" based on static data. */
-    class StaticMemoryFile : public IMemoryMappedFile
+     /** A block of binary data. */
+    class IBlob : public virtual IUnknown
     {
-    public:
-        Z_IMPLEMENTATION(StaticMemoryFile)
+        Z_INTERFACE(IBlob)
 
         /**
-         * Constructor.
-         * @param data Pointer to the data.
-         * @param length Length of the data.
-          *@param fileName File name.
-          */
-        StaticMemoryFile(const void* data, size_t length, const std::string& fileName = "<memory>");
+         * Retrieves pointer to the data.
+         * @return Pointer to the data.
+         */
+        virtual const void* rawDataPointer() const = 0;
 
-        /** Destructor. */
-        ~StaticMemoryFile();
-
-        /** @cond */
-        const std::string& name() const override;
-        const void* rawDataPointer() const override;
-        size_t rawDataSize() const override;
-        uint64_t size() const override;
-        bool read(uint64_t offset, void* buffer, size_t size) override;
-        /** @endcond */
-
-    private:
-        std::string m_Name;         /**< File name. */
-        const char* m_Data;         /**< Pointer to the data. */
-        size_t m_Length;            /**< Size of the data. */
+        /**
+         * Retrieves size of the data in bytes.
+         * @return Size of the data in bytes.
+         */
+        virtual size_t rawDataSize() const = 0;
     };
 }

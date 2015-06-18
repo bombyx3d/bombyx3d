@@ -21,14 +21,14 @@
  */
 
 #pragma once
-#include "core/interfaces/IFileReader.h"
+#include "core/interfaces/IMemoryMappedFile.h"
 #include <string>
 #include <vector>
 
 namespace Engine
 {
-    /** An in-memory, `std::vector`-based implementation of @ref Engine::IFileReader. */
-    class MemoryFile : public IFileReader
+    /** An in-memory, `std::vector`-based file. */
+    class MemoryFile : public IMemoryMappedFile
     {
     public:
         Z_IMPLEMENTATION(MemoryFile)
@@ -78,6 +78,8 @@ namespace Engine
 
         /** @cond */
         const std::string& name() const override;
+        const void* rawDataPointer() const override;
+        size_t rawDataSize() const override;
         uint64_t size() const override;
         bool read(uint64_t offset, void* buffer, size_t bytesToRead) override;
         /** @endcond */

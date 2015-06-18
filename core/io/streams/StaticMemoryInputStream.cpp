@@ -36,6 +36,16 @@ namespace Engine
         return StaticMemoryFile::name();
     }
 
+    const void* StaticMemoryInputStream::rawDataPointer() const
+    {
+        return StaticMemoryFile::rawDataPointer();
+    }
+
+    size_t StaticMemoryInputStream::rawDataSize() const
+    {
+        return StaticMemoryFile::rawDataSize();
+    }
+
     bool StaticMemoryInputStream::atEnd() const
     {
         return m_BytesLeft == 0;
@@ -44,6 +54,11 @@ namespace Engine
     uint64_t StaticMemoryInputStream::bytesAvailable() const
     {
         return m_BytesLeft;
+    }
+
+    uint64_t StaticMemoryInputStream::size() const
+    {
+        return StaticMemoryFile::size();
     }
 
     size_t StaticMemoryInputStream::read(void* buffer, size_t size)
@@ -64,6 +79,11 @@ namespace Engine
         m_BytesLeft -= size;
 
         return size;
+    }
+
+    bool StaticMemoryInputStream::read(uint64_t offset, void* buffer, size_t bytesToRead)
+    {
+        return StaticMemoryFile::read(offset, buffer, bytesToRead);
     }
 
     bool StaticMemoryInputStream::skip(size_t count)

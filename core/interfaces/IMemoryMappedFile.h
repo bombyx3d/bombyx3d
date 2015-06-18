@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,56 +19,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "MemoryFile.h"
-#include "core/utility/debug.h"
-#include <cstring>
+
+#pragma once
+#include "core/interfaces/IBlob.h"
+#include "core/interfaces/IFileReader.h"
 
 namespace Engine
 {
-    MemoryFile::MemoryFile(const std::string& fileName)
-        : m_Name(fileName)
+     /** An interface to the memory-mapped file. */
+    class IMemoryMappedFile : public IBlob, public IFileReader
     {
-    }
+        Z_INTERFACE(IMemoryMappedFile)
 
-    MemoryFile::MemoryFile(std::vector<char>&& fileData, const std::string& fileName)
-        : m_Name(fileName)
-        , m_Data(std::move(fileData))
-    {
-    }
+        virtual const std::string& name() const override = 0;
+        virtual uint64_t size() const override = 0;
+        virtual bool read(uint64_t offset, void* buffer, size_t bytesToRead) override = 0;
 
-    MemoryFile::~MemoryFile()
-    {
-    }
-
-    const std::string& MemoryFile::name() const
-    {
-        return m_Name;
-    }
-
-    const void* MemoryFile::rawDataPointer() const
-    {
-        return m_Data.data();
-    }
-
-    size_t MemoryFile::rawDataSize() const
-    {
-        return m_Data.size();
-    }
-
-    uint64_t MemoryFile::size() const
-    {
-        return m_Data.size();
-    }
-
-    bool MemoryFile::read(uint64_t offset, void* buffer, size_t bytesToRead)
-    {
-        if (offset + bytesToRead > m_Data.size()) {
-            Z_LOG("Incomplete read in file \"" << m_Name << "\".");
-            return false;
-        }
-
-        memcpy(buffer, m_Data.data() + offset, bytesToRead);
-
-        return true;
-    }
+        virtual const void* rawDataPointer() const override = 0;
+        virtual size_t rawDataSize() const override = 0;
+    };
 }
