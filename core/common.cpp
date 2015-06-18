@@ -28,6 +28,8 @@
 #include "interfaces/IMemoryMappedFile.h"
 #include "interfaces/IStream.h"
 #include "interfaces/IInputStream.h"
+#include "interfaces/IImage.h"
+#include "interfaces/ITextureImage.h"
 #include "io/FileSystemList.h"
 #include "io/files/MemoryFile.h"
 #include "io/files/StaticMemoryFile.h"
@@ -103,6 +105,20 @@ namespace Engine
         if (typeID == typeOf<IInputStream>())
             return this;
         return IStream::queryInterface(typeID);
+    }
+
+    void* IImage::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<IImage>())
+            return this;
+        return IBlob::queryInterface(typeID);
+    }
+
+    void* ITextureImage::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<ITextureImage>())
+            return this;
+        return IUnknown::queryInterface(typeID);
     }
 
     void* Core::queryInterface(TypeID typeID)
