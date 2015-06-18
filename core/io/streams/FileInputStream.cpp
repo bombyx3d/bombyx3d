@@ -23,6 +23,13 @@
 
 namespace Engine
 {
+    FileInputStream::FileInputStream(IFileReader* reader)
+        : m_Reader(reader)
+        , m_Offset(0)
+        , m_BytesLeft(m_Reader ? m_Reader->size() : 0)
+    {
+    }
+
     FileInputStream::FileInputStream(const Ptr<IFileReader>& reader)
         : m_Reader(reader)
         , m_Offset(0)
@@ -34,6 +41,13 @@ namespace Engine
         : m_Reader(std::move(reader))
         , m_Offset(0)
         , m_BytesLeft(m_Reader ? m_Reader->size() : 0)
+    {
+    }
+
+    FileInputStream::FileInputStream(IFileReader* reader, uint64_t offset, uint64_t limit)
+        : m_Reader(reader)
+        , m_Offset(offset)
+        , m_BytesLeft(m_Reader ? limit : 0)
     {
     }
 

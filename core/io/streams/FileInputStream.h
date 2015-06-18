@@ -37,6 +37,12 @@ namespace Engine
          * Constructor.
          * @param reader File reader.
          */
+        explicit FileInputStream(IFileReader* reader);
+
+        /**
+         * Constructor.
+         * @param reader File reader.
+         */
         explicit FileInputStream(const Ptr<IFileReader>& reader);
 
         /**
@@ -44,6 +50,14 @@ namespace Engine
          * @param reader File reader.
          */
         explicit FileInputStream(Ptr<IFileReader>&& reader);
+
+        /**
+         * Constructor.
+         * @param reader File reader.
+         * @param offset Starting offset in file.
+         * @param limit Limit in bytes.
+         */
+        FileInputStream(IFileReader* reader, uint64_t offset, uint64_t limit);
 
         /**
          * Constructor.

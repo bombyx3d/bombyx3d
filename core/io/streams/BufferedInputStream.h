@@ -40,13 +40,26 @@ namespace Engine
          * Constructor.
          * @param stream Source stream.
          */
-        BufferedInputStream(const Ptr<IInputStream>& stream);
+        explicit BufferedInputStream(IInputStream* stream);
 
         /**
          * Constructor.
          * @param stream Source stream.
          */
-        BufferedInputStream(Ptr<IInputStream>&& stream);
+        explicit BufferedInputStream(const Ptr<IInputStream>& stream);
+
+        /**
+         * Constructor.
+         * @param stream Source stream.
+         */
+        explicit BufferedInputStream(Ptr<IInputStream>&& stream);
+
+        /**
+         * Constructor.
+         * @param stream Source stream.
+         * @param bufferSize Size of buffer.
+         */
+        BufferedInputStream(IInputStream* stream, size_t bufferSize);
 
         /**
          * Constructor.

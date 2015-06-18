@@ -26,6 +26,14 @@
 
 namespace Engine
 {
+    BufferedInputStream::BufferedInputStream(IInputStream* stream)
+        : m_Stream(stream)
+        , m_BufferSize(DEFAULT_BUFFER_SIZE)
+    {
+        if (m_Stream)
+            m_Buffer.reset(new uint8_t[m_BufferSize]);
+    }
+
     BufferedInputStream::BufferedInputStream(const Ptr<IInputStream>& stream)
         : m_Stream(stream)
         , m_BufferSize(DEFAULT_BUFFER_SIZE)
@@ -38,6 +46,17 @@ namespace Engine
         : m_Stream(std::move(stream))
         , m_BufferSize(DEFAULT_BUFFER_SIZE)
     {
+        if (m_Stream)
+            m_Buffer.reset(new uint8_t[m_BufferSize]);
+    }
+
+    BufferedInputStream::BufferedInputStream(IInputStream* stream, size_t bufferSize)
+        : m_Stream(stream)
+        , m_BufferSize(bufferSize)
+    {
+        Z_CHECK(bufferSize > 0);
+        m_BufferSize = std::max<size_t>(m_BufferSize, 1);
+
         if (m_Stream)
             m_Buffer.reset(new uint8_t[m_BufferSize]);
     }
