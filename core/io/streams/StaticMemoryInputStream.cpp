@@ -61,6 +61,23 @@ namespace Engine
         return StaticMemoryFile::size();
     }
 
+    bool StaticMemoryInputStream::skip(size_t count)
+    {
+        if (count == 0)
+            return true;
+
+        if (count > m_BytesLeft)
+        {
+            m_BytesLeft = 0;
+            return false;
+        }
+
+        m_Offset += count;
+        m_BytesLeft -= count;
+
+        return true;
+    }
+
     size_t StaticMemoryInputStream::read(void* buffer, size_t size)
     {
         if (m_BytesLeft == 0 || size == 0)
@@ -84,22 +101,5 @@ namespace Engine
     bool StaticMemoryInputStream::read(uint64_t offset, void* buffer, size_t bytesToRead)
     {
         return StaticMemoryFile::read(offset, buffer, bytesToRead);
-    }
-
-    bool StaticMemoryInputStream::skip(size_t count)
-    {
-        if (count == 0)
-            return true;
-
-        if (count > m_BytesLeft)
-        {
-            m_BytesLeft = 0;
-            return false;
-        }
-
-        m_Offset += count;
-        m_BytesLeft -= count;
-
-        return true;
     }
 }

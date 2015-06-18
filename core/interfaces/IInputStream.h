@@ -33,6 +33,8 @@ namespace Engine
     {
         Z_INTERFACE(IInputStream)
 
+        const std::string& name() const override = 0;
+
         /**
          * Checks whether end of stream has been reached.
          * @return `true` if end of stream has been reached, otherwise returns `false`.
@@ -45,6 +47,15 @@ namespace Engine
          * @return number of bytes available for reading from stream without blocking.
          */
         virtual uint64_t bytesAvailable() const = 0;
+
+        /**
+         * Skips the specified amount of bytes.
+         * @note This method may block for unspecified amount of time if requested `count` is greater than
+         * a value returned by @ref bytesAvailable().
+         * @param bytesToSkip Number of bytes to skip.
+         * @return `true` if the specified amount of bytes have been skipped, otherwise returns `false`.
+         */
+        virtual bool skip(size_t bytesToSkip) = 0;
 
         /**
          * Reads the specified number of bytes from stream.
@@ -71,14 +82,5 @@ namespace Engine
          * @return Vector of bytes.
          */
         virtual std::vector<char> readAll();
-
-        /**
-         * Skips the specified amount of bytes.
-         * @note This method may block for unspecified amount of time if requested `count` is greater than
-         * a value returned by @ref bytesAvailable().
-         * @param bytesToSkip Number of bytes to skip.
-         * @return `true` if the specified amount of bytes have been skipped, otherwise returns `false`.
-         */
-        virtual bool skip(size_t bytesToSkip) = 0;
     };
 }

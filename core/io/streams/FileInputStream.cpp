@@ -83,26 +83,6 @@ namespace Engine
         return m_BytesLeft;
     }
 
-    size_t FileInputStream::read(void* buffer, size_t size)
-    {
-        if (!m_Reader || m_BytesLeft == 0 || size == 0)
-            return 0;
-
-        if (uint64_t(size) > m_BytesLeft)
-            size = size_t(m_BytesLeft);
-
-        if (!m_Reader->read(m_Offset, buffer, size))
-        {
-            m_BytesLeft = 0;
-            return 0;
-        }
-
-        m_Offset += uint64_t(size);
-        m_BytesLeft -= uint64_t(size);
-
-        return size;
-    }
-
     bool FileInputStream::skip(size_t count)
     {
         if (!m_Reader)
@@ -121,6 +101,26 @@ namespace Engine
         m_BytesLeft -= uint64_t(count);
 
         return true;
+    }
+
+    size_t FileInputStream::read(void* buffer, size_t size)
+    {
+        if (!m_Reader || m_BytesLeft == 0 || size == 0)
+            return 0;
+
+        if (uint64_t(size) > m_BytesLeft)
+            size = size_t(m_BytesLeft);
+
+        if (!m_Reader->read(m_Offset, buffer, size))
+        {
+            m_BytesLeft = 0;
+            return 0;
+        }
+
+        m_Offset += uint64_t(size);
+        m_BytesLeft -= uint64_t(size);
+
+        return size;
     }
 
     void* FileInputStream::queryInterface(TypeID typeID)

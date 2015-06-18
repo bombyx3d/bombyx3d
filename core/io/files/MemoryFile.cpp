@@ -45,14 +45,14 @@ namespace Engine
         return m_Name;
     }
 
-    const void* MemoryFile::rawDataPointer() const
-    {
-        return m_Data.data();
-    }
-
     size_t MemoryFile::rawDataSize() const
     {
         return m_Data.size();
+    }
+
+    const void* MemoryFile::rawDataPointer() const
+    {
+        return m_Data.data();
     }
 
     uint64_t MemoryFile::size() const

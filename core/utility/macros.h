@@ -78,9 +78,12 @@
  * @see @ref Z_INTERFACE, @ref Z_SINGLETON_INTERFACE.
  */
 #define Z_IMPLEMENTATION(NAME) \
+    /** @cond */ \
     Z_DISABLE_COPY(NAME) \
     public: \
-        _Z_DECLARE_QUERY_INTERFACE_METHODS()
+        _Z_DECLARE_QUERY_INTERFACE_METHODS() \
+    /** @endcond */ \
+    public:
 
 /**
  * Helper macro for interfaces.
@@ -103,14 +106,15 @@
  * @see @ref Z_SINGLETON_INTERFACE, @ref Z_IMPLEMENTATION.
  */
 #define Z_INTERFACE(NAME) \
+    /** @cond */ \
     Z_DISABLE_COPY(NAME) \
     protected: \
-        /** @cond */ \
         NAME() = default; \
         virtual ~NAME() = default; \
-        /** @endcond */ \
     public: \
-        _Z_DECLARE_QUERY_INTERFACE_METHODS()
+        _Z_DECLARE_QUERY_INTERFACE_METHODS() \
+    /** @endcond */ \
+    public:
 
 /**
  * Helper macro for singleton interfaces.
@@ -131,9 +135,9 @@
  * @endcode
  */
 #define Z_SINGLETON_INTERFACE(NAME) \
+    /** @cond */ \
     Z_DISABLE_COPY(NAME) \
     private: \
-        /** @cond */ \
         static NAME*& instancePtr() { \
             static NAME* instance;\
             return instance; \
@@ -153,8 +157,9 @@
             Z_ASSERT(NAME::instancePtr() != nullptr); \
             return *NAME::instancePtr(); \
         } \
-        /** @endcond */ \
-        _Z_DECLARE_QUERY_INTERFACE_METHODS()
+        _Z_DECLARE_QUERY_INTERFACE_METHODS() \
+    /** @endcond */ \
+    public:
 
 /**
  * @def Z_THREADLOCAL

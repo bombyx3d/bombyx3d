@@ -44,11 +44,9 @@ namespace Engine
         /** Destructor. */
         ~StdioFileReader();
 
-        /** @cond */
         const std::string& name() const override;
         uint64_t size() const override;
         bool read(uint64_t offset, void* buffer, size_t bytesToRead) override;
-        /** @endcond */
 
     private:
         std::mutex m_Mutex;             /**< Mutex. */

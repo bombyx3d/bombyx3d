@@ -42,14 +42,14 @@ namespace Engine
         return m_Name;
     }
 
-    const void* StaticMemoryFile::rawDataPointer() const
-    {
-        return m_Data;
-    }
-
     size_t StaticMemoryFile::rawDataSize() const
     {
         return m_Length;
+    }
+
+    const void* StaticMemoryFile::rawDataPointer() const
+    {
+        return m_Data;
     }
 
     uint64_t StaticMemoryFile::size() const

@@ -49,7 +49,7 @@ namespace Engine
         void reset();
 
         /**
-         * Resets the topmost matrix.
+         * Retrieves the topmost matrix.
          * If stack is empty, this method returns an identity matrix.
          * @return The topmost matrix.
          */

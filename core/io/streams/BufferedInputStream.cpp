@@ -103,6 +103,25 @@ namespace Engine
         return (m_BufferEnd - m_BufferStart) + m_Stream->bytesAvailable();
     }
 
+    bool BufferedInputStream::skip(size_t count)
+    {
+        if (!m_Stream)
+            return false;
+
+        if (count == 0)
+            return true;
+
+        size_t bytesBuffered = m_BufferEnd - m_BufferStart;
+        if (bytesBuffered >= count)
+        {
+            m_BufferStart += count;
+            return true;
+        }
+
+        m_BufferStart = m_BufferEnd;
+        return m_Stream->skip(count - bytesBuffered);
+    }
+
     size_t BufferedInputStream::read(void* buffer, size_t size)
     {
         if (!m_Stream || size == 0)
@@ -149,25 +168,6 @@ namespace Engine
         }
 
         return size - bytesLeft;
-    }
-
-    bool BufferedInputStream::skip(size_t count)
-    {
-        if (!m_Stream)
-            return false;
-
-        if (count == 0)
-            return true;
-
-        size_t bytesBuffered = m_BufferEnd - m_BufferStart;
-        if (bytesBuffered >= count)
-        {
-            m_BufferStart += count;
-            return true;
-        }
-
-        m_BufferStart = m_BufferEnd;
-        return m_Stream->skip(count - bytesBuffered);
     }
 
     void* BufferedInputStream::queryInterface(TypeID typeID)

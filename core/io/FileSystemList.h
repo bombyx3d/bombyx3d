@@ -60,10 +60,8 @@ namespace Engine
          */
         void add(Ptr<IFileSystem>&& fileSystem);
 
-        /** @cond */
         bool fileExists(const std::string& path) override;
         Ptr<IFileReader> openFile(const std::string& path) override;
-        /** @endcond */
 
     private:
         using Array = std::vector<Ptr<IFileSystem>>;

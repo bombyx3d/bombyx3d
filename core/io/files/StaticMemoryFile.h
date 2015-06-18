@@ -44,13 +44,11 @@ namespace Engine
         /** Destructor. */
         ~StaticMemoryFile();
 
-        /** @cond */
         const std::string& name() const override;
-        const void* rawDataPointer() const override;
         size_t rawDataSize() const override;
+        const void* rawDataPointer() const override;
         uint64_t size() const override;
         bool read(uint64_t offset, void* buffer, size_t size) override;
-        /** @endcond */
 
     private:
         std::string m_Name;         /**< File name. */

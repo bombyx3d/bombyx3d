@@ -78,13 +78,11 @@ namespace Engine
         /** Destructor. */
         ~BufferedInputStream() = default;
 
-        /** @cond */
         const std::string& name() const override;
         bool atEnd() const override;
         uint64_t bytesAvailable() const override;
-        size_t read(void* buffer, size_t size) override;
         bool skip(size_t count) override;
-        /** @endcond */
+        size_t read(void* buffer, size_t size) override;
 
     private:
         Ptr<IInputStream> m_Stream;             /**< Pointer to the source stream. */

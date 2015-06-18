@@ -59,10 +59,8 @@ namespace Engine
         /** Destructor. */
         ~ZipFileSystem();
 
-        /** @cond */
         bool fileExists(const std::string& path) final override;
         Ptr<IFileReader> openFile(const std::string& path) final override;
-        /** @endcond */
 
     private:
         std::mutex m_Mutex;
