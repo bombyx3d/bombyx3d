@@ -22,6 +22,7 @@
 
 #pragma once
 #include "core/utility/macros.h"
+#include "core/utility/debug.h"
 #include "core/utility/TypeID.h"
 #include <atomic>
 #include <string>
@@ -73,6 +74,9 @@ namespace Engine
 
     private:
         mutable volatile std::atomic_int m_ReferenceCount;
+      #if Z_ASSERTIONS_ENABLED
+        int m_InitialReferenceCount;
+      #endif
 
         Z_DISABLE_COPY(IUnknown)
     };

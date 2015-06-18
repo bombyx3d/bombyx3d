@@ -20,19 +20,89 @@
  * THE SOFTWARE.
  */
 #include "IUnknown.h"
-#include "core/utility/debug.h"
 #include <cstring>
 
 namespace Engine
 {
+    namespace
+    {
+        //
+        // Maintain a little per-thread stack of IUnknown instances constructed with operator new.
+        //
+        // In IUnknown constructor we initialize reference counter to 0 if object was created with
+        // operator new or to 1 if object was created any other way.
+        //
+        // This allows user code to create objects both on stack and on heap and pass them
+        // through the code that increments/decrements reference counter.
+        //
+
+        struct AllocatedObject
+        {
+            const void* startAddress;
+            size_t size;
+        };
+
+        struct AllocatedObjects
+        {
+            static const size_t SIZE = 8;
+
+            AllocatedObject objects[SIZE];
+            size_t count;
+
+            void push(void* address, size_t size)
+            {
+                size_t n = count;
+
+                Z_ASSERT(n < SIZE);
+                if (n >= SIZE)
+                    abort();
+
+                objects[n].startAddress = address;
+                objects[n].size = size;
+                count = n + 1;
+            }
+
+            bool tryPop(const void* address)
+            {
+                size_t n = count;
+                if (n == 0)
+                    return false;
+
+                size_t last = n - 1;
+                const uint8_t* addr = reinterpret_cast<const uint8_t*>(address);
+                const uint8_t* start = reinterpret_cast<const uint8_t*>(objects[last].startAddress);
+                const uint8_t* end = start + objects[last].size;
+
+                if (addr >= start && addr < end) {
+                    count = n - 1;
+                    return true;
+                }
+
+                return false;
+            }
+        };
+    }
+
+    static Z_THREADLOCAL AllocatedObjects g_AllocationStack;
+
+
     IUnknown::IUnknown()
     {
-        std::atomic_store_explicit(&m_ReferenceCount, 0, std::memory_order_relaxed);
+        int initialRefCount = 0;
+
+        if (!g_AllocationStack.tryPop(this))
+            initialRefCount = 1;
+
+      #if Z_ASSERTIONS_ENABLED
+        m_InitialReferenceCount = initialRefCount;
+      #endif
+
+        std::atomic_store_explicit(&m_ReferenceCount, initialRefCount, std::memory_order_relaxed);
     }
 
     IUnknown::~IUnknown()
     {
-        Z_ASSERT(m_ReferenceCount == 0);
+        Z_ASSERT(m_ReferenceCount == m_InitialReferenceCount);
     }
 
     void IUnknown::addRef() const
@@ -65,9 +135,9 @@ namespace Engine
         // does not yet reach zero and may impose a performance penalty.
         //
 
-        auto refCount = std::atomic_fetch_sub_explicit(&m_ReferenceCount, 1, std::memory_order_release);
-        Z_ASSERT(refCount > 0);
-        if (refCount == 1) {
+        auto wasRefCount = std::atomic_fetch_sub_explicit(&m_ReferenceCount, 1, std::memory_order_release);
+        Z_ASSERT(wasRefCount > m_InitialReferenceCount);
+        if (wasRefCount <= 1) {
             std::atomic_thread_fence(std::memory_order_acquire);
             delete this;
         }
@@ -75,18 +145,27 @@ namespace Engine
 
     void* IUnknown::operator new(size_t size)
     {
-        void** ptr = new void*[(size + sizeof(void*) - 1) / sizeof(void*)];
+        void* ptr = new void*[(size + sizeof(void*) - 1) / sizeof(void*)];
+        if (!ptr)
+            return nullptr;
+
+        g_AllocationStack.push(ptr, size);
+
       #if Z_ASSERTIONS_ENABLED
         memset(ptr, 0xCC, size);
       #endif
+
         return ptr;
     }
 
     void IUnknown::operator delete(void* ptr, size_t size)
     {
+        g_AllocationStack.tryPop(ptr);
+
       #if Z_ASSERTIONS_ENABLED
         memset(ptr, 0xCC, size);
       #endif
+
         delete[] reinterpret_cast<void**>(ptr);
     }
 }
