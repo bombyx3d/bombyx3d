@@ -20,6 +20,10 @@
  * THE SOFTWARE.
 */
 #include "Core.h"
+#include "core/io/streams/FileInputStream.h"
+#include "core/utility/path.h"
+#include "core/utility/string.h"
+#include "core/utility/debug.h"
 
 namespace Engine
 {
@@ -31,5 +35,59 @@ namespace Engine
     Core::~Core()
     {
         m_FileSystem.release();
+    }
+
+    void Core::registerFileSystem(const Ptr<IFileSystem>& fileSystem)
+    {
+        Z_CHECK(fileSystem != nullptr);
+        if (fileSystem)
+            m_FileSystem->add(fileSystem);
+    }
+
+    void Core::registerTextureLoader(const Ptr<ITextureLoader>& loader)
+    {
+        Z_CHECK(loader != nullptr);
+        if (loader)
+            m_TextureLoaders.emplace_back(loader);
+    }
+
+    Ptr<ITextureImage> Core::loadTexture(IInputStream* stream)
+    {
+        Z_CHECK(stream != nullptr);
+        if (!stream)
+            return nullptr;
+
+        std::string format = pathGetFileNameExtension(stream->name());
+        return loadTexture(stream, format);
+    }
+
+    Ptr<ITextureImage> Core::loadTexture(IInputStream* stream, const std::string& format)
+    {
+        Z_CHECK(stream != nullptr);
+        if (!stream)
+            return nullptr;
+
+        std::string extension = stringToLowerCase(format);
+        for (const auto& loader : m_TextureLoaders) {
+            if (loader->supportsFormat(extension))
+                return loader->loadTexture(stream);
+        }
+
+        Z_LOG("Unable to load texture \"" << stream->name()
+            << "\": there is no texture loader for format \"" << format << "\".");
+
+        return nullptr;
+    }
+
+    Ptr<ITextureImage> Core::loadTexture(const std::string& fileName)
+    {
+        Ptr<IFileReader> fileReader = m_FileSystem->openFile(fileName);
+        if (!fileReader)
+            return nullptr;
+
+        std::string format = pathGetFileNameExtension(fileName);
+
+        FileInputStream fileInputStream(fileReader);
+        return loadTexture(&fileInputStream, format);
     }
 }

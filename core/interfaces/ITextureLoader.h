@@ -21,38 +21,30 @@
  */
 
 #pragma once
+#include "core/interfaces/IUnknown.h"
+#include "core/interfaces/ITextureImage.h"
+#include "core/interfaces/IInputStream.h"
 #include "core/utility/Ptr.h"
-#include "core/interfaces/ICore.h"
-#include "core/io/FileSystemList.h"
-#include <vector>
 
 namespace Engine
 {
-    /** Engine core. */
-    class Core : public ICore
+    /** Base interface for texture loaders. */
+    class ITextureLoader : public IUnknown
     {
-    public:
-        Z_IMPLEMENTATION(Core)
+        Z_INTERFACE(ITextureLoader)
 
         /**
-         * Constructor.
-         * @param fileSystemList Pointer to the list of native filesystems.
+         * Checks whether this loader can load textures of the specified format.
+         * @param extension File extension of the format (using lower-case symbols).
+         * @return `true` if format is supported by this loader or `false` if it is not.
          */
-        explicit Core(const Ptr<FileSystemList>& fileSystemList);
+        virtual bool supportsFormat(const std::string& extension) const = 0;
 
-        /** Destructor. */
-        ~Core();
-
-        void registerFileSystem(const Ptr<IFileSystem>& fileSystem) override;
-        IFileSystem& fileSystem() override { return *m_FileSystem; }
-
-        void registerTextureLoader(const Ptr<ITextureLoader>& loader) override;
-        Ptr<ITextureImage> loadTexture(IInputStream* stream) override;
-        Ptr<ITextureImage> loadTexture(IInputStream* stream, const std::string& format) override;
-        Ptr<ITextureImage> loadTexture(const std::string& fileName) override;
-
-    private:
-        Ptr<FileSystemList> m_FileSystem;                   /**< Instance of the file system. */
-        std::vector<Ptr<ITextureLoader>> m_TextureLoaders;  /**< List of known texture loaders. */
+        /**
+         * Attempts to load texture from the provided input stream.
+         * @param stream Pointer to the input stream.
+         * @return Pointer to the texture or `nullptr` if texture can't be loaded.
+         */
+        virtual Ptr<ITextureImage> loadTexture(IInputStream* stream) = 0;
     };
 }

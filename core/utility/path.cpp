@@ -19,40 +19,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "core/utility/Ptr.h"
-#include "core/interfaces/ICore.h"
-#include "core/io/FileSystemList.h"
-#include <vector>
+#include "path.h"
 
 namespace Engine
 {
-    /** Engine core. */
-    class Core : public ICore
+    size_t pathFindLastDirectorySeparator(const std::string& path)
     {
-    public:
-        Z_IMPLEMENTATION(Core)
+        size_t index = path.rfind('/');
+      #ifdef _WIN32
+        size_t index2 = path.rfind('\\');
+        if (index2 != std::string::npos && (index == std::string::npos || index2 > index))
+            index = index2;
+      #endif
+        return index;
+    }
 
-        /**
-         * Constructor.
-         * @param fileSystemList Pointer to the list of native filesystems.
-         */
-        explicit Core(const Ptr<FileSystemList>& fileSystemList);
+    size_t pathFindFileNameExtension(const std::string& path)
+    {
+        size_t dotIndex = path.rfind('.');
+        if (dotIndex == std::string::npos)
+            return std::string::npos;
 
-        /** Destructor. */
-        ~Core();
+        size_t separatorIndex = pathFindLastDirectorySeparator(path);
+        if (separatorIndex != std::string::npos && dotIndex <= separatorIndex)
+            return std::string::npos;
 
-        void registerFileSystem(const Ptr<IFileSystem>& fileSystem) override;
-        IFileSystem& fileSystem() override { return *m_FileSystem; }
+        return dotIndex;
+    }
 
-        void registerTextureLoader(const Ptr<ITextureLoader>& loader) override;
-        Ptr<ITextureImage> loadTexture(IInputStream* stream) override;
-        Ptr<ITextureImage> loadTexture(IInputStream* stream, const std::string& format) override;
-        Ptr<ITextureImage> loadTexture(const std::string& fileName) override;
-
-    private:
-        Ptr<FileSystemList> m_FileSystem;                   /**< Instance of the file system. */
-        std::vector<Ptr<ITextureLoader>> m_TextureLoaders;  /**< List of known texture loaders. */
-    };
+    std::string pathGetFileNameExtension(const std::string& path)
+    {
+        size_t dotIndex = pathFindFileNameExtension(path);
+        return (dotIndex == std::string::npos ? std::string() : path.substr(dotIndex + 1));
+    }
 }

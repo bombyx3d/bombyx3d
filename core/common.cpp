@@ -30,6 +30,7 @@
 #include "interfaces/IInputStream.h"
 #include "interfaces/IImage.h"
 #include "interfaces/ITextureImage.h"
+#include "interfaces/ITextureLoader.h"
 #include "io/FileSystemList.h"
 #include "io/files/MemoryFile.h"
 #include "io/files/StaticMemoryFile.h"
@@ -117,6 +118,13 @@ namespace Engine
     void* ITextureImage::queryInterface(TypeID typeID)
     {
         if (typeID == typeOf<ITextureImage>())
+            return this;
+        return IUnknown::queryInterface(typeID);
+    }
+
+    void* ITextureLoader::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<ITextureLoader>())
             return this;
         return IUnknown::queryInterface(typeID);
     }

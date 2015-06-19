@@ -22,7 +22,10 @@
 
 #pragma once
 #include "core/interfaces/IUnknown.h"
+#include "core/interfaces/ITextureLoader.h"
+#include "core/interfaces/ITextureImage.h"
 #include "core/interfaces/IFileSystem.h"
+#include "core/interfaces/IInputStream.h"
 #include "core/utility/debug.h"
 
 namespace Engine
@@ -41,9 +44,43 @@ namespace Engine
       #endif
 
         /**
+         * Registers an additional filesystem for engine use.
+         * @param filesystem Pointer to the filesystem.
+         */
+        virtual void registerFileSystem(const Ptr<IFileSystem>& fileSystem) = 0;
+
+        /**
          * Retrieves a reference to the file system.
          * @return Reference to the file system.
          */
         virtual IFileSystem& fileSystem() = 0;
+
+        /**
+         * Registers texture loader.
+         * @param loader Texture loader.
+         */
+        virtual void registerTextureLoader(const Ptr<ITextureLoader>& loader) = 0;
+
+        /**
+         * Loads texture from the specified stream.
+         * @param stream Pointer to the input stream.
+         * @return Loaded texture or `nullptr` if texture can't be loaded.
+         */
+        virtual Ptr<ITextureImage> loadTexture(IInputStream* stream) = 0;
+
+        /**
+         * Loads texture from the specified stream.
+         * @param stream Pointer to the input stream.
+         * @param format Texture format.
+         * @return Loaded texture or `nullptr` if texture can't be loaded.
+         */
+        virtual Ptr<ITextureImage> loadTexture(IInputStream* stream, const std::string& format) = 0;
+
+        /**
+         * Loads texture from the specified file.
+         * @param fileName Name of the file.
+         * @return Loaded texture or `nullptr` if texture can't be loaded.
+         */
+        virtual Ptr<ITextureImage> loadTexture(const std::string& fileName) = 0;
     };
 }

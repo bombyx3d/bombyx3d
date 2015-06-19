@@ -21,38 +21,30 @@
  */
 
 #pragma once
-#include "core/utility/Ptr.h"
-#include "core/interfaces/ICore.h"
-#include "core/io/FileSystemList.h"
-#include <vector>
+#include <string>
 
 namespace Engine
 {
-    /** Engine core. */
-    class Core : public ICore
-    {
-    public:
-        Z_IMPLEMENTATION(Core)
+    /**
+     * Retrieves offset of the last directory separator (usually '/' or '\\').
+     * @param path Path.
+     * @return Offset of the last directory separator from the beginning of the string
+     * or `std::string::npos` if provided string does not have directory separators.
+     */
+    size_t pathFindLastDirectorySeparator(const std::string& path);
 
-        /**
-         * Constructor.
-         * @param fileSystemList Pointer to the list of native filesystems.
-         */
-        explicit Core(const Ptr<FileSystemList>& fileSystemList);
+    /**
+     * Retrieves offset of the file name extension (the part after the last '.').
+     * @param path Path.
+     * @return Offset of the last '.' in the file name from the beginning of the string
+     * or `std::string::npos` if provided file name does not have an extension.
+     */
+    size_t pathFindFileNameExtension(const std::string& path);
 
-        /** Destructor. */
-        ~Core();
-
-        void registerFileSystem(const Ptr<IFileSystem>& fileSystem) override;
-        IFileSystem& fileSystem() override { return *m_FileSystem; }
-
-        void registerTextureLoader(const Ptr<ITextureLoader>& loader) override;
-        Ptr<ITextureImage> loadTexture(IInputStream* stream) override;
-        Ptr<ITextureImage> loadTexture(IInputStream* stream, const std::string& format) override;
-        Ptr<ITextureImage> loadTexture(const std::string& fileName) override;
-
-    private:
-        Ptr<FileSystemList> m_FileSystem;                   /**< Instance of the file system. */
-        std::vector<Ptr<ITextureLoader>> m_TextureLoaders;  /**< List of known texture loaders. */
-    };
+    /**
+     * Extracts extension (the part after the last '.') from the provided file name.
+     * @param path Path.
+     * @return Extension or empty string if file name does not have an extension.
+     */
+    std::string pathGetFileNameExtension(const std::string& path);
 }

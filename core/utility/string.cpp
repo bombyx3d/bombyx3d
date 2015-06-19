@@ -19,40 +19,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "core/utility/Ptr.h"
-#include "core/interfaces/ICore.h"
-#include "core/io/FileSystemList.h"
-#include <vector>
+#include "core/utility/string.h"
+#include <cctype>
+#include <sstream>
 
 namespace Engine
 {
-    /** Engine core. */
-    class Core : public ICore
+    std::string stringToLowerCase(const std::string& string)
     {
-    public:
-        Z_IMPLEMENTATION(Core)
-
-        /**
-         * Constructor.
-         * @param fileSystemList Pointer to the list of native filesystems.
-         */
-        explicit Core(const Ptr<FileSystemList>& fileSystemList);
-
-        /** Destructor. */
-        ~Core();
-
-        void registerFileSystem(const Ptr<IFileSystem>& fileSystem) override;
-        IFileSystem& fileSystem() override { return *m_FileSystem; }
-
-        void registerTextureLoader(const Ptr<ITextureLoader>& loader) override;
-        Ptr<ITextureImage> loadTexture(IInputStream* stream) override;
-        Ptr<ITextureImage> loadTexture(IInputStream* stream, const std::string& format) override;
-        Ptr<ITextureImage> loadTexture(const std::string& fileName) override;
-
-    private:
-        Ptr<FileSystemList> m_FileSystem;                   /**< Instance of the file system. */
-        std::vector<Ptr<ITextureLoader>> m_TextureLoaders;  /**< List of known texture loaders. */
-    };
+        std::stringstream ss;
+        for (auto ch : string)
+            ss << tolower(ch);
+        return ss.str();
+    }
 }
