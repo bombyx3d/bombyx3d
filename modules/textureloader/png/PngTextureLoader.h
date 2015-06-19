@@ -39,6 +39,9 @@ namespace Engine
     {
         Z_IMPLEMENTATION(PngTextureLoader)
 
+        /** Constructor. */
+        PngTextureLoader() = default;
+
         bool supportsFormat(const std::string& extension) const override;
         Ptr<ITextureImage> loadTexture(IInputStream* stream) override;
     };

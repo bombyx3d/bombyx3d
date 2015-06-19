@@ -74,7 +74,7 @@ namespace Engine
         }
 
         Z_LOG("Unable to load texture \"" << stream->name()
-            << "\": there is no texture loader for format \"" << format << "\".");
+            << "\": there is no texture loader for format \"" << extension << "\".");
 
         return nullptr;
     }

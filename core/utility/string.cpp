@@ -29,7 +29,7 @@ namespace Engine
     {
         std::stringstream ss;
         for (auto ch : string)
-            ss << tolower(ch);
+            ss << char(tolower(ch));
         return ss.str();
     }
 }

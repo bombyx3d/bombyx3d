@@ -124,6 +124,7 @@ namespace Engine
         Ptr& operator=(const std::nullptr_t&)
         {
             IUnknownPtr::release(m_Object);
+            m_Object = nullptr;
             return *this;
         }
 
@@ -198,6 +199,7 @@ namespace Engine
         void release()
         {
             IUnknownPtr::release(m_Object);
+            m_Object = nullptr;
         }
 
         /**

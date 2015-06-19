@@ -148,7 +148,7 @@ namespace Engine
 
         Ptr<SimpleImage> image = new SimpleImage(format, width, height, rowbytes);
         auto& imageData = image->data();
-        imageData.resize(width * rowbytes);
+        imageData.resize(height * rowbytes);
 
         for (int i = 0; i < numPasses; i++) {
             uint8_t* row = imageData.data();
