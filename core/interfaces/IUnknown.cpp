@@ -147,7 +147,7 @@ namespace Engine
     {
         void* ptr = new void*[(size + sizeof(void*) - 1) / sizeof(void*)];
         if (!ptr)
-            return nullptr;
+            throw std::bad_alloc();
 
         g_AllocationStack.push(ptr, size);
 
