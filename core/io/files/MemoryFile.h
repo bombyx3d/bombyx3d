@@ -22,6 +22,7 @@
 
 #pragma once
 #include "core/interfaces/IMemoryMappedFile.h"
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -44,7 +45,7 @@ namespace Engine
          * @param fileData File data.
          * @param fileName File name.
          */
-        explicit MemoryFile(std::vector<char>&& fileData, const std::string& fileName = "<memory>");
+        explicit MemoryFile(std::vector<uint8_t>&& fileData, const std::string& fileName = "<memory>");
 
         /** Destructor. */
         ~MemoryFile();
@@ -53,7 +54,7 @@ namespace Engine
          * Retrieves reference to data.
          * @return Reference to data.
          */
-        std::vector<char>& data()
+        std::vector<uint8_t>& data()
         {
             return m_Data;
         }
@@ -62,7 +63,7 @@ namespace Engine
          * Retrieves reference to data.
          * @return Reference to data.
          */
-        const std::vector<char>& data() const
+        const std::vector<uint8_t>& data() const
         {
             return m_Data;
         }
@@ -71,7 +72,7 @@ namespace Engine
          * Retrieves reference to data.
          * @return Reference to data.
          */
-        const std::vector<char>& constData() const
+        const std::vector<uint8_t>& constData() const
         {
             return m_Data;
         }
@@ -85,6 +86,6 @@ namespace Engine
 
     private:
         std::string m_Name;             /**< File name. */
-        std::vector<char> m_Data;       /**< File data. */
+        std::vector<uint8_t> m_Data;    /**< File data. */
     };
 }

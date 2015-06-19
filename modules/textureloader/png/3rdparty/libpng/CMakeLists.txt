@@ -27,20 +27,15 @@ if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
-configure_file(scripts/pnglibconf.h.prebuilt "${CMAKE_CURRENT_BINARY_DIR}/pnglibconf.h" COPYONLY)
-
-set(scripts_files scripts/pnglibconf.h.prebuilt)
-file(GLOB root_files *.c *.h)
-
-add_library(libpng STATIC ${EXCLUDE_FROM_ALL}
-    ${script_files}
-    ${root_files}
-)
-
-source_group("Source Files\\scripts" FILES ${scripts_files})
-source_group("Source Files" FILES ${root_files})
-
 set_source_files_properties(scripts/pnglibconf.h.prebuilt PROPERTIES HEADER_FILE_ONLY TRUE)
+configure_file(scripts/pnglibconf.h.prebuilt "${CMAKE_CURRENT_BINARY_DIR}/pnglibconf.h" COPYONLY)
+set(scripts_files scripts/pnglibconf.h.prebuilt)
+
+file(GLOB root_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" *.c *.h)
+
+z_set_source_groups(${script_files} ${root_files})
+add_library(libpng STATIC EXCLUDE_FROM_ALL ${script_files} ${root_files})
+
 set_target_properties(libpng PROPERTIES OUTPUT_NAME "png")
 target_include_directories(libpng BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(libpng BEFORE PUBLIC "${CMAKE_CURRENT_BINARY_DIR}")

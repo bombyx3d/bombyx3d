@@ -100,6 +100,7 @@ WARN_LOGFILE           =
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
 INPUT                  = core/doc/Logging.dox \
+                         core/image \
                          core/interfaces \
                          core/io \
                          core/math \

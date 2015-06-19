@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -31,6 +31,7 @@
 #include "interfaces/IImage.h"
 #include "interfaces/ITextureImage.h"
 #include "interfaces/ITextureLoader.h"
+#include "image/SimpleImage.h"
 #include "io/FileSystemList.h"
 #include "io/files/MemoryFile.h"
 #include "io/files/StaticMemoryFile.h"
@@ -134,6 +135,18 @@ namespace Engine
         if (typeID == typeOf<Core>())
             return this;
         return ICore::queryInterface(typeID);
+    }
+
+    void* SimpleImage::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<SimpleImage>())
+            return this;
+
+        void* interface = IImage::queryInterface(typeID);
+        if (interface)
+            return interface;
+
+        return ITextureImage::queryInterface(typeID);
     }
 
     void* FileSystemList::queryInterface(TypeID typeID)

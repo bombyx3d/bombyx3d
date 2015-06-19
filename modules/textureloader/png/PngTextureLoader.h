@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,56 +19,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "MemoryFile.h"
-#include "core/utility/debug.h"
-#include <cstring>
+
+#pragma once
+#include "core/interfaces/ITextureLoader.h"
+
+/**
+ * @addtogroup Modules
+ * @{
+ * @addtogroup TextureLoader
+ * @{
+ * @addtogroup Png
+ * @{
+ */
 
 namespace Engine
 {
-    MemoryFile::MemoryFile(const std::string& fileName)
-        : m_Name(fileName)
+    /** Loader for PNG files. */
+    class PngTextureLoader : public ITextureLoader
     {
-    }
+        Z_IMPLEMENTATION(PngTextureLoader)
 
-    MemoryFile::MemoryFile(std::vector<uint8_t>&& fileData, const std::string& fileName)
-        : m_Name(fileName)
-        , m_Data(std::move(fileData))
-    {
-    }
-
-    MemoryFile::~MemoryFile()
-    {
-    }
-
-    const std::string& MemoryFile::name() const
-    {
-        return m_Name;
-    }
-
-    size_t MemoryFile::rawDataSize() const
-    {
-        return m_Data.size();
-    }
-
-    const void* MemoryFile::rawDataPointer() const
-    {
-        return m_Data.data();
-    }
-
-    uint64_t MemoryFile::size() const
-    {
-        return m_Data.size();
-    }
-
-    bool MemoryFile::read(uint64_t offset, void* buffer, size_t bytesToRead)
-    {
-        if (offset + bytesToRead > m_Data.size()) {
-            Z_LOG("Incomplete read in file \"" << m_Name << "\".");
-            return false;
-        }
-
-        memcpy(buffer, m_Data.data() + offset, bytesToRead);
-
-        return true;
-    }
+        bool supportsFormat(const std::string& extension) const override;
+        Ptr<ITextureImage> loadTexture(IInputStream* stream) override;
+    };
 }
+
+/**
+ * @}
+ * @}
+ * @}
+ */
