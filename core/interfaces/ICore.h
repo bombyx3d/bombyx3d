@@ -35,6 +35,7 @@ namespace Engine
      /** Interface to the engine core. */
     class ICore : public IUnknown
     {
+    public:
         Z_SINGLETON_INTERFACE(ICore)
 
       #ifdef DOXYGEN

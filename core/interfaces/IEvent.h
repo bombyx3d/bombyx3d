@@ -28,6 +28,7 @@ namespace Engine
      /** Base interface for events. */
     class IEvent : public IUnknown
     {
+    public:
         Z_INTERFACE(IEvent)
     };
 }

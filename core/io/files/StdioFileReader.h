@@ -28,7 +28,7 @@
 
 namespace Engine
 {
-    /** An implementation of @ref Engine::IFileReader using classic stdio `FILE*`. */
+    /** An implementation of @ref IFileReader using classic stdio `FILE*`. */
     class StdioFileReader : public IFileReader
     {
     public:

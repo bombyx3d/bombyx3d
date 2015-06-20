@@ -31,6 +31,7 @@ namespace Engine
     /** Base interface for input streams. */
     class IInputStream : public IStream
     {
+    public:
         Z_INTERFACE(IInputStream)
 
         const std::string& name() const override = 0;

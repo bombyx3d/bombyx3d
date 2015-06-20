@@ -29,7 +29,10 @@
 
 namespace Engine
 {
-    /** A list of filesystems. */
+    /**
+     * A list of filesystems.
+     * @see @ref Engine::ICore::registerFileSystem.
+     */
     class FileSystemList : public IFileSystem
     {
     public:

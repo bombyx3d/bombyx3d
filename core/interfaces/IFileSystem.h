@@ -28,9 +28,13 @@
 
 namespace Engine
 {
-    /** Base interface for filesystems. */
+    /**
+     * Base interface for filesystems.
+     * @see @ref ICore::registerFileSystem.
+     */
     class IFileSystem : public IUnknown
     {
+    public:
         Z_INTERFACE(IFileSystem)
 
         /**

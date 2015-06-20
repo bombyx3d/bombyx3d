@@ -30,6 +30,7 @@ namespace Engine
     /** Base interface for file readers. */
     class IFileReader : public virtual IUnknown
     {
+    public:
         Z_INTERFACE(IFileReader)
 
         /**

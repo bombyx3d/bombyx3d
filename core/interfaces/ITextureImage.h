@@ -26,9 +26,16 @@
 
 namespace Engine
 {
-    /** Base interface for texture image data. */
+    /**
+     * Base interface for texture image data.
+     *
+     * @see
+     * - @ref _textures;
+     * - @ref SimpleImage.
+     */
     class ITextureImage : public virtual IUnknown
     {
+    public:
         Z_INTERFACE(ITextureImage)
 
         /**

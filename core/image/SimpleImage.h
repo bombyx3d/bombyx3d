@@ -28,7 +28,12 @@
 
 namespace Engine
 {
-    /** Simple implementation of @ref Engine::IImage and @ref Engine::ITextureImage. */
+    /**
+     * Simple implementation of @ref IImage and @ref ITextureImage.
+     *
+     * @see
+     * - @ref _textures.
+     */
     class SimpleImage : public IImage, public ITextureImage
     {
         Z_IMPLEMENTATION(SimpleImage)

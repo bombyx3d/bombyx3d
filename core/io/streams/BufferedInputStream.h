@@ -27,7 +27,7 @@
 
 namespace Engine
 {
-    /** Wrapper over @ref Engine::IInputStream providing buffered I/O. */
+    /** Wrapper over @ref IInputStream providing buffered I/O. */
     class BufferedInputStream : public IInputStream
     {
     public:

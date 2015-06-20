@@ -38,7 +38,7 @@
 
 namespace Engine
 {
-     /** A read-only ZIP-file based implementation of @ref Engine::IFileSystem. */
+     /** A read-only ZIP-file based implementation of @ref IFileSystem. */
     class ZipFileSystem : public IFileSystem
     {
     public:

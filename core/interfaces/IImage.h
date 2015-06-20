@@ -63,9 +63,15 @@ namespace Engine
      *
      * Implementations of this interface keep an image data layed out in memory as a continuous array of pixels.
      * Pixels are grouped into 1D lines, and lines are grouped into 2D bitmaps.
+     *
+     * @see
+     * - @ref _textures;
+     * - @ref SimpleImage.
+     * - @ref ITextureImage.
      */
     class IImage : public IBlob
     {
+    public:
         Z_INTERFACE(IImage)
 
         /**

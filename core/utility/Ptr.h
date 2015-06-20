@@ -42,7 +42,7 @@ namespace Engine
     }
     /** @endcond */
 
-    /** Smart pointer for @ref Engine::IUnknown descendants. */
+    /** Smart pointer for @ref IUnknown descendants. */
     template <class TYPE> class Ptr
       #ifndef DOXYGEN
         : public Internal::IUnknownPtr

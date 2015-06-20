@@ -27,9 +27,17 @@
 
 namespace Engine
 {
-    /** Base interface for image pixel format converters. */
+    /**
+     * Base interface for image pixel format converters.
+     * @see
+     * - @ref _textures;
+     * - @ref ICore::registerImageFormatConverter;
+     * - @ref Rgb2LuminanceImageConverter;
+     * - @ref Rgba2LuminanceImageConverter.
+     */
     class IImageFormatConverter : public IUnknown
     {
+    public:
         Z_INTERFACE(IImageFormatConverter)
 
         /**

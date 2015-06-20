@@ -27,7 +27,7 @@
 
 namespace Engine
 {
-    /** An implementation of @ref Engine::IInputStream based on static data. */
+    /** An implementation of @ref IInputStream based on static data. */
     class StaticMemoryInputStream : public IInputStream, public StaticMemoryFile
     {
     public:

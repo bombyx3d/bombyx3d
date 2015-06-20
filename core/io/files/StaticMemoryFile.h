@@ -22,6 +22,7 @@
 
 #pragma once
 #include "core/interfaces/IMemoryMappedFile.h"
+#include "core/utility/macros.h"
 #include <string>
 #include <vector>
 

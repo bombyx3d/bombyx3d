@@ -28,9 +28,16 @@
 
 namespace Engine
 {
-    /** Base interface for texture loaders. */
+    /**
+     * Base interface for texture loaders.
+     *
+     * @see
+     * - @ref _textures;
+     * - @ref ICore::registerTextureLoader.
+     */
     class ITextureLoader : public IUnknown
     {
+    public:
         Z_INTERFACE(ITextureLoader)
 
         /**

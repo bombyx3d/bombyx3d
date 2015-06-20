@@ -1,4 +1,7 @@
 ﻿
+namespace Engine
+{
+
 /**
  * @page _logging Logging subsystem
  * @brief
@@ -21,5 +24,7 @@
  * and may be used in \#`if` directives to determine whether current build has logging enabled or not.
  *
  * By default engine writes log messages to `std::cerr`, but this can be overriden using the
- * @ref Engine::setDebugPrinter global function.
+ * @ref setDebugPrinter global function.
  */
+
+}

@@ -1,0 +1,33 @@
+﻿
+namespace Engine
+{
+
+/**
+ * @page _textures Textures
+ * @brief
+ * @details
+ *
+ * @ref IImage represents a 1D-, 2D- or 3D-bitmap, either compressed or uncompressed.
+ *
+ * Images can be stored in various pixel formats (see @ref ImagePixelFormat). To convert
+ * images between pixel formats you may use the corresponding instance of @ref IImageFormatConverter.
+ * Engine includes the following image convertors as modules:
+ * - @ref Rgb2LuminanceImageConverter;
+ * - @ref Rgba2LuminanceImageConverter.
+ *
+ * @ref ICore keeps a list of image format converters. You may register one using the
+ * @ref ICore::registerImageFormatConverter method. There is also the convenient @ref ICore::convertImageFormat
+ * method available for image conversion.
+ *
+ * @ref ITextureImage is a collection of faces (1 for normal textures or 6 for cube maps). Each
+ * face is represented as a collection of mipmap levels (1 or more). Each mipmap level is an instance of
+ * @ref IImage. To load texture you may use the corresponding instance of @ref ITextureLoader.
+ * Engine includes the following texture loaders as modules:
+ * - @ref PngTextureLoader.
+ *
+ * @ref ICore keeps a list of texture loaders. You may register on using the
+ * @ref ICore::registerTextureLoader method. There is also the convenient @ref ICore::loadTexture
+ * method available to load textures.
+ */
+
+}

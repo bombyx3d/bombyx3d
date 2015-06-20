@@ -29,6 +29,7 @@ namespace Engine
     /** Base interface for input and output streams. */
     class IStream : public virtual IUnknown
     {
+    public:
         Z_INTERFACE(IStream)
 
         /**

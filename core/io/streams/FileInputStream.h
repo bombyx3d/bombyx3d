@@ -27,7 +27,7 @@
 
 namespace Engine
 {
-    /** An @ref Engine::IInputStream implemented as a wrapper for an instance of @ref Engine::IFileReader. */
+    /** An @ref IInputStream implemented as a wrapper for an instance of @ref Engine::IFileReader. */
     class FileInputStream : public IInputStream
     {
     public:

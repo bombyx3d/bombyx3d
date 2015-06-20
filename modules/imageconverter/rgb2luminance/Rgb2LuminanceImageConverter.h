@@ -34,9 +34,10 @@
 
 namespace Engine
 {
-    /** RGB-to-Luminance image converter. */
+    /** Converts @ref PIXEL_FORMAT_RGB_24 images to @ref PIXEL_FORMAT_LUMINANCE_8 images. */
     class Rgb2LuminanceImageConverter : public IImageFormatConverter
     {
+    public:
         Z_IMPLEMENTATION(Rgb2LuminanceImageConverter)
 
         /** Constructor. */

@@ -29,6 +29,7 @@ namespace Engine
      /** An interface to the memory-mapped file. */
     class IMemoryMappedFile : public IBlob, public IFileReader
     {
+    public:
         Z_INTERFACE(IMemoryMappedFile)
 
         virtual const std::string& name() const override = 0;

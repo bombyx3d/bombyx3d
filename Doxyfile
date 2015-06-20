@@ -100,6 +100,7 @@ WARN_LOGFILE           =
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
 INPUT                  = core/doc/Logging.dox \
+                         core/doc/Textures.dox \
                          core/image \
                          core/interfaces \
                          core/io \
@@ -269,7 +270,7 @@ PERLMOD_MAKEVAR_PREFIX =
 #---------------------------------------------------------------------------
 ENABLE_PREPROCESSING   = YES
 MACRO_EXPANSION        = YES
-EXPAND_ONLY_PREDEF     = NO
+EXPAND_ONLY_PREDEF     = YES
 SEARCH_INCLUDES        = YES
 INCLUDE_PATH           =
 INCLUDE_FILE_PATTERNS  =

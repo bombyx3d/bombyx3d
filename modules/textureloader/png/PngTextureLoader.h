@@ -37,6 +37,7 @@ namespace Engine
     /** Loader for PNG files. */
     class PngTextureLoader : public ITextureLoader
     {
+    public:
         Z_IMPLEMENTATION(PngTextureLoader)
 
         /** Constructor. */

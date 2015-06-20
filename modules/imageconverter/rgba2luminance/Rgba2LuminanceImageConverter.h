@@ -34,9 +34,13 @@
 
 namespace Engine
 {
-    /** RGBA-to-LuminanceAlpha image converter. */
+    /**
+     * Converts @ref PIXEL_FORMAT_RGB_24 and @ref PIXEL_FORMAT_RGBA_32 images
+     * to @ref PIXEL_FORMAT_LUMINANCE_ALPHA_16 images.
+     */
     class Rgba2LuminanceImageConverter : public IImageFormatConverter
     {
+    public:
         Z_IMPLEMENTATION(Rgba2LuminanceImageConverter)
 
         /** Constructor. */
