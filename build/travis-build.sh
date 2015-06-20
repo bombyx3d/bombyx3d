@@ -13,8 +13,6 @@ cd `dirname "$0"`
 mkdir -p .cmake-build
 cd .cmake-build
 
-ls -la /usr/bin | grep cmake
-
 /usr/bin/cmake \
     "-DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE" \
     "-DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH" \
