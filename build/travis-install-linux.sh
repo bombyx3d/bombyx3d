@@ -6,13 +6,16 @@ if [ "${Z_TARGET_PLATFORM}" = "qt5" ]; then
     sudo apt-add-repository -y ppa:beineri/opt-qt541
 fi
 
-if [ "${Z_DOXYGEN}" != "TRUE" ]; then
+if [ "${Z_DOXYGEN}" = "TRUE" ]; then
+    # Add libreoffice PPA to get doxygen from
+    # See http://stackoverflow.com/questions/27031958/doxygen-1-8-on-travis-ci
+    sudo apt-add-repository -y ppa:libreoffice/libreoffice-4-2
+else
     sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
 fi
 
 echo "Updating repositories..."
 sudo apt-get -qq update
-
 sudo apt-get -qq install libc6-i386
 
 if [ "${Z_TARGET_PLATFORM}" = "qt5" ]; then
