@@ -4,7 +4,7 @@ set -e
 
 travis_dir=`pwd`
 
-cleanup {
+cleanup() {
     cd "$travis_dir"
 }
 trap cleanup EXIT INT QUIT HUP TERM

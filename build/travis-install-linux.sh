@@ -2,9 +2,6 @@
 
 set -e
 
-echo Test2
-#apt-cache search qt5 | grep dev
-
 # Install CMake
 wget http://www.cmake.org/files/v3.2/cmake-3.2.2-Linux-i386.tar.gz
 tar -xzf cmake-3.2.2-Linux-i386.tar.gz

@@ -56,7 +56,6 @@ matrix:
 
 before_install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-        echo Test &&
         build/travis-install-linux.sh;
     fi
 
