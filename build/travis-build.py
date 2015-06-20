@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import argparse
-import platform
 import subprocess
 import os
 import sys
@@ -28,10 +27,16 @@ if args.build:
 else:
     build = 'Debug'
 
+platform = False
+if args.platform:
+    platform = args.platform
+elif args.doxygen:
+    platform = 'dummy'
+
 print('build    = %s' % build)
 
-if args.platform:
-    print('platform = %s' % args.platform)
+if platform:
+    print('platform = %s' % platform)
 if args.qt5path:
     print('qt5path  = %s' % args.qt5path)
 
@@ -51,7 +56,7 @@ if sys.platform == 'linux2':
     if os.environ['CC'] == 'gcc':
         os.environ['CC'] = 'gcc-4.8'
     if os.environ['CXX'] == 'g++':
-        os.environ['CXX'] = 'gcc-4.8'
+        os.environ['CXX'] = 'g++-4.8'
 
 if args.doxygen:
     subprocess.check_call('../doc-checkout.sh', shell=True)
@@ -65,8 +70,8 @@ cmake = [
     '-DZ_BUILD_SAMPLES=NO'
 ]
 
-if args.platform:
-    cmake.append('-DZ_TARGET_PLATFORM=%s' % args.platform)
+if platform:
+    cmake.append('-DZ_TARGET_PLATFORM=%s' % platform)
 if args.qt5path:
     cmake.append('-DCMAKE_PREFIX_PATH="%s"' % args.qt5path)
 
