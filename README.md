@@ -8,7 +8,8 @@ Game Engine
 
 This is a game engine.
 
-Doxygen documentation: <a href="https://zapolnov.github.io/game_engine/doxygen/html/">https://zapolnov.github.io/game_engine/doxygen/html/</a>
+Doxygen documentation: <a href="https://zapolnov.github.io/game_engine/doxygen/html/"
+    target="_blank">https://zapolnov.github.io/game_engine/doxygen/html/</a>
 
 License
 -------

@@ -36,6 +36,7 @@ namespace Engine
      */
     class SimpleImage : public IImage, public ITextureImage
     {
+    public:
         Z_IMPLEMENTATION(SimpleImage)
 
         /**
