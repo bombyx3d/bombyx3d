@@ -54,7 +54,7 @@ if sys.platform == 'linux2':
         os.environ['CXX'] = 'gcc-4.8'
 
 if args.doxygen:
-    subprocess.check_call('../checkout-documentation.sh')
+    subprocess.check_call('../doc-checkout.sh', shell=True)
 
 #############################################################################################################
 ## Run CMake
@@ -83,7 +83,7 @@ else:
     cmake.extend(['-G', 'MinGW Makefiles'])
 
 cmake.append('../..')
-subprocess.check_call(cmake)
+subprocess.check_call(cmake, shell=True)
 
 #############################################################################################################
 ## Run make
@@ -93,9 +93,11 @@ if on_windows:
     make = 'mingw32-make'
 
 if args.doxygen:
-    subprocess.check_call([make, 'doc'])
+    subprocess.check_call([make, 'doc'], shell=True)
 else:
-    subprocess.check_call([make])
+    subprocess.check_call([make], shell=True)
 
 #############################################################################################################
 ## Upload documentation
+
+subprocess.check_call('../doc-commit.sh', shell=True)
