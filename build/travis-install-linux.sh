@@ -20,7 +20,7 @@ if [ "${Z_TARGET_PLATFORM}" = "qt5" ]; then
 fi
 
 if [ "${Z_DOXYGEN}" = "TRUE" ]; then
-    sudo apt-get -qq install doxygen graphviz
+    sudo apt-get -qq install --no-install-recommends doxygen graphviz
 else
     sudo apt-get -qq install g++-4.8
 fi

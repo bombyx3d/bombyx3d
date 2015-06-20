@@ -59,6 +59,7 @@ matrix:
       env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy Z_DOXYGEN=TRUE
 
 before_install:
+  - openssl aes-256-cbc -K $encrypted_b705a8d4577f_key -iv $encrypted_b705a8d4577f_iv -in build/id.enc -out build/id -d
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
       build/travis-install-linux.sh;
     fi

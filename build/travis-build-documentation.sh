@@ -10,6 +10,10 @@ cleanup() {
 trap cleanup EXIT INT QUIT HUP TERM
 
 cd `dirname "$0"`
+
+svn checkout https://github.com/zapolnov/game_engine/branches/gh-pages/doxygen doc
+rm -rf doc/html
+
 mkdir -p .cmake-build
 cd .cmake-build
 
@@ -22,3 +26,12 @@ cd .cmake-build
     ../..
 
 make doc
+
+svn add ../doc/html
+svn commit -m "Update doxygen documentation."
+
+svn status ../doc | grep "^\!" | awk '{ print $2; }' | xargs svn delete
+svn status ../doc | grep "^\?" | awk '{ print $2; }' | xargs svn add
+
+svn commit --non-interactive --username zapolnov --password `cat ../id` \
+    -m "[Travis] Update doxygen documentation." ../doc
