@@ -6,9 +6,9 @@ set -e
 wget http://www.cmake.org/files/v3.2/cmake-3.2.2-Linux-i386.tar.gz
 tar -xzf cmake-3.2.2-Linux-i386.tar.gz
 sudo cp -fR cmake-3.2.2-Linux-i386/* /usr
-chmod a+x /usr/bin/cmake
-chmod a+x /usr/bin/ctest
-chmod a+x /usr/bin/cpack
+sudo chmod a+x /usr/bin/cmake
+sudo chmod a+x /usr/bin/ctest
+sudo chmod a+x /usr/bin/cpack
 
 # Add PPA with Qt 5.4
 sudo apt-add-repository -y ppa:beineri/opt-qt541
