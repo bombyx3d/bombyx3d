@@ -6,37 +6,37 @@ sudo: required
 matrix:
   include:
     # linux/gcc/debug/dummy
-#    - compiler: gcc
-#      os: linux
-#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy
+    - compiler: gcc
+      os: linux
+      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy
     # linux/gcc/debug/qt5
-#    - compiler: gcc
-#      os: linux
-#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
+    - compiler: gcc
+      os: linux
+      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/gcc/release/dummy
-#    - compiler: gcc
-#      os: linux
-#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy
+    - compiler: gcc
+      os: linux
+      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy
     # linux/gcc/release/qt5
-#    - compiler: gcc
-#      os: linux
-#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
+    - compiler: gcc
+      os: linux
+      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/clang/debug/dummy
-#    - compiler: clang
-#      os: linux
-#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy
+    - compiler: clang
+      os: linux
+      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy
     # linux/clang/debug/qt5
-#    - compiler: clang
-#      os: linux
-#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
+    - compiler: clang
+      os: linux
+      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/clang/release/dummy
-#    - compiler: clang
-#      os: linux
-#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy
+    - compiler: clang
+      os: linux
+      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy
     # linux/clang/release/qt5
-#    - compiler: clang
-#      os: linux
-#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
+    - compiler: clang
+      os: linux
+      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # osx/clang/debug/dummy
 #    - compiler: clang
 #      os: osx

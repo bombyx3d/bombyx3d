@@ -24,7 +24,9 @@ fi
 
 if [ "${Z_DOXYGEN}" = "TRUE" ]; then
     sudo apt-get -qq install --no-install-recommends doxygen graphviz
-else
+fi
+
+if [ "${TRAVIS_OS_NAME}" = "linux" -a -( "${CC}" = "gcc" -o "${CXX}" = "g++" -) ]; then
     sudo apt-get -qq install g++-4.8
 fi
 
