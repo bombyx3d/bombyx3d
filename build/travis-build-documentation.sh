@@ -12,7 +12,8 @@ trap cleanup EXIT INT QUIT HUP TERM
 cd `dirname "$0"`
 
 svn checkout -q https://github.com/zapolnov/game_engine/branches/gh-pages/doxygen doc
-rm -rf doc/html
+find doc/html ! -name '.svn' -print0 | xargs -0 rm -rf
+find doc/html -type d -empty -print0 | xargs -0 rm -rf
 
 mkdir -p .cmake-build
 cd .cmake-build
