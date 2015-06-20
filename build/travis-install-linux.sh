@@ -19,7 +19,9 @@ if [ "${Z_TARGET_PLATFORM}" = "qt5" ]; then
     sudo apt-get -qq install qt54base qt54multimedia qt54tools
 fi
 
-if [ "${Z_DOXYGEN}" != "TRUE" ]; then
+if [ "${Z_DOXYGEN}" = "TRUE" ]; then
+    sudo apt-get -qq doxygen graphviz
+else
     sudo apt-get -qq install g++-4.8
 fi
 
