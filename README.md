@@ -2,6 +2,8 @@
 Game Engine
 ===========
 
+[![Build Status](https://travis-ci.org/zapolnov/game_engine.svg?branch=master)](https://travis-ci.org/zapolnov/game_engine)
+
 This is a game engine.
 
 
