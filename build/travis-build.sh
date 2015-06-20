@@ -10,14 +10,14 @@ cleanup() {
 trap cleanup EXIT INT QUIT HUP TERM
 
 cd `dirname "$0"`
+mkdir -p .cmake-build
+cd .cmake-build
 
-mkdir -p ".cmake-$Z_TARGET_PLATFORM-$CMAKE_BUILD_TYPE"
-cd ".cmake-$Z_TARGET_PLATFORM-$CMAKE_BUILD_TYPE"
-
-cmake \
+/usr/bin/cmake \
+    "-DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE" \
     "-DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH" \
     "-DZ_TARGET_PLATFORM=$Z_TARGET_PLATFORM" \
-    "-DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE" \
+    "-DZ_BUILD_SAMPLES=YES" \
     ../..
 
 make

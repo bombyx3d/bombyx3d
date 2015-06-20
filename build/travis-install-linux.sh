@@ -4,7 +4,7 @@ set -e
 
 # Install CMake
 wget http://www.cmake.org/files/v3.2/cmake-3.2.2-Linux-i386.tar.gz
-tar -xzf cmake-3.2.2-Linux-i386.tar.gz
+tar -xvzf cmake-3.2.2-Linux-i386.tar.gz
 sudo cp -fR cmake-3.2.2-Linux-i386/* /usr
 
 # Add PPA with Qt 5.4
