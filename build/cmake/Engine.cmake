@@ -44,6 +44,8 @@ if(NOT __Z_ENGINE_CMAKE_INCLUDED)
     endif()
 
     get_filename_component(engine_directory "${path}" PATH)
+    get_filename_component(engine_directory "${engine_directory}" PATH)
+
     include_directories("${engine_directory}")
     include_directories("${engine_directory}/3rdparty/glm")
 

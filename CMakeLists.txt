@@ -24,7 +24,7 @@ cmake_minimum_required(VERSION 3.2)
 project(Engine)
 
 set(__Z_ENGINE_DONT_ADD_SUBDIRECTORY TRUE)
-include(cmake/Engine.cmake)
+include(build/cmake/Engine.cmake)
 
 add_subdirectory(3rdparty)
 add_subdirectory(_OLD)

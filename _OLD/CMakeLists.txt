@@ -27,7 +27,6 @@ add_subdirectory(3rdparty)
 file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     canvas/*.cpp
     canvas/*.h
-    cmake/*.cmake
     mechanics/match3/*.cpp
     mechanics/match3/*.h
     renderer/formats/*.h
