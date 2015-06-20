@@ -35,6 +35,7 @@ namespace Engine
 
         /**
          * Constructs a 2D image.
+         * @note Constructor does not allocate actual storage for the pixel data.
          * @param format Pixel format of the image.
          * @param width Width of the image.
          * @param height Height of the image.
@@ -44,6 +45,7 @@ namespace Engine
 
         /**
          * Constructs a 2D image.
+         * @note Constructor does not allocate actual storage for the pixel data.
          * @param format Pixel format of the image.
          * @param width Width of the image.
          * @param height Height of the image.
@@ -55,6 +57,7 @@ namespace Engine
 
         /**
          * Constructs a 3D image.
+         * @note Constructor does not allocate actual storage for the pixel data.
          * @param format Pixel format of the image.
          * @param width Width of the image.
          * @param height Height of the image.
@@ -67,6 +70,7 @@ namespace Engine
 
         /**
          * Constructs a 3D image.
+         * @note Constructor does not allocate actual storage for the pixel data.
          * @param format Pixel format of the image.
          * @param width Width of the image.
          * @param height Height of the image.
