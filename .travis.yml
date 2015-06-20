@@ -8,35 +8,51 @@ matrix:
     # linux/gcc/debug/dummy
     - compiler: gcc
       os: linux
-      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy
+      env: I='-g' C='-b Debug -p dummy'
     # linux/gcc/debug/qt5
     - compiler: gcc
       os: linux
-      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
+      env: I='-g -q' C='-b Debug -p qt5 -q /opt/qt54/lib/cmake'
     # linux/gcc/release/dummy
-    - compiler: gcc
-      os: linux
-      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy
+#    - compiler: gcc
+#      os: linux
+#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy
     # linux/gcc/release/qt5
-    - compiler: gcc
-      os: linux
-      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
+#    - compiler: gcc
+#      os: linux
+#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/clang/debug/dummy
-    - compiler: clang
-      os: linux
-      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy
+#    - compiler: clang
+#      os: linux
+#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy
     # linux/clang/debug/qt5
-    - compiler: clang
-      os: linux
-      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
+#    - compiler: clang
+#      os: linux
+#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/clang/release/dummy
-    - compiler: clang
-      os: linux
-      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy
+#    - compiler: clang
+#      os: linux
+#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy
     # linux/clang/release/qt5
-    - compiler: clang
-      os: linux
-      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
+#    - compiler: clang
+#      os: linux
+#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
+    # linux/mingw-w32/debug/dummy
+#    - compiler: ": w32"
+#      os: linux
+#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy Z_MINGW=32
+    # linux/mingw-w32/debug/qt5
+#    - compiler: ": w32"
+#      os: linux
+#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
+    # linux/mingw-w32/release/dummy
+#    - compiler: ": w32"
+#      os: linux
+#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy
+    # linux/mingw-w32/release/qt5
+#    - compiler: ": w32"
+#      os: linux
+#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # osx/clang/debug/dummy
 #    - compiler: clang
 #      os: osx
@@ -56,20 +72,14 @@ matrix:
     # documentation
     - compiler: clang
       os: linux
-      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy Z_DOXYGEN=TRUE
+      env: I='-x' C='-p dummy'
 
 before_install:
   - openssl aes-256-cbc -K $encrypted_b705a8d4577f_key -iv $encrypted_b705a8d4577f_iv -in build/id.enc -out build/id -d
-  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-      build/travis-install-linux.sh;
-    fi
+  - build/travis-install.py $I
 
 script:
-  - if [ "${Z_DOXYGEN}" = "TRUE" ]; then
-      build/travis-build-documentation.sh;
-    else
-      build/travis-build.sh;
-    fi
+    build/travis-build.py $C;
 
 notifications:
   email:
