@@ -12,50 +12,53 @@ matrix:
     # linux/gcc/debug/qt5
     - compiler: gcc
       os: linux
-      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5
+      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/gcc/release/dummy
 #    - compiler: gcc
 #      os: linux
-#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy
+#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/gcc/release/qt5
 #    - compiler: gcc
 #      os: linux
-#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5
+#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/clang/debug/dummy
 #    - compiler: clang
 #      os: linux
-#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy
+#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/clang/debug/qt5
 #    - compiler: clang
 #      os: linux
-#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5
+#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/clang/release/dummy
 #    - compiler: clang
 #      os: linux
-#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy
+#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/clang/release/qt5
 #    - compiler: clang
 #      os: linux
-#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5
+#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # osx/clang/debug/dummy
 #    - compiler: clang
 #      os: osx
-#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy
+#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy CMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake
     # osx/clang/debug/qt5
 #    - compiler: clang
 #      os: osx
-#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5
+#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake
     # osx/clang/release/dummy
 #    - compiler: clang
 #      os: osx
-#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy
+#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy CMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake
     # osx/clang/release/qt5
 #    - compiler: clang
 #      os: osx
-#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5
+#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake
 
 before_install:
-  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then build/travis-install-linux.sh; fi
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+        echo Test &&
+        build/travis-install-linux.sh;
+    fi
 
 script:
   - build/travis-build.sh
