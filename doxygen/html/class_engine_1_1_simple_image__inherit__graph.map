@@ -1,0 +1,6 @@
+<map id="Engine::SimpleImage" name="Engine::SimpleImage">
+<area shape="rect" id="node2" href="$class_engine_1_1_i_image.html" title="Interface to one&#45;, two&#45; or three&#45;dimensional bitmap image. " alt="" coords="5,152,116,177"/>
+<area shape="rect" id="node3" href="$class_engine_1_1_i_blob.html" title="A block of binary data. " alt="" coords="45,79,146,104"/>
+<area shape="rect" id="node4" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="83,5,212,31"/>
+<area shape="rect" id="node5" href="$class_engine_1_1_i_texture_image.html" title="Base interface for texture image data. " alt="" coords="141,152,296,177"/>
+</map>

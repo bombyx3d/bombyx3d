@@ -1,0 +1,9 @@
+<map id="Engine::IBlob" name="Engine::IBlob">
+<area shape="rect" id="node3" href="$class_engine_1_1_i_image.html" title="Interface to one&#45;, two&#45; or three&#45;dimensional bitmap image. " alt="" coords="24,152,135,177"/>
+<area shape="rect" id="node5" href="$class_engine_1_1_i_memory_mapped_file.html" title="An interface to the memory&#45;mapped file. " alt="" coords="159,152,351,177"/>
+<area shape="rect" id="node2" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="103,5,232,31"/>
+<area shape="rect" id="node4" href="$class_engine_1_1_simple_image.html" title="Simple implementation of IImage and ITextureImage. " alt="" coords="5,225,153,251"/>
+<area shape="rect" id="node6" href="$class_engine_1_1_memory_file.html" title="An in&#45;memory, std::vector&#45;based file. " alt="" coords="181,225,321,251"/>
+<area shape="rect" id="node7" href="$class_engine_1_1_static_memory_file.html" title="A &quot;file&quot; based on static data. " alt="" coords="345,225,518,251"/>
+<area shape="rect" id="node8" href="$class_engine_1_1_static_memory_input_stream.html" title="An implementation of IInputStream based on static data. " alt="" coords="341,299,522,337"/>
+</map>

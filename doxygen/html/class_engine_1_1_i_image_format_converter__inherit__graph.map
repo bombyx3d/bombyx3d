@@ -1,0 +1,5 @@
+<map id="Engine::IImageFormatConverter" name="Engine::IImageFormatConverter">
+<area shape="rect" id="node3" href="$class_engine_1_1_rgb2_luminance_image_converter.html" title="Converts PIXEL_FORMAT_RGB_24 images to PIXEL_FORMAT_LUMINANCE_8 images. " alt="" coords="5,152,210,191"/>
+<area shape="rect" id="node4" href="$class_engine_1_1_rgba2_luminance_image_converter.html" title="Converts PIXEL_FORMAT_RGB_24 and PIXEL_FORMAT_RGBA_32 images to PIXEL_FORMAT_LUMINANCE_ALPHA_16 image..." alt="" coords="234,152,445,191"/>
+<area shape="rect" id="node2" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="159,5,288,31"/>
+</map>
