@@ -21,20 +21,21 @@
 #
 
 cmake_minimum_required(VERSION 3.2)
-project(Engine)
+project(Sample1)
 
-set(__Z_ENGINE_DONT_ADD_SUBDIRECTORY TRUE)
-include(build/cmake/Engine.cmake)
+set(source_files
+    Game.cpp
+    Game.h
+)
 
-set(Z_BUILD_SAMPLES NO CACHE STRING "Build engine samples")
+z_set_source_groups(${source_files})
+add_executable(Sample1 ${source_files})
 
-add_subdirectory(3rdparty)
-add_subdirectory(_OLD)
-add_subdirectory(core)
-add_subdirectory(modules)
-add_subdirectory(system)
-add_subdirectory(doc)
+set_target_properties(Sample1 PROPERTIES CXX_STANDARD 11)
+target_link_libraries(Sample1 libengine)
 
-if(Z_BUILD_SAMPLES)
-    add_subdirectory(samples)
+get_filename_component(path "${CMAKE_CURRENT_SOURCE_DIR}" ABSOLUTE)
+if(WIN32)
+    string(REPLACE "\\" "/" path "${path}")
 endif()
+target_compile_definitions(Sample1 PUBLIC "Z_DEBUG_ASSETS_PATH=\"${path}\"")

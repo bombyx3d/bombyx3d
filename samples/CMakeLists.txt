@@ -21,20 +21,5 @@
 #
 
 cmake_minimum_required(VERSION 3.2)
-project(Engine)
 
-set(__Z_ENGINE_DONT_ADD_SUBDIRECTORY TRUE)
-include(build/cmake/Engine.cmake)
-
-set(Z_BUILD_SAMPLES NO CACHE STRING "Build engine samples")
-
-add_subdirectory(3rdparty)
-add_subdirectory(_OLD)
-add_subdirectory(core)
-add_subdirectory(modules)
-add_subdirectory(system)
-add_subdirectory(doc)
-
-if(Z_BUILD_SAMPLES)
-    add_subdirectory(samples)
-endif()
+add_subdirectory(1.match3)
