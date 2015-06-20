@@ -23,47 +23,47 @@
 
 namespace Engine
 {
-    SimpleImage::SimpleImage(ImagePixelFormat format, size_t width, size_t height, size_t lineSize)
-        : m_Width(width)
-        , m_Height(height)
+    SimpleImage::SimpleImage(ImagePixelFormat format, size_t imageWidth, size_t imageHeight, size_t imageLineSize)
+        : m_Width(imageWidth)
+        , m_Height(imageHeight)
         , m_Depth(1)
-        , m_LineSize(lineSize)
+        , m_LineSize(imageLineSize)
         , m_SliceSize(0)
         , m_Format(format)
     {
     }
 
-    SimpleImage::SimpleImage(ImagePixelFormat format, size_t width, size_t height, size_t lineSize,
-            std::vector<uint8_t>&& data)
-        : m_Width(width)
-        , m_Height(height)
+    SimpleImage::SimpleImage(ImagePixelFormat format, size_t imageWidth, size_t imageHeight, size_t imageLineSize,
+            std::vector<uint8_t>&& imageData)
+        : m_Width(imageWidth)
+        , m_Height(imageHeight)
         , m_Depth(1)
-        , m_LineSize(lineSize)
+        , m_LineSize(imageLineSize)
         , m_SliceSize(0)
-        , m_Data(std::move(data))
+        , m_Data(std::move(imageData))
         , m_Format(format)
     {
     }
 
-    SimpleImage::SimpleImage(ImagePixelFormat format, size_t width, size_t height, size_t depth,
-            size_t lineSize, size_t sliceSize)
-        : m_Width(width)
-        , m_Height(height)
-        , m_Depth(depth)
-        , m_LineSize(lineSize)
-        , m_SliceSize(sliceSize)
+    SimpleImage::SimpleImage(ImagePixelFormat format, size_t imageWidth, size_t imageHeight, size_t imageDepth,
+            size_t imageLineSize, size_t imageSliceSize)
+        : m_Width(imageWidth)
+        , m_Height(imageHeight)
+        , m_Depth(imageDepth)
+        , m_LineSize(imageLineSize)
+        , m_SliceSize(imageSliceSize)
         , m_Format(format)
     {
     }
 
-    SimpleImage::SimpleImage(ImagePixelFormat format, size_t width, size_t height, size_t depth,
-            size_t lineSize, size_t sliceSize, std::vector<uint8_t>&& data)
-        : m_Width(width)
-        , m_Height(height)
-        , m_Depth(depth)
-        , m_LineSize(lineSize)
-        , m_SliceSize(sliceSize)
-        , m_Data(std::move(data))
+    SimpleImage::SimpleImage(ImagePixelFormat format, size_t imageWidth, size_t imageHeight, size_t imageDepth,
+            size_t imageLineSize, size_t imageSliceSize, std::vector<uint8_t>&& imageData)
+        : m_Width(imageWidth)
+        , m_Height(imageHeight)
+        , m_Depth(imageDepth)
+        , m_LineSize(imageLineSize)
+        , m_SliceSize(imageSliceSize)
+        , m_Data(std::move(imageData))
         , m_Format(format)
     {
     }

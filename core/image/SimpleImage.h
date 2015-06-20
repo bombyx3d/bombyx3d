@@ -43,50 +43,48 @@ namespace Engine
          * Constructs a 2D image.
          * @note Constructor does not allocate actual storage for the pixel data.
          * @param format Pixel format of the image.
-         * @param width Width of the image.
-         * @param height Height of the image.
-         * @param lineSize Number of bytes per single 1D line of the image.
+         * @param imageWidth Width of the image.
+         * @param imageHeight Height of the image.
+         * @param imageLineSize Number of bytes per single 1D line of the image.
          */
-        SimpleImage(ImagePixelFormat format, size_t width, size_t height, size_t lineSize);
+        SimpleImage(ImagePixelFormat format, size_t imageWidth, size_t imageHeight, size_t imageLineSize);
 
         /**
          * Constructs a 2D image.
-         * @note Constructor does not allocate actual storage for the pixel data.
          * @param format Pixel format of the image.
-         * @param width Width of the image.
-         * @param height Height of the image.
-         * @param lineSize Number of bytes per single 1D line of the image.
-         * @param data Image data.
+         * @param imageWidth Width of the image.
+         * @param imageHeight Height of the image.
+         * @param imageLineSize Number of bytes per single 1D line of the image.
+         * @param imageData Image data.
          */
-        SimpleImage(ImagePixelFormat format, size_t width, size_t height, size_t lineSize,
-            std::vector<uint8_t>&& data);
+        SimpleImage(ImagePixelFormat format, size_t imageWidth, size_t imageHeight, size_t imageLineSize,
+            std::vector<uint8_t>&& imageData);
 
         /**
          * Constructs a 3D image.
          * @note Constructor does not allocate actual storage for the pixel data.
          * @param format Pixel format of the image.
-         * @param width Width of the image.
-         * @param height Height of the image.
-         * @param depth Depth of the image.
-         * @param lineSize Number of bytes per single 1D line of the image.
-         * @param sliceSize Number of bytes per single 2D slice of the image.
+         * @param imageWidth Width of the image.
+         * @param imageHeight Height of the image.
+         * @param imageDepth Depth of the image.
+         * @param imageLineSize Number of bytes per single 1D line of the image.
+         * @param imageSliceSize Number of bytes per single 2D slice of the image.
          */
-        SimpleImage(ImagePixelFormat format, size_t width, size_t height, size_t depth,
-            size_t lineSize, size_t sliceSize);
+        SimpleImage(ImagePixelFormat format, size_t imageWidth, size_t imageHeight, size_t imageDepth,
+            size_t imageLineSize, size_t imageSliceSize);
 
         /**
          * Constructs a 3D image.
-         * @note Constructor does not allocate actual storage for the pixel data.
          * @param format Pixel format of the image.
-         * @param width Width of the image.
-         * @param height Height of the image.
-         * @param depth Depth of the image.
-         * @param lineSize Number of bytes per single 1D line of the image.
-         * @param sliceSize Number of bytes per single 2D slice of the image.
-         * @param data Image data.
+         * @param imageWidth Width of the image.
+         * @param imageHeight Height of the image.
+         * @param imageDepth Depth of the image.
+         * @param imageLineSize Number of bytes per single 1D line of the image.
+         * @param imageSliceSize Number of bytes per single 2D slice of the image.
+         * @param imageData Image data.
          */
-        SimpleImage(ImagePixelFormat format, size_t width, size_t height, size_t depth,
-            size_t lineSize, size_t sliceSize, std::vector<uint8_t>&& data);
+        SimpleImage(ImagePixelFormat format, size_t imageWidth, size_t imageHeight, size_t imageDepth,
+            size_t imageLineSize, size_t imageSliceSize, std::vector<uint8_t>&& imageData);
 
         /**
          * Retrieves reference to data.
