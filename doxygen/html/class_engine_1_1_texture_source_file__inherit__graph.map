@@ -1,4 +1,4 @@
 <map id="Engine::TextureSourceFile" name="Engine::TextureSourceFile">
-<area shape="rect" id="node2" href="$class_engine_1_1_i_texture_source.html" title="Base interface for texture sources. " alt="" coords="14,79,174,104"/>
-<area shape="rect" id="node3" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="29,5,159,31"/>
+<area shape="rect" id="node2" href="$class_engine_1_1_i_texture_source.html" title="Base interface for texture sources. " alt="" coords="15,83,172,112"/>
+<area shape="rect" id="node4" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="29,5,157,35"/>
 </map>

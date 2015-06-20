@@ -1,4 +1,4 @@
 <map id="Engine::ITextureImage" name="Engine::ITextureImage">
-<area shape="rect" id="node3" href="$class_engine_1_1_simple_image.html" title="Simple implementation of IImage and ITextureImage. " alt="" coords="9,152,157,177"/>
-<area shape="rect" id="node2" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="18,5,147,31"/>
+<area shape="rect" id="node5" href="$class_engine_1_1_simple_image.html" title="Simple implementation of IImage and ITextureImage. " alt="" coords="9,160,156,189"/>
+<area shape="rect" id="node2" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="19,5,147,35"/>
 </map>

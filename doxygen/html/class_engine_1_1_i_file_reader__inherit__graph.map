@@ -1,9 +1,9 @@
 <map id="Engine::IFileReader" name="Engine::IFileReader">
-<area shape="rect" id="node3" href="$class_engine_1_1_i_memory_mapped_file.html" title="An interface to the memory&#45;mapped file. " alt="" coords="69,152,261,177"/>
-<area shape="rect" id="node7" href="$class_engine_1_1_qt_file_reader.html" title="A Qt&#45;based implementation of IFileReader. " alt="" coords="285,152,434,177"/>
-<area shape="rect" id="node8" href="$class_engine_1_1_stdio_file_reader.html" title="An implementation of IFileReader using classic stdio FILE*. " alt="" coords="458,152,624,177"/>
-<area shape="rect" id="node2" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="295,5,424,31"/>
-<area shape="rect" id="node4" href="$class_engine_1_1_memory_file.html" title="An in&#45;memory, std::vector&#45;based file. " alt="" coords="5,225,145,251"/>
-<area shape="rect" id="node5" href="$class_engine_1_1_static_memory_file.html" title="A &quot;file&quot; based on static data. " alt="" coords="169,225,342,251"/>
-<area shape="rect" id="node6" href="$class_engine_1_1_static_memory_input_stream.html" title="An implementation of IInputStream based on static data. " alt="" coords="165,299,346,337"/>
+<area shape="rect" id="node5" href="$class_engine_1_1_i_memory_mapped_file.html" title="An interface to the memory&#45;mapped file. " alt="" coords="71,160,257,189"/>
+<area shape="rect" id="node13" href="$class_engine_1_1_qt_file_reader.html" title="A Qt&#45;based implementation of IFileReader. " alt="" coords="281,160,428,189"/>
+<area shape="rect" id="node15" href="$class_engine_1_1_stdio_file_reader.html" title="An implementation of IFileReader using classic stdio FILE*. " alt="" coords="452,160,615,189"/>
+<area shape="rect" id="node2" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="291,5,419,35"/>
+<area shape="rect" id="node7" href="$class_engine_1_1_memory_file.html" title="An in&#45;memory, std::vector&#45;based file. " alt="" coords="5,237,144,267"/>
+<area shape="rect" id="node9" href="$class_engine_1_1_static_memory_file.html" title="A &quot;file&quot; based on static data. " alt="" coords="168,237,339,267"/>
+<area shape="rect" id="node11" href="$class_engine_1_1_static_memory_input_stream.html" title="An implementation of IInputStream based on static data. " alt="" coords="164,315,343,362"/>
 </map>

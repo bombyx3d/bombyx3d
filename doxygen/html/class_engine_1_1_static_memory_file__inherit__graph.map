@@ -1,7 +1,7 @@
 <map id="Engine::StaticMemoryFile" name="Engine::StaticMemoryFile">
-<area shape="rect" id="node6" href="$class_engine_1_1_static_memory_input_stream.html" title="An implementation of IInputStream based on static data. " alt="" coords="37,299,218,337"/>
-<area shape="rect" id="node2" href="$class_engine_1_1_i_memory_mapped_file.html" title="An interface to the memory&#45;mapped file. " alt="" coords="32,152,224,177"/>
-<area shape="rect" id="node3" href="$class_engine_1_1_i_blob.html" title="A block of binary data. " alt="" coords="5,79,106,104"/>
-<area shape="rect" id="node4" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="63,5,192,31"/>
-<area shape="rect" id="node5" href="$class_engine_1_1_i_file_reader.html" title="Base interface for file readers. " alt="" coords="130,79,269,104"/>
+<area shape="rect" id="node12" href="$class_engine_1_1_static_memory_input_stream.html" title="An implementation of IInputStream based on static data. " alt="" coords="36,315,215,362"/>
+<area shape="rect" id="node2" href="$class_engine_1_1_i_memory_mapped_file.html" title="An interface to the memory&#45;mapped file. " alt="" coords="32,160,219,189"/>
+<area shape="rect" id="node4" href="$class_engine_1_1_i_blob.html" title="A block of binary data. " alt="" coords="5,83,104,112"/>
+<area shape="rect" id="node6" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="61,5,189,35"/>
+<area shape="rect" id="node8" href="$class_engine_1_1_i_file_reader.html" title="Base interface for file readers. " alt="" coords="128,83,264,112"/>
 </map>
