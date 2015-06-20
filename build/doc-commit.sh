@@ -15,5 +15,5 @@ for file in `svn status "$dir/doc" | grep "^\?" | awk '{ print $2; }'`; do
     svn add -q "$file"
 done
 
-svn commit --non-interactive --username zapolnov --password `cat ../id` \
+svn commit --non-interactive --username zapolnov --password `cat "$dir/id"` \
     -q -m "[Travis] Update doxygen documentation." "$dir/doc"
