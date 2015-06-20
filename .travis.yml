@@ -22,13 +22,13 @@ matrix:
 #      os: linux
 #      env: I='-g -q' C='-b Release -p qt5 -q /opt/qt54/lib/cmake'
     # linux/clang/debug/dummy
-    - compiler: clang
-      os: linux
-      env: I='' C='-b Debug -p dummy'
+#    - compiler: clang
+#      os: linux
+#      env: I='' C='-b Debug -p dummy'
     # linux/clang/debug/qt5
-    - compiler: clang
-      os: linux
-      env: I='-q' C='-b Debug -p qt5 -q /opt/qt54/lib/cmake'
+#    - compiler: clang
+#      os: linux
+#      env: I='-q' C='-b Debug -p qt5 -q /opt/qt54/lib/cmake'
     # linux/clang/release/dummy
 #    - compiler: clang
 #      os: linux
