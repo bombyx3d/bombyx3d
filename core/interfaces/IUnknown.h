@@ -73,7 +73,7 @@ namespace Engine
         /** @endcond */
 
     private:
-        mutable volatile std::atomic_int m_ReferenceCount;
+        mutable volatile std::atomic<int> m_ReferenceCount;
       #if Z_ASSERTIONS_ENABLED
         int m_InitialReferenceCount;
       #endif
