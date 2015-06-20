@@ -55,7 +55,7 @@ matrix:
 #      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5
 
 before_install:
-  - if [ $TRAVIS_OS_NAME == "linux" ]; then build/travis-install-linux.sh; fi
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then build/travis-install-linux.sh; fi
 
 script:
   - build/travis-build.sh
