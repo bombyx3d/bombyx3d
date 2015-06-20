@@ -8,10 +8,10 @@ import sys
 ## Parse command-line arguments
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-q', '--qt5', help='Install Qt5')
-parser.add_argument('-x', '--doxygen', help='Install Doxygen')
-parser.add_argument('-g', '--gcc', help='Install GCC')
-parser.add_argument('-m', '--mingw', help='Install MinGW')
+parser.add_argument('-q', '--qt5', help='Install Qt5', action='store_true')
+parser.add_argument('-x', '--doxygen', help='Install Doxygen', action='store_true')
+parser.add_argument('-g', '--gcc', help='Install GCC', action='store_true')
+parser.add_argument('-m', '--mingw', help='Install MinGW', action='store_true')
 args = parser.parse_args()
 
 if args.gcc and args.mingw:

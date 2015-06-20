@@ -20,7 +20,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-b', '--build', help='Value for CMAKE_BUILD_TYPE')
 parser.add_argument('-p', '--platform', help='Value for Z_TARGET_PLATFORM')
 parser.add_argument('-q', '--qt5path', help='Path to Qt5 installation')
-parser.add_argument('-x', '--doxygen', help='Build documentation only')
+parser.add_argument('-x', '--doxygen', help='Build documentation only', action='store_true')
 args = parser.parse_args()
 
 if args.build:
