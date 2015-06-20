@@ -26,13 +26,19 @@
 #include "interfaces/IFileReader.h"
 #include "interfaces/IFileSystem.h"
 #include "interfaces/IMemoryMappedFile.h"
+#include "interfaces/ISystem.h"
 #include "interfaces/IStream.h"
 #include "interfaces/IInputStream.h"
 #include "interfaces/IImage.h"
 #include "interfaces/IImageFormatConverter.h"
 #include "interfaces/ITextureImage.h"
 #include "interfaces/ITextureLoader.h"
+#include "interfaces/ITextureSource.h"
+#include "interfaces/IRenderer.h"
+#include "interfaces/IRendererResource.h"
+#include "interfaces/IViewport.h"
 #include "image/SimpleImage.h"
+#include "resource/TextureSourceFile.h"
 #include "io/FileSystemList.h"
 #include "io/files/MemoryFile.h"
 #include "io/files/StaticMemoryFile.h"
@@ -96,6 +102,13 @@ namespace Engine
         return IFileReader::queryInterface(typeID);
     }
 
+    void* ISystem::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<ISystem>())
+            return this;
+        return IUnknown::queryInterface(typeID);
+    }
+
     void* IStream::queryInterface(TypeID typeID)
     {
         if (typeID == typeOf<IStream>())
@@ -138,6 +151,34 @@ namespace Engine
         return IUnknown::queryInterface(typeID);
     }
 
+    void* ITextureSource::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<ITextureSource>())
+            return this;
+        return IUnknown::queryInterface(typeID);
+    }
+
+    void* IRenderer::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<IRenderer>())
+            return this;
+        return IUnknown::queryInterface(typeID);
+    }
+
+    void* IRendererResource::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<IRendererResource>())
+            return this;
+        return IUnknown::queryInterface(typeID);
+    }
+
+    void* IViewport::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<IViewport>())
+            return this;
+        return IUnknown::queryInterface(typeID);
+    }
+
     void* Core::queryInterface(TypeID typeID)
     {
         if (typeID == typeOf<Core>())
@@ -155,6 +196,13 @@ namespace Engine
             return interface;
 
         return ITextureImage::queryInterface(typeID);
+    }
+
+    void* TextureSourceFile::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<TextureSourceFile>())
+            return this;
+        return ITextureSource::queryInterface(typeID);
     }
 
     void* FileSystemList::queryInterface(TypeID typeID)

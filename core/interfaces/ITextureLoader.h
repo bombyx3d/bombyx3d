@@ -29,7 +29,7 @@
 namespace Engine
 {
     /**
-     * Base interface for texture loaders.
+     * Base interface for texture image loaders.
      *
      * @see
      * - @ref _textures;
@@ -48,10 +48,10 @@ namespace Engine
         virtual bool supportsFormat(const std::string& extension) const = 0;
 
         /**
-         * Attempts to load texture from the provided input stream.
+         * Attempts to load texture image from the provided input stream.
          * @param stream Pointer to the input stream.
          * @return Pointer to the texture or `nullptr` if texture can't be loaded.
          */
-        virtual Ptr<ITextureImage> loadTexture(IInputStream* stream) const = 0;
+        virtual Ptr<ITextureImage> loadTextureImage(IInputStream* stream) const = 0;
     };
 }

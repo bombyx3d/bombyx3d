@@ -105,6 +105,7 @@ INPUT                  = core/doc/Logging.dox \
                          core/interfaces \
                          core/io \
                          core/math \
+                         core/resource \
                          core/utility \
                          modules/filesystem/zip \
                          modules/imageconverter/rgb2luminance \

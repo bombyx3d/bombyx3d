@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,35 +21,17 @@
  */
 
 #pragma once
-#include "core/interfaces/ITextureLoader.h"
-
-/**
- * @addtogroup Modules
- * @{
- * @addtogroup TextureLoader
- * @{
- * @addtogroup Png
- * @{
- */
 
 namespace Engine
 {
-    /** Loader for PNG files. */
-    class PngTextureLoader : public ITextureLoader
+    /** A handle of texture resource. */
+    class Texture
     {
     public:
-        Z_IMPLEMENTATION(PngTextureLoader)
-
         /** Constructor. */
-        PngTextureLoader() = default;
+        Texture();
 
-        bool supportsFormat(const std::string& extension) const override;
-        Ptr<ITextureImage> loadTextureImage(IInputStream* stream) const override;
+        /** Destructor. */
+        ~Texture();
     };
 }
-
-/**
- * @}
- * @}
- * @}
- */

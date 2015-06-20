@@ -1,5 +1,5 @@
-﻿/*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+/*
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,35 +21,22 @@
  */
 
 #pragma once
-#include "core/interfaces/ITextureLoader.h"
-
-/**
- * @addtogroup Modules
- * @{
- * @addtogroup TextureLoader
- * @{
- * @addtogroup Png
- * @{
- */
+#include "core/interfaces/IUnknown.h"
 
 namespace Engine
 {
-    /** Loader for PNG files. */
-    class PngTextureLoader : public ITextureLoader
+    /** Interface to the operating system API. */
+    class ISystem : public IUnknown
     {
     public:
-        Z_IMPLEMENTATION(PngTextureLoader)
+        Z_SINGLETON_INTERFACE(ISystem)
 
-        /** Constructor. */
-        PngTextureLoader() = default;
-
-        bool supportsFormat(const std::string& extension) const override;
-        Ptr<ITextureImage> loadTextureImage(IInputStream* stream) const override;
+      #ifdef DOXYGEN
+        /**
+         * Retrieves reference to the instance of the operating system API wrapper.
+         * @return Reference to the instance of the operating system API wrapper.
+         */
+        static ISystem& instance();
+      #endif
     };
 }
-
-/**
- * @}
- * @}
- * @}
- */

@@ -47,9 +47,9 @@ namespace Engine
         IFileSystem& fileSystem() override { return *m_FileSystem; }
 
         void registerTextureLoader(const Ptr<ITextureLoader>& loader) override;
-        Ptr<ITextureImage> loadTexture(IInputStream* stream) override;
-        Ptr<ITextureImage> loadTexture(IInputStream* stream, const std::string& format) override;
-        Ptr<ITextureImage> loadTexture(const std::string& fileName) override;
+        Ptr<ITextureImage> loadTextureImage(IInputStream* stream) override;
+        Ptr<ITextureImage> loadTextureImage(IInputStream* stream, const std::string& format) override;
+        Ptr<ITextureImage> loadTextureImage(const std::string& fileName) override;
 
         void registerImageFormatConverter(const Ptr<IImageFormatConverter>& converter) override;
         Ptr<IImage> convertImageFormat(IImage* image, ImagePixelFormat targetFormat) override;

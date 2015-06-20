@@ -51,17 +51,17 @@ namespace Engine
             m_TextureLoaders.emplace_back(loader);
     }
 
-    Ptr<ITextureImage> Core::loadTexture(IInputStream* stream)
+    Ptr<ITextureImage> Core::loadTextureImage(IInputStream* stream)
     {
         Z_CHECK(stream != nullptr);
         if (!stream)
             return nullptr;
 
         std::string format = pathGetFileNameExtension(stream->name());
-        return loadTexture(stream, format);
+        return loadTextureImage(stream, format);
     }
 
-    Ptr<ITextureImage> Core::loadTexture(IInputStream* stream, const std::string& format)
+    Ptr<ITextureImage> Core::loadTextureImage(IInputStream* stream, const std::string& format)
     {
         Z_CHECK(stream != nullptr);
         if (!stream)
@@ -70,7 +70,7 @@ namespace Engine
         std::string extension = stringToLowerCase(format);
         for (const auto& loader : m_TextureLoaders) {
             if (loader->supportsFormat(extension))
-                return loader->loadTexture(stream);
+                return loader->loadTextureImage(stream);
         }
 
         Z_LOG("Unable to load texture \"" << stream->name()
@@ -79,7 +79,7 @@ namespace Engine
         return nullptr;
     }
 
-    Ptr<ITextureImage> Core::loadTexture(const std::string& fileName)
+    Ptr<ITextureImage> Core::loadTextureImage(const std::string& fileName)
     {
         Ptr<IFileReader> fileReader = m_FileSystem->openFile(fileName);
         if (!fileReader)
@@ -88,7 +88,7 @@ namespace Engine
         std::string format = pathGetFileNameExtension(fileName);
 
         FileInputStream fileInputStream(fileReader);
-        return loadTexture(&fileInputStream, format);
+        return loadTextureImage(&fileInputStream, format);
     }
 
     void Core::registerImageFormatConverter(const Ptr<IImageFormatConverter>& converter)

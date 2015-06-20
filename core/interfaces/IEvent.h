@@ -25,7 +25,7 @@
 
 namespace Engine
 {
-     /** Base interface for events. */
+    /** Base interface for events. */
     class IEvent : public IUnknown
     {
     public:

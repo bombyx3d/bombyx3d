@@ -26,8 +26,12 @@ namespace Engine
  * - @ref PngTextureLoader.
  *
  * @ref ICore keeps a list of texture loaders. You may register on using the
- * @ref ICore::registerTextureLoader method. There is also the convenient @ref ICore::loadTexture
+ * @ref ICore::registerTextureLoader method. There is also the convenient @ref ICore::loadTextureImage
  * method available to load textures.
+ *
+ * Resource manager provides developer with a @ref Texture handle. The corresponding texture may be either
+ * resident in memory or not. The @ref ITextureSource interface has been provided for resource manager to
+ * be able to reload textures on demand.
  */
 
 }

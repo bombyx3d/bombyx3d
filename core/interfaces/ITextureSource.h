@@ -1,5 +1,5 @@
-﻿/*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+/*
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,35 +21,29 @@
  */
 
 #pragma once
-#include "core/interfaces/ITextureLoader.h"
-
-/**
- * @addtogroup Modules
- * @{
- * @addtogroup TextureLoader
- * @{
- * @addtogroup Png
- * @{
- */
+#include "core/interfaces/IUnknown.h"
+#include "core/interfaces/ITextureImage.h"
+#include "core/interfaces/IInputStream.h"
+#include "core/utility/Ptr.h"
 
 namespace Engine
 {
-    /** Loader for PNG files. */
-    class PngTextureLoader : public ITextureLoader
+    /**
+     * Base interface for texture sources.
+     *
+     * @see
+     * - @ref _textures;
+     * - @ref TextureSourceFile.
+     */
+    class ITextureSource : public IUnknown
     {
     public:
-        Z_IMPLEMENTATION(PngTextureLoader)
+        Z_INTERFACE(ITextureSource)
 
-        /** Constructor. */
-        PngTextureLoader() = default;
-
-        bool supportsFormat(const std::string& extension) const override;
-        Ptr<ITextureImage> loadTextureImage(IInputStream* stream) const override;
+        /**
+         * Loads the texture image.
+         * @return Instance of the texture.
+         */
+        virtual Ptr<ITextureImage> loadTextureImage() = 0;
     };
 }
-
-/**
- * @}
- * @}
- * @}
- */

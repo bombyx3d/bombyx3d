@@ -48,6 +48,8 @@ file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     math/*.h
     private/*.cpp
     private/*.h
+    resource/*.cpp
+    resource/*.h
     utility/*.cpp
     utility/*.h
     common.cpp

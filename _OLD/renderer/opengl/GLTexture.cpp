@@ -109,7 +109,7 @@ namespace Z
 
         Z_LOG("Loading texture \"" << inputStream->name() << "\".");
 
-        auto texture = ICore::instance().loadTexture(inputStream);
+        auto texture = ICore::instance().loadTextureImage(inputStream);
         auto image = texture->mipmapLevel(0, 0);
         auto image2 = ICore::instance().convertImageFormat(image, PIXEL_FORMAT_LUMINANCE_ALPHA_16);
         loadUncompressedImage(inputStream->name(), GL::TEXTURE_2D, 0, GL::LUMINANCE_ALPHA, image2->width(), image2->height(), 0,

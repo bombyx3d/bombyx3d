@@ -32,7 +32,7 @@
 
 namespace Engine
 {
-     /** Interface to the engine core. */
+    /** Interface to the engine core. */
     class ICore : public IUnknown
     {
     public:
@@ -65,26 +65,26 @@ namespace Engine
         virtual void registerTextureLoader(const Ptr<ITextureLoader>& loader) = 0;
 
         /**
-         * Loads texture from the specified stream.
+         * Loads texture image from the specified stream.
          * @param stream Pointer to the input stream.
          * @return Loaded texture or `nullptr` if texture can't be loaded.
          */
-        virtual Ptr<ITextureImage> loadTexture(IInputStream* stream) = 0;
+        virtual Ptr<ITextureImage> loadTextureImage(IInputStream* stream) = 0;
 
         /**
-         * Loads texture from the specified stream.
+         * Loads texture image from the specified stream.
          * @param stream Pointer to the input stream.
          * @param format Texture format.
          * @return Loaded texture or `nullptr` if texture can't be loaded.
          */
-        virtual Ptr<ITextureImage> loadTexture(IInputStream* stream, const std::string& format) = 0;
+        virtual Ptr<ITextureImage> loadTextureImage(IInputStream* stream, const std::string& format) = 0;
 
         /**
-         * Loads texture from the specified file.
+         * Loads texture image from the specified file.
          * @param fileName Name of the file.
          * @return Loaded texture or `nullptr` if texture can't be loaded.
          */
-        virtual Ptr<ITextureImage> loadTexture(const std::string& fileName) = 0;
+        virtual Ptr<ITextureImage> loadTextureImage(const std::string& fileName) = 0;
 
         /**
          * Registers image pixel format converter.

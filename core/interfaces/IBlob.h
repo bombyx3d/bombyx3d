@@ -25,7 +25,7 @@
 
 namespace Engine
 {
-     /** A block of binary data. */
+    /** A block of binary data. */
     class IBlob : public virtual IUnknown
     {
     public:

@@ -26,7 +26,7 @@
 
 namespace Engine
 {
-     /** An interface to the memory-mapped file. */
+    /** An interface to the memory-mapped file. */
     class IMemoryMappedFile : public IBlob, public IFileReader
     {
     public:
