@@ -72,4 +72,5 @@ z_target_link_qt5(libengine)
 z_target_link_opengl(libengine)
 
 add_subdirectory(platform)
-target_link_libraries(libengine libplatform)
+target_link_libraries(libengine libplatform libEngineCore libPngTextureLoader libRgb2LuminanceImageConverter
+    libRgba2LuminanceImageConverter)

@@ -90,4 +90,30 @@ namespace Engine
         FileInputStream fileInputStream(fileReader);
         return loadTexture(&fileInputStream, format);
     }
+
+    void Core::registerImageFormatConverter(const Ptr<IImageFormatConverter>& converter)
+    {
+        Z_CHECK(converter != nullptr);
+        if (converter)
+            m_ImageFormatConverters.emplace_back(converter);
+    }
+
+    Ptr<IImage> Core::convertImageFormat(IImage* image, ImagePixelFormat targetFormat)
+    {
+        Z_CHECK(image != nullptr);
+        if (!image)
+            return nullptr;
+
+        ImagePixelFormat inputFormat = image->pixelFormat();
+        if (inputFormat == targetFormat)
+            return image;
+
+        for (const auto& converter : m_ImageFormatConverters) {
+            if (converter->outputPixelFormat() == targetFormat && converter->acceptsInputPixelFormat(inputFormat))
+                return converter->convertImage(image);
+        }
+
+        Z_LOG("Unable to convert image to another pixel format: there is no corresponding format converter available.");
+        return nullptr;
+    }
 }

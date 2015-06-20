@@ -55,7 +55,7 @@ namespace Engine
         }
     }
 
-    Ptr<ITextureImage> PngTextureLoader::loadTexture(IInputStream* stream)
+    Ptr<ITextureImage> PngTextureLoader::loadTexture(IInputStream* stream) const
     {
         struct Context
         {

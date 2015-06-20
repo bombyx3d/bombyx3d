@@ -29,6 +29,7 @@
 #include "interfaces/IStream.h"
 #include "interfaces/IInputStream.h"
 #include "interfaces/IImage.h"
+#include "interfaces/IImageFormatConverter.h"
 #include "interfaces/ITextureImage.h"
 #include "interfaces/ITextureLoader.h"
 #include "image/SimpleImage.h"
@@ -114,6 +115,13 @@ namespace Engine
         if (typeID == typeOf<IImage>())
             return this;
         return IBlob::queryInterface(typeID);
+    }
+
+    void* IImageFormatConverter::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<IImageFormatConverter>())
+            return this;
+        return IUnknown::queryInterface(typeID);
     }
 
     void* ITextureImage::queryInterface(TypeID typeID)

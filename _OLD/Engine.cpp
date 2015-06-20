@@ -22,6 +22,9 @@
 #include "Engine.h"
 #include "Game.h"
 #include "core/utility/debug.h"
+#include "modules/textureloader/png/PngTextureLoader.h"
+#include "modules/imageconverter/rgb2luminance/Rgb2LuminanceImageConverter.h"
+#include "modules/imageconverter/rgba2luminance/Rgba2LuminanceImageConverter.h"
 
 namespace Z
 {
@@ -30,6 +33,10 @@ namespace Z
     Engine::Engine(const Ptr<FileSystemList>& fileSystemList)
         : Core(fileSystemList)
     {
+        ICore::instance().registerTextureLoader(new PngTextureLoader);
+        ICore::instance().registerImageFormatConverter(new Rgb2LuminanceImageConverter);
+        ICore::instance().registerImageFormatConverter(new Rgba2LuminanceImageConverter);
+
         Z_ASSERT(m_Instance == nullptr);
         m_Instance = this;
         m_Game.reset(Game::create());

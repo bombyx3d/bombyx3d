@@ -28,6 +28,8 @@
 
 namespace Z
 {
+    using namespace Engine;
+
     GLTexture::GLTexture()
     {
         gl::GenTextures(1, &m_Handle);
@@ -106,6 +108,14 @@ namespace Z
             return false;
 
         Z_LOG("Loading texture \"" << inputStream->name() << "\".");
+
+        auto texture = ICore::instance().loadTexture(inputStream);
+        auto image = texture->mipmapLevel(0, 0);
+        auto image2 = ICore::instance().convertImageFormat(image, PIXEL_FORMAT_LUMINANCE_ALPHA_16);
+        loadUncompressedImage(inputStream->name(), GL::TEXTURE_2D, 0, GL::LUMINANCE_ALPHA, image2->width(), image2->height(), 0,
+            GL::LUMINANCE_ALPHA, GL::UNSIGNED_BYTE, image2->rawDataPointer());
+
+        /*
         std::vector<char> data = inputStream->readAll();
 
         ZTexHeader* header = reinterpret_cast<ZTexHeader*>(data.data());
@@ -162,6 +172,7 @@ namespace Z
                 }
             }
         }
+        */
 
         return true;
     }

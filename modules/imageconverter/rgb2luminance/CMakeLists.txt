@@ -21,7 +21,16 @@
 #
 
 cmake_minimum_required(VERSION 3.2)
+project(Rgb2LuminanceImageConverter)
 
-add_subdirectory(filesystem)
-add_subdirectory(imageconverter)
-add_subdirectory(textureloader)
+set(source_files
+    common.cpp
+    Rgb2LuminanceImageConverter.cpp
+    Rgb2LuminanceImageConverter.h
+)
+
+z_set_source_groups(${source_files})
+add_library(libRgb2LuminanceImageConverter STATIC EXCLUDE_FROM_ALL ${source_files})
+
+target_link_libraries(libRgb2LuminanceImageConverter libEngineCore libpng)
+set_target_properties(libRgb2LuminanceImageConverter PROPERTIES OUTPUT_NAME "Rgb2LuminanceImageConverter" CXX_STANDARD 11)

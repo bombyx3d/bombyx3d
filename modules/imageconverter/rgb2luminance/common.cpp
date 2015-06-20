@@ -19,36 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "core/interfaces/ITextureLoader.h"
-
-/**
- * @addtogroup Modules
- * @{
- * @addtogroup TextureLoader
- * @{
- * @addtogroup Png
- * @{
- */
+#include "Rgb2LuminanceImageConverter.h"
 
 namespace Engine
 {
-    /** Loader for PNG files. */
-    class PngTextureLoader : public ITextureLoader
+    void* Rgb2LuminanceImageConverter::queryInterface(TypeID typeID)
     {
-        Z_IMPLEMENTATION(PngTextureLoader)
-
-        /** Constructor. */
-        PngTextureLoader() = default;
-
-        bool supportsFormat(const std::string& extension) const override;
-        Ptr<ITextureImage> loadTexture(IInputStream* stream) const override;
-    };
+        if (typeID == typeOf<Rgb2LuminanceImageConverter>())
+            return this;
+        return IImageFormatConverter::queryInterface(typeID);
+    }
 }
-
-/**
- * @}
- * @}
- * @}
- */

@@ -22,6 +22,5 @@
 
 cmake_minimum_required(VERSION 3.2)
 
-add_subdirectory(filesystem)
-add_subdirectory(imageconverter)
-add_subdirectory(textureloader)
+add_subdirectory(rgb2luminance)
+add_subdirectory(rgba2luminance)

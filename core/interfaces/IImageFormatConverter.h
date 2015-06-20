@@ -1,5 +1,5 @@
-﻿/*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+/*
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,34 +21,35 @@
  */
 
 #pragma once
-#include "core/interfaces/ITextureLoader.h"
-
-/**
- * @addtogroup Modules
- * @{
- * @addtogroup TextureLoader
- * @{
- * @addtogroup Png
- * @{
- */
+#include "core/interfaces/IUnknown.h"
+#include "core/interfaces/IImage.h"
+#include "core/utility/Ptr.h"
 
 namespace Engine
 {
-    /** Loader for PNG files. */
-    class PngTextureLoader : public ITextureLoader
+    /** Base interface for image pixel format converters. */
+    class IImageFormatConverter : public IUnknown
     {
-        Z_IMPLEMENTATION(PngTextureLoader)
+        Z_INTERFACE(IImageFormatConverter)
 
-        /** Constructor. */
-        PngTextureLoader() = default;
+        /**
+         * Checks whether the specified input pixel format is accepted by this converter.
+         * @param format Input pixel format.
+         * @return `true` if the specified pixel format is accepted, otherwise `false`.
+         */
+        virtual bool acceptsInputPixelFormat(ImagePixelFormat format) const = 0;
 
-        bool supportsFormat(const std::string& extension) const override;
-        Ptr<ITextureImage> loadTexture(IInputStream* stream) const override;
+        /**
+         * Returns output format of this converter.
+         * @return Pixel format of output images.
+         */
+        virtual ImagePixelFormat outputPixelFormat() const = 0;
+
+        /**
+         * Converts image from one pixel format into another.
+         * @param image Input image.
+         * @return Output image or `nullptr` if image can't be converted.
+         */
+        virtual Ptr<IImage> convertImage(const IImage* image) const = 0;
     };
 }
-
-/**
- * @}
- * @}
- * @}
- */

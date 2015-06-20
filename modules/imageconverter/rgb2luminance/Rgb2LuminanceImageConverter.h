@@ -1,5 +1,5 @@
-﻿/*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+/*
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,29 +21,30 @@
  */
 
 #pragma once
-#include "core/interfaces/ITextureLoader.h"
+#include "core/interfaces/IImageFormatConverter.h"
 
 /**
  * @addtogroup Modules
  * @{
- * @addtogroup TextureLoader
+ * @addtogroup ImageConverter
  * @{
- * @addtogroup Png
+ * @addtogroup Rgb2Luminance
  * @{
  */
 
 namespace Engine
 {
-    /** Loader for PNG files. */
-    class PngTextureLoader : public ITextureLoader
+    /** RGB-to-Luminance image converter. */
+    class Rgb2LuminanceImageConverter : public IImageFormatConverter
     {
-        Z_IMPLEMENTATION(PngTextureLoader)
+        Z_IMPLEMENTATION(Rgb2LuminanceImageConverter)
 
         /** Constructor. */
-        PngTextureLoader() = default;
+        Rgb2LuminanceImageConverter() = default;
 
-        bool supportsFormat(const std::string& extension) const override;
-        Ptr<ITextureImage> loadTexture(IInputStream* stream) const override;
+        bool acceptsInputPixelFormat(ImagePixelFormat format) const override;
+        ImagePixelFormat outputPixelFormat() const override;
+        Ptr<IImage> convertImage(const IImage* image) const override;
     };
 }
 

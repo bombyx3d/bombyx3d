@@ -26,6 +26,8 @@
 #include "core/interfaces/ITextureImage.h"
 #include "core/interfaces/IFileSystem.h"
 #include "core/interfaces/IInputStream.h"
+#include "core/interfaces/IImage.h"
+#include "core/interfaces/IImageFormatConverter.h"
 #include "core/utility/debug.h"
 
 namespace Engine
@@ -45,7 +47,7 @@ namespace Engine
 
         /**
          * Registers an additional filesystem for engine use.
-         * @param filesystem Pointer to the filesystem.
+         * @param fileSystem Pointer to the filesystem.
          */
         virtual void registerFileSystem(const Ptr<IFileSystem>& fileSystem) = 0;
 
@@ -57,7 +59,7 @@ namespace Engine
 
         /**
          * Registers texture loader.
-         * @param loader Texture loader.
+         * @param loader Pointer to the texture loader.
          */
         virtual void registerTextureLoader(const Ptr<ITextureLoader>& loader) = 0;
 
@@ -82,5 +84,19 @@ namespace Engine
          * @return Loaded texture or `nullptr` if texture can't be loaded.
          */
         virtual Ptr<ITextureImage> loadTexture(const std::string& fileName) = 0;
+
+        /**
+         * Registers image pixel format converter.
+         * @param converter Pointer to the converter.
+         */
+        virtual void registerImageFormatConverter(const Ptr<IImageFormatConverter>& converter) = 0;
+
+        /**
+         * Converts image to another pixel format.
+         * @param image Image to convert.
+         * @param targetFormat Target pixel format.
+         * @return Converted image or `nullptr` if conversion is not possible.
+         */
+        virtual Ptr<IImage> convertImageFormat(IImage* image, ImagePixelFormat targetFormat) = 0;
     };
 }

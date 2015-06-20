@@ -51,8 +51,12 @@ namespace Engine
         Ptr<ITextureImage> loadTexture(IInputStream* stream, const std::string& format) override;
         Ptr<ITextureImage> loadTexture(const std::string& fileName) override;
 
+        void registerImageFormatConverter(const Ptr<IImageFormatConverter>& converter) override;
+        Ptr<IImage> convertImageFormat(IImage* image, ImagePixelFormat targetFormat) override;
+
     private:
-        Ptr<FileSystemList> m_FileSystem;                   /**< Instance of the file system. */
-        std::vector<Ptr<ITextureLoader>> m_TextureLoaders;  /**< List of known texture loaders. */
+        Ptr<FileSystemList> m_FileSystem;                                   /**< Instance of the file system. */
+        std::vector<Ptr<ITextureLoader>> m_TextureLoaders;                  /**< List of texture loaders. */
+        std::vector<Ptr<IImageFormatConverter>> m_ImageFormatConverters;    /**< List of image format converters. */
     };
 }

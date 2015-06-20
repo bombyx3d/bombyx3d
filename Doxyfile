@@ -38,7 +38,7 @@ MARKDOWN_SUPPORT       = YES
 AUTOLINK_SUPPORT       = NO
 BUILTIN_STL_SUPPORT    = YES
 CPP_CLI_SUPPORT        = NO
-SIP_SUPPORT            = NO
+SIP_SUPPORT            = YES
 IDL_PROPERTY_SUPPORT   = YES
 DISTRIBUTE_GROUP_DOC   = NO
 SUBGROUPING            = YES
@@ -106,12 +106,16 @@ INPUT                  = core/doc/Logging.dox \
                          core/math \
                          core/utility \
                          modules/filesystem/zip \
+                         modules/imageconverter/rgb2luminance \
+                         modules/imageconverter/rgba2luminance \
+                         modules/textureloader/png \
                          README.md
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.h
 RECURSIVE              = YES
 EXCLUDE                = modules/filesystem/zip/3rdparty \
                          modules/filesystem/zip/private \
+                         modules/textureloader/png/3rdparty \
                          doc/.gitignore
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
@@ -269,7 +273,7 @@ EXPAND_ONLY_PREDEF     = NO
 SEARCH_INCLUDES        = YES
 INCLUDE_PATH           =
 INCLUDE_FILE_PATTERNS  =
-PREDEFINED             = DOXYGEN class=struct
+PREDEFINED             = DOXYGEN
 EXPAND_AS_DEFINED      =
 SKIP_FUNCTION_MACROS   = YES
 #---------------------------------------------------------------------------
@@ -293,7 +297,7 @@ DOT_NUM_THREADS        = 0
 DOT_FONTSIZE           = 10
 CLASS_GRAPH            = YES
 COLLABORATION_GRAPH    = NO
-GROUP_GRAPHS           = YES
+GROUP_GRAPHS           = NO
 UML_LOOK               = NO
 UML_LIMIT_NUM_FIELDS   = 10
 TEMPLATE_RELATIONS     = YES

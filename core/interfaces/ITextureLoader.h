@@ -45,6 +45,6 @@ namespace Engine
          * @param stream Pointer to the input stream.
          * @return Pointer to the texture or `nullptr` if texture can't be loaded.
          */
-        virtual Ptr<ITextureImage> loadTexture(IInputStream* stream) = 0;
+        virtual Ptr<ITextureImage> loadTexture(IInputStream* stream) const = 0;
     };
 }
