@@ -2,10 +2,13 @@
 Game Engine
 ===========
 
-[![Build Status](https://travis-ci.org/zapolnov/game_engine.svg?branch=master)](https://travis-ci.org/zapolnov/game_engine)
+<a href="https://travis-ci.org/zapolnov/game_engine" target="_blank">
+ <img src="https://travis-ci.org/zapolnov/game_engine.svg?branch=master" alt="Build Status" />
+</a>
 
 This is a game engine.
 
+Doxygen documentation: <a href="https://zapolnov.github.io/game_engine/doxygen/html/">https://zapolnov.github.io/game_engine/doxygen/html/</a>
 
 License
 -------

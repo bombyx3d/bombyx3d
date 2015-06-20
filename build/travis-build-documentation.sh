@@ -27,8 +27,13 @@ cd .cmake-build
 
 make doc
 
-svn status ../doc | grep "^\!" | awk '{ print $2; }' | xargs svn delete -q
-svn status ../doc | grep "^\?" | awk '{ print $2; }' | xargs svn add -q
+for file in `svn status ../doc | grep "^\!" | awk '{ print $2; }'`; do
+    svn delete -q "$file"
+done
+
+for file in `svn status ../doc | grep "^\?" | awk '{ print $2; }'`; do
+    svn add -q "$file"
+done
 
 svn commit --non-interactive --username zapolnov --password `cat ../id` \
     -q -m "[Travis] Update doxygen documentation." ../doc
