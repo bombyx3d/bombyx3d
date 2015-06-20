@@ -1,6 +1,8 @@
 
 language: cpp
 
+sudo: required
+
 matrix:
   include:
     # linux/gcc/debug/dummy

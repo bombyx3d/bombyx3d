@@ -2,9 +2,7 @@
 
 set -e
 
-echo $TRAVIS_OS_NAME
-
-if [ $TRAVIS_OS_NAME == linux ]; then
+if [ "$TRAVIS_OS_NAME" == "linux" ]; then
     apt-cache search qt5 | grep dev
 
     sudo apt-get update -qq
