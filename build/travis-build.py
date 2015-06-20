@@ -68,7 +68,7 @@ cmake = [
 if args.platform:
     cmake.append('-DZ_TARGET_PLATFORM=%s' % args.platform)
 if args.qt5path:
-    cmake.append('-DCMAKE_PREFIX_PATH=%s' % args.qt5path)
+    cmake.append('-DCMAKE_PREFIX_PATH="%s"' % args.qt5path)
 
 if args.doxygen:
     cmake.append('-DZ_BUILD_DOCUMENTATION=YES')
@@ -78,12 +78,12 @@ else:
 cmake.append('-DZ_BUILD_SAMPLES=YES')
 
 if not on_windows:
-    cmake.extend(['-G', 'Unix Makefiles'])
+    cmake.extend(['-G', '"Unix Makefiles"'])
 else:
-    cmake.extend(['-G', 'MinGW Makefiles'])
+    cmake.extend(['-G', '"MinGW Makefiles"'])
 
 cmake.append('../..')
-subprocess.check_call(cmake, shell=True)
+subprocess.check_call(' '.join(cmake), shell=True)
 
 #############################################################################################################
 ## Run make
@@ -93,9 +93,9 @@ if on_windows:
     make = 'mingw32-make'
 
 if args.doxygen:
-    subprocess.check_call([make, 'doc'], shell=True)
+    subprocess.check_call(('%s doc' % make), shell=True)
 else:
-    subprocess.check_call([make], shell=True)
+    subprocess.check_call(make, shell=True)
 
 #############################################################################################################
 ## Upload documentation
