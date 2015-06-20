@@ -100,4 +100,5 @@ else:
 #############################################################################################################
 ## Upload documentation
 
-subprocess.check_call('../doc-commit.sh', shell=True)
+if args.doxygen:
+    subprocess.check_call('../doc-commit.sh', shell=True)
