@@ -47,7 +47,7 @@ if sys.platform == 'linux2':
     print("Updating repositories...")
     subprocess.check_call('sudo apt-get -qq update', shell=True)
 
-    subprocess.check_call(('sudo apt-get -qq install --no-install-recommends %s' % packages.join(' ')), shell=True)
+    subprocess.check_call(('sudo apt-get -qq install --no-install-recommends %s' % (' '.join(packages))), shell=True)
 
     subprocess.check_call('wget http://www.cmake.org/files/v3.2/cmake-3.2.2-Linux-i386.tar.gz', shell=True)
     subprocess.check_call('tar -xzf cmake-3.2.2-Linux-i386.tar.gz', shell=True)
