@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Game Engine: Engine::ISystem Class Reference</title>
+<title>Game Engine: Engine::DummySystem Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -46,33 +46,36 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="namespace_engine.html">Engine</a></li><li class="navelem"><a class="el" href="class_engine_1_1_i_system.html">ISystem</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespace_engine.html">Engine</a></li><li class="navelem"><a class="el" href="class_engine_1_1_dummy_system.html">DummySystem</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="class_engine_1_1_i_system-members.html">List of all members</a>  </div>
+<a href="class_engine_1_1_dummy_system-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Engine::ISystem Class Reference</div>  </div>
+<div class="title">Engine::DummySystem Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Interface to the operating system API.  
- <a href="class_engine_1_1_i_system.html#details">More...</a></p>
+<p>Dummy implementation of <a class="el" href="class_engine_1_1_i_system.html">ISystem</a>.  
+ <a href="class_engine_1_1_dummy_system.html#details">More...</a></p>
 
-<p><code>#include &quot;game_engine/core/interfaces/ISystem.h&quot;</code></p>
+<p><code>#include &quot;game_engine/system/dummy/DummySystem.h&quot;</code></p>
 <div class="dynheader">
-Inheritance diagram for Engine::ISystem:</div>
+Inheritance diagram for Engine::DummySystem:</div>
 <div class="dyncontent">
-<div class="center"><img src="class_engine_1_1_i_system__inherit__graph.png" border="0" usemap="#_engine_1_1_i_system_inherit__map" alt="Inheritance graph"/></div>
-<map name="_engine_1_1_i_system_inherit__map" id="_engine_1_1_i_system_inherit__map">
-<area shape="rect" id="node5" href="class_engine_1_1_dummy_system.html" title="Dummy implementation of ISystem. " alt="" coords="5,160,165,189"/><area shape="rect" id="node7" href="class_engine_1_1_qt_system.html" title="Implementation of ISystem for Qt5. " alt="" coords="189,160,317,189"/><area shape="rect" id="node2" href="class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="105,5,233,35"/></map>
+<div class="center"><img src="class_engine_1_1_dummy_system__inherit__graph.png" border="0" usemap="#_engine_1_1_dummy_system_inherit__map" alt="Inheritance graph"/></div>
+<map name="_engine_1_1_dummy_system_inherit__map" id="_engine_1_1_dummy_system_inherit__map">
+<area shape="rect" id="node2" href="class_engine_1_1_i_system.html" title="Interface to the operating system API. " alt="" coords="27,83,144,112"/><area shape="rect" id="node4" href="class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="21,5,149,35"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:af6958d85364d477ff72bc463b1406291"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_dummy_system.html#af6958d85364d477ff72bc463b1406291">DummySystem</a> ()</td></tr>
+<tr class="memdesc:af6958d85364d477ff72bc463b1406291"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#af6958d85364d477ff72bc463b1406291">More...</a><br/></td></tr>
+<tr class="separator:af6958d85364d477ff72bc463b1406291"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad881320f598a1efa3aa809def924343"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_unknown.html#aad881320f598a1efa3aa809def924343">addRef</a> () const </td></tr>
 <tr class="memdesc:aad881320f598a1efa3aa809def924343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increments reference counter for this object.  <a href="#aad881320f598a1efa3aa809def924343">More...</a><br/></td></tr>
 <tr class="separator:aad881320f598a1efa3aa809def924343"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -94,8 +97,26 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a5bb20ff21197d6c1c03999ab85afd51d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Interface to the operating system API. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+<div class="textblock"><p>Dummy implementation of <a class="el" href="class_engine_1_1_i_system.html">ISystem</a>. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="af6958d85364d477ff72bc463b1406291"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Engine::DummySystem::DummySystem </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructor. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="a5bb20ff21197d6c1c03999ab85afd51d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -112,7 +133,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
