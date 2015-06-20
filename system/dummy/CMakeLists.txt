@@ -21,14 +21,20 @@
 #
 
 cmake_minimum_required(VERSION 3.2)
-project(Engine)
+project(DummySystem)
 
-set(__Z_ENGINE_DONT_ADD_SUBDIRECTORY TRUE)
-include(cmake/Engine.cmake)
+if(Z_TARGET_DUMMY)
 
-add_subdirectory(3rdparty)
-add_subdirectory(_OLD)
-add_subdirectory(core)
-add_subdirectory(modules)
-add_subdirectory(system)
-add_subdirectory(doc)
+    set(source_files
+        DummySystem.cpp
+        DummySystem.h
+        common.cpp
+    )
+
+    z_set_source_groups(${source_files})
+    add_library(libSystem STATIC EXCLUDE_FROM_ALL ${source_files})
+
+    target_link_libraries(libSystem libEngineCore)
+    set_target_properties(libSystem PROPERTIES OUTPUT_NAME "DummySystem" CXX_STANDARD 11)
+
+endif()

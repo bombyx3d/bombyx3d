@@ -21,6 +21,7 @@
  */
 #include "opengl.h"
 #include "core/utility/debug.h"
+#include <algorithm>
 #include <string>
 #include <cstring>
 
@@ -194,7 +195,7 @@ bool gl::IsExtensionSupported(GLExtension extension)
         case X: \
             if (X##_supported == -1) \
                 X##_supported = char(gl::IsExtensionSupported(#X) ? 1 : 0); \
-            return X##_supported;
+            return X##_supported != 0;
     #include "extensions.h"
     #undef Z_GL_EXTENSION_
     }

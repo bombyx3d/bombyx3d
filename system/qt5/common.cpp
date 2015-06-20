@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,36 +19,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "QtSystem.h"
+#include "io/QtFileReader.h"
+#include "io/QtFileSystem.h"
 
-#pragma once
-#include "core/interfaces/IFileReader.h"
-#include <string>
-#include <mutex>
-#include <memory>
-#include <QFile>
-
-namespace Z
+namespace Engine
 {
-    using namespace Engine;
-
-    class QtFileReader : public IFileReader
+    void* QtSystem::queryInterface(TypeID typeID)
     {
-    public:
-        Z_IMPLEMENTATION(QtFileReader)
+        if (typeID == typeOf<QtSystem>())
+            return this;
+        return ISystem::queryInterface(typeID);
+    }
 
-        QtFileReader(const std::string& name, std::unique_ptr<QFile>&& file);
-        ~QtFileReader();
+    void* QtFileReader::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<QtFileReader>())
+            return this;
+        return IFileReader::queryInterface(typeID);
+    }
 
-        const std::string& name() const override;
-
-        uint64_t size() const override;
-        bool read(uint64_t offset, void* buffer, size_t size) override;
-
-    private:
-        std::mutex m_Mutex;
-        std::string m_Name;
-        std::unique_ptr<QFile> m_File;
-        uint64_t m_Size;
-        uint64_t m_Offset;
-    };
+    void* QtFileSystem::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<QtFileSystem>())
+            return this;
+        return IFileSystem::queryInterface(typeID);
+    }
 }

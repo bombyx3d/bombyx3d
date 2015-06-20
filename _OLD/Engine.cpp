@@ -30,8 +30,7 @@ namespace Z
 {
     Engine* Engine::m_Instance;
 
-    Engine::Engine(const Ptr<FileSystemList>& fileSystemList)
-        : Core(fileSystemList)
+    Engine::Engine()
     {
         ICore::instance().registerTextureLoader(new PngTextureLoader);
         ICore::instance().registerImageFormatConverter(new Rgb2LuminanceImageConverter);
@@ -49,9 +48,9 @@ namespace Z
         m_Instance = nullptr;
     }
 
-    PlatformCallbacks* Engine::create(const Ptr<FileSystemList>& fileSystemList)
+    PlatformCallbacks* Engine::create()
     {
-        return new Engine(fileSystemList);
+        return new Engine();
     }
 
     void Engine::cancelAllActiveTouches()

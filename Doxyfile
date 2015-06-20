@@ -107,6 +107,7 @@ INPUT                  = core/doc/Logging.dox \
                          core/math \
                          core/resource \
                          core/utility \
+                         system/qt5 \
                          modules/filesystem/zip \
                          modules/imageconverter/rgb2luminance \
                          modules/imageconverter/rgba2luminance \

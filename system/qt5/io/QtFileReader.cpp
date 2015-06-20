@@ -20,18 +20,19 @@
  * THE SOFTWARE.
  */
 #include "QtFileReader.h"
-#include "QtMacros.h"
+#include "system/qt5/utility/QtMacros.h"
 #include "core/utility/debug.h"
 #include <cerrno>
 #include <cstring>
 
-namespace Z
+namespace Engine
 {
     QtFileReader::QtFileReader(const std::string& name, std::unique_ptr<QFile>&& file)
         : m_Name(name)
         , m_File(std::move(file))
         , m_Offset(0)
     {
+        Z_ASSERT(m_File.get() != nullptr);
         qint64 size = m_File->size();
         m_Size = (size >= 0 ? uint64_t(size) : 0);
     }
@@ -59,7 +60,7 @@ namespace Z
         {
             if (!m_File->seek(qint64(offset)))
             {
-                Z_LOG("Seek failed in file \"" << m_Name << "\": " << zqUtf8Printable(m_File->errorString()));
+                Z_LOG("Seek failed in file \"" << m_Name << "\": " << zqUtf8(m_File->errorString()));
                 return false;
             }
             m_Offset = offset;
@@ -68,7 +69,7 @@ namespace Z
         qint64 bytesRead = m_File->read(reinterpret_cast<char*>(buffer), qint64(size));
         if (bytesRead < 0)
         {
-            Z_LOG("Error reading file \"" << m_Name << "\": " << zqUtf8Printable(m_File->errorString()));
+            Z_LOG("Error reading file \"" << m_Name << "\": " << zqUtf8(m_File->errorString()));
             return false;
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,24 +20,7 @@
  * THE SOFTWARE.
  */
 
-#pragma once
-#include "core/interfaces/IUnknown.h"
-#include "core/utility/Ptr.h"
-
-namespace Engine
+int main(int argc, char** argv)
 {
-    /** Interface to the operating system API. */
-    class ISystem : public IUnknown
-    {
-    public:
-        Z_SINGLETON_INTERFACE(ISystem)
-
-      #ifdef DOXYGEN
-        /**
-         * Retrieves reference to the instance of the operating system API wrapper.
-         * @return Reference to the instance of the operating system API wrapper.
-         */
-        static ISystem& instance();
-      #endif
-    };
+    return 0;
 }

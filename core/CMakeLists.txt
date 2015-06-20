@@ -67,3 +67,4 @@ target_include_directories(libEngineCore BEFORE PUBLIC
 )
 
 set_target_properties(libEngineCore PROPERTIES OUTPUT_NAME "EngineCore" CXX_STANDARD 11)
+target_link_libraries(libEngineCore libSystem)

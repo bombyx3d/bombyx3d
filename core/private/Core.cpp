@@ -27,13 +27,17 @@
 
 namespace Engine
 {
-    Core::Core(const Ptr<FileSystemList>& fileSystemList)
-        : m_FileSystem(fileSystemList)
+    Core::Core()
     {
+        m_FileSystem = new FileSystemList;
+        m_System = createISystemInstance();
     }
 
     Core::~Core()
     {
+        m_TextureLoaders.clear();
+        m_ImageFormatConverters.clear();
+        m_System.release();
         m_FileSystem.release();
     }
 

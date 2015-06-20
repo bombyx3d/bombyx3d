@@ -1,5 +1,5 @@
-﻿/*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+/*
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,22 +19,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "QtFileReader.h"
-#include "QtFileSystem.h"
+#include "DummySystem.h"
+#include "core/private/Core.h"
 
-namespace Z
+namespace Engine
 {
-    void* QtFileReader::queryInterface(TypeID typeID)
+    DummySystem::DummySystem()
     {
-        if (typeID == typeOf<QtFileReader>())
-            return this;
-        return IFileReader::queryInterface(typeID);
     }
 
-    void* QtFileSystem::queryInterface(TypeID typeID)
+    Ptr<ISystem> createISystemInstance()
     {
-        if (typeID == typeOf<QtFileSystem>())
-            return this;
-        return IFileSystem::queryInterface(typeID);
+        return new DummySystem;
     }
 }

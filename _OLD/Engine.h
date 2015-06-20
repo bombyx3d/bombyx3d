@@ -37,7 +37,7 @@ namespace Z
     public:
         using TouchMap = std::unordered_map<int, glm::vec2>;
 
-        static PlatformCallbacks* create(const Ptr<FileSystemList>& fileSystemList);
+        static PlatformCallbacks* create();
         static Engine& instance() { Z_ASSERT(m_Instance != nullptr); return *m_Instance; }
 
         Renderer& renderer() { Z_ASSERT(m_Renderer != nullptr); return *m_Renderer; }
@@ -51,7 +51,7 @@ namespace Z
         std::unique_ptr<Game> m_Game;
         TouchMap m_ActiveTouches;
 
-        explicit Engine(const Ptr<FileSystemList>& fileSystemList);
+        explicit Engine();
         ~Engine();
 
         const PlatformInitOptions* getInitOptions() const final override;

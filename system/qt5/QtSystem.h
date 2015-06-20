@@ -21,45 +21,17 @@
  */
 
 #pragma once
-#include "core/utility/Ptr.h"
-#include "core/interfaces/ICore.h"
 #include "core/interfaces/ISystem.h"
-#include "core/io/FileSystemList.h"
-#include <vector>
 
 namespace Engine
 {
-    /** Engine core. */
-    class Core : public ICore
+    /** Implementation of @ref ISystem for Qt5. */
+    class QtSystem : public ISystem
     {
     public:
-        Z_IMPLEMENTATION(Core)
+        Z_IMPLEMENTATION(QtSystem)
 
         /** Constructor. */
-        Core();
-
-        /** Destructor. */
-        ~Core();
-
-        void registerFileSystem(const Ptr<IFileSystem>& fileSystem) override;
-        IFileSystem& fileSystem() override { return *m_FileSystem; }
-
-        void registerTextureLoader(const Ptr<ITextureLoader>& loader) override;
-        Ptr<ITextureImage> loadTextureImage(IInputStream* stream) override;
-        Ptr<ITextureImage> loadTextureImage(IInputStream* stream, const std::string& format) override;
-        Ptr<ITextureImage> loadTextureImage(const std::string& fileName) override;
-
-        void registerImageFormatConverter(const Ptr<IImageFormatConverter>& converter) override;
-        Ptr<IImage> convertImageFormat(IImage* image, ImagePixelFormat targetFormat) override;
-
-    private:
-        Ptr<FileSystemList> m_FileSystem;
-        Ptr<ISystem> m_System;
-        std::vector<Ptr<ITextureLoader>> m_TextureLoaders;
-        std::vector<Ptr<IImageFormatConverter>> m_ImageFormatConverters;
+        QtSystem();
     };
-
-    /** @cond */
-    Ptr<ISystem> createISystemInstance();
-    /** @endcond */
 }

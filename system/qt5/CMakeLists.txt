@@ -21,14 +21,26 @@
 #
 
 cmake_minimum_required(VERSION 3.2)
-project(Engine)
+project(QtSystem)
 
-set(__Z_ENGINE_DONT_ADD_SUBDIRECTORY TRUE)
-include(cmake/Engine.cmake)
+if(Z_TARGET_QT5)
 
-add_subdirectory(3rdparty)
-add_subdirectory(_OLD)
-add_subdirectory(core)
-add_subdirectory(modules)
-add_subdirectory(system)
-add_subdirectory(doc)
+    set(source_files
+        io/QtFileReader.cpp
+        io/QtFileReader.h
+        io/QtFileSystem.cpp
+        io/QtFileSystem.h
+        utility/QtMacros.h
+        QtSystem.cpp
+        QtSystem.h
+        common.cpp
+    )
+
+    z_set_source_groups(${source_files})
+    add_library(libSystem STATIC EXCLUDE_FROM_ALL ${source_files})
+
+    target_link_libraries(libSystem libEngineCore)
+    set_target_properties(libSystem PROPERTIES OUTPUT_NAME "QtSystem" CXX_STANDARD 11)
+    z_target_link_qt5(libSystem)
+
+endif()

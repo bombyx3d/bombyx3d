@@ -20,14 +20,11 @@
  * THE SOFTWARE.
  */
 #include "QtFileSystem.h"
-#include "QtMacros.h"
+#include "system/qt5/utility/QtMacros.h"
 #include "core/utility/debug.h"
+#include <memory>
 
-#if QT_VERSION < 0x050400
- #define AppDataLocation DataLocation
-#endif
-
-namespace Z
+namespace Engine
 {
     QtFileSystem::QtFileSystem(const QDir& baseDir)
         : m_BaseDir(baseDir)
@@ -54,7 +51,7 @@ namespace Z
 
         path = QDir(path).absolutePath();
         if (!QDir().mkpath(path)) {
-            Z_LOG("Unable to create directory \"" << zqUtf8Printable(path) << "\".");
+            Z_LOG("Unable to create directory \"" << zqUtf8(path) << "\".");
             return QString();
         }
 
@@ -71,8 +68,8 @@ namespace Z
         std::unique_ptr<QFile> file(new QFile(absoluteFilePath(path)));
 
         if (!file->open(QFile::ReadOnly)) {
-            Z_LOG("Unable to open file \"" << zqUtf8Printable(file->fileName()) << "\": "
-                << zqUtf8Printable(file->errorString()) << ".");
+            Z_LOG("Unable to open file \"" << zqUtf8(file->fileName()) << "\": "
+                << zqUtf8(file->errorString()) << ".");
             return nullptr;
         }
 

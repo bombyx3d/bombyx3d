@@ -21,30 +21,39 @@
  */
 
 #pragma once
-#include "core/interfaces/IFileSystem.h"
-#include "QtFileReader.h"
-#include <QDir>
-#include <QStandardPaths>
+#include "core/interfaces/IFileReader.h"
+#include <string>
+#include <mutex>
 #include <memory>
+#include <QFile>
 
-namespace Z
+namespace Engine
 {
-    class QtFileSystem : public IFileSystem
+    /** A Qt-based implementation of @ref IFileReader. */
+    class QtFileReader : public IFileReader
     {
     public:
-        Z_IMPLEMENTATION(QtFileSystem)
+        Z_IMPLEMENTATION(QtFileReader)
 
-        explicit QtFileSystem(const QDir& baseDir);
-        explicit QtFileSystem(const QString& baseDir);
+        /**
+         * Constructor.
+         * @param name File name.
+         * @param file Pointer to the corresponding `QFile`.
+         */
+        QtFileReader(const std::string& name, std::unique_ptr<QFile>&& file);
 
-        QString absoluteFilePath(const std::string& file) const;
+        /** Destructor. */
+        ~QtFileReader();
 
-        static QString getStandardPath(QStandardPaths::StandardLocation location);
-
-        bool fileExists(const std::string& path) final override;
-        Ptr<IFileReader> openFile(const std::string& path) final override;
+        const std::string& name() const override;
+        uint64_t size() const override;
+        bool read(uint64_t offset, void* buffer, size_t size) override;
 
     private:
-        QDir m_BaseDir;
+        std::mutex m_Mutex;
+        std::string m_Name;
+        std::unique_ptr<QFile> m_File;
+        uint64_t m_Size;
+        uint64_t m_Offset;
     };
 }
