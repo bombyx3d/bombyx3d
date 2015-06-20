@@ -61,14 +61,14 @@ if args.doxygen:
 
 cmake = [
     'cmake',
-    '-DCMAKE_BUILD_TYPE="%s"' % build,
+    '-DCMAKE_BUILD_TYPE=%s' % build,
     '-DZ_BUILD_SAMPLES=NO'
 ]
 
 if args.platform:
-    cmake.append('-DZ_TARGET_PLATFORM="%s"' % args.platform)
+    cmake.append('-DZ_TARGET_PLATFORM=%s' % args.platform)
 if args.qt5path:
-    cmake.append('-DCMAKE_PREFIX_PATH="%s"' % args.qt5path)
+    cmake.append('-DCMAKE_PREFIX_PATH=%s' % args.qt5path)
 
 if args.doxygen:
     cmake.append('-DZ_BUILD_DOCUMENTATION=YES')
