@@ -6,37 +6,37 @@ sudo: required
 matrix:
   include:
     # linux/gcc/debug/dummy
-#    - compiler: gcc
-#      os: linux
-#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy
+    - compiler: gcc
+      os: linux
+      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy
     # linux/gcc/debug/qt5
     - compiler: gcc
       os: linux
       env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/gcc/release/dummy
-#    - compiler: gcc
-#      os: linux
-#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
+    - compiler: gcc
+      os: linux
+      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/gcc/release/qt5
-#    - compiler: gcc
-#      os: linux
-#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
+    - compiler: gcc
+      os: linux
+      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/clang/debug/dummy
-#    - compiler: clang
-#      os: linux
-#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
+    - compiler: clang
+      os: linux
+      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/clang/debug/qt5
-#    - compiler: clang
-#      os: linux
-#      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
+    - compiler: clang
+      os: linux
+      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/clang/release/dummy
-#    - compiler: clang
-#      os: linux
-#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
+    - compiler: clang
+      os: linux
+      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=dummy CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # linux/clang/release/qt5
-#    - compiler: clang
-#      os: linux
-#      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
+    - compiler: clang
+      os: linux
+      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake
     # osx/clang/debug/dummy
 #    - compiler: clang
 #      os: osx
@@ -53,14 +53,22 @@ matrix:
 #    - compiler: clang
 #      os: osx
 #      env: CMAKE_BUILD_TYPE=Release Z_TARGET_PLATFORM=qt5 CMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake
+    # documentation
+    - compiler: clang
+      os: linux
+      env: CMAKE_BUILD_TYPE=Debug Z_TARGET_PLATFORM=dummy CMAKE_PREFIX_PATH=/opt/qt54/lib/cmake Z_DOXYGEN=TRUE
 
 before_install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-        build/travis-install-linux.sh;
+      build/travis-install-linux.sh;
     fi
 
 script:
-  - build/travis-build.sh
+  - if [ "${Z_DOXYGEN}" = "TRUE" ]; then
+      build/travis-build-documentation.sh;
+    else
+      build/travis-build.sh;
+    fi
 
 notifications:
   email:

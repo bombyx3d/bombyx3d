@@ -26,6 +26,7 @@ project(Engine)
 set(__Z_ENGINE_DONT_ADD_SUBDIRECTORY TRUE)
 include(build/cmake/Engine.cmake)
 
+set(Z_BUILD_DOCUMENTATION NO CACHE STRING "Build engine documentation")
 set(Z_BUILD_SAMPLES NO CACHE STRING "Build engine samples")
 
 add_subdirectory(3rdparty)
@@ -33,7 +34,41 @@ add_subdirectory(_OLD)
 add_subdirectory(core)
 add_subdirectory(modules)
 add_subdirectory(system)
-add_subdirectory(doc)
+
+if (Z_BUILD_DOCUMENTATION)
+    if(NOT WIN32)
+        find_package(Doxygen)
+    else()
+        set(DOXYGEN_EXECUTABLE "${Engine_SOURCE_DIR}/tools/win32/doxygen.cmd")
+        set(DOXYGEN_FOUND TRUE)
+        set(DOXYGEN_VERSION "1.8.8")
+        set(DOXYGEN_DOT_EXECUTABLE "${Engine_SOURCE_DIR}/tools/win32/dot.exe")
+        set(DOXYGEN_DOT_FOUND TRUE)
+        set(DOXYGEN_DOT_PATH "${Engine_SOURCE_DIR}/tools/win32")
+    endif()
+
+    set(doc_source_files
+        "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile"
+        "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
+        "${EngineCore_SOURCE_DIR}/doc/Logging.dox"
+        "${EngineCore_SOURCE_DIR}/doc/Textures.dox"
+    )
+
+    if(DOXYGEN_FOUND AND DOXYGEN_DOT_FOUND)
+        add_custom_target(doc ALL
+            COMMAND
+                "${DOXYGEN_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile"
+            DEPENDS
+                ${doc_source_files}
+            WORKING_DIRECTORY
+                "${CMAKE_CURRENT_SOURCE_DIR}"
+            COMMENT
+                "Generating documentation"
+            SOURCES
+                ${doc_source_files}
+        )
+    endif()
+endif()
 
 if(Z_BUILD_SAMPLES)
     add_subdirectory(samples)

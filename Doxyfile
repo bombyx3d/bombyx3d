@@ -8,7 +8,7 @@ PROJECT_NAME           = "Game Engine"
 PROJECT_NUMBER         =
 PROJECT_BRIEF          =
 PROJECT_LOGO           =
-OUTPUT_DIRECTORY       = doc
+OUTPUT_DIRECTORY       = build/doc
 CREATE_SUBDIRS         = NO
 ALLOW_UNICODE_NAMES    = NO
 OUTPUT_LANGUAGE        = English
@@ -118,8 +118,7 @@ FILE_PATTERNS          = *.h
 RECURSIVE              = YES
 EXCLUDE                = modules/filesystem/zip/3rdparty \
                          modules/filesystem/zip/private \
-                         modules/textureloader/png/3rdparty \
-                         doc/.gitignore
+                         modules/textureloader/png/3rdparty
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
 EXCLUDE_SYMBOLS        =
@@ -164,7 +163,7 @@ HTML_EXTRA_FILES       =
 HTML_COLORSTYLE_HUE    = 220
 HTML_COLORSTYLE_SAT    = 100
 HTML_COLORSTYLE_GAMMA  = 80
-HTML_TIMESTAMP         = YES
+HTML_TIMESTAMP         = NO
 HTML_DYNAMIC_SECTIONS  = NO
 HTML_INDEX_NUM_ENTRIES = 100
 GENERATE_DOCSET        = NO
