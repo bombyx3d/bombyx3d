@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,18 +19,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "QtOpenGLWindow.h"
-#include <QApplication>
 
-using namespace Z;
+#pragma once
 
-int main(int argc, char** argv)
-{
-    QCoreApplication::setAttribute(Qt::AA_X11InitThreads);
-    QApplication app(argc, argv);
-
-    QtOpenGLWindow window;
-    window.show();
-
-    return app.exec();
-}
+/** @cond */
+int gameMain();
+/** @endcond */

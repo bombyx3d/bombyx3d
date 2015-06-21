@@ -33,5 +33,10 @@ namespace Engine
 
         /** Constructor. */
         DummySystem();
+
+        Ptr<IViewport> createViewport(const ViewportSettings& viewportSettings,
+            const Ptr<IViewportDelegate>& delegate) override;
+
+        void runEventLoop() override;
     };
 }

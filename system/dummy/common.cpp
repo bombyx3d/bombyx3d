@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  */
 #include "DummySystem.h"
+#include "viewport/DummyViewport.h"
 
 namespace Engine
 {
@@ -28,5 +29,12 @@ namespace Engine
         if (typeID == typeOf<DummySystem>())
             return this;
         return ISystem::queryInterface(typeID);
+    }
+
+    void* DummyViewport::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<DummyViewport>())
+            return this;
+        return IViewport::queryInterface(typeID);
     }
 }

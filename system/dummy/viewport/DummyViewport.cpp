@@ -1,5 +1,5 @@
-﻿/*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+/*
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,32 +19,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "DummyViewport.h"
 
-#pragma once
-
-namespace Z
+namespace Engine
 {
-    class PlatformInitOptions;
-
-    class PlatformCallbacks
+    DummyViewport::DummyViewport(const ViewportSettings&, const Ptr<IViewportDelegate>&)
     {
-    public:
-        PlatformCallbacks() = default;
-        virtual ~PlatformCallbacks() = default;
+    }
 
-        virtual const PlatformInitOptions* getInitOptions() const = 0;
+    int DummyViewport::viewportWidth() const
+    {
+        return 0;
+    }
 
-        virtual bool onInitialize(int width, int height) = 0;
-        virtual void onShutdown() = 0;
-        virtual void onSuspend() = 0;
-        virtual void onResume() = 0;
-
-        virtual void onPointerPressed(int id, float x, float y) = 0;
-        virtual void onPointerMoved(int id, float x, float y) = 0;
-        virtual void onPointerReleased(int id, float x, float y) = 0;
-        virtual void onPointerCancelled(int id, float x, float y) = 0;
-
-        virtual void onViewportSizeChanged(int width, int height) = 0;
-        virtual void onPaintEvent(double time) = 0;
-    };
+    int DummyViewport::viewportHeight() const
+    {
+        return 0;
+    }
 }

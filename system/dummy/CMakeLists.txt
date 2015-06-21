@@ -26,9 +26,12 @@ project(DummySystem)
 if(Z_TARGET_DUMMY)
 
     set(source_files
+        viewport/DummyViewport.cpp
+        viewport/DummyViewport.h
         DummySystem.cpp
         DummySystem.h
         common.cpp
+        main.cpp
     )
 
     z_set_source_groups(${source_files})

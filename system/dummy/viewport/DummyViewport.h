@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,27 @@
  * THE SOFTWARE.
  */
 
-int main(int argc, char** argv)
+#pragma once
+#include "core/interfaces/IViewport.h"
+#include "core/interfaces/IViewportDelegate.h"
+#include "core/utility/Ptr.h"
+
+namespace Engine
 {
-    return 0;
+    /** Dummy implementation of @ref IViewport. */
+    class DummyViewport : public IViewport
+    {
+    public:
+        Z_IMPLEMENTATION(DummyViewport)
+
+        /**
+         * Constructor.
+         * @param viewportSettings Viewport settings.
+         * @param delegate Viewport delegate.
+         */
+        DummyViewport(const ViewportSettings& viewportSettings, const Ptr<IViewportDelegate>& delegate);
+
+        int viewportWidth() const;
+        int viewportHeight() const;
+    };
 }

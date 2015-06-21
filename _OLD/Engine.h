@@ -22,8 +22,8 @@
 
 #pragma once
 #include "core/private/Core.h"
+#include "core/interfaces/IViewportDelegate.h"
 #include "core/utility/debug.h"
-#include "platform/PlatformCallbacks.h"
 #include "renderer/Renderer.h"
 #include <memory>
 #include <unordered_map>
@@ -32,12 +32,14 @@ namespace Z
 {
     class Game;
 
-    class Engine : private PlatformCallbacks, private Core
+    class Engine : public IViewportDelegate
     {
     public:
         using TouchMap = std::unordered_map<int, glm::vec2>;
 
-        static PlatformCallbacks* create();
+        explicit Engine();
+        ~Engine();
+
         static Engine& instance() { Z_ASSERT(m_Instance != nullptr); return *m_Instance; }
 
         Renderer& renderer() { Z_ASSERT(m_Renderer != nullptr); return *m_Renderer; }
@@ -51,22 +53,17 @@ namespace Z
         std::unique_ptr<Game> m_Game;
         TouchMap m_ActiveTouches;
 
-        explicit Engine();
-        ~Engine();
-
-        const PlatformInitOptions* getInitOptions() const final override;
-
-        bool onInitialize(int width, int height) final override;
-        void onShutdown() final override;
-        void onSuspend() final override;
-        void onResume() final override;
+        bool onViewportCreated(int width, int height) final override;
+        void onViewportWillClose() final override;
+        void onViewportWillSuspend() final override;
+        void onViewportDidResume() final override;
 
         void onPointerPressed(int id, float x, float y) final override;
         void onPointerMoved(int id, float x, float y) final override;
         void onPointerReleased(int id, float x, float y) final override;
         void onPointerCancelled(int id, float x, float y) final override;
 
-        void onViewportSizeChanged(int width, int height) final override;
-        void onPaintEvent(double time) final override;
+        void onViewportDidResize(int width, int height) final override;
+        void onViewportShouldRender(double time) final override;
     };
 }

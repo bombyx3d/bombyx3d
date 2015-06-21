@@ -1,10 +1,13 @@
 ﻿#include "Game.h"
+#include "core/interfaces/ISystem.h"
+#include "core/interfaces/IViewport.h"
 #include "_OLD/Engine.h"
 #include "_OLD/canvas/Canvas.h"
 #include "_OLD/canvas/CanvasSprite.h"
 #include "_OLD/mechanics/match3/Match3Field.h"
 #include "_OLD/mechanics/match3/Match3View.h"
 #include "_OLD/renderer/opengl/api/opengl.h"
+#include "system/main.h"
 #include <cstdio>
 
 Z_GAME_CLASS(Game)
@@ -110,4 +113,34 @@ void Game::onPointerReleased(int id, const glm::vec2& pos)
 void Game::onPointerCancelled(int id, const glm::vec2& pos)
 {
     canvas->sendPointerCancelEvent(id, pos);
+}
+
+////////////////////////////////////
+
+#ifdef Z_TARGET_QT5
+#include "system/qt5/io/QtFileSystem.h"
+#endif
+
+using namespace Z;
+using namespace Engine;
+
+int gameMain()
+{
+    Ptr<Z::Engine> engine = new Z::Engine;
+
+  #if defined(Z_TARGET_QT5) && defined(Z_DEBUG_ASSETS_PATH)
+    const char* assetsLocation = Z_DEBUG_ASSETS_PATH;
+    if (assetsLocation)
+        ICore::instance().registerFileSystem(new QtFileSystem(assetsLocation));
+  #endif
+
+    ViewportSettings viewportSettings;
+    Ptr<IViewport> viewport = ISystem::instance().createViewport(viewportSettings, engine);
+
+    ISystem::instance().runEventLoop();
+
+    viewport.release();
+    engine.release();
+
+    return 0;
 }

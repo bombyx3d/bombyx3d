@@ -22,6 +22,8 @@
 
 #pragma once
 #include "core/interfaces/IUnknown.h"
+#include "core/interfaces/IViewport.h"
+#include "core/interfaces/IViewportDelegate.h"
 #include "core/utility/Ptr.h"
 
 namespace Engine
@@ -39,5 +41,19 @@ namespace Engine
          */
         static ISystem& instance();
       #endif
+
+        /**
+         * Creates new viewport.
+         * @param viewportSettings Desired settings of the viewport.
+         * @note Settings passed to this method are hints. Engine will do its best to enforce provided
+         * values, but operating system has the power to override any of them.
+         * @param delegate Viewport delegate.
+         * @return Pointer to the viewport or `nullptr` if error has occured.
+         */
+        virtual Ptr<IViewport> createViewport(const ViewportSettings& viewportSettings,
+            const Ptr<IViewportDelegate>& delegate) = 0;
+
+        /** Runs the event loop. */
+        virtual void runEventLoop() = 0;
     };
 }

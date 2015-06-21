@@ -23,7 +23,6 @@
 #pragma once
 #include "core/utility/Ptr.h"
 #include "core/interfaces/ICore.h"
-#include "core/interfaces/ISystem.h"
 #include "core/io/FileSystemList.h"
 #include <vector>
 
@@ -54,12 +53,7 @@ namespace Engine
 
     private:
         Ptr<FileSystemList> m_FileSystem;
-        Ptr<ISystem> m_System;
         std::vector<Ptr<ITextureLoader>> m_TextureLoaders;
         std::vector<Ptr<IImageFormatConverter>> m_ImageFormatConverters;
     };
-
-    /** @cond */
-    Ptr<ISystem> createISystemInstance();
-    /** @endcond */
 }

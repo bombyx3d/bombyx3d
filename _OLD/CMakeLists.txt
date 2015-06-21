@@ -70,6 +70,5 @@ target_link_libraries(libengine libjpeg libglew libunzip libEngineCore)
 z_target_link_qt5(libengine)
 z_target_link_opengl(libengine)
 
-add_subdirectory(platform)
-target_link_libraries(libengine libplatform libEngineCore libPngTextureLoader libRgb2LuminanceImageConverter
+target_link_libraries(libengine libEngineCore libSystem libPngTextureLoader libRgb2LuminanceImageConverter
     libRgba2LuminanceImageConverter libZipFileSystem)

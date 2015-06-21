@@ -21,37 +21,23 @@
  */
 
 #pragma once
-#include "platform/PlatformInitOptions.h"
 #include <glm/glm.hpp>
-
-#ifdef NDEBUG
- #undef Z_DEBUG_ASSETS_PATH
-#endif
-#ifndef Z_DEBUG_ASSETS_PATH
- #define Z_DEBUG_ASSETS_PATH nullptr
-#endif
 
 #define Z_GAME_CLASS(CLASS) \
     ::Z::Game* ::Z::Game::create() { \
         ::Z::Game* game = new ::CLASS; \
-        game->setAssetsLocationHint(Z_DEBUG_ASSETS_PATH); \
         return game; \
     }
 
 namespace Z
 {
-    class Game : public PlatformInitOptions
+    class Game
     {
     public:
         Game() = default;
         virtual ~Game() = default;
 
         static Game* create();
-
-        virtual int preferredDisplayWidth() const override;
-        virtual int preferredDisplayHeight() const override;
-        virtual int preferredDepthBufferBits() const override;
-        virtual int preferredStencilBufferBits() const override;
 
         virtual bool initialize() = 0;
         virtual void shutdown() = 0;
@@ -61,11 +47,5 @@ namespace Z
         virtual void onPointerMoved(int id, const glm::vec2& pos);
         virtual void onPointerReleased(int id, const glm::vec2& pos);
         virtual void onPointerCancelled(int id, const glm::vec2& pos);
-
-    private:
-        const char* m_AssetsLocationHint = nullptr;
-
-        void setAssetsLocationHint(const char* hint);
-        virtual const char* assetsLocationHint() const final override;
     };
 }

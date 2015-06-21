@@ -25,12 +25,18 @@ project(QtSystem)
 
 if(Z_TARGET_QT5)
 
+    set(CMAKE_AUTOMOC TRUE)
+
     set(source_files
         io/QtFileReader.cpp
         io/QtFileReader.h
         io/QtFileSystem.cpp
         io/QtFileSystem.h
         utility/QtMacros.h
+        viewport/QtOpenGLRenderThread.cpp
+        viewport/QtOpenGLRenderThread.h
+        viewport/QtOpenGLWindow.cpp
+        viewport/QtOpenGLWindow.h
         QtSystem.cpp
         QtSystem.h
         common.cpp

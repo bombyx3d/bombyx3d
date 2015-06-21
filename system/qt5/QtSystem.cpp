@@ -20,20 +20,31 @@
  * THE SOFTWARE.
  */
 #include "QtSystem.h"
-#include "io/QtFileSystem.h"
-#include "core/private/Core.h"
+#include "viewport/QtOpenGLWindow.h"
+#include "core/utility/debug.h"
 #include <QApplication>
 
 namespace Engine
 {
     QtSystem::QtSystem()
     {
-        ICore::instance().registerFileSystem(new QtFileSystem(qApp->applicationDirPath()));
-        ICore::instance().registerFileSystem(new QtFileSystem(":/"));
     }
 
-    Ptr<ISystem> createISystemInstance()
+    Ptr<IViewport> QtSystem::createViewport(const ViewportSettings& viewportSettings,
+        const Ptr<IViewportDelegate>& delegate)
     {
-        return new QtSystem;
+        Z_CHECK(delegate != nullptr);
+        if (!delegate)
+            return nullptr;
+
+        Ptr<QtOpenGLWindow> window = new QtOpenGLWindow(viewportSettings, delegate);
+        window->show();
+
+        return window;
+    }
+
+    void QtSystem::runEventLoop()
+    {
+        qApp->exec();
     }
 }

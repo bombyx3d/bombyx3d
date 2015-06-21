@@ -32,7 +32,7 @@ z_set_source_groups(${source_files})
 add_executable(Sample1 ${source_files})
 
 set_target_properties(Sample1 PROPERTIES CXX_STANDARD 11)
-target_link_libraries(Sample1 libengine)
+target_link_libraries(Sample1 libengine libMain)
 
 get_filename_component(path "${CMAKE_CURRENT_SOURCE_DIR}" ABSOLUTE)
 if(WIN32)

@@ -19,39 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "system/main.h"
+#include "core/private/Core.h"
+#include "DummySystem.h"
 
-#pragma once
-#include "QtOpenGLRenderThread.h"
-#include <QGLWidget>
+using namespace Engine;
 
-namespace Z
+int main(int, char**)
 {
-    class QtOpenGLWindow : public QGLWidget
-    {
-        Q_OBJECT
-
-    public:
-        explicit QtOpenGLWindow(QWidget* parent = nullptr);
-        ~QtOpenGLWindow();
-
-    protected:
-        void resizeEvent(QResizeEvent* resizeEvent) override;
-        void paintEvent(QPaintEvent* paintEvent) override;
-
-        void showEvent(QShowEvent* showEvent) override;
-        void hideEvent(QHideEvent* hideEvent) override;
-        void closeEvent(QCloseEvent* closeEvent) override;
-
-        void mousePressEvent(QMouseEvent* mouseEvent) override;
-        void mouseMoveEvent(QMouseEvent* mouseEvent) override;
-        void mouseReleaseEvent(QMouseEvent* mouseEvent) override;
-
-        void keyPressEvent(QKeyEvent* keyEvent) override;
-        void keyReleaseEvent(QKeyEvent* keyEvent) override;
-
-    private:
-        QtOpenGLRenderThread m_RenderThread;
-        bool m_Initialized = false;
-        bool m_InitializationFailed = false;
-    };
+    DummySystem system;
+    Core core;
+    return gameMain();
 }

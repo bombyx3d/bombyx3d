@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,22 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "system/main.h"
+#include "QtSystem.h"
+#include "core/private/Core.h"
+#include "io/QtFileSystem.h"
+#include <QApplication>
 
-#pragma once
+using namespace Engine;
 
-namespace Z
+int main(int argc, char** argv)
 {
-    class PlatformInitOptions
-    {
-    public:
-        PlatformInitOptions() = default;
-        virtual ~PlatformInitOptions() = default;
+    QCoreApplication::setAttribute(Qt::AA_X11InitThreads);
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+    QApplication app(argc, argv);
 
-        virtual const char* assetsLocationHint() const = 0;
+    QtSystem system;
 
-        virtual int preferredDisplayWidth() const = 0;
-        virtual int preferredDisplayHeight() const = 0;
-        virtual int preferredDepthBufferBits() const = 0;
-        virtual int preferredStencilBufferBits() const = 0;
-    };
+    Core core;
+    ICore::instance().registerFileSystem(new QtFileSystem(qApp->applicationDirPath()));
+    ICore::instance().registerFileSystem(new QtFileSystem(":/"));
+
+    return gameMain();
 }

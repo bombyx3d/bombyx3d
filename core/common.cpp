@@ -37,6 +37,7 @@
 #include "interfaces/IRenderer.h"
 #include "interfaces/IRendererResource.h"
 #include "interfaces/IViewport.h"
+#include "interfaces/IViewportDelegate.h"
 #include "image/SimpleImage.h"
 #include "resource/TextureSourceFile.h"
 #include "io/FileSystemList.h"
@@ -175,6 +176,20 @@ namespace Engine
     void* IViewport::queryInterface(TypeID typeID)
     {
         if (typeID == typeOf<IViewport>())
+            return this;
+        return IUnknown::queryInterface(typeID);
+    }
+
+    void* IViewportDelegate::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<IViewportDelegate>())
+            return this;
+        return IUnknown::queryInterface(typeID);
+    }
+
+    void* ViewportSettings::queryInterface(TypeID typeID)
+    {
+        if (typeID == typeOf<ViewportSettings>())
             return this;
         return IUnknown::queryInterface(typeID);
     }

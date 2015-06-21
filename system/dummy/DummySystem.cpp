@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  */
 #include "DummySystem.h"
+#include "viewport/DummyViewport.h"
 #include "core/private/Core.h"
 
 namespace Engine
@@ -28,8 +29,13 @@ namespace Engine
     {
     }
 
-    Ptr<ISystem> createISystemInstance()
+    Ptr<IViewport> DummySystem::createViewport(const ViewportSettings& viewportSettings,
+        const Ptr<IViewportDelegate>& delegate)
     {
-        return new DummySystem;
+        return new DummyViewport(viewportSettings, delegate);
+    }
+
+    void DummySystem::runEventLoop()
+    {
     }
 }

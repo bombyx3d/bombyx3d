@@ -20,14 +20,11 @@
  * THE SOFTWARE.
  */
 #include "QtOpenGLRenderThread.h"
-#include "system/qt5/io/QtFileSystem.h"
-#include "Engine.h"
-#include "platform/PlatformInitOptions.h"
 #include "core/utility/debug.h"
 #include <QApplication>
 #include <limits>
 
-namespace Z
+namespace Engine
 {
     namespace
     {
@@ -50,16 +47,12 @@ namespace Z
         };
     }
 
-    QtOpenGLRenderThread::QtOpenGLRenderThread(QGLWidget* gl)
+    QtOpenGLRenderThread::QtOpenGLRenderThread(QGLWidget* gl, const Ptr<IViewportDelegate>& delegate)
         : m_GL(gl)
+        , m_Delegate(delegate)
         , m_Suspended(false)
         , m_ShuttingDown(false)
     {
-        m_Callbacks.reset(Engine::create());
-
-        const char* assetsLocation = m_Callbacks->getInitOptions()->assetsLocationHint();
-        if (assetsLocation)
-            ICore::instance().registerFileSystem(new QtFileSystem(assetsLocation));
     }
 
     QtOpenGLRenderThread::~QtOpenGLRenderThread()
@@ -117,7 +110,7 @@ namespace Z
         // Initialize the renderer
         m_GL->context()->makeCurrent();
         viewportSize.packed = m_ViewportSize.load();
-        bool success = m_Callbacks->onInitialize(viewportSize.unpacked.width, viewportSize.unpacked.height);
+        bool success = m_Delegate->onViewportCreated(viewportSize.unpacked.width, viewportSize.unpacked.height);
         m_GL->context()->doneCurrent();
 
         // Notify UI thread that we have started
@@ -143,9 +136,9 @@ namespace Z
             // Notify delegate about suspension
             if (newSuspended != suspended) {
                 if (newSuspended)
-                    m_Callbacks->onSuspend();
+                    m_Delegate->onViewportWillSuspend();
                 else {
-                    m_Callbacks->onResume();
+                    m_Delegate->onViewportDidResume();
                     m_Timer.restart();
                 }
                 suspended = newSuspended;
@@ -157,12 +150,12 @@ namespace Z
                 uint32_t newViewportSize = m_ViewportSize.load();
                 if (viewportSize.packed != newViewportSize) {
                     viewportSize.packed = newViewportSize;
-                    m_Callbacks->onViewportSizeChanged(viewportSize.unpacked.width, viewportSize.unpacked.height);
+                    m_Delegate->onViewportDidResize(viewportSize.unpacked.width, viewportSize.unpacked.height);
                 }
 
                 // Run frame
                 auto time = m_Timer.restart();
-                m_Callbacks->onPaintEvent(time * 0.001);
+                m_Delegate->onViewportShouldRender(time * 0.001);
                 m_GL->context()->swapBuffers();
             }
 
@@ -171,7 +164,7 @@ namespace Z
 
         // Shutdown the engine
         m_GL->context()->makeCurrent();
-        m_Callbacks->onShutdown();
+        m_Delegate->onViewportWillClose();
         m_GL->context()->doneCurrent();
     }
 }

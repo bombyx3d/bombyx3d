@@ -48,11 +48,6 @@ namespace Z
         m_Instance = nullptr;
     }
 
-    PlatformCallbacks* Engine::create()
-    {
-        return new Engine();
-    }
-
     void Engine::cancelAllActiveTouches()
     {
         while (!m_ActiveTouches.empty()) {
@@ -64,31 +59,26 @@ namespace Z
         }
     }
 
-    const PlatformInitOptions* Engine::getInitOptions() const
-    {
-        return m_Game.get();
-    }
-
-    bool Engine::onInitialize(int width, int height)
+    bool Engine::onViewportCreated(int width, int height)
     {
         m_Renderer.reset(new Renderer(width, height));
         return m_Game->initialize();
     }
 
-    void Engine::onShutdown()
+    void Engine::onViewportWillClose()
     {
         m_Game->shutdown();
         m_Renderer.reset();
     }
 
-    void Engine::onSuspend()
+    void Engine::onViewportWillSuspend()
     {
         cancelAllActiveTouches();
         if (m_Renderer)
             m_Renderer->suspend();
     }
 
-    void Engine::onResume()
+    void Engine::onViewportDidResume()
     {
         if (m_Renderer)
             m_Renderer->resume();
@@ -146,13 +136,13 @@ namespace Z
         }
     }
 
-    void Engine::onViewportSizeChanged(int width, int height)
+    void Engine::onViewportDidResize(int width, int height)
     {
         if (m_Renderer)
             m_Renderer->setViewportSize(width, height);
     }
 
-    void Engine::onPaintEvent(double time)
+    void Engine::onViewportShouldRender(double time)
     {
         if (m_Renderer) {
             m_Renderer->beginFrame();

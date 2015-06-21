@@ -24,3 +24,18 @@ cmake_minimum_required(VERSION 3.2)
 
 add_subdirectory(dummy)
 add_subdirectory(qt5)
+
+set(main)
+if(Z_TARGET_DUMMY)
+    set(main dummy/main.cpp)
+elseif(Z_TARGET_QT5)
+    set(main qt5/main.cpp)
+endif()
+
+if(main)
+    z_set_source_groups(main.h ${main})
+    add_library(libMain STATIC EXCLUDE_FROM_ALL main.h ${main})
+
+    target_link_libraries(libMain libSystem libEngineCore)
+    set_target_properties(libMain PROPERTIES OUTPUT_NAME "Main" CXX_STANDARD 11)
+endif()

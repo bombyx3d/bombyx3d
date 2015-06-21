@@ -23,26 +23,6 @@
 
 namespace Z
 {
-    int Game::preferredDisplayWidth() const
-    {
-        return 1024;
-    }
-
-    int Game::preferredDisplayHeight() const
-    {
-        return 768;
-    }
-
-    int Game::preferredDepthBufferBits() const
-    {
-        return 16;
-    }
-
-    int Game::preferredStencilBufferBits() const
-    {
-        return 8;
-    }
-
     void Game::onPointerPressed(int id, const glm::vec2& pos)
     {
         (void)id;
@@ -65,15 +45,5 @@ namespace Z
     {
         (void)id;
         (void)pos;
-    }
-
-    void Game::setAssetsLocationHint(const char* hint)
-    {
-        m_AssetsLocationHint = hint;
-    }
-
-    const char* Game::assetsLocationHint() const
-    {
-        return m_AssetsLocationHint;
     }
 }
