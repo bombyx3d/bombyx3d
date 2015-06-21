@@ -4,8 +4,8 @@
 #include "_OLD/Engine.h"
 #include "_OLD/canvas/Canvas.h"
 #include "_OLD/canvas/CanvasSprite.h"
-#include "_OLD/mechanics/match3/Match3Field.h"
-#include "_OLD/mechanics/match3/Match3View.h"
+#include "Match3Field.h"
+#include "Match3View.h"
 #include "_OLD/renderer/opengl/api/opengl.h"
 #include "system/main.h"
 #include <cstdio>

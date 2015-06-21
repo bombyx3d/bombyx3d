@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "renderer/Sprite.h"
+#include "_OLD/renderer/Sprite.h"
 
 namespace Z
 {

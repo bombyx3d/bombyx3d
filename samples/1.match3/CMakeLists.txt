@@ -26,6 +26,12 @@ project(Sample1)
 set(source_files
     Game.cpp
     Game.h
+    Match3Field.cpp
+    Match3Field.h
+    Match3Listener.h
+    Match3SpriteFactory.h
+    Match3View.cpp
+    Match3View.h
 )
 
 z_set_source_groups(${source_files})
