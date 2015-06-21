@@ -67,14 +67,17 @@ Inheritance diagram for Engine::IViewport:</div>
 <div class="dyncontent">
 <div class="center"><img src="class_engine_1_1_i_viewport__inherit__graph.png" border="0" usemap="#_engine_1_1_i_viewport_inherit__map" alt="Inheritance graph"/></div>
 <map name="_engine_1_1_i_viewport_inherit__map" id="_engine_1_1_i_viewport_inherit__map">
-<area shape="rect" id="node2" href="class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="5,5,133,35"/></map>
+<area shape="rect" id="node5" href="class_engine_1_1_dummy_viewport.html" title="Dummy implementation of IViewport. " alt="" coords="5,160,171,189"/><area shape="rect" id="node7" href="class_engine_1_1_qt_open_g_l_window.html" title="An OpenGL&#45;based implementation of IViewport. " alt="" coords="195,160,373,189"/><area shape="rect" id="node2" href="class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="121,5,249,35"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8056687c3da2e7c05e20bebc5ccd04b3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_engine_1_1_i_renderer.html">IRenderer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_viewport.html#a8056687c3da2e7c05e20bebc5ccd04b3">renderer</a> ()=0</td></tr>
-<tr class="memdesc:a8056687c3da2e7c05e20bebc5ccd04b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a reference to the renderer for this viewport.  <a href="#a8056687c3da2e7c05e20bebc5ccd04b3">More...</a><br/></td></tr>
-<tr class="separator:a8056687c3da2e7c05e20bebc5ccd04b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cf1b8e5d110cb310700fbf0de66176a"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_viewport.html#a2cf1b8e5d110cb310700fbf0de66176a">viewportWidth</a> () const =0</td></tr>
+<tr class="memdesc:a2cf1b8e5d110cb310700fbf0de66176a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves width of the viewport.  <a href="#a2cf1b8e5d110cb310700fbf0de66176a">More...</a><br/></td></tr>
+<tr class="separator:a2cf1b8e5d110cb310700fbf0de66176a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ad9c144753acf6d29106c59e2658cf2"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_viewport.html#a5ad9c144753acf6d29106c59e2658cf2">viewportHeight</a> () const =0</td></tr>
+<tr class="memdesc:a5ad9c144753acf6d29106c59e2658cf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves height of the viewport.  <a href="#a5ad9c144753acf6d29106c59e2658cf2">More...</a><br/></td></tr>
+<tr class="separator:a5ad9c144753acf6d29106c59e2658cf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad881320f598a1efa3aa809def924343"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_unknown.html#aad881320f598a1efa3aa809def924343">addRef</a> () const </td></tr>
 <tr class="memdesc:aad881320f598a1efa3aa809def924343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increments reference counter for this object.  <a href="#aad881320f598a1efa3aa809def924343">More...</a><br/></td></tr>
 <tr class="separator:aad881320f598a1efa3aa809def924343"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -92,7 +95,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface to the viewport. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a8056687c3da2e7c05e20bebc5ccd04b3"></a>
+<a class="anchor" id="a2cf1b8e5d110cb310700fbf0de66176a"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -100,10 +103,10 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="class_engine_1_1_i_renderer.html">IRenderer</a>&amp; Engine::IViewport::renderer </td>
+          <td class="memname">virtual int Engine::IViewport::viewportWidth </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -113,8 +116,38 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Retrieves a reference to the renderer for this viewport. </p>
-<dl class="section return"><dt>Returns</dt><dd>Reference to the renderer. </dd></dl>
+<p>Retrieves width of the viewport. </p>
+<dl class="section return"><dt>Returns</dt><dd>Width of the viewport. </dd></dl>
+
+<p>Implemented in <a class="el" href="class_engine_1_1_qt_open_g_l_window.html#af235ca914e072822d4b24f821cd04ea0">Engine::QtOpenGLWindow</a>, and <a class="el" href="class_engine_1_1_dummy_viewport.html#a5d395d077e50e2f890603eab89086747">Engine::DummyViewport</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5ad9c144753acf6d29106c59e2658cf2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int Engine::IViewport::viewportHeight </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieves height of the viewport. </p>
+<dl class="section return"><dt>Returns</dt><dd>Height of the viewport. </dd></dl>
+
+<p>Implemented in <a class="el" href="class_engine_1_1_qt_open_g_l_window.html#a0f3f2c50450c1747a296676822bf3111">Engine::QtOpenGLWindow</a>, and <a class="el" href="class_engine_1_1_dummy_viewport.html#a3c3d7ab73b816167a004ac7d11d0775f">Engine::DummyViewport</a>.</p>
 
 </div>
 </div>

@@ -1,18 +1,20 @@
 <map id="Engine::IUnknown" name="Engine::IUnknown">
 <area shape="rect" id="node3" href="$class_engine_1_1_i_blob.html" title="A block of binary data. " alt="" coords="239,112,337,141"/>
-<area shape="rect" id="node17" href="$class_engine_1_1_i_core.html" title="Interface to the engine core. " alt="" coords="237,304,339,333"/>
-<area shape="rect" id="node19" href="$class_engine_1_1_i_event.html" title="Base interface for events. " alt="" coords="235,357,341,387"/>
-<area shape="rect" id="node21" href="$class_engine_1_1_i_file_reader.html" title="Base interface for file readers. " alt="" coords="220,243,356,272"/>
-<area shape="rect" id="node28" href="$class_engine_1_1_i_file_system.html" title="Base interface for filesystems. " alt="" coords="219,411,357,440"/>
-<area shape="rect" id="node36" href="$class_engine_1_1_i_image_format_converter.html" title="Base interface for image pixel format converters. " alt="" coords="184,464,392,493"/>
-<area shape="rect" id="node42" href="$class_engine_1_1_i_renderer.html" title="Interface to the renderer. " alt="" coords="225,517,351,547"/>
-<area shape="rect" id="node44" href="$class_engine_1_1_i_renderer_resource.html" title="Interface to resources used by the renderer. " alt="" coords="197,571,379,600"/>
-<area shape="rect" id="node46" href="$class_engine_1_1_i_stream.html" title="Base interface for input and output streams. " alt="" coords="231,173,345,203"/>
-<area shape="rect" id="node55" href="$class_engine_1_1_i_system.html" title="Interface to the operating system API. " alt="" coords="229,624,347,653"/>
+<area shape="rect" id="node17" href="$class_engine_1_1_i_core.html" title="Interface to the engine core. " alt="" coords="237,325,339,355"/>
+<area shape="rect" id="node19" href="$class_engine_1_1_i_event.html" title="Base interface for events. " alt="" coords="235,379,341,408"/>
+<area shape="rect" id="node21" href="$class_engine_1_1_i_file_reader.html" title="Base interface for file readers. " alt="" coords="220,259,356,288"/>
+<area shape="rect" id="node28" href="$class_engine_1_1_i_file_system.html" title="Base interface for filesystems. " alt="" coords="219,432,357,461"/>
+<area shape="rect" id="node36" href="$class_engine_1_1_i_image_format_converter.html" title="Base interface for image pixel format converters. " alt="" coords="184,485,392,515"/>
+<area shape="rect" id="node42" href="$class_engine_1_1_i_renderer.html" title="Interface to the renderer. " alt="" coords="225,539,351,568"/>
+<area shape="rect" id="node44" href="$class_engine_1_1_i_renderer_resource.html" title="Interface to resources used by the renderer. " alt="" coords="197,592,379,621"/>
+<area shape="rect" id="node46" href="$class_engine_1_1_i_stream.html" title="Base interface for input and output streams. " alt="" coords="231,179,345,208"/>
+<area shape="rect" id="node55" href="$class_engine_1_1_i_system.html" title="Interface to the operating system API. " alt="" coords="229,645,347,675"/>
 <area shape="rect" id="node61" href="$class_engine_1_1_i_texture_image.html" title="Base interface for texture image data. " alt="" coords="211,32,365,61"/>
-<area shape="rect" id="node64" href="$class_engine_1_1_i_texture_loader.html" title="Base interface for texture image loaders. " alt="" coords="209,677,367,707"/>
-<area shape="rect" id="node68" href="$class_engine_1_1_i_texture_source.html" title="Base interface for texture sources. " alt="" coords="209,731,367,760"/>
-<area shape="rect" id="node72" href="$class_engine_1_1_i_viewport.html" title="Interface to the viewport. " alt="" coords="225,784,351,813"/>
+<area shape="rect" id="node64" href="$class_engine_1_1_i_texture_loader.html" title="Base interface for texture image loaders. " alt="" coords="209,699,367,728"/>
+<area shape="rect" id="node68" href="$class_engine_1_1_i_texture_source.html" title="Base interface for texture sources. " alt="" coords="209,752,367,781"/>
+<area shape="rect" id="node72" href="$class_engine_1_1_i_viewport.html" title="Interface to the viewport. " alt="" coords="225,805,351,835"/>
+<area shape="rect" id="node78" href="$class_engine_1_1_i_viewport_delegate.html" title="Viewport delegate. " alt="" coords="200,859,376,888"/>
+<area shape="rect" id="node80" href="$class_engine_1_1_viewport_settings.html" title="Viewport settings. " alt="" coords="204,912,372,941"/>
 <area shape="rect" id="node5" href="$class_engine_1_1_i_image.html" title="Interface to one&#45;, two&#45; or three&#45;dimensional bitmap image. " alt="" coords="489,57,599,87"/>
 <area shape="rect" id="node9" href="$class_engine_1_1_i_memory_mapped_file.html" title="An interface to the memory&#45;mapped file. " alt="" coords="451,112,637,141"/>
 <area shape="rect" id="node7" href="$class_engine_1_1_simple_image.html" title="Simple implementation of IImage and ITextureImage. " alt="" coords="719,5,865,35"/>
@@ -33,4 +35,6 @@
 <area shape="rect" id="node59" href="$class_engine_1_1_qt_system.html" title="Implementation of ISystem for Qt5. " alt="" coords="480,624,608,653"/>
 <area shape="rect" id="node66" href="$class_engine_1_1_png_texture_loader.html" title="Loader for PNG files. " alt="" coords="456,731,632,760"/>
 <area shape="rect" id="node70" href="$class_engine_1_1_texture_source_file.html" title="A file&#45;based implementation of ITextureSource. " alt="" coords="456,784,632,813"/>
+<area shape="rect" id="node74" href="$class_engine_1_1_dummy_viewport.html" title="Dummy implementation of IViewport. " alt="" coords="461,891,627,920"/>
+<area shape="rect" id="node76" href="$class_engine_1_1_qt_open_g_l_window.html" title="An OpenGL&#45;based implementation of IViewport. " alt="" coords="455,837,633,867"/>
 </map>

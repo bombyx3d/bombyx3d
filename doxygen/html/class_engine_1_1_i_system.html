@@ -55,7 +55,7 @@
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="class_engine_1_1_i_system-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Engine::ISystem Class Reference</div>  </div>
+<div class="title">Engine::ISystem Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -73,6 +73,12 @@ Inheritance diagram for Engine::ISystem:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a4878c0790047b0786a9b36021117080e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_engine_1_1_ptr.html">Ptr</a>&lt; <a class="el" href="class_engine_1_1_i_viewport.html">IViewport</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_system.html#a4878c0790047b0786a9b36021117080e">createViewport</a> (const <a class="el" href="class_engine_1_1_viewport_settings.html">ViewportSettings</a> &amp;viewportSettings, const <a class="el" href="class_engine_1_1_ptr.html">Ptr</a>&lt; <a class="el" href="class_engine_1_1_i_viewport_delegate.html">IViewportDelegate</a> &gt; &amp;delegate)=0</td></tr>
+<tr class="memdesc:a4878c0790047b0786a9b36021117080e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates new viewport.  <a href="#a4878c0790047b0786a9b36021117080e">More...</a><br/></td></tr>
+<tr class="separator:a4878c0790047b0786a9b36021117080e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae348b7f97cea59be515a6f4296ae2ad1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_system.html#ae348b7f97cea59be515a6f4296ae2ad1">runEventLoop</a> ()=0</td></tr>
+<tr class="memdesc:ae348b7f97cea59be515a6f4296ae2ad1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs the event loop.  <a href="#ae348b7f97cea59be515a6f4296ae2ad1">More...</a><br/></td></tr>
+<tr class="separator:ae348b7f97cea59be515a6f4296ae2ad1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad881320f598a1efa3aa809def924343"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_unknown.html#aad881320f598a1efa3aa809def924343">addRef</a> () const </td></tr>
 <tr class="memdesc:aad881320f598a1efa3aa809def924343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increments reference counter for this object.  <a href="#aad881320f598a1efa3aa809def924343">More...</a><br/></td></tr>
 <tr class="separator:aad881320f598a1efa3aa809def924343"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -119,6 +125,85 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Retrieves reference to the instance of the operating system API wrapper. </p>
 <dl class="section return"><dt>Returns</dt><dd>Reference to the instance of the operating system API wrapper. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a4878c0790047b0786a9b36021117080e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="class_engine_1_1_ptr.html">Ptr</a>&lt;<a class="el" href="class_engine_1_1_i_viewport.html">IViewport</a>&gt; Engine::ISystem::createViewport </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_engine_1_1_viewport_settings.html">ViewportSettings</a> &amp;&#160;</td>
+          <td class="paramname"><em>viewportSettings</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_engine_1_1_ptr.html">Ptr</a>&lt; <a class="el" href="class_engine_1_1_i_viewport_delegate.html">IViewportDelegate</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>delegate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates new viewport. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">viewportSettings</td><td>Desired settings of the viewport. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>Settings passed to this method are hints. Engine will do its best to enforce provided values, but operating system has the power to override any of them. </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">delegate</td><td>Viewport delegate. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to the viewport or <code>nullptr</code> if error has occured. </dd></dl>
+
+<p>Implemented in <a class="el" href="class_engine_1_1_dummy_system.html#a7f1755bc53357213f4c040b2bd09c4b5">Engine::DummySystem</a>, and <a class="el" href="class_engine_1_1_qt_system.html#a1b4b092b7973209ac66b8a30386d62d8">Engine::QtSystem</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae348b7f97cea59be515a6f4296ae2ad1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Engine::ISystem::runEventLoop </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Runs the event loop. </p>
+
+<p>Implemented in <a class="el" href="class_engine_1_1_dummy_system.html#a1e6e2ec9e624c23ec6bfd35c02715797">Engine::DummySystem</a>, and <a class="el" href="class_engine_1_1_qt_system.html#a2f4fb572556c2a43582a52a214772e1c">Engine::QtSystem</a>.</p>
 
 </div>
 </div>
