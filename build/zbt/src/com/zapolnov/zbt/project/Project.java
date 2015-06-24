@@ -44,4 +44,10 @@ public class Project
     {
         return enumerationNames.add(name);
     }
+
+    public void visitDirectives(ProjectVisitor visitor)
+    {
+        for (ProjectDirective directive : directives)
+            directive.visit(visitor);
+    }
 }

@@ -21,6 +21,7 @@
  */
 package com.zapolnov.zbt;
 
+import com.zapolnov.zbt.gui.ProjectConfigurationGui;
 import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.utility.Utility;
 import java.io.File;
@@ -35,6 +36,8 @@ public class Main
             Project project = new Project();
             ProjectFileReader file = new ProjectFileReader(project);
             file.readFile(new File("../../project.yml"));
+
+            ProjectConfigurationGui.run(project);
         } catch (Throwable t) {
             if (verbose)
                 throw t;

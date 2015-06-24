@@ -50,14 +50,15 @@ public final class SelectorDirective extends ProjectDirective
         return enumerationValue;
     }
 
-    public List<ProjectDirective> innerDirectives()
-    {
-        return Collections.unmodifiableList(innerDirectives);
-    }
-
     @Override public void visit(ProjectVisitor visitor)
     {
         visitor.visitSelector(this);
+    }
+
+    public void visitDirectives(ProjectVisitor visitor)
+    {
+        for (ProjectDirective directive : innerDirectives)
+            directive.visit(visitor);
     }
 }
 
