@@ -1,3 +1,6 @@
 /.cmake-build
 /doc
 /id
+/zbt/bin/classes
+/zbt/bin/out
+/zbt/.idea/workspace.xml

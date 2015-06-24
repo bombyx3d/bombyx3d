@@ -1,0 +1,17 @@
+
+import: [ 'core', 'modules', 'samples' ]
+
+enum:
+  name: platform
+  values:
+    dummy: 'Dummy'
+    qt5: 'Qt5'
+
+^platform(dummy):
+  import: 'system/dummy'
+  define: 'Z_TARGET_DUMMY'
+
+^platform(qt5):
+  import: 'system/qt5'
+  define: 'Z_TARGET_QT5'
+
