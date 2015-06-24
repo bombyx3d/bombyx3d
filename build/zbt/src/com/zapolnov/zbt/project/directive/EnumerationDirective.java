@@ -19,26 +19,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt;
+package com.zapolnov.zbt.project.directive;
 
-import com.zapolnov.zbt.project.Project;
-import com.zapolnov.zbt.utility.Utility;
-import java.io.File;
+import com.zapolnov.zbt.project.ProjectDirective;
+import com.zapolnov.zbt.project.ProjectVisitor;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
 
-public class Main
+public final class EnumerationDirective extends ProjectDirective
 {
-    public static void main(String[] args)
-    {
-        boolean verbose = false;
+    public static Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z0-9_-]+");
+    public static Pattern VALUE_PATTERN = Pattern.compile("[a-zA-Z0-9_-]+");
 
-        try {
-            Project project = new Project();
-            ProjectFileReader file = new ProjectFileReader(project);
-            file.readFile(new File("../../project.yml"));
-        } catch (Throwable t) {
-            if (verbose)
-                throw t;
-            System.out.println(String.format("Error: %s", Utility.getExceptionMessage(t)));
-        }
+    private final String name;
+    private final String description;
+    private final Map<String, String> values;
+
+    public EnumerationDirective(String name, String description, Map<String, String> values)
+    {
+        this.name = name;
+        this.description = description;
+        this.values = new LinkedHashMap<>(values);
+    }
+
+    public String name()
+    {
+        return name;
+    }
+
+    public String description()
+    {
+        return description;
+    }
+
+    public Map<String, String> values()
+    {
+        return Collections.unmodifiableMap(values);
+    }
+
+    @Override public void visit(ProjectVisitor visitor)
+    {
+        visitor.visitEnumeration(this);
     }
 }

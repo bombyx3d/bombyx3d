@@ -19,26 +19,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt;
+package com.zapolnov.zbt.project;
 
-import com.zapolnov.zbt.project.Project;
-import com.zapolnov.zbt.utility.Utility;
-import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class Main
+public class Project
 {
-    public static void main(String[] args)
-    {
-        boolean verbose = false;
+    private final List<ProjectDirective> directives = new ArrayList<>();
+    private final Set<String> enumerationNames = new HashSet<>();
 
-        try {
-            Project project = new Project();
-            ProjectFileReader file = new ProjectFileReader(project);
-            file.readFile(new File("../../project.yml"));
-        } catch (Throwable t) {
-            if (verbose)
-                throw t;
-            System.out.println(String.format("Error: %s", Utility.getExceptionMessage(t)));
-        }
+    public Project()
+    {
+    }
+
+    public List<ProjectDirective> directives()
+    {
+        return directives;
+    }
+
+    public boolean addEnumerationName(String name)
+    {
+        return enumerationNames.add(name);
     }
 }

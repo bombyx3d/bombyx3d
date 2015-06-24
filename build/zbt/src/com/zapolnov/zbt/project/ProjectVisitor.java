@@ -19,26 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt;
+package com.zapolnov.zbt.project;
 
-import com.zapolnov.zbt.project.Project;
-import com.zapolnov.zbt.utility.Utility;
-import java.io.File;
+import com.zapolnov.zbt.project.directive.DefineDirective;
+import com.zapolnov.zbt.project.directive.EnumerationDirective;
+import com.zapolnov.zbt.project.directive.SelectorDirective;
 
-public class Main
+public abstract class ProjectVisitor
 {
-    public static void main(String[] args)
-    {
-        boolean verbose = false;
-
-        try {
-            Project project = new Project();
-            ProjectFileReader file = new ProjectFileReader(project);
-            file.readFile(new File("../../project.yml"));
-        } catch (Throwable t) {
-            if (verbose)
-                throw t;
-            System.out.println(String.format("Error: %s", Utility.getExceptionMessage(t)));
-        }
-    }
+    public void visitDefine(DefineDirective directive) {}
+    public void visitEnumeration(EnumerationDirective directive) {}
+    public void visitSelector(SelectorDirective directive) {}
 }

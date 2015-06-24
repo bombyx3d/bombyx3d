@@ -19,26 +19,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt;
+package com.zapolnov.zbt.project.directive;
 
-import com.zapolnov.zbt.project.Project;
-import com.zapolnov.zbt.utility.Utility;
-import java.io.File;
+import com.zapolnov.zbt.project.ProjectDirective;
+import com.zapolnov.zbt.project.ProjectVisitor;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class Main
+public final class DefineDirective extends ProjectDirective
 {
-    public static void main(String[] args)
-    {
-        boolean verbose = false;
+    private final List<String> defines;
 
-        try {
-            Project project = new Project();
-            ProjectFileReader file = new ProjectFileReader(project);
-            file.readFile(new File("../../project.yml"));
-        } catch (Throwable t) {
-            if (verbose)
-                throw t;
-            System.out.println(String.format("Error: %s", Utility.getExceptionMessage(t)));
-        }
+    public DefineDirective(List<String> defines)
+    {
+        this.defines = new ArrayList<>(defines);
+    }
+
+    public List<String> defines()
+    {
+        return Collections.unmodifiableList(defines);
+    }
+
+    @Override public void visit(ProjectVisitor visitor)
+    {
+        visitor.visitDefine(this);
     }
 }

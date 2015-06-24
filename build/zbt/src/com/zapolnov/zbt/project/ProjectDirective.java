@@ -19,26 +19,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt;
+package com.zapolnov.zbt.project;
 
-import com.zapolnov.zbt.project.Project;
-import com.zapolnov.zbt.utility.Utility;
-import java.io.File;
-
-public class Main
+public abstract class ProjectDirective
 {
-    public static void main(String[] args)
-    {
-        boolean verbose = false;
-
-        try {
-            Project project = new Project();
-            ProjectFileReader file = new ProjectFileReader(project);
-            file.readFile(new File("../../project.yml"));
-        } catch (Throwable t) {
-            if (verbose)
-                throw t;
-            System.out.println(String.format("Error: %s", Utility.getExceptionMessage(t)));
-        }
-    }
+    public abstract void visit(ProjectVisitor visitor);
 }

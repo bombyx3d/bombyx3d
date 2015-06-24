@@ -60,7 +60,7 @@ public final class YamlParser
                 throw new RuntimeException(message, t);
             }
 
-            return String.format("Error%s %s", option.node.getStartMark().toString(), message);
+            return String.format("Problem%s %s", option.node.getStartMark().toString(), message);
         }
     }
 
@@ -77,12 +77,12 @@ public final class YamlParser
 
         public boolean isSequence()
         {
-            return this.value instanceof List;
+            return this.value != null && this.value instanceof List;
         }
 
         public boolean isMapping()
         {
-            return this.value instanceof Map;
+            return this.value != null && this.value instanceof Map;
         }
 
         @SuppressWarnings("unchecked") public List<Option> toSequence()
@@ -101,6 +101,8 @@ public final class YamlParser
 
         @Override public String toString()
         {
+            if (value == null || isSequence() || isMapping())
+                return null;
             return value.toString();
         }
     }
@@ -129,7 +131,7 @@ public final class YamlParser
             StreamReader reader = new StreamReader(fileReader);
             Field field = reader.getClass().getDeclaredField("name");
             field.setAccessible(true);
-            field.set(reader, file.getAbsolutePath());
+            field.set(reader, Utility.getCanonicalPath(file));
 
             // Read the file
             try {

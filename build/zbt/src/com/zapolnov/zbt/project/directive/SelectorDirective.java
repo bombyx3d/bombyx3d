@@ -19,26 +19,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt;
+package com.zapolnov.zbt.project.directive;
 
-import com.zapolnov.zbt.project.Project;
-import com.zapolnov.zbt.utility.Utility;
-import java.io.File;
+import com.zapolnov.zbt.project.ProjectDirective;
+import com.zapolnov.zbt.project.ProjectVisitor;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class Main
+public final class SelectorDirective extends ProjectDirective
 {
-    public static void main(String[] args)
-    {
-        boolean verbose = false;
+    private final String enumerationName;
+    private final String enumerationValue;
+    private final List<ProjectDirective> innerDirectives;
 
-        try {
-            Project project = new Project();
-            ProjectFileReader file = new ProjectFileReader(project);
-            file.readFile(new File("../../project.yml"));
-        } catch (Throwable t) {
-            if (verbose)
-                throw t;
-            System.out.println(String.format("Error: %s", Utility.getExceptionMessage(t)));
-        }
+    public SelectorDirective(String enumerationName, String enumerationValue, List<ProjectDirective> innerDirectives)
+    {
+        this.enumerationName = enumerationName;
+        this.enumerationValue = enumerationValue;
+        this.innerDirectives = new ArrayList<>(innerDirectives);
+    }
+
+    public String enumerationName()
+    {
+        return enumerationName;
+    }
+
+    public String enumerationValue()
+    {
+        return enumerationValue;
+    }
+
+    public List<ProjectDirective> innerDirectives()
+    {
+        return Collections.unmodifiableList(innerDirectives);
+    }
+
+    @Override public void visit(ProjectVisitor visitor)
+    {
+        visitor.visitSelector(this);
     }
 }
+
