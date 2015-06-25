@@ -19,17 +19,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt.project;
+package com.zapolnov.zbt.utility;
 
-import com.zapolnov.zbt.project.directive.DefineDirective;
-import com.zapolnov.zbt.project.directive.EnumerationDirective;
-import com.zapolnov.zbt.project.directive.SelectorDirective;
-import com.zapolnov.zbt.project.directive.SourceDirectoriesDirective;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 
-public abstract class ProjectVisitor
+public final class StreamReaderThread extends Thread
 {
-    public void visitDefine(DefineDirective directive) {}
-    public void visitSourceDirectories(SourceDirectoriesDirective directive) {}
-    public void visitEnumeration(EnumerationDirective directive) {}
-    public void visitSelector(SelectorDirective directive) {}
+    private final InputStream inputStream;
+    private final StringWriter stringWriter = new StringWriter();
+
+    public StreamReaderThread(InputStream inputStream)
+    {
+        this.inputStream = inputStream;
+    }
+
+    public void run()
+    {
+        try {
+            for (;;) {
+                int c = inputStream.read();
+                if (c < 0)
+                    break;
+                stringWriter.write(c);
+            }
+        } catch (IOException e) {
+            e.printStackTrace(System.err);
+        }
+    }
+
+    public String getResult()
+    {
+        return stringWriter.toString();
+    }
 }

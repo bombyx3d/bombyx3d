@@ -23,10 +23,40 @@ package com.zapolnov.zbt.utility;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Utility
 {
+    public static final String OS_NAME = System.getProperty("os.name");
+    public static final boolean IS_LINUX = startsWith(OS_NAME, "Linux") || startsWith(OS_NAME, "LINUX");
+    public static final boolean IS_OSX = startsWith(OS_NAME, "Mac OS");
+    public static final boolean IS_WINDOWS = startsWith(OS_NAME, "Windows");
+
     private Utility() {}
+
+    public static boolean startsWith(String string, String prefix)
+    {
+        if (string == null || prefix == null)
+            return false;
+        return string.startsWith(prefix);
+    }
+
+    public static File getCanonicalFile(File file)
+    {
+        try {
+            return file.getCanonicalFile();
+        } catch (Throwable ignored) {
+            return file.getAbsoluteFile();
+        }
+    }
 
     public static String getCanonicalPath(File file)
     {
@@ -47,5 +77,67 @@ public final class Utility
             message = String.format("Unhandled exception: %s", throwable.getClass().getName());
 
         return message;
+    }
+
+    public static List<File> recursivelyEnumerateFilesInDirectory(File directory)
+    {
+        final List<File> files = new ArrayList<>();
+
+        try {
+            final Path path = Paths.get(directory.getAbsolutePath());
+
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    files.add(file.toFile().getCanonicalFile());
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            String message = String.format("Unable to enumerate files in directory \"%s\".", directory.getAbsolutePath());
+            throw new RuntimeException(message, e);
+        }
+
+        return files;
+    }
+
+    public static String invokeProgram(String program)
+    {
+        try {
+            Process process = Runtime.getRuntime().exec(program);
+
+            StreamReaderThread reader = new StreamReaderThread(process.getInputStream());
+            reader.start();
+            process.waitFor();
+            reader.join();
+
+            int exitValue = process.exitValue();
+            if (exitValue != 0)
+                throw new RuntimeException(String.format("Process \"%s\" exited with code %d.", program, exitValue));
+
+            return reader.getResult();
+        } catch (IOException|InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean isWindowsRegistryKeyPresent(String key) {
+        if (!IS_WINDOWS)
+            return false;
+
+        try {
+            Process process = Runtime.getRuntime().exec(String.format("reg query \"%s\"", key));
+            process.waitFor();
+            StreamReaderThread reader = new StreamReaderThread(process.getInputStream());
+            reader.start();
+            reader.join();
+
+            int exitValue = process.exitValue();
+            if (exitValue == 0)
+                return true;
+        } catch (Throwable t) {
+            t.printStackTrace(System.err);
+        }
+
+        return false;
     }
 }

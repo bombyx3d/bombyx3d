@@ -21,6 +21,7 @@
  */
 package com.zapolnov.zbt.project;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,11 +29,18 @@ import java.util.Set;
 
 public class Project
 {
+    private final File projectDirectory;
     private final List<ProjectDirective> directives = new ArrayList<>();
     private final Set<String> enumerationNames = new HashSet<>();
 
-    public Project()
+    public Project(File projectDirectory)
     {
+        this.projectDirectory = projectDirectory;
+    }
+
+    public File projectDirectory()
+    {
+        return projectDirectory;
     }
 
     public List<ProjectDirective> directives()

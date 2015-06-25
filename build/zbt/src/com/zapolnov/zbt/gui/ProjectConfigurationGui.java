@@ -21,6 +21,7 @@
  */
 package com.zapolnov.zbt.gui;
 
+import com.zapolnov.zbt.Main;
 import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.project.ProjectVisitor;
 import com.zapolnov.zbt.project.directive.DefineDirective;
@@ -30,6 +31,8 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -42,6 +45,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
@@ -143,7 +147,13 @@ public final class ProjectConfigurationGui extends ProjectVisitor
 
     private void generateProject()
     {
-        // FIXME
+        try {
+            Main.generateProject(project, true);
+        } catch (Throwable t) {
+            t.printStackTrace(System.err);
+            String message = String.format("%s: %s", t.getClass().getName(), t.getMessage());
+            JOptionPane.showMessageDialog(frame, message, "Fatal error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void updateOptionsVisibility()

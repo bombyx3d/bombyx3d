@@ -21,11 +21,10 @@
  */
 package com.zapolnov.zbt.project;
 
-import com.zapolnov.zbt.project.Project;
-import com.zapolnov.zbt.project.ProjectDirective;
 import com.zapolnov.zbt.project.directive.DefineDirective;
 import com.zapolnov.zbt.project.directive.EnumerationDirective;
 import com.zapolnov.zbt.project.directive.SelectorDirective;
+import com.zapolnov.zbt.project.directive.SourceDirectoriesDirective;
 import com.zapolnov.zbt.utility.Utility;
 import com.zapolnov.zbt.utility.YamlParser;
 import java.io.File;
@@ -98,6 +97,7 @@ public final class ProjectFileReader
                 case "enum": directive = processEnum(keyOption, valueOption); break;
                 case "import": processImport(basePath, directiveList, valueOption); break;
                 case "define": directive = processDefine(valueOption); break;
+                case "source_directories": directive = processSourceDirectories(basePath, valueOption); break;
                 default: throw new YamlParser.Error(keyOption, String.format("Unknown option \"%s\".", key));
                 }
             }
@@ -255,5 +255,39 @@ public final class ProjectFileReader
         }
 
         return new DefineDirective(defineList);
+    }
+
+    private ProjectDirective processSourceDirectories(File basePath, YamlParser.Option valueOption)
+    {
+        List<YamlParser.Option> paths;
+        if (valueOption.isSequence())
+            paths = valueOption.toSequence();
+        else {
+            if (valueOption.toString() == null)
+                throw new YamlParser.Error(valueOption, "Expected string or sequence of strings.");
+            paths = new ArrayList<>(1);
+            paths.add(valueOption);
+        }
+
+        List<File> directories = new ArrayList<>();
+        for (YamlParser.Option path : paths) {
+            String name = path.toString();
+            if (name == null)
+                throw new YamlParser.Error(path, "Expected string.");
+
+            File file = new File(basePath, name);
+            if (!file.exists()) {
+                String fileName = Utility.getCanonicalPath(file);
+                throw new YamlParser.Error(path, String.format("Directory \"%s\" does not exist.", fileName));
+            }
+            if (!file.isDirectory()) {
+                String fileName = Utility.getCanonicalPath(file);
+                throw new YamlParser.Error(path, String.format("\"%s\" is not a directory.", fileName));
+            }
+
+            directories.add(Utility.getCanonicalFile(file));
+        }
+
+        return new SourceDirectoriesDirective(directories);
     }
 }

@@ -19,43 +19,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt;
+package com.zapolnov.zbt.generators;
 
-import com.zapolnov.zbt.generators.Generator;
-import com.zapolnov.zbt.gui.ProjectConfigurationGui;
 import com.zapolnov.zbt.project.Project;
-import com.zapolnov.zbt.project.ProjectFileReader;
 import com.zapolnov.zbt.utility.Utility;
 import java.io.File;
 
-public class Main
+public abstract class Generator
 {
-    public static void generateProject(Project project, boolean openAfterGenerate)
+    public abstract void generate(File targetPath, Project project);
+
+    public static Generator generatorForCurrentPlatform()
     {
-        File projectDirectory = project.projectDirectory();
-        File outputDirectory = new File(projectDirectory, ".zbt");
+        if (Utility.IS_WINDOWS) {
+            if (Utility.isWindowsRegistryKeyPresent("HKEY_CLASSES_ROOT\\VisualStudio.DTE.12.0")) {
+                System.out.println("Found Visual Studio 2013");
+                return new VisualStudioGenerator();
+            }
 
-        Generator generator = Generator.generatorForCurrentPlatform();
-        generator.generate(outputDirectory, project);
-    }
-
-    public static void main(String[] args)
-    {
-        boolean verbose = false;
-
-        try {
-            File projectDirectory = new File("../..");
-            File projectFile = new File(projectDirectory, ProjectFileReader.PROJECT_FILE_NAME);
-
-            Project project = new Project(projectDirectory);
-            ProjectFileReader file = new ProjectFileReader(project);
-            file.readFile(new File("../../project.yml"));
-
-            ProjectConfigurationGui.run(project);
-        } catch (Throwable t) {
-            if (verbose)
-                throw t;
-            System.out.println(String.format("Error: %s", Utility.getExceptionMessage(t)));
+            if (Utility.isWindowsRegistryKeyPresent("HKEY_CLASSES_ROOT\\VisualStudio.DTE.11.0")) {
+                System.out.println("Found Visual Studio 2012");
+                return new VisualStudioGenerator();
+            }
         }
+        throw new RuntimeException("Unable to find an appropriate project generator for the current platform.");
     }
 }

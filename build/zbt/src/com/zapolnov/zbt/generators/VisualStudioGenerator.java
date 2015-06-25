@@ -19,17 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt.project;
+package com.zapolnov.zbt.generators;
 
-import com.zapolnov.zbt.project.directive.DefineDirective;
-import com.zapolnov.zbt.project.directive.EnumerationDirective;
-import com.zapolnov.zbt.project.directive.SelectorDirective;
-import com.zapolnov.zbt.project.directive.SourceDirectoriesDirective;
+import com.zapolnov.zbt.project.Project;
+import java.io.File;
 
-public abstract class ProjectVisitor
+public class VisualStudioGenerator extends CMakeGenerator
 {
-    public void visitDefine(DefineDirective directive) {}
-    public void visitSourceDirectories(SourceDirectoriesDirective directive) {}
-    public void visitEnumeration(EnumerationDirective directive) {}
-    public void visitSelector(SelectorDirective directive) {}
+    @Override public void generate(File targetPath, Project project)
+    {
+    }
 }

@@ -19,43 +19,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt;
+package com.zapolnov.zbt.project.directive;
 
-import com.zapolnov.zbt.generators.Generator;
-import com.zapolnov.zbt.gui.ProjectConfigurationGui;
-import com.zapolnov.zbt.project.Project;
-import com.zapolnov.zbt.project.ProjectFileReader;
+import com.zapolnov.zbt.project.ProjectDirective;
+import com.zapolnov.zbt.project.ProjectVisitor;
 import com.zapolnov.zbt.utility.Utility;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class Main
+public final class SourceDirectoriesDirective extends ProjectDirective
 {
-    public static void generateProject(Project project, boolean openAfterGenerate)
-    {
-        File projectDirectory = project.projectDirectory();
-        File outputDirectory = new File(projectDirectory, ".zbt");
+    private final List<File> sourceDirectories;
 
-        Generator generator = Generator.generatorForCurrentPlatform();
-        generator.generate(outputDirectory, project);
+    public SourceDirectoriesDirective(List<File> sourceDirectories)
+    {
+        this.sourceDirectories = new ArrayList<>(sourceDirectories);
     }
 
-    public static void main(String[] args)
+    public List<File> sourceDirectories()
     {
-        boolean verbose = false;
+        return Collections.unmodifiableList(sourceDirectories);
+    }
 
-        try {
-            File projectDirectory = new File("../..");
-            File projectFile = new File(projectDirectory, ProjectFileReader.PROJECT_FILE_NAME);
-
-            Project project = new Project(projectDirectory);
-            ProjectFileReader file = new ProjectFileReader(project);
-            file.readFile(new File("../../project.yml"));
-
-            ProjectConfigurationGui.run(project);
-        } catch (Throwable t) {
-            if (verbose)
-                throw t;
-            System.out.println(String.format("Error: %s", Utility.getExceptionMessage(t)));
+    public List<File> sourceFiles()
+    {
+        List<File> files = new ArrayList<>();
+        for (File directory : sourceDirectories) {
+            List<File> directoryFiles = Utility.recursivelyEnumerateFilesInDirectory(directory);
+            files.addAll(directoryFiles);
         }
+        return files;
+    }
+
+    @Override public void visit(ProjectVisitor visitor)
+    {
+        visitor.visitSourceDirectories(this);
     }
 }
