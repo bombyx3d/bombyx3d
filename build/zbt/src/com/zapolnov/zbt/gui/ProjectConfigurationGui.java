@@ -35,6 +35,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -42,7 +43,6 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
@@ -52,11 +52,13 @@ public final class ProjectConfigurationGui extends ProjectVisitor
     {
         public final JLabel label;
         public final JComboBox<String> comboBox;
+        public final String[] values;
 
-        public Enumeration(JLabel label, JComboBox<String> comboBox)
+        public Enumeration(JLabel label, JComboBox<String> comboBox, String[] values)
         {
             this.label = label;
             this.comboBox = comboBox;
+            this.values = values;
         }
     }
 
@@ -93,6 +95,8 @@ public final class ProjectConfigurationGui extends ProjectVisitor
         }
         frame.getContentPane().add(optionsPanel, BorderLayout.PAGE_START);
 
+        updateOptionsVisibility();
+
         JPanel buttonsBox = new JPanel();
         buttonsBox.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         frame.getContentPane().add(buttonsBox, BorderLayout.PAGE_END);
@@ -122,6 +126,10 @@ public final class ProjectConfigurationGui extends ProjectVisitor
 
         Collection<String> enumValues = directive.values().values();
         String[] items = enumValues.toArray(new String[enumValues.size()]);
+
+        Collection<String> enumNames = directive.values().keySet();
+        String[] values = enumNames.toArray(new String[enumNames.size()]);
+
         JComboBox<String> comboBox = new JComboBox<>(items);
         comboBox.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
@@ -130,7 +138,7 @@ public final class ProjectConfigurationGui extends ProjectVisitor
         });
         panel.add(comboBox, BorderLayout.EAST);
 
-        enumerations.put(directive.name(), new Enumeration(label, comboBox));
+        enumerations.put(directive.name(), new Enumeration(label, comboBox, values));
     }
 
     private void generateProject()
@@ -140,7 +148,36 @@ public final class ProjectConfigurationGui extends ProjectVisitor
 
     private void updateOptionsVisibility()
     {
-        // FIXME
+        final Stack<Boolean> visible = new Stack<>();
+        visible.push(true);
+        project.visitDirectives(new ProjectVisitor() {
+            @Override public void visitEnumeration(EnumerationDirective directive) {
+                Enumeration enumeration = enumerations.get(directive.name());
+                if (enumeration != null) {
+                    boolean thisVisible = visible.peek();
+                    enumeration.label.setVisible(thisVisible);
+                    enumeration.comboBox.setVisible(thisVisible);
+                }
+            }
+            @Override public void visitSelector(SelectorDirective directive) {
+                boolean thisVisible = false;
+                Enumeration enumeration = enumerations.get(directive.enumerationName());
+                if (enumeration != null) {
+                    int index = enumeration.comboBox.getSelectedIndex();
+                    if (index >= 0 && index < enumeration.values.length) {
+                        String value = enumeration.values[index];
+                        if (directive.enumerationValue().equals(value))
+                            thisVisible = true;
+                    }
+                }
+                visible.push(visible.peek() && thisVisible);
+                try {
+                    directive.visitDirectives(this);
+                } finally {
+                    visible.pop();
+                }
+            }
+        });
     }
 
     public static void run(final Project project)
