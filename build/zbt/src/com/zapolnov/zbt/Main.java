@@ -23,6 +23,7 @@ package com.zapolnov.zbt;
 
 import com.zapolnov.zbt.gui.ProjectConfigurationGui;
 import com.zapolnov.zbt.project.Project;
+import com.zapolnov.zbt.project.ProjectFileReader;
 import com.zapolnov.zbt.utility.Utility;
 import java.io.File;
 
