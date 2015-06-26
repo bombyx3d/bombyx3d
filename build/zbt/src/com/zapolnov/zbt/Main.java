@@ -25,18 +25,44 @@ import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.gui.ProjectConfigurationGui;
 import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.project.ProjectFileReader;
+import com.zapolnov.zbt.utility.Database;
 import com.zapolnov.zbt.utility.Utility;
 import java.io.File;
 
 public class Main
 {
+    public static String BUILD_DIRECTORY_NAME = ".build";
+
     public static void generateProject(Project project, boolean openAfterGenerate)
     {
         File projectDirectory = project.projectDirectory();
-        File outputDirectory = new File(projectDirectory, ".zbt");
+        File outputDirectory = new File(projectDirectory, BUILD_DIRECTORY_NAME);
 
-        Generator generator = Generator.generatorForCurrentPlatform();
-        generator.generate(outputDirectory, project);
+        if (!outputDirectory.exists()) {
+            if (!outputDirectory.mkdirs()) {
+                throw new RuntimeException(String.format("Unable to create directory \"%s\".",
+                    Utility.getCanonicalPath(outputDirectory)));
+            }
+        }
+
+        if (!outputDirectory.isDirectory()) {
+            throw new RuntimeException(String.format("\"%s\" is not a directory.",
+                Utility.getCanonicalPath(outputDirectory)));
+        }
+
+        Database database = new Database(outputDirectory);
+        try {
+            try {
+                Generator generator = Generator.generatorForCurrentPlatform();
+                generator.generate(outputDirectory, project);
+            } catch (Throwable t) {
+                database.rollbackSafe();
+                throw t;
+            }
+            database.commit();
+        } finally {
+            database.close();
+        }
     }
 
     public static void main(String[] args)
