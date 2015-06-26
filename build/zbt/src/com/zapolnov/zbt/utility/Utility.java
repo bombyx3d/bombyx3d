@@ -99,45 +99,4 @@ public final class Utility
 
         return files;
     }
-
-    public static String invokeProgram(String program)
-    {
-        try {
-            Process process = Runtime.getRuntime().exec(program);
-
-            StreamReaderThread reader = new StreamReaderThread(process.getInputStream());
-            reader.start();
-            process.waitFor();
-            reader.join();
-
-            int exitValue = process.exitValue();
-            if (exitValue != 0)
-                throw new RuntimeException(String.format("Process \"%s\" exited with code %d.", program, exitValue));
-
-            return reader.getResult();
-        } catch (IOException|InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static boolean isWindowsRegistryKeyPresent(String key) {
-        if (!IS_WINDOWS)
-            return false;
-
-        try {
-            Process process = Runtime.getRuntime().exec(String.format("reg query \"%s\"", key));
-            process.waitFor();
-            StreamReaderThread reader = new StreamReaderThread(process.getInputStream());
-            reader.start();
-            reader.join();
-
-            int exitValue = process.exitValue();
-            if (exitValue == 0)
-                return true;
-        } catch (Throwable t) {
-            t.printStackTrace(System.err);
-        }
-
-        return false;
-    }
 }

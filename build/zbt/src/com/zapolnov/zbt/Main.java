@@ -53,8 +53,8 @@ public class Main
         Database database = new Database(outputDirectory);
         try {
             try {
-                Generator generator = Generator.generatorForCurrentPlatform();
-                generator.generate(outputDirectory, project);
+//                Generator generator = Generator.generatorForCurrentPlatform();
+//                generator.generate(outputDirectory, project);
             } catch (Throwable t) {
                 database.rollbackSafe();
                 throw t;

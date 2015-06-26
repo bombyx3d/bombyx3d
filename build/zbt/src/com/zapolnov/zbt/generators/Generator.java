@@ -22,26 +22,9 @@
 package com.zapolnov.zbt.generators;
 
 import com.zapolnov.zbt.project.Project;
-import com.zapolnov.zbt.utility.Utility;
 import java.io.File;
 
 public abstract class Generator
 {
     public abstract void generate(File targetPath, Project project);
-
-    public static Generator generatorForCurrentPlatform()
-    {
-        if (Utility.IS_WINDOWS) {
-            if (Utility.isWindowsRegistryKeyPresent("HKEY_CLASSES_ROOT\\VisualStudio.DTE.12.0")) {
-                System.out.println("Found Visual Studio 2013");
-                return new VisualStudioGenerator();
-            }
-
-            if (Utility.isWindowsRegistryKeyPresent("HKEY_CLASSES_ROOT\\VisualStudio.DTE.11.0")) {
-                System.out.println("Found Visual Studio 2012");
-                return new VisualStudioGenerator();
-            }
-        }
-        throw new RuntimeException("Unable to find an appropriate project generator for the current platform.");
-    }
 }
