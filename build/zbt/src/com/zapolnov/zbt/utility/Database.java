@@ -29,7 +29,12 @@ import org.mapdb.DBMaker;
 public class Database
 {
     public final static String FILE_NAME = "database";
-    public final static String INPUT_FILES_TABLE = "InputFiles";
+
+    public final static String TARGET_PLATFORM_OPTION = "TargetPlatform";
+    public final static String TARGET_COMPILER_OPTION = "TargetCompiler";
+
+    private final static String INPUT_FILES_TABLE = "<InputFiles>";
+    private final static String OPTIONS_TABLE = "<Options>";
 
     protected DB db;
 
@@ -61,8 +66,27 @@ public class Database
 
     public void close()
     {
-        db.close();
-        db = null;
+        if (db != null) {
+            db.close();
+            db = null;
+        }
+    }
+
+    public String getOption(String key)
+    {
+        try {
+            ConcurrentNavigableMap<String, String> table = db.getTreeMap(OPTIONS_TABLE);
+            return table.get(key);
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        return null;
+    }
+
+    public void setOption(String key, String value)
+    {
+        ConcurrentNavigableMap<String, String> table = db.getTreeMap(OPTIONS_TABLE);
+        table.put(key, value);
     }
 
     public boolean didInputFileChange(File file)

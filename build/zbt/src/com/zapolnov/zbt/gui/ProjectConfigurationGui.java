@@ -22,17 +22,17 @@
 package com.zapolnov.zbt.gui;
 
 import com.zapolnov.zbt.Main;
+import com.zapolnov.zbt.ProjectBuilder;
+import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.project.ProjectVisitor;
-import com.zapolnov.zbt.project.directive.DefineDirective;
 import com.zapolnov.zbt.project.directive.EnumerationDirective;
 import com.zapolnov.zbt.project.directive.SelectorDirective;
+import com.zapolnov.zbt.utility.Database;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -67,15 +67,17 @@ public final class ProjectConfigurationGui extends ProjectVisitor
     }
 
     private final Project project;
+    private final ProjectBuilder projectBuilder;
     private final JFrame frame;
-    private final JPanel optionsPanel;
+    private final CMakeOptionsPanel cmakeOptionsPanel;
     private final List<JLabel> labels = new ArrayList<>();
     private final List<JComponent> editors = new ArrayList<>();
     private final Map<String, Enumeration> enumerations = new HashMap<>();
 
-    private ProjectConfigurationGui(Project project)
+    private ProjectConfigurationGui(ProjectBuilder projectBuilder)
     {
-        this.project = project;
+        this.projectBuilder = projectBuilder;
+        this.project = projectBuilder.readProjectFile();
 
         frame = new JFrame("Project Configuration");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -90,14 +92,17 @@ public final class ProjectConfigurationGui extends ProjectVisitor
             }
         });
 
-        optionsPanel = new JPanel();
+        cmakeOptionsPanel = new CMakeOptionsPanel();
+        frame.getContentPane().add(cmakeOptionsPanel, BorderLayout.PAGE_START);
+
+        JPanel optionsPanel = new JPanel();
         optionsPanel.setLayout(new GridLayout(labels.size(), 2));
         optionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         for (int i = 0; i < labels.size(); i++) {
             optionsPanel.add(labels.get(i), BorderLayout.WEST);
             optionsPanel.add(editors.get(i), BorderLayout.EAST);
         }
-        frame.getContentPane().add(optionsPanel, BorderLayout.PAGE_START);
+        frame.getContentPane().add(optionsPanel, BorderLayout.CENTER);
 
         updateOptionsVisibility();
 
@@ -106,11 +111,7 @@ public final class ProjectConfigurationGui extends ProjectVisitor
         frame.getContentPane().add(buttonsBox, BorderLayout.PAGE_END);
 
         JButton button = new JButton("Generate project");
-        button.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                ProjectConfigurationGui.this.generateProject();
-            }
-        });
+        button.addActionListener(e -> ProjectConfigurationGui.this.generateProject());
         buttonsBox.add(button);
 
         frame.pack();
@@ -118,7 +119,12 @@ public final class ProjectConfigurationGui extends ProjectVisitor
         frame.setVisible(true);
     }
 
-    public void visitEnumeration(EnumerationDirective directive)
+    private void setSelectedTarget(String platform, String compiler)
+    {
+        cmakeOptionsPanel.setSelection(platform, compiler);
+    }
+
+    @Override public void visitEnumeration(EnumerationDirective directive)
     {
         JLabel label = new JLabel(directive.description());
         labels.add(label);
@@ -135,11 +141,7 @@ public final class ProjectConfigurationGui extends ProjectVisitor
         String[] values = enumNames.toArray(new String[enumNames.size()]);
 
         JComboBox<String> comboBox = new JComboBox<>(items);
-        comboBox.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                updateOptionsVisibility();
-            }
-        });
+        comboBox.addActionListener(e -> updateOptionsVisibility());
         panel.add(comboBox, BorderLayout.EAST);
 
         enumerations.put(directive.name(), new Enumeration(label, comboBox, values));
@@ -148,7 +150,13 @@ public final class ProjectConfigurationGui extends ProjectVisitor
     private void generateProject()
     {
         try {
-            Main.generateProject(project, true);
+            Generator generator = cmakeOptionsPanel.createSelectedGenerator();
+
+            projectBuilder.database().setOption(Database.TARGET_PLATFORM_OPTION, cmakeOptionsPanel.selectedPlatform());
+            projectBuilder.database().setOption(Database.TARGET_COMPILER_OPTION, cmakeOptionsPanel.selectedCompiler());
+            projectBuilder.database().commit();
+
+            projectBuilder.buildProject(generator);
         } catch (Throwable t) {
             t.printStackTrace(System.err);
             String message = String.format("%s: %s", t.getClass().getName(), t.getMessage());
@@ -190,12 +198,21 @@ public final class ProjectConfigurationGui extends ProjectVisitor
         });
     }
 
-    public static void run(final Project project)
+    public static void run(final ProjectBuilder projectBuilder, final String platform, final String compiler)
     {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override public void run() {
-                new ProjectConfigurationGui(project);
+        ProjectConfigurationGui gui = new ProjectConfigurationGui(projectBuilder);
+        if (platform != null || compiler != null)
+            gui.setSelectedTarget(platform, compiler);
+        else {
+            String savedPlatform = projectBuilder.database().getOption(Database.TARGET_PLATFORM_OPTION);
+            String savedCompiler = projectBuilder.database().getOption(Database.TARGET_COMPILER_OPTION);
+            if (savedPlatform != null && savedCompiler != null) {
+                try {
+                    gui.setSelectedTarget(savedPlatform, savedCompiler);
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
             }
-        });
+        }
     }
 }

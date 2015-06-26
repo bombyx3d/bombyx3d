@@ -24,8 +24,36 @@ package com.zapolnov.zbt.generators;
 import com.zapolnov.zbt.project.Project;
 import java.io.File;
 
-public abstract class CMakeGenerator extends Generator
+public class CMakeGenerator extends Generator
 {
+    public enum Target
+    {
+        // Windows
+        MINGW32_MAKEFILES,
+        MSYS32_MAKEFILES,
+        MINGW64_MAKEFILES,
+        MSYS64_MAKEFILES,
+        VS2013_WIN32,
+        VS2013_WIN64,
+        VS2013_WINPHONE,
+        VS2013_WINSTORE,
+        VS2015_WIN32,
+        VS2015_WIN64,
+        VS2015_WINPHONE,
+        VS2015_WINSTORE,
+    }
+
+    private final Target target;
+
+    public CMakeGenerator(Target target)
+    {
+        this.target = target;
+    }
+
+    @Override public void generate(File targetPath, Project project)
+    {
+    }
+
     public void writeCMakeLists(File targetPath, Project project)
     {
     }
