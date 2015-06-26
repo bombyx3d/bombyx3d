@@ -32,6 +32,7 @@ import java.util.List;
 public final class SourceDirectoriesDirective extends ProjectDirective
 {
     private final List<File> sourceDirectories;
+    private List<File> sourceFiles;
 
     public SourceDirectoriesDirective(List<File> sourceDirectories)
     {
@@ -45,12 +46,14 @@ public final class SourceDirectoriesDirective extends ProjectDirective
 
     public List<File> sourceFiles()
     {
-        List<File> files = new ArrayList<>();
-        for (File directory : sourceDirectories) {
-            List<File> directoryFiles = Utility.recursivelyEnumerateFilesInDirectory(directory);
-            files.addAll(directoryFiles);
+        if (sourceFiles == null) {
+            sourceFiles = new ArrayList<>();
+            for (File directory : sourceDirectories) {
+                List<File> directoryFiles = Utility.recursivelyEnumerateFilesInDirectory(directory);
+                sourceFiles.addAll(directoryFiles);
+            }
         }
-        return files;
+        return sourceFiles;
     }
 
     @Override public void visit(ProjectVisitor visitor)
