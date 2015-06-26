@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="snakeyaml-1.15" level="project" />
+    <orderEntry type="library" name="mapdb-1.0.7" level="project" />
   </component>
 </module>
