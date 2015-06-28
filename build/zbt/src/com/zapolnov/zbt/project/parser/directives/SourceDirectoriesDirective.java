@@ -19,46 +19,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt.project.directive;
+package com.zapolnov.zbt.project.parser.directives;
 
-import com.zapolnov.zbt.project.ProjectDirective;
-import com.zapolnov.zbt.project.ProjectVisitor;
+import com.zapolnov.zbt.project.parser.ProjectDirective;
+import com.zapolnov.zbt.project.parser.ProjectDirectiveVisitor;
+import com.zapolnov.zbt.utility.Utility;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class SelectorDirective extends ProjectDirective
+public final class SourceDirectoriesDirective extends ProjectDirective
 {
-    private final String enumerationName;
-    private final String enumerationValue;
-    private final List<ProjectDirective> innerDirectives;
+    private final List<File> sourceDirectories;
+    private List<File> sourceFiles;
 
-    public SelectorDirective(String enumerationName, String enumerationValue, List<ProjectDirective> innerDirectives)
+    public SourceDirectoriesDirective(List<File> sourceDirectories)
     {
-        this.enumerationName = enumerationName;
-        this.enumerationValue = enumerationValue;
-        this.innerDirectives = new ArrayList<>(innerDirectives);
+        this.sourceDirectories = new ArrayList<>(sourceDirectories);
     }
 
-    public String enumerationName()
+    public List<File> sourceDirectories()
     {
-        return enumerationName;
+        return Collections.unmodifiableList(sourceDirectories);
     }
 
-    public String enumerationValue()
+    public List<File> sourceFiles()
     {
-        return enumerationValue;
+        if (sourceFiles == null) {
+            sourceFiles = new ArrayList<>();
+            for (File directory : sourceDirectories) {
+                List<File> directoryFiles = Utility.recursivelyEnumerateFilesInDirectory(directory);
+                sourceFiles.addAll(directoryFiles);
+            }
+        }
+        return sourceFiles;
     }
 
-    @Override public void visit(ProjectVisitor visitor)
+    @Override public void visit(ProjectDirectiveVisitor visitor)
     {
-        visitor.visitSelector(this);
-    }
-
-    public void visitDirectives(ProjectVisitor visitor)
-    {
-        for (ProjectDirective directive : innerDirectives)
-            directive.visit(visitor);
+        visitor.visitSourceDirectories(this);
     }
 }
-

@@ -19,42 +19,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt.generators;
+package com.zapolnov.zbt.generators.cmake;
 
+import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.project.Project;
-import java.io.File;
 
 public class CMakeGenerator extends Generator
 {
-    public enum Target
+    public static final String NAME = "CMake 3.2+";
+
+    @Override public String name()
     {
-        // Windows
-        MINGW32_MAKEFILES,
-        MSYS32_MAKEFILES,
-        MINGW64_MAKEFILES,
-        MSYS64_MAKEFILES,
-        VS2013_WIN32,
-        VS2013_WIN64,
-        VS2013_WINPHONE,
-        VS2013_WINSTORE,
-        VS2015_WIN32,
-        VS2015_WIN64,
-        VS2015_WINPHONE,
-        VS2015_WINSTORE,
+        return NAME;
     }
 
-    private final Target target;
-
-    public CMakeGenerator(Target target)
-    {
-        this.target = target;
-    }
-
-    @Override public void generate(File targetPath, Project project)
-    {
-    }
-
-    public void writeCMakeLists(File targetPath, Project project)
+    @Override public void generate(Project project)
     {
     }
 }

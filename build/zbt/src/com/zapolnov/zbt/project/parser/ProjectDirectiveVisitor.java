@@ -19,30 +19,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt.project.directive;
+package com.zapolnov.zbt.project.parser;
 
-import com.zapolnov.zbt.project.ProjectDirective;
-import com.zapolnov.zbt.project.ProjectVisitor;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.zapolnov.zbt.project.parser.directives.DefineDirective;
+import com.zapolnov.zbt.project.parser.directives.EnumerationDirective;
+import com.zapolnov.zbt.project.parser.directives.ImportDirective;
+import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
+import com.zapolnov.zbt.project.parser.directives.SourceDirectoriesDirective;
 
-public final class DefineDirective extends ProjectDirective
+public abstract class ProjectDirectiveVisitor
 {
-    private final List<String> defines;
-
-    public DefineDirective(List<String> defines)
-    {
-        this.defines = new ArrayList<>(defines);
-    }
-
-    public List<String> defines()
-    {
-        return Collections.unmodifiableList(defines);
-    }
-
-    @Override public void visit(ProjectVisitor visitor)
-    {
-        visitor.visitDefine(this);
-    }
+    public void visitDefine(DefineDirective directive) {}
+    public void visitSourceDirectories(SourceDirectoriesDirective directive) {}
+    public void visitEnumeration(EnumerationDirective directive) {}
+    public void visitImport(ImportDirective directive) {}
+    public void visitSelector(SelectorDirective directive) {}
 }

@@ -22,13 +22,13 @@
 package com.zapolnov.zbt;
 
 import com.zapolnov.zbt.generators.Generator;
-import com.zapolnov.zbt.gui.ProjectConfigurationGui;
+import com.zapolnov.zbt.gui.FatalErrorDialog;
+import com.zapolnov.zbt.gui.MainDialog;
+import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.utility.Utility;
 import java.io.File;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 public class Main
 {
@@ -44,15 +44,14 @@ public class Main
         System.out.println("  -h, --help                Display this help screen.");
         System.out.println("  -v, --verbose             Verbose error reporting.");
         System.out.println("  -b, --batch               Batch mode (no GUI).");
-        System.out.println("  -t, --target              Specify target platform/compiler.");
+        System.out.println("  -g, --generator           Specify generator to use.");
+        System.out.println("  -p, --project             Path to the source directory of the project.");
         System.out.println("");
 
-        System.out.println("The following combinations of target platform/compiler are allowed:");
-        Map<String, Map<String, Generator.Factory>> generators = Generator.allGenerators();
-        for (Map.Entry<String, Map<String, Generator.Factory>> it : generators.entrySet()) {
-            for (String compiler : it.getValue().keySet()) {
-                System.out.println(String.format("  \"%s / %s\"", it.getKey(), compiler));
-            }
+        System.out.println("The following generators are available:");
+        Map<String, Generator> generators = Generator.allGenerators();
+        for (Map.Entry<String, Generator> it : generators.entrySet()) {
+            System.out.println(String.format("  \"%s\"", it.getKey()));
         }
 
         System.out.println("");
@@ -67,33 +66,39 @@ public class Main
 
         if (batch)
             System.exit(1);
-        else {
-            final String message = String.format("%s: %s", t.getClass().getName(), t.getMessage());
-            SwingUtilities.invokeLater(() -> {
-                JOptionPane.showMessageDialog(null, message, "Fatal error", JOptionPane.ERROR_MESSAGE);
-                System.exit(1);
-            });
-        }
+        else
+            FatalErrorDialog.run(t);
     }
 
     public static void main(String[] args)
     {
-        Map<String, String> options = new HashMap<>();
-        String target = null;
-
-        // Parse command-line arguments
-
         try {
+            Map<String, String> options = new LinkedHashMap<>();
+            File projectPath = Utility.getCanonicalFile(new File("."));
+            Generator generator = null;
+
+            // Parse command-line arguments
 
             for (int i = 0; i < args.length; i++) {
                 if ("--verbose".equals(args[i]) || "-v".equals(args[i]))
                     verbose = true;
                 else if ("--batch".equals(args[i]) || "-b".equals(args[i]))
                     batch = true;
-                else if ("--target".equals(args[i]) || "-t".equals(args[i])) {
+                else if ("--generator".equals(args[i]) || "-g".equals(args[i])) {
                     if (i == args.length - 1)
-                        throw new RuntimeException(String.format("Error: missing value after the \"%s\" option.", args[i]));
-                    target = args[++i];
+                        throw new RuntimeException(String.format("Missing value after the \"%s\" option.", args[i]));
+                    String generatorName = args[++i];
+                    generator = Generator.allGenerators().get(generatorName);
+                    if (generator == null)
+                        throw new RuntimeException(String.format("Invalid generator \"%s\".", generatorName));
+                } else if ("--project".equals(args[i]) || "-p".equals(args[i])) {
+                    if (i == args.length - 1)
+                        throw new RuntimeException(String.format("Missing value after the \"%s\" option.", args[i]));
+                    projectPath = Utility.getCanonicalFile(new File(args[++i]));
+                    if (!projectPath.exists())
+                        throw new RuntimeException(String.format("Directory does not exist: \"%s\".", projectPath));
+                    if (!projectPath.isDirectory())
+                        throw new RuntimeException(String.format("\"%s\" is not a directory.", projectPath));
                 } else if ("--help".equals(args[i]) || "-h".equals(args[i])) {
                     showUsage();
                     System.exit(1);
@@ -103,41 +108,7 @@ public class Main
                     String value = args[i].substring(index + 1);
                     options.put(name, value);
                 } else
-                    throw new RuntimeException(String.format("Error: invalid option \"%s\".", args[i]));
-            }
-
-            // Validate the provided target platform/compiler pair
-
-            Generator.Factory generatorFactory = null;
-            String platform = null;
-            String compiler = null;
-            if (target != null) {
-                int index = target.indexOf(" / ");
-                if (index < 0) {
-                    throw new RuntimeException(
-                        String.format("Invalid target platform/compiler combination: \"%s\".", target));
-                }
-
-                platform = target.substring(0, index);
-                compiler = target.substring(index + 3);
-
-                Map<String, Map<String, Generator.Factory>> generators = Generator.allGenerators();
-                for (Map.Entry<String, Map<String, Generator.Factory>> it : generators.entrySet()) {
-                    if (it.getKey().equals(platform)) {
-                        for (String jt : it.getValue().keySet()) {
-                            if (jt.equals(compiler)) {
-                                generatorFactory = it.getValue().get(jt);
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
-
-                if (generatorFactory == null) {
-                    throw new RuntimeException(
-                        String.format("Invalid target platform/compiler combination: \"%s\".", target));
-                }
+                    throw new RuntimeException(String.format("Invalid option \"%s\".", args[i]));
             }
 
             // Display help screen if needed
@@ -147,40 +118,24 @@ public class Main
 
             // Build the project
 
-            final ProjectBuilder builder = new ProjectBuilder(new File("../.."));
+            final Project project = new Project(projectPath);
             try {
-                // Read project file
-
-                builder.readProjectFile();
-
-                // Apply options from the command line
-
-                for (Map.Entry<String, String> option : options.entrySet())
-                    builder.setOption(option.getKey(), option.getValue());
-
                 // Invoke the builder
 
-                if (batch) {
-                    if (generatorFactory == null)
-                        throw new RuntimeException("No target was specified on the command line.");
-                    builder.buildProject(generatorFactory.create());
-                } else {
-                    final String platformID = platform;
-                    final String compilerID = compiler;
-                    SwingUtilities.invokeLater(() -> {
-                        try {
-                            ProjectConfigurationGui.run(builder, platformID, compilerID);
-                        } catch (Throwable t) {
-                            handleFatalException(t);
-                        }
-                    });
+                if (!batch)
+                    MainDialog.run(project, generator, options);
+                else {
+                    if (generator == null)
+                        throw new RuntimeException("No generator was specified on the command line.");
+                    project.buildProject(generator, options);
                 }
             } finally {
-                if (batch)
-                    builder.closeDatabase();
+                project.closeDatabase();
             }
         } catch (Throwable t) {
             handleFatalException(t);
         }
+
+        System.exit(0);
     }
 }

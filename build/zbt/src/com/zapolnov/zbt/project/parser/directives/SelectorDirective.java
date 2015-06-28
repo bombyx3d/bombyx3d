@@ -19,45 +19,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt.project.directive;
+package com.zapolnov.zbt.project.parser.directives;
 
-import com.zapolnov.zbt.project.ProjectDirective;
-import com.zapolnov.zbt.project.ProjectVisitor;
-import com.zapolnov.zbt.utility.Utility;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.zapolnov.zbt.project.parser.ProjectDirective;
+import com.zapolnov.zbt.project.parser.ProjectDirectiveList;
+import com.zapolnov.zbt.project.parser.ProjectDirectiveVisitor;
+import java.util.Set;
 
-public final class SourceDirectoriesDirective extends ProjectDirective
+public final class SelectorDirective extends ProjectDirective
 {
-    private final List<File> sourceDirectories;
-    private List<File> sourceFiles;
+    private final String enumerationID;
+    private final Set<String> matchingValues;
+    private final ProjectDirectiveList innerDirectives;
 
-    public SourceDirectoriesDirective(List<File> sourceDirectories)
+    public SelectorDirective(String enumerationID, Set<String> matchingValues, ProjectDirectiveList innerDirectives)
     {
-        this.sourceDirectories = new ArrayList<>(sourceDirectories);
+        this.enumerationID = enumerationID;
+        this.matchingValues = matchingValues;
+        this.innerDirectives = innerDirectives;
     }
 
-    public List<File> sourceDirectories()
+    public String enumerationID()
     {
-        return Collections.unmodifiableList(sourceDirectories);
+        return enumerationID;
     }
 
-    public List<File> sourceFiles()
+    public Set<String> matchingValues()
     {
-        if (sourceFiles == null) {
-            sourceFiles = new ArrayList<>();
-            for (File directory : sourceDirectories) {
-                List<File> directoryFiles = Utility.recursivelyEnumerateFilesInDirectory(directory);
-                sourceFiles.addAll(directoryFiles);
-            }
-        }
-        return sourceFiles;
+        return matchingValues;
     }
 
-    @Override public void visit(ProjectVisitor visitor)
+    public ProjectDirectiveList innerDirectives()
     {
-        visitor.visitSourceDirectories(this);
+        return innerDirectives;
+    }
+
+    @Override public void visit(ProjectDirectiveVisitor visitor)
+    {
+        visitor.visitSelector(this);
     }
 }
+

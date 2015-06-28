@@ -19,26 +19,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt.generators;
+package com.zapolnov.zbt.project.parser;
 
-import com.zapolnov.zbt.generators.cmake.CMakeGenerator;
-import com.zapolnov.zbt.project.Project;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-public abstract class Generator
+public abstract class ProjectDirective
 {
-    public abstract String name();
-    public abstract void generate(Project project);
-
-    private static Map<String, Generator> allGenerators;
-    public static Map<String, Generator> allGenerators()
-    {
-        if (allGenerators == null) {
-            Map<String, Generator> g = new LinkedHashMap<>();
-            g.put(CMakeGenerator.NAME, new CMakeGenerator());
-            allGenerators = g;
-        }
-        return allGenerators;
-    }
+    public abstract void visit(ProjectDirectiveVisitor visitor);
 }

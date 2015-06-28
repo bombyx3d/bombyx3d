@@ -19,10 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt.project.directive;
+package com.zapolnov.zbt.project.parser.directives;
 
-import com.zapolnov.zbt.project.ProjectDirective;
-import com.zapolnov.zbt.project.ProjectVisitor;
+import com.zapolnov.zbt.project.parser.ProjectDirective;
+import com.zapolnov.zbt.project.parser.ProjectDirectiveVisitor;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,25 +33,32 @@ public final class EnumerationDirective extends ProjectDirective
     public static Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z0-9_-]+");
     public static Pattern VALUE_PATTERN = Pattern.compile("[a-zA-Z0-9_-]+");
 
-    private final String name;
-    private final String description;
+    private final String id;
+    private final String title;
+    private final String defaultValue;
     private final Map<String, String> values;
 
-    public EnumerationDirective(String name, String description, Map<String, String> values)
+    public EnumerationDirective(String id, String title, String defaultValue, Map<String, String> values)
     {
-        this.name = name;
-        this.description = description;
+        this.id = id;
+        this.title = title;
+        this.defaultValue = defaultValue;
         this.values = new LinkedHashMap<>(values);
     }
 
-    public String name()
+    public String id()
     {
-        return name;
+        return id;
     }
 
-    public String description()
+    public String title()
     {
-        return description;
+        return title;
+    }
+
+    public String defaultValue()
+    {
+        return defaultValue;
     }
 
     public Map<String, String> values()
@@ -59,7 +66,7 @@ public final class EnumerationDirective extends ProjectDirective
         return Collections.unmodifiableMap(values);
     }
 
-    @Override public void visit(ProjectVisitor visitor)
+    @Override public void visit(ProjectDirectiveVisitor visitor)
     {
         visitor.visitEnumeration(this);
     }

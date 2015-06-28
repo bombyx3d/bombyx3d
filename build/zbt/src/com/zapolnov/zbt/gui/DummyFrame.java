@@ -19,9 +19,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt.project;
+package com.zapolnov.zbt.gui;
 
-public abstract class ProjectDirective
+import javax.swing.JFrame;
+
+public final class DummyFrame extends JFrame
 {
-    public abstract void visit(ProjectVisitor visitor);
+    public DummyFrame(String title)
+    {
+        super(title);
+        setUndecorated(true);
+        setVisible(true);
+        setLocationRelativeTo(null);
+    }
 }

@@ -30,8 +30,8 @@ public class Database
 {
     public final static String FILE_NAME = "database";
 
-    public final static String TARGET_PLATFORM_OPTION = "TargetPlatform";
-    public final static String TARGET_COMPILER_OPTION = "TargetCompiler";
+    public static final String OPTION_GENERATOR_NAME = "Generator";
+    public static final String PROJECT_OPTION_FORMAT = "ProjectOption:%s";
 
     private final static String INPUT_FILES_TABLE = "<InputFiles>";
     private final static String OPTIONS_TABLE = "<Options>";

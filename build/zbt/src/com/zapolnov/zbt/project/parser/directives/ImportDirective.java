@@ -19,26 +19,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt.generators;
+package com.zapolnov.zbt.project.parser.directives;
 
-import com.zapolnov.zbt.generators.cmake.CMakeGenerator;
-import com.zapolnov.zbt.project.Project;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.zapolnov.zbt.project.parser.ProjectDirective;
+import com.zapolnov.zbt.project.parser.ProjectDirectiveList;
+import com.zapolnov.zbt.project.parser.ProjectDirectiveVisitor;
 
-public abstract class Generator
+public final class ImportDirective extends ProjectDirective
 {
-    public abstract String name();
-    public abstract void generate(Project project);
+    private final String modulePath;
+    private final ProjectDirectiveList innerDirectives;
 
-    private static Map<String, Generator> allGenerators;
-    public static Map<String, Generator> allGenerators()
+    public ImportDirective(String modulePath, ProjectDirectiveList innerDirectives)
     {
-        if (allGenerators == null) {
-            Map<String, Generator> g = new LinkedHashMap<>();
-            g.put(CMakeGenerator.NAME, new CMakeGenerator());
-            allGenerators = g;
-        }
-        return allGenerators;
+        this.modulePath = modulePath;
+        this.innerDirectives = innerDirectives;
+    }
+
+    public String modulePath()
+    {
+        return modulePath;
+    }
+
+    public ProjectDirectiveList innerDirectives()
+    {
+        return innerDirectives;
+    }
+
+    @Override public void visit(ProjectDirectiveVisitor visitor)
+    {
+        visitor.visitImport(this);
     }
 }

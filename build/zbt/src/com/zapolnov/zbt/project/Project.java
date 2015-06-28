@@ -21,41 +21,90 @@
  */
 package com.zapolnov.zbt.project;
 
+import com.zapolnov.zbt.generators.Generator;
+import com.zapolnov.zbt.project.parser.ProjectDirectiveList;
+import com.zapolnov.zbt.project.parser.ProjectFileParser;
+import com.zapolnov.zbt.project.parser.directives.ImportDirective;
+import com.zapolnov.zbt.utility.Database;
+import com.zapolnov.zbt.utility.Utility;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Project
 {
+    public static final String BUILD_DIRECTORY_NAME = ".build";
+
     private final File projectDirectory;
-    private final List<ProjectDirective> directives = new ArrayList<>();
-    private final Set<String> enumerationNames = new HashSet<>();
+    private final File projectFile;
+    private final File outputDirectory;
+    private final Database database;
+    private final Map<String, String> options = new HashMap<>();
+    private final Map<String, ImportDirective> importedModules = new HashMap<>();
+    private final ProjectDirectiveList directives = new ProjectDirectiveList(null, false);
 
     public Project(File projectDirectory)
     {
         this.projectDirectory = projectDirectory;
+        this.projectFile = new File(projectDirectory, ProjectFileParser.PROJECT_FILE_NAME);
+        this.outputDirectory = new File(projectDirectory, BUILD_DIRECTORY_NAME);
+
+        ProjectFileParser parser = new ProjectFileParser(this);
+        parser.parseFile(projectFile);
+
+        if (!outputDirectory.exists()) {
+            if (!outputDirectory.mkdirs()) {
+                throw new RuntimeException(String.format("Unable to create directory \"%s\".",
+                    Utility.getCanonicalPath(outputDirectory)));
+            }
+        }
+
+        if (!outputDirectory.isDirectory()) {
+            throw new RuntimeException(String.format("\"%s\" is not a directory.",
+                Utility.getCanonicalPath(outputDirectory)));
+        }
+
+        database = new Database(outputDirectory);
     }
 
-    public File projectDirectory()
+    public Database database()
     {
-        return projectDirectory;
+        return database;
     }
 
-    public List<ProjectDirective> directives()
+    public void closeDatabase()
+    {
+        database.close();
+    }
+
+    public String getConfigurationOption(String name)
+    {
+        return options.get(name);
+    }
+
+    public ImportDirective getImportedModule(String modulePath)
+    {
+        return importedModules.get(modulePath);
+    }
+
+    public void addImportedModule(ImportDirective directive)
+    {
+        importedModules.put(directive.modulePath(), directive);
+    }
+
+    public ProjectDirectiveList directives()
     {
         return directives;
     }
 
-    public boolean addEnumerationName(String name)
+    public void buildProject(Generator generator, Map<String, String> options)
     {
-        return enumerationNames.add(name);
-    }
-
-    public void visitDirectives(ProjectVisitor visitor)
-    {
-        for (ProjectDirective directive : directives)
-            directive.visit(visitor);
+        try {
+            generator.generate(this);
+            database.commit();
+        } catch (Throwable t) {
+            database.rollbackSafe();
+            throw t;
+        }
     }
 }

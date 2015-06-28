@@ -1,0 +1,252 @@
+/*
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.zapolnov.zbt.gui;
+
+import com.zapolnov.zbt.generators.Generator;
+import com.zapolnov.zbt.project.Project;
+import com.zapolnov.zbt.project.parser.ProjectDirectiveList;
+import com.zapolnov.zbt.project.parser.ProjectDirectiveVisitor;
+import com.zapolnov.zbt.project.parser.directives.EnumerationDirective;
+import com.zapolnov.zbt.project.parser.directives.ImportDirective;
+import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
+import com.zapolnov.zbt.utility.Database;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+public final class ProjectConfigurationPanel extends JPanel
+{
+    public static final String GENERATOR_LABEL = "Generator:";
+
+    public interface Listener
+    {
+        void onProjectConfigurationPanelChanged();
+    }
+
+    private final Project project;
+    private final JComboBox<String> generatorCombo;
+    private final Map<JComboBox<String>, EnumerationDirective> enumerationDirectives = new LinkedHashMap<>();
+    private final Map<String, JComboBox<String>> comboBoxes = new LinkedHashMap<>();
+    private final List<Container> widgetPanels = new ArrayList<>();
+    private final List<Listener> listeners = new ArrayList<>();
+    private final Map<String, String> defaultOptionValues;
+
+    public ProjectConfigurationPanel(Project project, Generator defaultGenerator, Map<String, String> options)
+    {
+        this.project = project;
+        this.defaultOptionValues = new LinkedHashMap<>(options);
+
+        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+
+        String defaultGeneratorName = (defaultGenerator != null ? defaultGenerator.name() : null);
+        if (defaultGeneratorName == null)
+            defaultGeneratorName = project.database().getOption(Database.OPTION_GENERATOR_NAME);
+        generatorCombo = createComboBox(GENERATOR_LABEL, Generator.allGenerators().keySet(), defaultGeneratorName);
+
+        createWidgets();
+        updateWidgetsVisibility();
+    }
+
+    public void addChangeListener(Listener listener)
+    {
+        listeners.add(listener);
+    }
+
+    private void createWidgets()
+    {
+        createWidgets(project.directives());
+    }
+
+    private void createWidgets(ProjectDirectiveList directives)
+    {
+        directives.visitDirectives(new ProjectDirectiveVisitor() {
+            @Override public void visitEnumeration(EnumerationDirective directive) {
+                createEnumerationWidget(directive);
+            }
+        });
+
+        directives.visitDirectives(new ProjectDirectiveVisitor() {
+            @Override public void visitImport(ImportDirective directive) {
+                createWidgets(directive.innerDirectives());
+            }
+            @Override public void visitSelector(SelectorDirective directive) {
+                createWidgets(directive.innerDirectives());
+            }
+        });
+    }
+
+    private void createEnumerationWidget(EnumerationDirective directive)
+    {
+        JComboBox<String> comboBox = comboBoxes.get(directive.id());
+        if (comboBox != null)
+            return;
+
+        Collection<String> values = directive.values().values();
+
+        int selectedIndex = -1;
+        String defaultValue = defaultOptionValues.get(directive.id());
+        if (defaultValue == null)
+            defaultValue = project.database().getOption(String.format(Database.PROJECT_OPTION_FORMAT, directive.id()));
+        if (defaultValue == null)
+            defaultValue = directive.defaultValue();
+        if (defaultValue != null) {
+            int index = 0;
+            for (Map.Entry<String, String> item : directive.values().entrySet()) {
+                if (defaultValue.equals(item.getKey())) {
+                    selectedIndex = index;
+                    break;
+                }
+                ++index;
+            }
+        }
+
+        comboBox = createComboBox(directive.title(), values, selectedIndex);
+        comboBox.addItemListener(e -> updateWidgetsVisibility());
+
+        comboBoxes.put(directive.id(), comboBox);
+        enumerationDirectives.put(comboBox, directive);
+        widgetPanels.add(comboBox.getParent());
+    }
+
+    private void updateWidgetsVisibility()
+    {
+        Set<Container> visible = new HashSet<>();
+        updateWidgetsVisibility(visible, project.directives());
+
+        for (Container panel : widgetPanels)
+            panel.setVisible(visible.contains(panel));
+
+        List<Listener> listenerList = new ArrayList<>(listeners);
+        listenerList.forEach(ProjectConfigurationPanel.Listener::onProjectConfigurationPanelChanged);
+    }
+
+    private void updateWidgetsVisibility(final Set<Container> visible, ProjectDirectiveList directives)
+    {
+        directives.visitDirectives(new ProjectDirectiveVisitor() {
+            @Override public void visitEnumeration(EnumerationDirective directive) {
+                visible.add(comboBoxes.get(directive.id()).getParent());
+            }
+            @Override public void visitImport(ImportDirective directive) {
+                updateWidgetsVisibility(visible, directive.innerDirectives());
+            }
+            @Override public void visitSelector(SelectorDirective directive) {
+                JComboBox<String> comboBox = comboBoxes.get(directive.enumerationID());
+                String selectedItem = getComboBoxSelectedEnumeration(comboBox);
+                if (selectedItem != null && directive.matchingValues().contains(selectedItem))
+                    updateWidgetsVisibility(visible, directive.innerDirectives());
+            }
+        });
+    }
+
+    private JComboBox<String> createComboBox(String labelText, Collection<String> items, String selectedItem)
+    {
+        int selectedIndex = -1;
+        if (selectedItem != null) {
+            int index = 0;
+            for (String item : items) {
+                if (selectedItem.equals(item)) {
+                    selectedIndex = index;
+                    break;
+                }
+                ++index;
+            }
+        }
+        return createComboBox(labelText, items, selectedIndex);
+    }
+
+    private JComboBox<String> createComboBox(String labelText, Collection<String> items, int selectedIndex)
+    {
+        JPanel panel = new JPanel(new GridLayout(1, 2));
+        panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+        add(panel);
+
+        JLabel label = new JLabel(labelText);
+        panel.add(label, BorderLayout.WEST);
+
+        JComboBox<String> comboBox = new JComboBox<>(items.toArray(new String[items.size()]));
+        comboBox.setEditable(false);
+        panel.add(comboBox, BorderLayout.EAST);
+
+        comboBox.setSelectedIndex(selectedIndex);
+
+        return comboBox;
+    }
+
+    private String getComboBoxSelectedEnumeration(JComboBox<String> comboBox)
+    {
+        if (comboBox == null)
+            return null;
+
+        EnumerationDirective enumeration = enumerationDirectives.get(comboBox);
+        if (enumeration == null)
+            return null;
+
+        int selectedIndex = comboBox.getSelectedIndex();
+        if (selectedIndex < 0)
+            return null;
+
+        Iterator<String> valueIterator = enumeration.values().keySet().iterator();
+        for (int i = 0; valueIterator.hasNext(); i++) {
+            String value = valueIterator.next();
+            if (i == selectedIndex)
+                return value;
+        }
+
+        return null;
+    }
+
+    public Generator selectedGenerator()
+    {
+        String generatorName = (String)generatorCombo.getSelectedItem();
+        return Generator.allGenerators().get(generatorName);
+    }
+
+    public Map<String, String> selectedOptions()
+    {
+        Map<String, String> options = new LinkedHashMap<>(defaultOptionValues);
+        for (Map.Entry<String, JComboBox<String>> it : comboBoxes.entrySet()) {
+            String enumerationID = it.getKey();
+            JComboBox<String> comboBox = it.getValue();
+            if (comboBox.getParent().isVisible()) {
+                String value = getComboBoxSelectedEnumeration(comboBox);
+                if (value != null)
+                    options.put(enumerationID, value);
+                else
+                    options.remove(enumerationID);
+            }
+        }
+        return options;
+    }
+}

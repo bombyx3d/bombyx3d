@@ -19,39 +19,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt.project;
+package com.zapolnov.zbt.project.parser;
 
-import com.zapolnov.zbt.project.directive.DefineDirective;
-import com.zapolnov.zbt.project.directive.EnumerationDirective;
-import com.zapolnov.zbt.project.directive.SelectorDirective;
-import com.zapolnov.zbt.project.directive.SourceDirectoriesDirective;
+import com.zapolnov.zbt.project.Project;
+import com.zapolnov.zbt.project.parser.directives.DefineDirective;
+import com.zapolnov.zbt.project.parser.directives.EnumerationDirective;
+import com.zapolnov.zbt.project.parser.directives.ImportDirective;
+import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
+import com.zapolnov.zbt.project.parser.directives.SourceDirectoriesDirective;
 import com.zapolnov.zbt.utility.Utility;
 import com.zapolnov.zbt.utility.YamlParser;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class ProjectFileReader
+public final class ProjectFileParser
 {
     public static final String PROJECT_FILE_NAME = "project.yml";
 
     private final Project project;
 
-    public ProjectFileReader(Project project)
+    public ProjectFileParser(Project project)
     {
         this.project = project;
     }
 
-    public void readFile(File file)
+    public void parseFile(File file)
     {
-        readFile(project.directives(), file);
+        parseFile(project.directives(), file);
     }
 
-    private void readFile(List<ProjectDirective> directiveList, File file)
+    private void parseFile(ProjectDirectiveList directiveList, File file)
     {
         YamlParser.Option root = YamlParser.readFile(file);
         if (root == null)
@@ -70,10 +75,10 @@ public final class ProjectFileReader
         }
     }
 
-    private static final Pattern enumRegExp = Pattern.compile(String.format("\\^(%s)\\((%s)\\)$",
-        EnumerationDirective.NAME_PATTERN, EnumerationDirective.VALUE_PATTERN));
+    private static final Pattern enumRegExp = Pattern.compile(String.format("^\\^(%s)\\((%s(,%s)*)\\)$",
+        EnumerationDirective.NAME_PATTERN, EnumerationDirective.VALUE_PATTERN, EnumerationDirective.VALUE_PATTERN));
 
-    private void processOptions(File basePath, List<ProjectDirective> directiveList,
+    private void processOptions(File basePath, ProjectDirectiveList directiveList,
         Map<YamlParser.Option, YamlParser.Option> options)
     {
         for (Map.Entry<YamlParser.Option, YamlParser.Option> item : options.entrySet()) {
@@ -89,13 +94,13 @@ public final class ProjectFileReader
             char firstChar = (key.length() > 0 ? key.charAt(0) : 0);
             switch (firstChar)
             {
-            case '^': directive = processSelector(basePath, key, keyOption, valueOption); break;
+            case '^': directive = processSelector(basePath, directiveList, key, keyOption, valueOption); break;
 
             default:
                 switch (key)
                 {
-                case "enum": directive = processEnum(keyOption, valueOption); break;
-                case "import": processImport(basePath, directiveList, valueOption); break;
+                case "enum": directive = processEnum(directiveList, keyOption, valueOption); break;
+                case "import": directive = processImport(basePath, directiveList, valueOption); break;
                 case "define": directive = processDefine(valueOption); break;
                 case "source_directories": directive = processSourceDirectories(basePath, valueOption); break;
                 default: throw new YamlParser.Error(keyOption, String.format("Unknown option \"%s\".", key));
@@ -103,37 +108,42 @@ public final class ProjectFileReader
             }
 
             if (directive != null)
-                directiveList.add(directive);
+                directiveList.addDirective(directive);
         }
     }
 
-    private ProjectDirective processSelector(File basePath, String key,
-        YamlParser.Option keyOption, YamlParser.Option valueOption)
+    private ProjectDirective processSelector(File basePath, ProjectDirectiveList directiveList,
+        String key, YamlParser.Option keyOption, YamlParser.Option valueOption)
     {
         Matcher matcher = enumRegExp.matcher(key);
-        if (!matcher.find() || matcher.groupCount() != 2)
+        if (!matcher.matches() || matcher.groupCount() != 3)
             throw new YamlParser.Error(keyOption, "Invalid selector.");
 
         if (!valueOption.isMapping())
             throw new YamlParser.Error(valueOption, "Expected mapping.");
 
-        String enumName = matcher.group(1);
-        String enumValue = matcher.group(2);
+        String enumID = matcher.group(1);
 
-        List<ProjectDirective> innerDirectives = new ArrayList<>();
+        Set<String> matchingValues = new LinkedHashSet<>();
+        Collections.addAll(matchingValues, matcher.group(2).split(","));
+
+        ProjectDirectiveList innerDirectives = new ProjectDirectiveList(directiveList, false);
         processOptions(basePath, innerDirectives, valueOption.toMapping());
 
-        return new SelectorDirective(enumName, enumValue, innerDirectives);
+        return new SelectorDirective(enumID, matchingValues, innerDirectives);
     }
 
-    private ProjectDirective processEnum(YamlParser.Option keyOption, YamlParser.Option valueOption)
+    private ProjectDirective processEnum(ProjectDirectiveList directiveList,
+        YamlParser.Option keyOption, YamlParser.Option valueOption)
     {
         if (!valueOption.isMapping())
             throw new YamlParser.Error(valueOption, "Expected mapping.");
 
-        String name = null;
-        String description = null;
+        String defaultValue = null;
+        String id = null;
+        String title = null;
         Map<String, String> values = new LinkedHashMap<>();
+        YamlParser.Option defaultValueOption = null;
 
         for (Map.Entry<YamlParser.Option, YamlParser.Option> item : valueOption.toMapping().entrySet()) {
             YamlParser.Option subKeyOption = item.getKey();
@@ -145,19 +155,28 @@ public final class ProjectFileReader
 
             switch (subKey)
             {
-            case "name":
-                name = subValueOption.toString();
-                if (name == null)
+            case "id":
+                id = subValueOption.toString();
+                if (id == null)
                     throw new YamlParser.Error(subValueOption, "Expected string.");
-                if (!EnumerationDirective.NAME_PATTERN.matcher(name).matches())
-                    throw new YamlParser.Error(subValueOption, String.format("Invalid enumeration name \"%s\".", name));
-                if (!project.addEnumerationName(name))
-                    throw new YamlParser.Error(subValueOption, String.format("Duplicate enumeration name \"%s\".", name));
+                if (!EnumerationDirective.NAME_PATTERN.matcher(id).matches())
+                    throw new YamlParser.Error(subValueOption, String.format("Invalid enumeration id \"%s\".", id));
+                if (!directiveList.reserveEnumerationID(id))
+                    throw new YamlParser.Error(subValueOption, String.format("Duplicate enumeration id \"%s\".", id));
                 break;
 
-            case "description":
-                description = subValueOption.toString();
-                if (description == null)
+            case "title":
+                title = subValueOption.toString();
+                if (title == null)
+                    throw new YamlParser.Error(subValueOption, "Expected string.");
+                if (title.length() == 0)
+                    throw new YamlParser.Error(subValueOption, "Title should not be empty.");
+                break;
+
+            case "default":
+                defaultValue = subValueOption.toString();
+                defaultValueOption = subValueOption;
+                if (defaultValue == null)
                     throw new YamlParser.Error(subValueOption, "Expected string.");
                 break;
 
@@ -170,14 +189,17 @@ public final class ProjectFileReader
             }
         }
 
-        if (name == null)
-            throw new YamlParser.Error(keyOption, "Missing enumeration name.");
-        if (description == null)
-            throw new YamlParser.Error(keyOption, "Missing enumeration description.");
+        if (id == null)
+            throw new YamlParser.Error(keyOption, "Missing enumeration id.");
+        if (title == null)
+            throw new YamlParser.Error(keyOption, "Missing enumeration title.");
         if (values.isEmpty())
             throw new YamlParser.Error(keyOption, "Missing enumeration values.");
 
-        return new EnumerationDirective(name, description, values);
+        if (defaultValue != null && !values.containsKey(defaultValue))
+            throw new YamlParser.Error(defaultValueOption, String.format("Invalid default value \"%s\".", defaultValue));
+
+        return new EnumerationDirective(id, title, defaultValue, values);
     }
 
     private void processEnumValues(Map<String, String> values, YamlParser.Option valueOption)
@@ -206,7 +228,7 @@ public final class ProjectFileReader
         }
     }
 
-    private void processImport(File basePath, List<ProjectDirective> directiveList,
+    private ProjectDirective processImport(File basePath, ProjectDirectiveList directiveList,
         YamlParser.Option valueOption)
     {
         List<YamlParser.Option> modules;
@@ -219,19 +241,35 @@ public final class ProjectFileReader
             modules.add(valueOption);
         }
 
+        ImportDirective importDirective = null;
+
         for (YamlParser.Option module : modules) {
             String name = module.toString();
             if (name == null)
                 throw new YamlParser.Error(module, "Expected string.");
 
-            File file = new File(new File(basePath, name), PROJECT_FILE_NAME);
-            if (!file.exists()) {
-                String fileName = Utility.getCanonicalPath(file);
+            File moduleDirectory = new File(basePath, name);
+            File moduleFile = new File(moduleDirectory, PROJECT_FILE_NAME);
+            if (!moduleFile.exists()) {
+                String fileName = Utility.getCanonicalPath(moduleFile);
                 throw new YamlParser.Error(module, String.format("File \"%s\" does not exist.", fileName));
             }
 
-            readFile(directiveList, file);
+            if (importDirective != null)
+                directiveList.addDirective(importDirective);
+
+            String modulePath =  Utility.getCanonicalPath(moduleDirectory);
+            importDirective = project.getImportedModule(modulePath);
+            if (importDirective == null) {
+                ProjectDirectiveList innerDirectiveList = new ProjectDirectiveList(directiveList, true);
+                parseFile(innerDirectiveList, moduleFile);
+
+                importDirective = new ImportDirective(modulePath, innerDirectiveList);
+                project.addImportedModule(importDirective);
+            }
         }
+
+        return importDirective;
     }
 
     private ProjectDirective processDefine(YamlParser.Option valueOption)
