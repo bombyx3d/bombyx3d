@@ -1,11 +1,15 @@
-﻿#
+#
 # Template file is Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
 # Licensed under the MIT license.
 #
 
 cmake_minimum_required(VERSION 3.2)
+project(@{target_name})
+
+find_package(Threads)
 
 set(Z_USE_QT5 @{use_qt5})
+set(Z_USE_OPENGL @{use_opengl})
 
 if(Z_USE_QT5)
     find_package(Qt5Widgets REQUIRED)
@@ -16,12 +20,42 @@ if(Z_USE_QT5)
     find_package(Qt5OpenGL REQUIRED)
 endif()
 
-add_executable(@{target_name} WIN32 MACOSX_BUNDLE
-)
+if(Z_USE_OPENGL)
+    find_package(OpenGL)
+    if(OPENGL_FOUND)
+        include_directories(${OPENGL_INCLUDE_DIR})
+    else()
+        find_package(PkgConfig)
+        if(PKG_CONFIG_FOUND)
+            pkg_check_modules(OPENGL REQUIRED gl)
+            include_directories(${OPENGL_INCLUDE_DIRS})
+        else()
+            message(FATAL_ERROR "Unable to find the OpenGL library.")
+        endif()
+    endif()
+endif()
+
+@{defines}
+
+include(SourceFiles.cmake)
+include(SourceGroups.cmake)
+
+add_executable(@{target_name} WIN32 MACOSX_BUNDLE ${source_files})
+
+find_library(LIBM m)
+if(LIBM)
+    target_link_libraries(@{target_name} ${LIBM})
+endif()
+
+target_link_libraries(@{target_name} ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS})
 
 if(Z_USE_QT5)
     target_link_libraries(@{target_name} Qt5::Multimedia Qt5::OpenGL Qt5::Network Qt5::Widgets Qt5::Gui Qt5::Core)
     if(MSVC)
         target_compile_options(@{target_name} PRIVATE /wd4458)
     endif()
+endif()
+
+if(Z_USE_OPENGL)
+    target_link_libraries(@{target_name} ${OPENGL_LIBRARIES})
 endif()

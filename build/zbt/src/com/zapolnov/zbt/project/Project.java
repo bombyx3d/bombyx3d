@@ -39,6 +39,7 @@ public class Project
     public static final String BUILD_DIRECTORY_NAME = ".build";
 
     private final File outputDirectory;
+    private final File projectDirectory;
     private final Database database;
     private final Map<String, ImportDirective> importedModules = new HashMap<>();
     private final ProjectDirectiveList directives = new ProjectDirectiveList(null, false);
@@ -48,6 +49,7 @@ public class Project
     {
         File projectFile = new File(projectDirectory, ProjectFileParser.PROJECT_FILE_NAME);
         this.outputDirectory = new File(projectDirectory, BUILD_DIRECTORY_NAME);
+        this.projectDirectory = projectDirectory;
 
         ProjectFileParser parser = new ProjectFileParser(this);
         parser.parseFile(projectFile);
@@ -64,6 +66,11 @@ public class Project
     public void closeDatabase()
     {
         database.close();
+    }
+
+    public File projectDirectory()
+    {
+        return projectDirectory;
     }
 
     public File outputDirectory()

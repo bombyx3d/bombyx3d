@@ -22,6 +22,7 @@
 package com.zapolnov.zbt.project.parser;
 
 import com.zapolnov.zbt.project.Project;
+import com.zapolnov.zbt.project.parser.directives.CMakeUseOpenGLDirective;
 import com.zapolnov.zbt.project.parser.directives.CMakeUseQt5Directive;
 import com.zapolnov.zbt.project.parser.directives.DefineDirective;
 import com.zapolnov.zbt.project.parser.directives.EnumerationDirective;
@@ -105,12 +106,13 @@ public final class ProjectFileParser
             default:
                 switch (key)
                 {
-                case "+generator": directive = processGeneratorSelector(basePath, directiveList, keyOption, valueOption); break;
+                case "+generator": directive = processGeneratorSelector(basePath, directiveList, valueOption); break;
                 case "enum": directive = processEnum(directiveList, keyOption, valueOption); break;
                 case "import": directive = processImport(basePath, directiveList, valueOption); break;
                 case "define": directive = processDefine(valueOption); break;
                 case "source_directories": directive = processSourceDirectories(basePath, valueOption); break;
                 case "target_name": directive = processTargetName(valueOption); break;
+                case "cmake-use-opengl": directive = processCMakeUseOpenGL(valueOption); break;
                 case "cmake-use-qt5": directive = processCMakeUseQt5(valueOption); break;
                 default: throw new YamlParser.Error(keyOption, String.format("Unknown option \"%s\".", key));
                 }
@@ -143,7 +145,7 @@ public final class ProjectFileParser
     }
 
     private ProjectDirective processGeneratorSelector(File basePath, ProjectDirectiveList directiveList,
-        YamlParser.Option keyOption, YamlParser.Option valueOption)
+        YamlParser.Option valueOption)
     {
         if (!valueOption.isMapping())
             throw new YamlParser.Error(valueOption, "Expected mapping.");
@@ -379,6 +381,21 @@ public final class ProjectFileParser
             throw new YamlParser.Error(valueOption, "Invalid target name.");
 
         return new TargetNameDirective(name);
+    }
+
+    private ProjectDirective processCMakeUseOpenGL(YamlParser.Option valueOption)
+    {
+        String name = valueOption.toString();
+
+        boolean value;
+        if ("true".equals(name))
+            value = true;
+        else if ("false".equals(name))
+            value = false;
+        else
+            throw new YamlParser.Error(valueOption, "Expected 'true' or 'false'.");
+
+        return new CMakeUseOpenGLDirective(value);
     }
 
     private ProjectDirective processCMakeUseQt5(YamlParser.Option valueOption)

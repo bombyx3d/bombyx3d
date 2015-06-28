@@ -32,6 +32,7 @@ import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
 import com.zapolnov.zbt.utility.Database;
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,6 +51,8 @@ import javax.swing.JPanel;
 public final class ProjectConfigurationPanel extends JPanel
 {
     public static final String GENERATOR_LABEL = "Generator:";
+    public static final int LABEL_PREFERRED_WIDTH = 200;
+    public static final int COMBOBOX_PREFERRED_WIDTH = 200;
 
     public interface Listener
     {
@@ -227,9 +230,11 @@ public final class ProjectConfigurationPanel extends JPanel
         add(panel);
 
         JLabel label = new JLabel(labelText);
+        label.setPreferredSize(new Dimension(LABEL_PREFERRED_WIDTH, label.getPreferredSize().height));
         panel.add(label, BorderLayout.WEST);
 
         JComboBox<String> comboBox = new JComboBox<>(items.toArray(new String[items.size()]));
+        comboBox.setPreferredSize(new Dimension(COMBOBOX_PREFERRED_WIDTH, comboBox.getPreferredSize().height));
         comboBox.setEditable(false);
         panel.add(comboBox, BorderLayout.EAST);
 

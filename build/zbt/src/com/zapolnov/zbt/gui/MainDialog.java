@@ -25,6 +25,10 @@ import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.utility.Database;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -40,6 +44,10 @@ public class MainDialog extends JDialog
     public static final String TITLE = "Generate Project Files";
     public static final String BUTTON_TITLE = "Generate";
 
+    public static final int PREFERRED_WIDTH = ProjectConfigurationPanel.LABEL_PREFERRED_WIDTH +
+        ProjectConfigurationPanel.COMBOBOX_PREFERRED_WIDTH + 70;
+    public static final int PREFERRED_HEIGHT = 200;
+
     private final Project project;
     private final ProjectConfigurationPanel projectConfigurationPanel;
 
@@ -49,8 +57,13 @@ public class MainDialog extends JDialog
 
         this.project = project;
 
-        //setPreferredSize(new Dimension(400, 400));
-        //setResizable(false);
+        setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
+        addComponentListener(new ComponentAdapter() {
+             @Override public void componentResized(ComponentEvent e) {
+                 Rectangle bounds = e.getComponent().getBounds();
+                 setPreferredSize(new Dimension(bounds.width, bounds.height));
+             }
+        });
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -61,11 +74,14 @@ public class MainDialog extends JDialog
         projectConfigurationPanel = new ProjectConfigurationPanel(project, generator, options);
         projectConfigurationPanel.addChangeListener(this::pack);
 
-        JScrollPane scrollArea = new JScrollPane(projectConfigurationPanel);
+        JPanel wrapper = new JPanel();
+        wrapper.add(projectConfigurationPanel);
+
+        JScrollPane scrollArea = new JScrollPane(wrapper);
         scrollArea.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         scrollArea.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollArea.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        contentPanel.add(scrollArea, BorderLayout.PAGE_START);
+        contentPanel.add(scrollArea, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));

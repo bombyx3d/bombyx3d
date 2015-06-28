@@ -21,13 +21,11 @@
  */
 package com.zapolnov.zbt.utility;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -36,6 +34,8 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public final class Utility
@@ -51,9 +51,7 @@ public final class Utility
 
     public static boolean startsWith(String string, String prefix)
     {
-        if (string == null || prefix == null)
-            return false;
-        return string.startsWith(prefix);
+        return !(string == null || prefix == null) && string.startsWith(prefix);
     }
 
     public static File getCanonicalFile(File file)
@@ -72,6 +70,120 @@ public final class Utility
         } catch (Throwable ignored) {
             return file.getAbsolutePath();
         }
+    }
+
+    public static String getRelativePath(File fromFile, File toFile)
+    {
+        // This method is based on code from FileUtils.java of Apache Ant 1.9.5
+        // Original code was licensed under the Apache 2.0 license
+        //
+        // --------------------------------------------------------------------
+        // Apache Ant
+        // Copyright 1999-2015 The Apache Software Foundation
+        //
+        // This product includes software developed at
+        // The Apache Software Foundation (http://www.apache.org/).
+        // --------------------------------------------------------------------
+
+        try {
+            String fromPath = fromFile.getCanonicalPath();
+            String toPath = toFile.getCanonicalPath();
+
+            // build the path stack info to compare
+            String[] fromPathStack = getPathStack(fromPath);
+            String[] toPathStack = getPathStack(toPath);
+
+            if (0 < toPathStack.length && 0 < fromPathStack.length) {
+                if (!fromPathStack[0].equals(toPathStack[0])) {
+                    // not the same device (would be "" on Linux/Unix)
+                    return getPath(Arrays.asList(toPathStack));
+                }
+            } else {
+                // no comparison possible
+                return getPath(Arrays.asList(toPathStack));
+            }
+
+            int minLength = Math.min(fromPathStack.length, toPathStack.length);
+            int same = 1; // Used outside the for loop
+
+            // get index of parts which are equal
+            while (same < minLength && fromPathStack[same].equals(toPathStack[same]))
+                ++same;
+
+            List<String> relativePathStack = new ArrayList<>();
+
+            // if "from" part is longer, fill it up with ".."
+            // to reach path which is equal to both paths
+            for (int i = same; i < fromPathStack.length; i++)
+                relativePathStack.add("..");
+
+            // fill it up path with parts which were not equal
+            relativePathStack.addAll(Arrays.asList(toPathStack).subList(same, toPathStack.length));
+
+            return getPath(relativePathStack);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String getPath(List<String> pathStack)
+    {
+        // This method is based on code from FileUtils.java of Apache Ant 1.9.5
+        // Original code was licensed under the Apache 2.0 license
+        //
+        // --------------------------------------------------------------------
+        // Apache Ant
+        // Copyright 1999-2015 The Apache Software Foundation
+        //
+        // This product includes software developed at
+        // The Apache Software Foundation (http://www.apache.org/).
+        // --------------------------------------------------------------------
+
+        return getPath(pathStack, '/');
+    }
+
+    public static String getPath(List<String> pathStack, char separatorChar)
+    {
+        // This method is based on code from FileUtils.java of Apache Ant 1.9.5
+        // Original code was licensed under the Apache 2.0 license
+        //
+        // --------------------------------------------------------------------
+        // Apache Ant
+        // Copyright 1999-2015 The Apache Software Foundation
+        //
+        // This product includes software developed at
+        // The Apache Software Foundation (http://www.apache.org/).
+        // --------------------------------------------------------------------
+
+        final StringBuilder buffer = new StringBuilder();
+
+        final Iterator iter = pathStack.iterator();
+        if (iter.hasNext())
+            buffer.append(iter.next());
+
+        while (iter.hasNext()) {
+            buffer.append(separatorChar);
+            buffer.append(iter.next());
+        }
+
+        return buffer.toString();
+    }
+
+    public static String[] getPathStack(String path)
+    {
+        // This method is based on code from FileUtils.java of Apache Ant 1.9.5
+        // Original code was licensed under the Apache 2.0 license
+        //
+        // --------------------------------------------------------------------
+        // Apache Ant
+        // Copyright 1999-2015 The Apache Software Foundation
+        //
+        // This product includes software developed at
+        // The Apache Software Foundation (http://www.apache.org/).
+        // --------------------------------------------------------------------
+
+        String normalizedPath = path.replace(File.separatorChar, '/');
+        return normalizedPath.split("/");
     }
 
     public static void ensureDirectoryExists(File directory)
