@@ -23,5 +23,6 @@ package com.zapolnov.zbt.project.parser;
 
 public abstract class ProjectDirective
 {
-    public abstract void visit(ProjectDirectiveVisitor visitor);
+    public abstract void clearCaches();
+    public abstract void visit(AbstractProjectDirectiveVisitor visitor);
 }

@@ -23,7 +23,7 @@ package com.zapolnov.zbt.project.parser.directives;
 
 import com.zapolnov.zbt.project.parser.ProjectDirective;
 import com.zapolnov.zbt.project.parser.ProjectDirectiveList;
-import com.zapolnov.zbt.project.parser.ProjectDirectiveVisitor;
+import com.zapolnov.zbt.project.parser.AbstractProjectDirectiveVisitor;
 import java.util.Set;
 
 public final class SelectorDirective extends ProjectDirective
@@ -54,8 +54,18 @@ public final class SelectorDirective extends ProjectDirective
         return innerDirectives;
     }
 
-    @Override public void visit(ProjectDirectiveVisitor visitor)
+    @Override public void clearCaches()
     {
+        innerDirectives.visitDirectives(new AbstractProjectDirectiveVisitor() {
+            @Override public void visitDirective(ProjectDirective directive) {
+                directive.clearCaches();
+            }
+        });
+    }
+
+    @Override public void visit(AbstractProjectDirectiveVisitor visitor)
+    {
+        visitor.visitDirective(this);
         visitor.visitSelector(this);
     }
 }

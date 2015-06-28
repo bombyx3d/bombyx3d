@@ -22,7 +22,7 @@
 package com.zapolnov.zbt.project.parser.directives;
 
 import com.zapolnov.zbt.project.parser.ProjectDirective;
-import com.zapolnov.zbt.project.parser.ProjectDirectiveVisitor;
+import com.zapolnov.zbt.project.parser.AbstractProjectDirectiveVisitor;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -66,8 +66,13 @@ public final class EnumerationDirective extends ProjectDirective
         return Collections.unmodifiableMap(values);
     }
 
-    @Override public void visit(ProjectDirectiveVisitor visitor)
+    @Override public void clearCaches()
     {
+    }
+
+    @Override public void visit(AbstractProjectDirectiveVisitor visitor)
+    {
+        visitor.visitDirective(this);
         visitor.visitEnumeration(this);
     }
 }

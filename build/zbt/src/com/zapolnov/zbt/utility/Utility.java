@@ -82,6 +82,7 @@ public final class Utility
     public static List<File> recursivelyEnumerateFilesInDirectory(File directory)
     {
         final List<File> files = new ArrayList<>();
+        System.out.println(String.format("Enumerating files in source directory \"%s\".", directory));
 
         try {
             final Path path = Paths.get(directory.getAbsolutePath());

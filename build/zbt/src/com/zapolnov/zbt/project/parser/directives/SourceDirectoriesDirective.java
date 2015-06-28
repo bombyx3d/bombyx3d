@@ -22,7 +22,7 @@
 package com.zapolnov.zbt.project.parser.directives;
 
 import com.zapolnov.zbt.project.parser.ProjectDirective;
-import com.zapolnov.zbt.project.parser.ProjectDirectiveVisitor;
+import com.zapolnov.zbt.project.parser.AbstractProjectDirectiveVisitor;
 import com.zapolnov.zbt.utility.Utility;
 import java.io.File;
 import java.util.ArrayList;
@@ -56,8 +56,14 @@ public final class SourceDirectoriesDirective extends ProjectDirective
         return sourceFiles;
     }
 
-    @Override public void visit(ProjectDirectiveVisitor visitor)
+    @Override public void clearCaches()
     {
+        sourceFiles = null;
+    }
+
+    @Override public void visit(AbstractProjectDirectiveVisitor visitor)
+    {
+        visitor.visitDirective(this);
         visitor.visitSourceDirectories(this);
     }
 }

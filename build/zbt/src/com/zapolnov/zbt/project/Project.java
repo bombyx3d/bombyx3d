@@ -22,6 +22,8 @@
 package com.zapolnov.zbt.project;
 
 import com.zapolnov.zbt.generators.Generator;
+import com.zapolnov.zbt.project.parser.AbstractProjectDirectiveVisitor;
+import com.zapolnov.zbt.project.parser.ProjectDirective;
 import com.zapolnov.zbt.project.parser.ProjectDirectiveList;
 import com.zapolnov.zbt.project.parser.ProjectFileParser;
 import com.zapolnov.zbt.project.parser.directives.ImportDirective;
@@ -30,6 +32,7 @@ import com.zapolnov.zbt.utility.Utility;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Project
 {
@@ -39,9 +42,9 @@ public class Project
     private final File projectFile;
     private final File outputDirectory;
     private final Database database;
-    private final Map<String, String> options = new HashMap<>();
     private final Map<String, ImportDirective> importedModules = new HashMap<>();
     private final ProjectDirectiveList directives = new ProjectDirectiveList(null, false);
+    private Map<String, String> options = new HashMap<>();
 
     public Project(File projectDirectory)
     {
@@ -97,14 +100,41 @@ public class Project
         return directives;
     }
 
-    public void buildProject(Generator generator, Map<String, String> options)
+    public void build(Generator generator, Map<String, String> options)
     {
         try {
+            System.out.println(String.format("Generating project for %s.", generator.name()));
+
+            directives().visitDirectives(new AbstractProjectDirectiveVisitor() {
+                @Override public void visitDirective(ProjectDirective directive) {
+                    directive.clearCaches();
+                }
+            });
+
+            this.options = new TreeMap<>(options);
+            if (!this.options.isEmpty()) {
+                System.out.println("Using options:");
+
+                int length = 0;
+                for (Map.Entry<String, String> option : this.options.entrySet())
+                    length = Math.max(length, option.getKey().length());
+
+                String format = String.format("  %%-%ds = %%s", length);
+                for (Map.Entry<String, String> option : this.options.entrySet())
+                    System.out.println(String.format(format, option.getKey(), option.getValue()));
+
+                System.out.println("");
+            }
+
             generator.generate(this);
             database.commit();
+
+            System.out.println("*** PROJECT HAS BEEN SUCCESSFULLY GENERATED ***\n");
         } catch (Throwable t) {
             database.rollbackSafe();
             throw t;
+        } finally {
+            this.options = new HashMap<>();
         }
     }
 }

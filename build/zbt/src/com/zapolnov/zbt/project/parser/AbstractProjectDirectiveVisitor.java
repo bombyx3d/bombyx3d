@@ -19,32 +19,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt.generators.cmake;
+package com.zapolnov.zbt.project.parser;
 
-import com.zapolnov.zbt.generators.Generator;
-import com.zapolnov.zbt.project.Project;
-import com.zapolnov.zbt.project.parser.ProjectDirectiveVisitor;
-import java.io.File;
+import com.zapolnov.zbt.project.parser.directives.DefineDirective;
+import com.zapolnov.zbt.project.parser.directives.EnumerationDirective;
+import com.zapolnov.zbt.project.parser.directives.ImportDirective;
+import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
+import com.zapolnov.zbt.project.parser.directives.SourceDirectoriesDirective;
 
-public class CMakeGenerator extends Generator
+public abstract class AbstractProjectDirectiveVisitor
 {
-    public static final String NAME = "CMake 3.2+";
-
-    @Override public String name()
-    {
-        return NAME;
-    }
-
-    @Override public void generate(final Project project)
-    {
-        ProjectDirectiveVisitor visitor = new ProjectDirectiveVisitor(project) {
-            @Override protected void visitDefine(String name, String value) {
-                //System.out.println(String.format("%s=%s", name, value));
-            }
-            @Override protected void visitSourceFile(File file) {
-                //System.out.println(String.format("%s", Utility.getCanonicalPath(file)));
-            }
-        };
-        project.directives().visitDirectives(visitor);
-    }
+    public void visitDirective(ProjectDirective directive) {}
+    public void visitDefine(DefineDirective directive) {}
+    public void visitSourceDirectories(SourceDirectoriesDirective directive) {}
+    public void visitEnumeration(EnumerationDirective directive) {}
+    public void visitImport(ImportDirective directive) {}
+    public void visitSelector(SelectorDirective directive) {}
 }

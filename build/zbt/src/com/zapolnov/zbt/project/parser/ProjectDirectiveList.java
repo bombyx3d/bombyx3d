@@ -60,7 +60,7 @@ public class ProjectDirectiveList
         directives.add(directive);
     }
 
-    public void visitDirectives(ProjectDirectiveVisitor visitor)
+    public void visitDirectives(AbstractProjectDirectiveVisitor visitor)
     {
         for (ProjectDirective directive : directives)
             directive.visit(visitor);

@@ -25,8 +25,6 @@ import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.utility.Database;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -101,7 +99,7 @@ public class MainDialog extends JDialog
             }
 
             project.database().commit();
-            project.buildProject(generator, options);
+            project.build(generator, options);
         } catch (Throwable t) {
             FatalErrorDialog dialog = new FatalErrorDialog(this, t);
             dialog.setVisible(true);

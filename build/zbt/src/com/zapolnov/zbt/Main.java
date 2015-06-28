@@ -59,15 +59,15 @@ public class Main
 
     private static void handleFatalException(final Throwable t)
     {
-        if (!batch || verbose)
-            t.printStackTrace(System.err);
-        else
-            System.err.println(String.format("Error: %s", Utility.getExceptionMessage(t)));
-
-        if (batch)
+        if (batch) {
+            if (verbose)
+                t.printStackTrace();
+            else
+                System.err.println(String.format("Error: %s", Utility.getExceptionMessage(t)));
             System.exit(1);
-        else
-            FatalErrorDialog.run(t);
+        }
+
+        FatalErrorDialog.run(t);
     }
 
     public static void main(String[] args)
@@ -127,7 +127,7 @@ public class Main
                 else {
                     if (generator == null)
                         throw new RuntimeException("No generator was specified on the command line.");
-                    project.buildProject(generator, options);
+                    project.build(generator, options);
                 }
             } finally {
                 project.closeDatabase();

@@ -52,6 +52,8 @@ public class FatalErrorDialog extends JDialog
 
     private void init(String message)
     {
+        System.err.println(message);
+
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         JPanel contentPanel = new JPanel(new BorderLayout());

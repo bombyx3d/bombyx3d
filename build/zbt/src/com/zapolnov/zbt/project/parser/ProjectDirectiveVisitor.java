@@ -21,17 +21,63 @@
  */
 package com.zapolnov.zbt.project.parser;
 
+import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.project.parser.directives.DefineDirective;
-import com.zapolnov.zbt.project.parser.directives.EnumerationDirective;
 import com.zapolnov.zbt.project.parser.directives.ImportDirective;
 import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.SourceDirectoriesDirective;
+import com.zapolnov.zbt.utility.Utility;
+import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
-public abstract class ProjectDirectiveVisitor
+public abstract class ProjectDirectiveVisitor extends AbstractProjectDirectiveVisitor
 {
-    public void visitDefine(DefineDirective directive) {}
-    public void visitSourceDirectories(SourceDirectoriesDirective directive) {}
-    public void visitEnumeration(EnumerationDirective directive) {}
-    public void visitImport(ImportDirective directive) {}
-    public void visitSelector(SelectorDirective directive) {}
+    private final Project project;
+    private final Set<String> visitedSourceFiles = new HashSet<>();
+    private final Set<String> importedModule = new HashSet<>();
+
+    public ProjectDirectiveVisitor(Project project)
+    {
+        this.project = project;
+    }
+
+    protected void visitDefine(String name, String value) {}
+    protected void visitSourceFile(File file) {}
+
+    @Override public void visitDefine(DefineDirective directive)
+    {
+        for (String define : directive.defines()) {
+            int index = define.indexOf('=');
+            if (index < 0)
+                visitDefine(define, null);
+            else {
+                String name = define.substring(0, index);
+                String value = define.substring(index + 1);
+                visitDefine(name, value);
+            }
+        }
+    }
+
+    @Override public void visitSourceDirectories(SourceDirectoriesDirective directive)
+    {
+        for (File file : directive.sourceFiles()) {
+            String canonicalPath = Utility.getCanonicalPath(file);
+            if (visitedSourceFiles.add(canonicalPath))
+                visitSourceFile(file);
+        }
+    }
+
+    @Override public void visitImport(ImportDirective directive)
+    {
+        if (importedModule.add(directive.modulePath()))
+            directive.innerDirectives().visitDirectives(this);
+    }
+
+    @Override public void visitSelector(SelectorDirective directive)
+    {
+        String value = project.getConfigurationOption(directive.enumerationID());
+        if (value != null && directive.matchingValues().contains(value))
+            directive.innerDirectives().visitDirectives(this);
+    }
 }

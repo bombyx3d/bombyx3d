@@ -24,7 +24,7 @@ package com.zapolnov.zbt.gui;
 import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.project.parser.ProjectDirectiveList;
-import com.zapolnov.zbt.project.parser.ProjectDirectiveVisitor;
+import com.zapolnov.zbt.project.parser.AbstractProjectDirectiveVisitor;
 import com.zapolnov.zbt.project.parser.directives.EnumerationDirective;
 import com.zapolnov.zbt.project.parser.directives.ImportDirective;
 import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
@@ -91,13 +91,13 @@ public final class ProjectConfigurationPanel extends JPanel
 
     private void createWidgets(ProjectDirectiveList directives)
     {
-        directives.visitDirectives(new ProjectDirectiveVisitor() {
+        directives.visitDirectives(new AbstractProjectDirectiveVisitor() {
             @Override public void visitEnumeration(EnumerationDirective directive) {
                 createEnumerationWidget(directive);
             }
         });
 
-        directives.visitDirectives(new ProjectDirectiveVisitor() {
+        directives.visitDirectives(new AbstractProjectDirectiveVisitor() {
             @Override public void visitImport(ImportDirective directive) {
                 createWidgets(directive.innerDirectives());
             }
@@ -154,7 +154,7 @@ public final class ProjectConfigurationPanel extends JPanel
 
     private void updateWidgetsVisibility(final Set<Container> visible, ProjectDirectiveList directives)
     {
-        directives.visitDirectives(new ProjectDirectiveVisitor() {
+        directives.visitDirectives(new AbstractProjectDirectiveVisitor() {
             @Override public void visitEnumeration(EnumerationDirective directive) {
                 visible.add(comboBoxes.get(directive.id()).getParent());
             }
@@ -239,7 +239,9 @@ public final class ProjectConfigurationPanel extends JPanel
         for (Map.Entry<String, JComboBox<String>> it : comboBoxes.entrySet()) {
             String enumerationID = it.getKey();
             JComboBox<String> comboBox = it.getValue();
-            if (comboBox.getParent().isVisible()) {
+            if (!comboBox.getParent().isVisible())
+                options.remove(enumerationID);
+            else {
                 String value = getComboBoxSelectedEnumeration(comboBox);
                 if (value != null)
                     options.put(enumerationID, value);
