@@ -59,7 +59,8 @@ public final class ProjectConfigurationPanel extends JPanel
     private final Project project;
     private final JComboBox<String> generatorCombo;
     private final Map<JComboBox<String>, EnumerationDirective> enumerationDirectives = new LinkedHashMap<>();
-    private final Map<String, JComboBox<String>> comboBoxes = new LinkedHashMap<>();
+    private final Map<EnumerationDirective, JComboBox<String>> comboBoxes = new LinkedHashMap<>();
+    private final Map<String, List<JComboBox<String>>> comboBoxesById = new LinkedHashMap<>();
     private final List<Container> widgetPanels = new ArrayList<>();
     private final List<Listener> listeners = new ArrayList<>();
     private final Map<String, String> defaultOptionValues;
@@ -114,7 +115,7 @@ public final class ProjectConfigurationPanel extends JPanel
 
     private void createEnumerationWidget(EnumerationDirective directive)
     {
-        JComboBox<String> comboBox = comboBoxes.get(directive.id());
+        JComboBox<String> comboBox = comboBoxes.get(directive);
         if (comboBox != null)
             return;
 
@@ -127,22 +128,38 @@ public final class ProjectConfigurationPanel extends JPanel
         if (defaultValue == null)
             defaultValue = directive.defaultValue();
         if (defaultValue != null) {
-            int index = 0;
-            for (Map.Entry<String, String> item : directive.values().entrySet()) {
-                if (defaultValue.equals(item.getKey())) {
-                    selectedIndex = index;
-                    break;
-                }
-                ++index;
+            selectedIndex = getEnumerationSelectedIndex(directive, defaultValue);
+            if (selectedIndex < 0 && !defaultValue.equals(directive.defaultValue())) {
+                defaultValue = directive.defaultValue();
+                if (defaultValue != null)
+                    selectedIndex = getEnumerationSelectedIndex(directive, defaultValue);
             }
         }
 
         comboBox = createComboBox(directive.title() + ':', values, selectedIndex);
         comboBox.addItemListener(e -> updateWidgetsVisibility());
 
-        comboBoxes.put(directive.id(), comboBox);
+        List<JComboBox<String>> list = comboBoxesById.get(directive.id());
+        if (list == null) {
+            list = new ArrayList<>();
+            comboBoxesById.put(directive.id(), list);
+        }
+        list.add(comboBox);
+
+        comboBoxes.put(directive, comboBox);
         enumerationDirectives.put(comboBox, directive);
         widgetPanels.add(comboBox.getParent());
+    }
+
+    private int getEnumerationSelectedIndex(EnumerationDirective directive, String defaultValue)
+    {
+        int index = 0;
+        for (Map.Entry<String, String> item : directive.values().entrySet()) {
+            if (defaultValue.equals(item.getKey()))
+                return index;
+            ++index;
+        }
+        return -1;
     }
 
     private void updateWidgetsVisibility()
@@ -161,16 +178,20 @@ public final class ProjectConfigurationPanel extends JPanel
     {
         directives.visitDirectives(new AbstractProjectDirectiveVisitor() {
             @Override public void visitEnumeration(EnumerationDirective directive) {
-                visible.add(comboBoxes.get(directive.id()).getParent());
+                visible.add(comboBoxes.get(directive).getParent());
             }
             @Override public void visitImport(ImportDirective directive) {
                 updateWidgetsVisibility(visible, directive.innerDirectives());
             }
             @Override public void visitSelector(SelectorDirective directive) {
-                JComboBox<String> comboBox = comboBoxes.get(directive.enumerationID());
-                String selectedItem = getComboBoxSelectedEnumeration(comboBox);
-                if (selectedItem != null && directive.matchingValues().contains(selectedItem))
-                    updateWidgetsVisibility(visible, directive.innerDirectives());
+                List<JComboBox<String>> list = comboBoxesById.get(directive.enumerationID());
+                for (JComboBox<String> comboBox : list) {
+                    String selectedItem = getComboBoxSelectedEnumeration(comboBox);
+                    if (selectedItem != null && directive.matchingValues().contains(selectedItem)) {
+                        updateWidgetsVisibility(visible, directive.innerDirectives());
+                        return;
+                    }
+                }
             }
             @Override public void visitGeneratorSelector(GeneratorSelectorDirective directive) {
                 Generator selectedGenerator = selectedGenerator();
@@ -249,19 +270,29 @@ public final class ProjectConfigurationPanel extends JPanel
     public Map<String, String> selectedOptions()
     {
         Map<String, String> options = new LinkedHashMap<>(defaultOptionValues);
-        for (Map.Entry<String, JComboBox<String>> it : comboBoxes.entrySet()) {
-            String enumerationID = it.getKey();
-            JComboBox<String> comboBox = it.getValue();
-            if (!comboBox.getParent().isVisible())
+
+        Set<String> visibleIDs = new HashSet<>();
+        for (Map.Entry<EnumerationDirective, JComboBox<String>> it : comboBoxes.entrySet()) {
+            if (it.getValue().isVisible())
+                visibleIDs.add(it.getKey().id());
+        }
+
+        for (Map.Entry<EnumerationDirective, JComboBox<String>> it : comboBoxes.entrySet()) {
+            String enumerationID = it.getKey().id();
+            if (!visibleIDs.contains(enumerationID))
                 options.remove(enumerationID);
             else {
-                String value = getComboBoxSelectedEnumeration(comboBox);
-                if (value != null)
-                    options.put(enumerationID, value);
-                else
-                    options.remove(enumerationID);
+                JComboBox<String> comboBox = it.getValue();
+                if (comboBox.getParent().isVisible()) {
+                    String value = getComboBoxSelectedEnumeration(comboBox);
+                    if (value != null)
+                        options.put(enumerationID, value);
+                    else
+                        options.remove(enumerationID);
+                }
             }
         }
+
         return options;
     }
 }

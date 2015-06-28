@@ -6,12 +6,12 @@
       title: 'System module'
       default: qt5
       values: { dummy: 'Dummy', qt5: 'Qt5' }
-#  +:
-#    enum:
-#      id: system
-#      title: 'System module'
-#      default: dummy
-#      values: { dummy: 'Dummy' }
+  +:
+    enum:
+      id: system
+      title: 'System module'
+      default: dummy
+      values: { dummy: 'Dummy' }
 
 ^system(dummy):
   import: 'dummy'
