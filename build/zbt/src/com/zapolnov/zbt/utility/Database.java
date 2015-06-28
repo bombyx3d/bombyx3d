@@ -22,6 +22,7 @@
 package com.zapolnov.zbt.utility;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.concurrent.ConcurrentNavigableMap;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
@@ -34,6 +35,7 @@ public class Database
     public static final String PROJECT_OPTION_FORMAT = "ProjectOption:%s";
 
     private final static String INPUT_FILES_TABLE = "<InputFiles>";
+    private final static String OUTPUT_FILES_TABLE = "<OutputFiles>";
     private final static String OPTIONS_TABLE = "<Options>";
 
     protected DB db;
@@ -107,6 +109,25 @@ public class Database
             }
 
             table.put(path, actualLastModificationTime);
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+
+        return true;
+    }
+
+
+    public boolean didOutputFileChange(File file, byte[] md5)
+    {
+        try {
+            ConcurrentNavigableMap<String, byte[]> table = db.getTreeMap(OUTPUT_FILES_TABLE);
+
+            String path = Utility.getCanonicalPath(file);
+            byte[] previousMd5 = table.get(path);
+            if (previousMd5 != null && Arrays.equals(md5, previousMd5))
+                return false;
+
+            table.put(path, md5);
         } catch (Throwable t) {
             t.printStackTrace();
         }

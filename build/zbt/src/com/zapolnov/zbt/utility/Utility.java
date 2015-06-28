@@ -21,9 +21,14 @@
  */
 package com.zapolnov.zbt.utility;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.Charset;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,6 +40,8 @@ import java.util.List;
 
 public final class Utility
 {
+    public static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
+
     public static final String OS_NAME = System.getProperty("os.name");
     public static final boolean IS_LINUX = startsWith(OS_NAME, "Linux") || startsWith(OS_NAME, "LINUX");
     public static final boolean IS_OSX = startsWith(OS_NAME, "Mac OS");
@@ -65,6 +72,35 @@ public final class Utility
         } catch (Throwable ignored) {
             return file.getAbsolutePath();
         }
+    }
+
+    public static void ensureDirectoryExists(File directory)
+    {
+        if (!directory.exists()) {
+            if (!directory.mkdirs()) {
+                throw new RuntimeException(String.format("Unable to create directory \"%s\".",
+                    Utility.getCanonicalPath(directory)));
+            }
+        }
+
+        if (!directory.isDirectory()) {
+            throw new RuntimeException(String.format("\"%s\" is not a directory.",
+                Utility.getCanonicalPath(directory)));
+        }
+    }
+
+    public static String stringFromInputStream(InputStream stream)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (InputStreamReader reader = new InputStreamReader(stream, UTF8_CHARSET)) {
+            char[] buffer = new char[16384];
+            int length;
+            while ((length = reader.read(buffer)) >= 0)
+                stringBuilder.append(buffer, 0, length);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return stringBuilder.toString();
     }
 
     public static String getExceptionMessage(Throwable throwable)

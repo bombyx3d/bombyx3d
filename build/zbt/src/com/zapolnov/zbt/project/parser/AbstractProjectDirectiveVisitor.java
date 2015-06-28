@@ -21,8 +21,11 @@
  */
 package com.zapolnov.zbt.project.parser;
 
+import com.zapolnov.zbt.project.parser.directives.CMakeUseQt5Directive;
 import com.zapolnov.zbt.project.parser.directives.DefineDirective;
 import com.zapolnov.zbt.project.parser.directives.EnumerationDirective;
+import com.zapolnov.zbt.project.parser.directives.TargetNameDirective;
+import com.zapolnov.zbt.project.parser.directives.GeneratorSelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.ImportDirective;
 import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.SourceDirectoriesDirective;
@@ -35,4 +38,7 @@ public abstract class AbstractProjectDirectiveVisitor
     public void visitEnumeration(EnumerationDirective directive) {}
     public void visitImport(ImportDirective directive) {}
     public void visitSelector(SelectorDirective directive) {}
+    public void visitGeneratorSelector(GeneratorSelectorDirective directive) {}
+    public void visitTargetName(TargetNameDirective directive) {}
+    public void visitCMakeUseQt5Directive(CMakeUseQt5Directive directive) {}
 }

@@ -26,6 +26,7 @@ import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.project.parser.ProjectDirectiveList;
 import com.zapolnov.zbt.project.parser.AbstractProjectDirectiveVisitor;
 import com.zapolnov.zbt.project.parser.directives.EnumerationDirective;
+import com.zapolnov.zbt.project.parser.directives.GeneratorSelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.ImportDirective;
 import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
 import com.zapolnov.zbt.utility.Database;
@@ -74,6 +75,7 @@ public final class ProjectConfigurationPanel extends JPanel
         if (defaultGeneratorName == null)
             defaultGeneratorName = project.database().getOption(Database.OPTION_GENERATOR_NAME);
         generatorCombo = createComboBox(GENERATOR_LABEL, Generator.allGenerators().keySet(), defaultGeneratorName);
+        generatorCombo.addItemListener(e -> updateWidgetsVisibility());
 
         createWidgets();
         updateWidgetsVisibility();
@@ -104,6 +106,9 @@ public final class ProjectConfigurationPanel extends JPanel
             @Override public void visitSelector(SelectorDirective directive) {
                 createWidgets(directive.innerDirectives());
             }
+            @Override public void visitGeneratorSelector(GeneratorSelectorDirective directive) {
+                directive.mapping().values().forEach(ProjectConfigurationPanel.this::createWidgets);
+            }
         });
     }
 
@@ -132,7 +137,7 @@ public final class ProjectConfigurationPanel extends JPanel
             }
         }
 
-        comboBox = createComboBox(directive.title(), values, selectedIndex);
+        comboBox = createComboBox(directive.title() + ':', values, selectedIndex);
         comboBox.addItemListener(e -> updateWidgetsVisibility());
 
         comboBoxes.put(directive.id(), comboBox);
@@ -166,6 +171,14 @@ public final class ProjectConfigurationPanel extends JPanel
                 String selectedItem = getComboBoxSelectedEnumeration(comboBox);
                 if (selectedItem != null && directive.matchingValues().contains(selectedItem))
                     updateWidgetsVisibility(visible, directive.innerDirectives());
+            }
+            @Override public void visitGeneratorSelector(GeneratorSelectorDirective directive) {
+                Generator selectedGenerator = selectedGenerator();
+                ProjectDirectiveList directives = directive.mapping().get(selectedGenerator.id());
+                if (directives == null)
+                    directives = directive.mapping().get(GeneratorSelectorDirective.DEFAULT);
+                if (directives != null)
+                    updateWidgetsVisibility(visible, directives);
             }
         });
     }

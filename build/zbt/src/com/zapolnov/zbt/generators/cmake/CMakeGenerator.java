@@ -24,11 +24,35 @@ package com.zapolnov.zbt.generators.cmake;
 import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.project.parser.ProjectDirectiveVisitor;
+import com.zapolnov.zbt.project.parser.directives.CMakeUseQt5Directive;
+import com.zapolnov.zbt.project.parser.directives.TargetNameDirective;
+import com.zapolnov.zbt.utility.FileBuilder;
+import com.zapolnov.zbt.utility.Template;
+import com.zapolnov.zbt.utility.Utility;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CMakeGenerator extends Generator
 {
+    public static final String ID = "cmake3.2";
     public static final String NAME = "CMake 3.2+";
+
+    private String targetName;
+    private File outputDirectory;
+    private Project project;
+    private boolean useQt5;
+    private final Template template;
+
+    public CMakeGenerator()
+    {
+        template = new Template(getClass().getResourceAsStream("CMakeLists.template"));
+    }
+
+    @Override public String id()
+    {
+        return ID;
+    }
 
     @Override public String name()
     {
@@ -37,14 +61,52 @@ public class CMakeGenerator extends Generator
 
     @Override public void generate(final Project project)
     {
-        ProjectDirectiveVisitor visitor = new ProjectDirectiveVisitor(project) {
-            @Override protected void visitDefine(String name, String value) {
-                //System.out.println(String.format("%s=%s", name, value));
-            }
-            @Override protected void visitSourceFile(File file) {
-                //System.out.println(String.format("%s", Utility.getCanonicalPath(file)));
-            }
-        };
-        project.directives().visitDirectives(visitor);
+        try {
+            this.project = project;
+            targetName = "App";
+            useQt5 = false;
+
+            outputDirectory = new File(project.outputDirectory(), ID);
+            Utility.ensureDirectoryExists(outputDirectory);
+
+            project.directives().visitDirectives(new ProjectDirectiveVisitor(project, this) {
+                @Override protected void visitDefine(String name, String value) {
+                    //System.out.println(String.format("%s=%s", name, value));
+                }
+                @Override protected void visitSourceFile(File file) {
+                    //System.out.println(String.format("%s", Utility.getCanonicalPath(file)));
+                }
+                @Override public void visitTargetName(TargetNameDirective directive) {
+                    targetName = directive.name();
+                }
+                @Override public void visitCMakeUseQt5Directive(CMakeUseQt5Directive directive) {
+                    useQt5 = directive.value();
+                }
+            });
+
+            writeCMakeLists();
+        } finally {
+            targetName = null;
+            outputDirectory = null;
+            this.project = null;
+        }
+    }
+
+    private void writeCMakeLists()
+    {
+        FileBuilder builder = new FileBuilder(outputDirectory, "CMakeLists.txt");
+
+        builder.append('\n');
+        builder.append("# ------------------------------------------------------\n");
+        builder.append("# THIS IS AN AUTOMATICALLY GENERATED FILE. DO NOT EDIT!\n");
+        builder.append("# ------------------------------------------------------\n");
+        builder.append('\n');
+
+        Map<String, String> options = new HashMap<>();
+        options.put("target_name", targetName);
+        options.put("use_qt5", useQt5 ? "YES" : "NO");
+        template.emit(builder, options);
+
+        builder.commit(project.database());
     }
 }

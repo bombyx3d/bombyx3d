@@ -1,0 +1,27 @@
+﻿#
+# Template file is Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
+# Licensed under the MIT license.
+#
+
+cmake_minimum_required(VERSION 3.2)
+
+set(Z_USE_QT5 @{use_qt5})
+
+if(Z_USE_QT5)
+    find_package(Qt5Widgets REQUIRED)
+    find_package(Qt5Core REQUIRED)
+    find_package(Qt5Gui REQUIRED)
+    find_package(Qt5Network REQUIRED)
+    find_package(Qt5Multimedia REQUIRED)
+    find_package(Qt5OpenGL REQUIRED)
+endif()
+
+add_executable(@{target_name} WIN32 MACOSX_BUNDLE
+)
+
+if(Z_USE_QT5)
+    target_link_libraries(@{target_name} Qt5::Multimedia Qt5::OpenGL Qt5::Network Qt5::Widgets Qt5::Gui Qt5::Core)
+    if(MSVC)
+        target_compile_options(@{target_name} PRIVATE /wd4458)
+    endif()
+endif()

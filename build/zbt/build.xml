@@ -42,6 +42,9 @@ THE SOFTWARE.
         <!-- Create JAR file -->
         <jar destfile="bin/zbt.jar" basedir="bin/classes">
             <manifest><attribute name="Main-Class" value="com.zapolnov.zbt.Main" /></manifest>
+            <fileset dir="src">
+                <include name="com/zapolnov/zbt/generators/cmake/CMakeLists.template" />
+            </fileset>
             <zipgroupfileset dir="lib" includes="**/*.jar" />
         </jar>
     </target>

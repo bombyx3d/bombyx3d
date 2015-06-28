@@ -38,8 +38,6 @@ public class Project
 {
     public static final String BUILD_DIRECTORY_NAME = ".build";
 
-    private final File projectDirectory;
-    private final File projectFile;
     private final File outputDirectory;
     private final Database database;
     private final Map<String, ImportDirective> importedModules = new HashMap<>();
@@ -48,25 +46,13 @@ public class Project
 
     public Project(File projectDirectory)
     {
-        this.projectDirectory = projectDirectory;
-        this.projectFile = new File(projectDirectory, ProjectFileParser.PROJECT_FILE_NAME);
+        File projectFile = new File(projectDirectory, ProjectFileParser.PROJECT_FILE_NAME);
         this.outputDirectory = new File(projectDirectory, BUILD_DIRECTORY_NAME);
 
         ProjectFileParser parser = new ProjectFileParser(this);
         parser.parseFile(projectFile);
 
-        if (!outputDirectory.exists()) {
-            if (!outputDirectory.mkdirs()) {
-                throw new RuntimeException(String.format("Unable to create directory \"%s\".",
-                    Utility.getCanonicalPath(outputDirectory)));
-            }
-        }
-
-        if (!outputDirectory.isDirectory()) {
-            throw new RuntimeException(String.format("\"%s\" is not a directory.",
-                Utility.getCanonicalPath(outputDirectory)));
-        }
-
+        Utility.ensureDirectoryExists(outputDirectory);
         database = new Database(outputDirectory);
     }
 
@@ -78,6 +64,11 @@ public class Project
     public void closeDatabase()
     {
         database.close();
+    }
+
+    public File outputDirectory()
+    {
+        return outputDirectory;
     }
 
     public String getConfigurationOption(String name)

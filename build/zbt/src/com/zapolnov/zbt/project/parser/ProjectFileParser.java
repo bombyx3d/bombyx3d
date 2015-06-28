@@ -22,8 +22,11 @@
 package com.zapolnov.zbt.project.parser;
 
 import com.zapolnov.zbt.project.Project;
+import com.zapolnov.zbt.project.parser.directives.CMakeUseQt5Directive;
 import com.zapolnov.zbt.project.parser.directives.DefineDirective;
 import com.zapolnov.zbt.project.parser.directives.EnumerationDirective;
+import com.zapolnov.zbt.project.parser.directives.GeneratorSelectorDirective;
+import com.zapolnov.zbt.project.parser.directives.TargetNameDirective;
 import com.zapolnov.zbt.project.parser.directives.ImportDirective;
 import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.SourceDirectoriesDirective;
@@ -32,6 +35,7 @@ import com.zapolnov.zbt.utility.YamlParser;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -43,6 +47,11 @@ import java.util.regex.Pattern;
 public final class ProjectFileParser
 {
     public static final String PROJECT_FILE_NAME = "project.yml";
+
+    private static final Pattern ENUM_REG_EXP = Pattern.compile(String.format("^\\^(%s)\\((%s(,%s)*)\\)$",
+        EnumerationDirective.NAME_PATTERN, EnumerationDirective.VALUE_PATTERN, EnumerationDirective.VALUE_PATTERN));
+    private static final Pattern EXE_NAME_REG_EXP = Pattern.compile(String.format("^%s$",
+        TargetNameDirective.PATTERN));
 
     private final Project project;
 
@@ -75,9 +84,6 @@ public final class ProjectFileParser
         }
     }
 
-    private static final Pattern enumRegExp = Pattern.compile(String.format("^\\^(%s)\\((%s(,%s)*)\\)$",
-        EnumerationDirective.NAME_PATTERN, EnumerationDirective.VALUE_PATTERN, EnumerationDirective.VALUE_PATTERN));
-
     private void processOptions(File basePath, ProjectDirectiveList directiveList,
         Map<YamlParser.Option, YamlParser.Option> options)
     {
@@ -99,10 +105,13 @@ public final class ProjectFileParser
             default:
                 switch (key)
                 {
+                case "+generator": directive = processGeneratorSelector(basePath, directiveList, keyOption, valueOption); break;
                 case "enum": directive = processEnum(directiveList, keyOption, valueOption); break;
                 case "import": directive = processImport(basePath, directiveList, valueOption); break;
                 case "define": directive = processDefine(valueOption); break;
                 case "source_directories": directive = processSourceDirectories(basePath, valueOption); break;
+                case "target_name": directive = processTargetName(valueOption); break;
+                case "cmake-use-qt5": directive = processCMakeUseQt5(valueOption); break;
                 default: throw new YamlParser.Error(keyOption, String.format("Unknown option \"%s\".", key));
                 }
             }
@@ -115,7 +124,7 @@ public final class ProjectFileParser
     private ProjectDirective processSelector(File basePath, ProjectDirectiveList directiveList,
         String key, YamlParser.Option keyOption, YamlParser.Option valueOption)
     {
-        Matcher matcher = enumRegExp.matcher(key);
+        Matcher matcher = ENUM_REG_EXP.matcher(key);
         if (!matcher.matches() || matcher.groupCount() != 3)
             throw new YamlParser.Error(keyOption, "Invalid selector.");
 
@@ -131,6 +140,36 @@ public final class ProjectFileParser
         processOptions(basePath, innerDirectives, valueOption.toMapping());
 
         return new SelectorDirective(enumID, matchingValues, innerDirectives);
+    }
+
+    private ProjectDirective processGeneratorSelector(File basePath, ProjectDirectiveList directiveList,
+        YamlParser.Option keyOption, YamlParser.Option valueOption)
+    {
+        if (!valueOption.isMapping())
+            throw new YamlParser.Error(valueOption, "Expected mapping.");
+
+        Map<String, ProjectDirectiveList> mapping = new HashMap<>();
+        for (Map.Entry<YamlParser.Option, YamlParser.Option> item : valueOption.toMapping().entrySet()) {
+            String key = item.getKey().toString();
+            if (key == null)
+                throw new RuntimeException("Expected string.");
+
+            if (!key.startsWith("+"))
+                throw new RuntimeException("Keys in generator selector should begin with '+'.");
+
+            String name = key.substring(1);
+            if (!item.getValue().isMapping())
+                throw new YamlParser.Error(item.getValue(), "Expected mapping.");
+
+            ProjectDirectiveList innerDirectives = new ProjectDirectiveList(directiveList, false);
+            processOptions(basePath, innerDirectives, item.getValue().toMapping());
+
+            if (mapping.containsKey(name))
+                throw new YamlParser.Error(item.getKey(), String.format("Duplicate key \"%s\".", name));
+            mapping.put(name, innerDirectives);
+        }
+
+        return new GeneratorSelectorDirective(mapping);
     }
 
     private ProjectDirective processEnum(ProjectDirectiveList directiveList,
@@ -327,5 +366,33 @@ public final class ProjectFileParser
         }
 
         return new SourceDirectoriesDirective(directories);
+    }
+
+    private ProjectDirective processTargetName(YamlParser.Option valueOption)
+    {
+        String name = valueOption.toString();
+        if (name == null)
+            throw new YamlParser.Error(valueOption, "Expected string.");
+
+        Matcher matcher = EXE_NAME_REG_EXP.matcher(name);
+        if (!matcher.matches())
+            throw new YamlParser.Error(valueOption, "Invalid target name.");
+
+        return new TargetNameDirective(name);
+    }
+
+    private ProjectDirective processCMakeUseQt5(YamlParser.Option valueOption)
+    {
+        String name = valueOption.toString();
+
+        boolean value;
+        if ("true".equals(name))
+            value = true;
+        else if ("false".equals(name))
+            value = false;
+        else
+            throw new YamlParser.Error(valueOption, "Expected 'true' or 'false'.");
+
+        return new CMakeUseQt5Directive(value);
     }
 }

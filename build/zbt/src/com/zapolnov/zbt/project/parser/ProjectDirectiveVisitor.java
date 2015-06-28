@@ -21,8 +21,10 @@
  */
 package com.zapolnov.zbt.project.parser;
 
+import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.project.parser.directives.DefineDirective;
+import com.zapolnov.zbt.project.parser.directives.GeneratorSelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.ImportDirective;
 import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.SourceDirectoriesDirective;
@@ -34,12 +36,14 @@ import java.util.Set;
 public abstract class ProjectDirectiveVisitor extends AbstractProjectDirectiveVisitor
 {
     private final Project project;
+    private final Generator generator;
     private final Set<String> visitedSourceFiles = new HashSet<>();
     private final Set<String> importedModule = new HashSet<>();
 
-    public ProjectDirectiveVisitor(Project project)
+    public ProjectDirectiveVisitor(Project project, Generator generator)
     {
         this.project = project;
+        this.generator = generator;
     }
 
     protected void visitDefine(String name, String value) {}
@@ -79,5 +83,17 @@ public abstract class ProjectDirectiveVisitor extends AbstractProjectDirectiveVi
         String value = project.getConfigurationOption(directive.enumerationID());
         if (value != null && directive.matchingValues().contains(value))
             directive.innerDirectives().visitDirectives(this);
+    }
+
+    @Override public void visitGeneratorSelector(GeneratorSelectorDirective directive)
+    {
+        String value = generator.id();
+
+        ProjectDirectiveList list = directive.mapping().get(value);
+        if (list == null)
+            list = directive.mapping().get(GeneratorSelectorDirective.DEFAULT);
+
+        if (list != null)
+            list.visitDirectives(this);
     }
 }
