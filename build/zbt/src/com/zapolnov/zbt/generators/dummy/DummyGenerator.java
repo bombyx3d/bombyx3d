@@ -19,29 +19,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.zapolnov.zbt.generators;
+package com.zapolnov.zbt.generators.dummy;
 
-import com.zapolnov.zbt.generators.cmake.CMakeGenerator;
-import com.zapolnov.zbt.generators.dummy.DummyGenerator;
+import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.project.Project;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-public abstract class Generator
+public class DummyGenerator extends Generator
 {
-    public abstract String id();
-    public abstract String name();
-    public abstract void generate(Project project);
+    public static final String ID = "dummy";
+    public static final String NAME = "Dummy";
 
-    private static Map<String, Generator> allGenerators;
-    public static Map<String, Generator> allGenerators()
+    public DummyGenerator()
     {
-        if (allGenerators == null) {
-            Map<String, Generator> g = new LinkedHashMap<>();
-            g.put(DummyGenerator.NAME, new DummyGenerator());
-            g.put(CMakeGenerator.NAME, new CMakeGenerator());
-            allGenerators = g;
-        }
-        return allGenerators;
+    }
+
+    @Override public String id()
+    {
+        return ID;
+    }
+
+    @Override public String name()
+    {
+        return NAME;
+    }
+
+    @Override public void generate(final Project project)
+    {
     }
 }
