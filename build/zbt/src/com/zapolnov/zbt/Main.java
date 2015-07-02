@@ -50,6 +50,7 @@ public class Main
         System.out.println("  -p, --project             Path to the source directory of the project.");
         System.out.println("  --cmake-build-tool        Build tool for CMake.");
         System.out.println("  --cmake-build-type        Build type for CMake.");
+        System.out.println("  --cmake-qt5-path          Specify path to Qt5 installation.");
         System.out.println("");
 
         System.out.println("The following generators are available:");
@@ -86,6 +87,7 @@ public class Main
             File projectPath = Utility.getCanonicalFile(new File("."));
             String cmakeBuildTool = null;
             String cmakeBuildType = null;
+            String cmakeQt5Path = null;
             Generator generator = null;
 
             // Parse command-line arguments
@@ -124,6 +126,13 @@ public class Main
                     if (!CMakeGenerator.isValidBuildType(buildType))
                         throw new RuntimeException(String.format("Invalid build type \"%s\".", buildType));
                     cmakeBuildType = buildType;
+                } else if ("--cmake-qt5-path".equals(args[i])) {
+                    if (i == args.length - 1)
+                        throw new RuntimeException(String.format("Missing value after the \"%s\" option.", args[i]));
+                    String qt5Path = args[++i];
+                    if (!CMakeGenerator.isValidQt5Directory(qt5Path))
+                        throw new RuntimeException(String.format("Invalid Qt5 directory \"%s\".", qt5Path));
+                    cmakeQt5Path = qt5Path;
                 } else if ("--help".equals(args[i]) || "-h".equals(args[i])) {
                     showUsage();
                     System.exit(1);
@@ -166,6 +175,8 @@ public class Main
                         CMakeGenerator cmakeGenerator = (CMakeGenerator)generator;
                         if (cmakeBuildTool != null || cmakeBuildType != null)
                             cmakeGenerator.setSelectedBuildTool(cmakeBuildTool, cmakeBuildType);
+                        if (cmakeQt5Path != null)
+                            cmakeGenerator.setQt5Path(cmakeQt5Path);
                     }
 
                     project.build(generator, options, null, error -> {

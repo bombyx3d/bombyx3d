@@ -36,8 +36,6 @@ import com.zapolnov.zbt.utility.Template;
 import com.zapolnov.zbt.utility.Utility;
 import java.awt.Container;
 import java.awt.Desktop;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -92,6 +90,7 @@ public class CMakeGenerator extends Generator
     private JComboBox<String> buildTypeCombo;
     private BuildTool selectedBuildTool;
     private String selectedBuildType;
+    private String qt5Path;
     private String cmakeExecutable;
 
     public CMakeGenerator()
@@ -181,6 +180,11 @@ public class CMakeGenerator extends Generator
             throw new RuntimeException("CMake was not found in PATH.");
     }
 
+    public void setQt5Path(String path)
+    {
+        qt5Path = path;
+    }
+
     @Override public void generate(final Project project, CommandInvoker.Printer printer)
     {
         try {
@@ -230,6 +234,8 @@ public class CMakeGenerator extends Generator
                 cmakeCommand.add(selectedBuildTool.cmakeGenerator);
                 if (selectedBuildTool.acceptsBuildType)
                     cmakeCommand.add(String.format("-DCMAKE_BUILD_TYPE=%s", selectedBuildType));
+                if (qt5Path != null)
+                    cmakeCommand.add(String.format("-DCMAKE_PREFIX_PATH=%s", qt5Path));
                 cmakeCommand.add("-DCMAKE_INSTALL_PREFIX=_INSTALL_");
                 for (String define : selectedBuildTool.defines)
                     cmakeCommand.add(String.format("-D%s", define));
@@ -346,6 +352,12 @@ public class CMakeGenerator extends Generator
     {
         return "Debug".equals(name) || "Release".equals(name)
             || "MinSizeRel".equals(name) || "RelWithDebInfo".equals(name);
+    }
+
+    public static boolean isValidQt5Directory(String path)
+    {
+        File file = new File(new File(path), "lib/cmake/Qt5/Qt5Config.cmake");
+        return file.exists() && !file.isDirectory();
     }
 
     private static String findCMakeExecutable()

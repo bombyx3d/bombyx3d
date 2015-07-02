@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ZBT" type="JarApplication" factoryName="JAR Application" singleton="true">
+  <configuration default="false" name="ZBT Gui" type="JarApplication" factoryName="JAR Application" singleton="true">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <option name="JAR_PATH" value="$PROJECT_DIR$/bin/zbt.jar" />
     <option name="PROGRAM_PARAMETERS" value="-p ../.." />
