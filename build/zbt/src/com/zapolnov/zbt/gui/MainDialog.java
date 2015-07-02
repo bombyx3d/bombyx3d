@@ -113,8 +113,6 @@ public class MainDialog extends JDialog
             Generator generator;
             Map<String, String> options;
 
-            project.database().commit();
-
             try {
                 generator = projectConfigurationPanel.selectedGenerator();
                 options = projectConfigurationPanel.selectedOptions();
