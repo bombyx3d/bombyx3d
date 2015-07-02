@@ -24,6 +24,7 @@ package com.zapolnov.zbt.generators;
 import com.zapolnov.zbt.generators.cmake.CMakeGenerator;
 import com.zapolnov.zbt.generators.dummy.DummyGenerator;
 import com.zapolnov.zbt.project.Project;
+import com.zapolnov.zbt.utility.CommandInvoker;
 import com.zapolnov.zbt.utility.Database;
 import java.awt.Container;
 import java.util.LinkedHashMap;
@@ -32,9 +33,14 @@ import javax.swing.JPanel;
 
 public abstract class Generator
 {
+    public interface CompletionHandler
+    {
+        void onComplete(boolean success);
+    }
+
     public abstract String id();
     public abstract String name();
-    public abstract void generate(Project project);
+    public abstract void generate(Project project, CommandInvoker.Printer printer);
 
     public JPanel createSettingsPanel(Database database) { return null; }
     public boolean validateAndSaveSettings(Container panel, Database database)

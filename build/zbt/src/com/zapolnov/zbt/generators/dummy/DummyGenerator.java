@@ -23,6 +23,7 @@ package com.zapolnov.zbt.generators.dummy;
 
 import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.project.Project;
+import com.zapolnov.zbt.utility.CommandInvoker;
 
 public class DummyGenerator extends Generator
 {
@@ -43,7 +44,7 @@ public class DummyGenerator extends Generator
         return NAME;
     }
 
-    @Override public void generate(final Project project)
+    @Override public void generate(final Project project, CommandInvoker.Printer printer)
     {
     }
 }

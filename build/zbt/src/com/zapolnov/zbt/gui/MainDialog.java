@@ -21,8 +21,10 @@
  */
 package com.zapolnov.zbt.gui;
 
+import com.zapolnov.zbt.Main;
 import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.project.Project;
+import com.zapolnov.zbt.utility.CommandInvoker;
 import com.zapolnov.zbt.utility.GuiUtility;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -37,6 +39,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 
 public class MainDialog extends JDialog
 {
@@ -96,7 +99,17 @@ public class MainDialog extends JDialog
 
     private void generateProject()
     {
+        ConsoleDialog consoleDialog = null;
         try {
+            setEnabled(false);
+
+            consoleDialog = new ConsoleDialog(this);
+            consoleDialog.button.setEnabled(false);
+            consoleDialog.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+            consoleDialog.setModal(false);
+            consoleDialog.setVisible(true);
+            consoleDialog.setLocationRelativeTo(this);
+
             Generator generator;
             Map<String, String> options;
 
@@ -117,10 +130,30 @@ public class MainDialog extends JDialog
                 throw t;
             }
 
-            project.build(generator, options);
+            final ConsoleDialog consoleDialog_ = consoleDialog;
+            project.build(generator, options, consoleDialog, error ->
+                SwingUtilities.invokeLater(() -> {
+                    if (error == null) {
+                        consoleDialog_.dispose();
+                    } else {
+                        JDialog dialog = new FatalErrorDialog(consoleDialog_, error);
+                        dialog.setVisible(true);
+                        consoleDialog_.button.setEnabled(true);
+                        consoleDialog_.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                        consoleDialog_.setModal(true);
+                        consoleDialog_.setVisible(true);
+                    }
+                    setEnabled(true);
+                })
+            );
         } catch (Throwable t) {
-            FatalErrorDialog dialog = new FatalErrorDialog(this, t);
+            consoleDialog.button.setEnabled(true);
+            consoleDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            consoleDialog.setVisible(true);
+            FatalErrorDialog dialog = new FatalErrorDialog(consoleDialog != null ? consoleDialog : this, t);
+            consoleDialog.setModal(true);
             dialog.setVisible(true);
+            setEnabled(true);
         }
     }
 

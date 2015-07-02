@@ -27,15 +27,24 @@ import com.zapolnov.zbt.project.parser.ProjectDirective;
 import com.zapolnov.zbt.project.parser.ProjectDirectiveList;
 import com.zapolnov.zbt.project.parser.ProjectFileParser;
 import com.zapolnov.zbt.project.parser.directives.ImportDirective;
+import com.zapolnov.zbt.utility.CommandInvoker;
 import com.zapolnov.zbt.utility.Database;
 import com.zapolnov.zbt.utility.Utility;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 public class Project
 {
+    public interface BuildCompletionListener
+    {
+        void onBuildFinished(Throwable error);
+    }
+
     public static final String BUILD_DIRECTORY_NAME = ".build";
 
     private final File outputDirectory;
@@ -98,7 +107,8 @@ public class Project
         return directives;
     }
 
-    public void build(Generator generator, Map<String, String> options)
+    public void build(final Generator generator, Map<String, String> options, final CommandInvoker.Printer printer,
+        final BuildCompletionListener listener)
     {
         try {
             System.out.println(String.format("Generating project for %s.", generator.name()));
@@ -124,15 +134,27 @@ public class Project
                 System.out.println("");
             }
 
-            generator.generate(this);
-            database.commit();
+            Thread thread = new Thread(() -> {
+                try {
+                    generator.generate(this, printer);
+                    database.commit();
+                } catch (Throwable t) {
+                    database.rollbackSafe();
+                    listener.onBuildFinished(t);
+                    return;
+                } finally {
+                    this.options = new HashMap<>();
+                }
 
-            System.out.println("*** PROJECT HAS BEEN SUCCESSFULLY GENERATED ***\n");
+                System.out.println("*** PROJECT HAS BEEN SUCCESSFULLY GENERATED ***\n");
+                listener.onBuildFinished(null);
+            });
+            thread.setDaemon(true);
+            thread.start();
         } catch (Throwable t) {
+            this.options = new HashMap<>();
             database.rollbackSafe();
             throw t;
-        } finally {
-            this.options = new HashMap<>();
         }
     }
 }

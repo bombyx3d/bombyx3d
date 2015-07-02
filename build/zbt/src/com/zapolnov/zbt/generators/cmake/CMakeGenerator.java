@@ -27,15 +27,18 @@ import com.zapolnov.zbt.project.parser.ProjectDirectiveVisitor;
 import com.zapolnov.zbt.project.parser.directives.CMakeUseOpenGLDirective;
 import com.zapolnov.zbt.project.parser.directives.CMakeUseQt5Directive;
 import com.zapolnov.zbt.project.parser.directives.TargetNameDirective;
+import com.zapolnov.zbt.utility.CommandInvoker;
 import com.zapolnov.zbt.utility.Database;
 import com.zapolnov.zbt.utility.FileBuilder;
 import com.zapolnov.zbt.utility.GuiUtility;
 import com.zapolnov.zbt.utility.Template;
 import com.zapolnov.zbt.utility.Utility;
 import java.awt.Container;
+import java.awt.Desktop;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -51,19 +54,22 @@ public class CMakeGenerator extends Generator
 {
     private final static class BuildTool
     {
+        public final String directoryName;
         public final String cmakeGenerator;
         public final boolean acceptsBuildType;
         public final String[] defines;
 
-        public BuildTool(String cmakeGenerator, boolean acceptsBuildType)
+        public BuildTool(String directoryName, String cmakeGenerator, boolean acceptsBuildType)
         {
+            this.directoryName = directoryName;
             this.cmakeGenerator = cmakeGenerator;
             this.acceptsBuildType = acceptsBuildType;
             this.defines = new String[0];
         }
 
-        public BuildTool(String cmakeGenerator, boolean acceptsBuildType, String... defines)
+        public BuildTool(String directoryName, String cmakeGenerator, boolean acceptsBuildType, String... defines)
         {
+            this.directoryName = directoryName;
             this.cmakeGenerator = cmakeGenerator;
             this.acceptsBuildType = acceptsBuildType;
             this.defines = defines;
@@ -85,6 +91,7 @@ public class CMakeGenerator extends Generator
     private JComboBox<String> buildTypeCombo;
     private BuildTool selectedBuildTool;
     private String selectedBuildType;
+    private String cmakeExecutable;
 
     public CMakeGenerator()
     {
@@ -148,6 +155,14 @@ public class CMakeGenerator extends Generator
             }
         }
 
+        cmakeExecutable = findCMakeExecutable();
+        if (cmakeExecutable == null) {
+            JOptionPane messageBox = new JOptionPane("CMake was not found in PATH.", JOptionPane.ERROR_MESSAGE);
+            JDialog dialog = messageBox.createDialog(panel, "Error");
+            dialog.setVisible(true);
+            return false;
+        }
+
         database.setOption(Database.OPTION_CMAKE_BUILD_TOOL, (String)buildToolCombo.getSelectedItem());
         if (selectedBuildType != null)
             database.setOption(Database.OPTION_CMAKE_BUILD_TYPE, selectedBuildType);
@@ -155,7 +170,7 @@ public class CMakeGenerator extends Generator
         return true;
     }
 
-    @Override public void generate(final Project project)
+    @Override public void generate(final Project project, CommandInvoker.Printer printer)
     {
         try {
             this.project = project;
@@ -165,7 +180,16 @@ public class CMakeGenerator extends Generator
             useQt5 = false;
             useOpenGL = false;
 
-            outputDirectory = new File(project.outputDirectory(), ID);
+            String outputDirectoryName;
+            if (selectedBuildTool == null) {
+                outputDirectoryName = String.format("%s/%s", ID, "default");
+            } else {
+                outputDirectoryName = String.format("%s/%s", ID, selectedBuildTool.directoryName);
+                if (selectedBuildType != null)
+                    outputDirectoryName = String.format("%s/%s", outputDirectoryName, selectedBuildType);
+            }
+
+            outputDirectory = new File(project.outputDirectory(), outputDirectoryName);
             Utility.ensureDirectoryExists(outputDirectory);
 
             project.directives().visitDirectives(new ProjectDirectiveVisitor(project, this) {
@@ -187,6 +211,30 @@ public class CMakeGenerator extends Generator
             });
 
             writeCMakeLists();
+
+            if (cmakeExecutable != null && selectedBuildTool != null) {
+                List<String> cmakeCommand = new ArrayList<>();
+                cmakeCommand.add(cmakeExecutable);
+                cmakeCommand.add("-G");
+                cmakeCommand.add(selectedBuildTool.cmakeGenerator);
+                if (selectedBuildTool.acceptsBuildType)
+                    cmakeCommand.add(String.format("-DCMAKE_BUILD_TYPE=%s", selectedBuildType));
+                cmakeCommand.add("-DCMAKE_INSTALL_PREFIX=_INSTALL_");
+                for (String define : selectedBuildTool.defines)
+                    cmakeCommand.add(String.format("-D%s", define));
+                cmakeCommand.add(".");
+
+                System.out.println(String.format("Invoking: \"%s\"", String.join("\" \"", cmakeCommand)));
+
+                final CommandInvoker commandInvoker = new CommandInvoker(outputDirectory, printer);
+                commandInvoker.invoke(cmakeCommand.toArray(new String[cmakeCommand.size()]));
+
+                try {
+                    Desktop.getDesktop().open(outputDirectory);
+                } catch (IOException e) {
+                    e.printStackTrace(System.err);
+                }
+            }
         } finally {
             targetName = null;
             outputDirectory = null;
@@ -274,11 +322,38 @@ public class CMakeGenerator extends Generator
         builder.append('\n');
     }
 
+    private static String findCMakeExecutable()
+    {
+        String path = Utility.resolveExecutable("cmake");
+        if (path == null) {
+            if (Utility.IS_WINDOWS) {
+                String programFiles = System.getenv("ProgramFiles");
+                if (programFiles == null)
+                    programFiles = "C:/Program Files";
+                File file = new File(String.format("%s/CMake/bin", programFiles));
+                if (file.exists())
+                    return Utility.getCanonicalPath(file);
+
+                String programFilesX86 = System.getenv("ProgramFiles(x86)");
+                if (programFilesX86 == null)
+                    programFilesX86 = "C:/Program Files (x86)";
+                file = new File(String.format("%s/CMake/bin", programFilesX86));
+                if (file.exists())
+                    return Utility.getCanonicalPath(file);
+            }
+
+            if (Utility.IS_OSX) {
+                File file = new File("/Applications/CMake.app/Contents/bin/cmake");
+                if (file.exists())
+                    return Utility.getCanonicalPath(file);
+            }
+        }
+        return path;
+    }
+
     private void updateUI()
     {
         BuildTool selectedBuildTool = selectedBuildTool();
-        String selectedBuildType = selectedBuildType();
-
         buildTypeCombo.getParent().setVisible(selectedBuildTool != null && selectedBuildTool.acceptsBuildType);
     }
 
@@ -302,21 +377,21 @@ public class CMakeGenerator extends Generator
             Map<String, BuildTool> g = new LinkedHashMap<String, BuildTool>();
 
             if (Utility.IS_OSX) {
-                g.put("Xcode", new BuildTool("Xcode", false));
+                g.put("Xcode", new BuildTool("xcode", "Xcode", false));
             }
 
             if (Utility.IS_WINDOWS) {
                 String mingwGenerator = Utility.resolveExecutable("sh") != null ? "MSYS Makefiles" : "MinGW Makefiles";
-                g.put("Visual Studio 2013 (32-bit)", new BuildTool("Visual Studio 12 2013", false));
-                g.put("Visual Studio 2013 (64-bit)", new BuildTool("Visual Studio 12 2013 - Win64", false));
-                g.put("Visual Studio 2015 (32-bit)", new BuildTool("Visual Studio 14 2015", false));
-                g.put("Visual Studio 2015 (64-bit)", new BuildTool("Visual Studio 14 2015 - Win64", false));
-                g.put("MinGW (32-bit)", new BuildTool(mingwGenerator, true, "-DZ_MINGW_CFLAGS=-m32"));
-                g.put("MinGW (64-bit)", new BuildTool(mingwGenerator, true, "-DZ_MINGW_CFLAGS=-m64"));
+                g.put("Visual Studio 2013 (32-bit)", new BuildTool("vs2013_win32", "Visual Studio 12 2013", false));
+                g.put("Visual Studio 2013 (64-bit)", new BuildTool("vs2013_win64", "Visual Studio 12 2013 Win64", false));
+                g.put("Visual Studio 2015 (32-bit)", new BuildTool("vs2015_win32", "Visual Studio 14 2015", false));
+                g.put("Visual Studio 2015 (64-bit)", new BuildTool("vs2015_win64", "Visual Studio 14 2015 Win64", false));
+                g.put("MinGW (32-bit)", new BuildTool("mingw32", mingwGenerator, true, "Z_MINGW_CFLAGS=-m32"));
+                g.put("MinGW (64-bit)", new BuildTool("mingw64", mingwGenerator, true, "Z_MINGW_CFLAGS=-m64"));
             }
 
             if (g.isEmpty())
-                g.put("Unix Makefiles", new BuildTool("Unix Makefiles", true));
+                g.put("Unix Makefiles", new BuildTool("makefiles", "Unix Makefiles", true));
 
             buildTools = g;
         }

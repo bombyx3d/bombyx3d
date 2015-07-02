@@ -119,18 +119,32 @@ public class Main
             // Build the project
 
             final Project project = new Project(projectPath);
-            try {
-                // Invoke the builder
 
-                if (!batch)
-                    MainDialog.run(project, generator, options);
-                else {
+            // Invoke the builder
+
+            try {
+                if (!batch) {
+                    try {
+                        MainDialog.run(project, generator, options);
+                    } finally {
+                        project.closeDatabase();
+                    }
+                } else {
                     if (generator == null)
                         throw new RuntimeException("No generator was specified on the command line.");
-                    project.build(generator, options);
+                    project.build(generator, options, null, error -> {
+                        project.closeDatabase();
+                        if (error != null)
+                            handleFatalException(error);
+                        System.exit(0);
+                    });
+
+                    for (;;)
+                        Thread.sleep(1000);
                 }
-            } finally {
+            } catch (Throwable t) {
                 project.closeDatabase();
+                throw t;
             }
         } catch (Throwable t) {
             handleFatalException(t);

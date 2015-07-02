@@ -9,7 +9,6 @@ project(@{target_name})
 if(Z_MINGW_CFLAGS)
     set(CMAKE_C_FLAGS "${CMAKE_C_FALGS} ${Z_MINGW_CFLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FALGS} ${Z_MINGW_CFLAGS}")
-    message(STATUS "${CMAKE_C_FLAGS}")
 endif()
 
 find_package(Threads)
