@@ -23,7 +23,7 @@ package com.zapolnov.zbt.gui;
 
 import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.project.Project;
-import com.zapolnov.zbt.utility.Database;
+import com.zapolnov.zbt.utility.GuiUtility;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -34,7 +34,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -44,9 +43,9 @@ public class MainDialog extends JDialog
     public static final String TITLE = "Generate Project Files";
     public static final String BUTTON_TITLE = "Generate";
 
-    public static final int PREFERRED_WIDTH = ProjectConfigurationPanel.LABEL_PREFERRED_WIDTH +
-        ProjectConfigurationPanel.COMBOBOX_PREFERRED_WIDTH + 70;
-    public static final int PREFERRED_HEIGHT = 200;
+    public static final int PREFERRED_WIDTH = GuiUtility.LABEL_PREFERRED_WIDTH +
+        GuiUtility.COMBOBOX_PREFERRED_WIDTH + 70;
+    public static final int PREFERRED_HEIGHT = 250;
 
     private final Project project;
     private final ProjectConfigurationPanel projectConfigurationPanel;
@@ -98,23 +97,26 @@ public class MainDialog extends JDialog
     private void generateProject()
     {
         try {
-            Generator generator = projectConfigurationPanel.selectedGenerator();
-            Map<String, String> options = projectConfigurationPanel.selectedOptions();
-
-            if (generator == null) {
-                JOptionPane messageBox = new JOptionPane("Please select valid generator.", JOptionPane.ERROR_MESSAGE);
-                JDialog dialog = messageBox.createDialog(this, "Error");
-                dialog.setVisible(true);
-                return;
-            }
-
-            project.database().setOption(Database.OPTION_GENERATOR_NAME, generator.name());
-            for (Map.Entry<String, String> option : options.entrySet()) {
-                String key = String.format(Database.PROJECT_OPTION_FORMAT, option.getKey());
-                project.database().setOption(key, option.getValue());
-            }
+            Generator generator;
+            Map<String, String> options;
 
             project.database().commit();
+
+            try {
+                generator = projectConfigurationPanel.selectedGenerator();
+                options = projectConfigurationPanel.selectedOptions();
+
+                if (!projectConfigurationPanel.validateAndSaveOptions()) {
+                    project.database().rollbackSafe();
+                    return;
+                }
+
+                project.database().commit();
+            } catch (Throwable t) {
+                project.database().rollbackSafe();
+                throw t;
+            }
+
             project.build(generator, options);
         } catch (Throwable t) {
             FatalErrorDialog dialog = new FatalErrorDialog(this, t);

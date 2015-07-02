@@ -30,29 +30,27 @@ import com.zapolnov.zbt.project.parser.directives.GeneratorSelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.ImportDirective;
 import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
 import com.zapolnov.zbt.utility.Database;
+import com.zapolnov.zbt.utility.GuiUtility;
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public final class ProjectConfigurationPanel extends JPanel
 {
     public static final String GENERATOR_LABEL = "Generator:";
-    public static final int LABEL_PREFERRED_WIDTH = 200;
-    public static final int COMBOBOX_PREFERRED_WIDTH = 200;
 
     public interface Listener
     {
@@ -61,6 +59,7 @@ public final class ProjectConfigurationPanel extends JPanel
 
     private final Project project;
     private final JComboBox<String> generatorCombo;
+    private final Map<Generator, JPanel> generatorSettingsPanels = new HashMap<>();
     private final Map<JComboBox<String>, EnumerationDirective> enumerationDirectives = new LinkedHashMap<>();
     private final Map<EnumerationDirective, JComboBox<String>> comboBoxes = new LinkedHashMap<>();
     private final Map<String, List<JComboBox<String>>> comboBoxesById = new LinkedHashMap<>();
@@ -78,8 +77,16 @@ public final class ProjectConfigurationPanel extends JPanel
         String defaultGeneratorName = (defaultGenerator != null ? defaultGenerator.name() : null);
         if (defaultGeneratorName == null)
             defaultGeneratorName = project.database().getOption(Database.OPTION_GENERATOR_NAME);
-        generatorCombo = createComboBox(GENERATOR_LABEL, Generator.allGenerators().keySet(), defaultGeneratorName);
+        generatorCombo = GuiUtility.createComboBox(this, GENERATOR_LABEL, Generator.allGenerators().keySet(), defaultGeneratorName);
         generatorCombo.addItemListener(e -> updateWidgetsVisibility());
+
+        for (Generator generator : Generator.allGenerators().values()) {
+            JPanel panel = generator.createSettingsPanel(project.database());
+            if (panel != null) {
+                add(panel);
+                generatorSettingsPanels.put(generator, panel);
+            }
+        }
 
         createWidgets();
         updateWidgetsVisibility();
@@ -139,7 +146,7 @@ public final class ProjectConfigurationPanel extends JPanel
             }
         }
 
-        comboBox = createComboBox(directive.title() + ':', values, selectedIndex);
+        comboBox = GuiUtility.createComboBox(this, directive.title() + ':', values, selectedIndex);
         comboBox.addItemListener(e -> updateWidgetsVisibility());
 
         List<JComboBox<String>> list = comboBoxesById.get(directive.id());
@@ -173,6 +180,10 @@ public final class ProjectConfigurationPanel extends JPanel
         for (Container panel : widgetPanels)
             panel.setVisible(visible.contains(panel));
 
+        Generator selectedGenerator = selectedGenerator();
+        for (Map.Entry<Generator, JPanel> it : generatorSettingsPanels.entrySet())
+            it.getValue().setVisible(it.getKey() == selectedGenerator);
+
         List<Listener> listenerList = new ArrayList<>(listeners);
         listenerList.forEach(ProjectConfigurationPanel.Listener::onProjectConfigurationPanelChanged);
     }
@@ -198,6 +209,8 @@ public final class ProjectConfigurationPanel extends JPanel
             }
             @Override public void visitGeneratorSelector(GeneratorSelectorDirective directive) {
                 Generator selectedGenerator = selectedGenerator();
+                if (selectedGenerator == null)
+                    return;
                 ProjectDirectiveList directives = directive.mapping().get(selectedGenerator.id());
                 if (directives == null)
                     directives = directive.mapping().get(GeneratorSelectorDirective.DEFAULT);
@@ -205,42 +218,6 @@ public final class ProjectConfigurationPanel extends JPanel
                     updateWidgetsVisibility(visible, directives);
             }
         });
-    }
-
-    private JComboBox<String> createComboBox(String labelText, Collection<String> items, String selectedItem)
-    {
-        int selectedIndex = -1;
-        if (selectedItem != null) {
-            int index = 0;
-            for (String item : items) {
-                if (selectedItem.equals(item)) {
-                    selectedIndex = index;
-                    break;
-                }
-                ++index;
-            }
-        }
-        return createComboBox(labelText, items, selectedIndex);
-    }
-
-    private JComboBox<String> createComboBox(String labelText, Collection<String> items, int selectedIndex)
-    {
-        JPanel panel = new JPanel(new GridLayout(1, 2));
-        panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-        add(panel);
-
-        JLabel label = new JLabel(labelText);
-        label.setPreferredSize(new Dimension(LABEL_PREFERRED_WIDTH, label.getPreferredSize().height));
-        panel.add(label, BorderLayout.WEST);
-
-        JComboBox<String> comboBox = new JComboBox<>(items.toArray(new String[items.size()]));
-        comboBox.setPreferredSize(new Dimension(COMBOBOX_PREFERRED_WIDTH, comboBox.getPreferredSize().height));
-        comboBox.setEditable(false);
-        panel.add(comboBox, BorderLayout.EAST);
-
-        comboBox.setSelectedIndex(selectedIndex);
-
-        return comboBox;
     }
 
     private String getComboBoxSelectedEnumeration(JComboBox<String> comboBox)
@@ -299,5 +276,26 @@ public final class ProjectConfigurationPanel extends JPanel
         }
 
         return options;
+    }
+
+    public boolean validateAndSaveOptions()
+    {
+        Generator selectedGenerator = selectedGenerator();
+        Map<String, String> selectedOptions = selectedOptions();
+
+        if (selectedGenerator == null) {
+            JOptionPane messageBox = new JOptionPane("Please select valid generator.", JOptionPane.ERROR_MESSAGE);
+            JDialog dialog = messageBox.createDialog(this, "Error");
+            dialog.setVisible(true);
+            return false;
+        }
+
+        project.database().setOption(Database.OPTION_GENERATOR_NAME, selectedGenerator.name());
+        for (Map.Entry<String, String> option : selectedOptions.entrySet()) {
+            String key = String.format(Database.PROJECT_OPTION_FORMAT, option.getKey());
+            project.database().setOption(key, option.getValue());
+        }
+
+        return selectedGenerator.validateAndSaveSettings(this, project.database());
     }
 }

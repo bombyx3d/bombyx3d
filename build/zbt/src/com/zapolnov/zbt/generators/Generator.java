@@ -24,14 +24,21 @@ package com.zapolnov.zbt.generators;
 import com.zapolnov.zbt.generators.cmake.CMakeGenerator;
 import com.zapolnov.zbt.generators.dummy.DummyGenerator;
 import com.zapolnov.zbt.project.Project;
+import com.zapolnov.zbt.utility.Database;
+import java.awt.Container;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.swing.JPanel;
 
 public abstract class Generator
 {
     public abstract String id();
     public abstract String name();
     public abstract void generate(Project project);
+
+    public JPanel createSettingsPanel(Database database) { return null; }
+    public boolean validateAndSaveSettings(Container panel, Database database)
+        { return createSettingsPanel(database) == null; }
 
     private static Map<String, Generator> allGenerators;
     public static Map<String, Generator> allGenerators()

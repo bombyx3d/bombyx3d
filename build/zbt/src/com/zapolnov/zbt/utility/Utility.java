@@ -186,6 +186,34 @@ public final class Utility
         return normalizedPath.split("/");
     }
 
+    public static String resolveExecutable(String program)
+    {
+        String[] extensions = null;
+        if (!Utility.IS_WINDOWS) {
+            extensions = new String[]{ "" };
+        } else {
+            String pathext = System.getenv("PATHEXT");
+            if (pathext != null)
+                extensions = pathext.split(";");
+            if (extensions == null || extensions.length == 0)
+                extensions = new String[]{ ".com", ".exe", ".bat", ".cmd" };
+        }
+
+        String path = System.getenv("PATH");
+        if (path != null) {
+            String[] paths = path.split(File.pathSeparator);
+            for (String directory : paths) {
+                for (String extension : extensions) {
+                    File file = new File(new File(directory), program + extension);
+                    if (file.exists())
+                        return getCanonicalPath(file);
+                }
+            }
+        }
+
+        return null;
+    }
+
     public static void ensureDirectoryExists(File directory)
     {
         if (!directory.exists()) {
