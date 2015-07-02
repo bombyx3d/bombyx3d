@@ -21,6 +21,7 @@
  */
 package com.zapolnov.zbt.generators.cmake;
 
+import com.zapolnov.zbt.Main;
 import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.project.parser.ProjectDirectiveVisitor;
@@ -163,11 +164,21 @@ public class CMakeGenerator extends Generator
             return false;
         }
 
-        database.setOption(Database.OPTION_CMAKE_BUILD_TOOL, (String)buildToolCombo.getSelectedItem());
+        database.setOption(Database.OPTION_CMAKE_BUILD_TOOL, (String) buildToolCombo.getSelectedItem());
         if (selectedBuildType != null)
             database.setOption(Database.OPTION_CMAKE_BUILD_TYPE, selectedBuildType);
 
         return true;
+    }
+
+    public void setSelectedBuildTool(String buildTool, String buildType)
+    {
+        selectedBuildTool = buildTools().get(buildTool);
+        selectedBuildType = buildType;
+
+        cmakeExecutable = findCMakeExecutable();
+        if (cmakeExecutable == null)
+            throw new RuntimeException("CMake was not found in PATH.");
     }
 
     @Override public void generate(final Project project, CommandInvoker.Printer printer)
@@ -229,10 +240,12 @@ public class CMakeGenerator extends Generator
                 final CommandInvoker commandInvoker = new CommandInvoker(outputDirectory, printer);
                 commandInvoker.invoke(cmakeCommand.toArray(new String[cmakeCommand.size()]));
 
-                try {
-                    Desktop.getDesktop().open(outputDirectory);
-                } catch (IOException e) {
-                    e.printStackTrace(System.err);
+                if (!Main.batchMode()) {
+                    try {
+                        Desktop.getDesktop().open(outputDirectory);
+                    } catch (IOException e) {
+                        e.printStackTrace(System.err);
+                    }
                 }
             }
         } finally {
@@ -320,6 +333,19 @@ public class CMakeGenerator extends Generator
         builder.append("# THIS IS AN AUTOMATICALLY GENERATED FILE. DO NOT EDIT!\n");
         builder.append("# ------------------------------------------------------\n");
         builder.append('\n');
+    }
+
+    public static boolean isValidBuildTool(String name)
+    {
+        if (name == null)
+            return false;
+        return buildTools().get(name) != null;
+    }
+
+    public static boolean isValidBuildType(String name)
+    {
+        return "Debug".equals(name) || "Release".equals(name)
+            || "MinSizeRel".equals(name) || "RelWithDebInfo".equals(name);
     }
 
     private static String findCMakeExecutable()

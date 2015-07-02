@@ -22,9 +22,11 @@
 package com.zapolnov.zbt;
 
 import com.zapolnov.zbt.generators.Generator;
+import com.zapolnov.zbt.generators.cmake.CMakeGenerator;
 import com.zapolnov.zbt.gui.FatalErrorDialog;
 import com.zapolnov.zbt.gui.MainDialog;
 import com.zapolnov.zbt.project.Project;
+import com.zapolnov.zbt.utility.Database;
 import com.zapolnov.zbt.utility.Utility;
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -46,6 +48,8 @@ public class Main
         System.out.println("  -b, --batch               Batch mode (no GUI).");
         System.out.println("  -g, --generator           Specify generator to use.");
         System.out.println("  -p, --project             Path to the source directory of the project.");
+        System.out.println("  --cmake-build-tool        Build tool for CMake.");
+        System.out.println("  --cmake-build-type        Build type for CMake.");
         System.out.println("");
 
         System.out.println("The following generators are available:");
@@ -70,11 +74,18 @@ public class Main
         FatalErrorDialog.run(t);
     }
 
+    public static boolean batchMode()
+    {
+        return batch;
+    }
+
     public static void main(String[] args)
     {
         try {
             Map<String, String> options = new LinkedHashMap<>();
             File projectPath = Utility.getCanonicalFile(new File("."));
+            String cmakeBuildTool = null;
+            String cmakeBuildType = null;
             Generator generator = null;
 
             // Parse command-line arguments
@@ -99,6 +110,20 @@ public class Main
                         throw new RuntimeException(String.format("Directory does not exist: \"%s\".", projectPath));
                     if (!projectPath.isDirectory())
                         throw new RuntimeException(String.format("\"%s\" is not a directory.", projectPath));
+                } else if ("--cmake-build-tool".equals(args[i])) {
+                    if (i == args.length - 1)
+                        throw new RuntimeException(String.format("Missing value after the \"%s\" option.", args[i]));
+                    String buildTool = args[++i];
+                    if (!CMakeGenerator.isValidBuildTool(buildTool))
+                        throw new RuntimeException(String.format("Invalid build tool \"%s\".", buildTool));
+                    cmakeBuildTool = buildTool;
+                } else if ("--cmake-build-type".equals(args[i])) {
+                    if (i == args.length - 1)
+                        throw new RuntimeException(String.format("Missing value after the \"%s\" option.", args[i]));
+                    String buildType = args[++i];
+                    if (!CMakeGenerator.isValidBuildType(buildType))
+                        throw new RuntimeException(String.format("Invalid build type \"%s\".", buildType));
+                    cmakeBuildType = buildType;
                 } else if ("--help".equals(args[i]) || "-h".equals(args[i])) {
                     showUsage();
                     System.exit(1);
@@ -125,6 +150,10 @@ public class Main
             try {
                 if (!batch) {
                     try {
+                        if (cmakeBuildTool != null)
+                            project.database().setOption(Database.OPTION_CMAKE_BUILD_TOOL, cmakeBuildTool);
+                        if (cmakeBuildType != null)
+                            project.database().setOption(Database.OPTION_CMAKE_BUILD_TYPE, cmakeBuildType);
                         MainDialog.run(project, generator, options);
                     } finally {
                         project.closeDatabase();
@@ -132,6 +161,13 @@ public class Main
                 } else {
                     if (generator == null)
                         throw new RuntimeException("No generator was specified on the command line.");
+
+                    if (generator instanceof CMakeGenerator) {
+                        CMakeGenerator cmakeGenerator = (CMakeGenerator)generator;
+                        if (cmakeBuildTool != null || cmakeBuildType != null)
+                            cmakeGenerator.setSelectedBuildTool(cmakeBuildTool, cmakeBuildType);
+                    }
+
                     project.build(generator, options, null, error -> {
                         project.closeDatabase();
                         if (error != null)
