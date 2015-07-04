@@ -1,0 +1,9 @@
+#
+# Template file is Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
+# Licensed under the MIT license.
+#
+
+cmake_minimum_required(VERSION 3.2)
+project(@{target_name})
+
+add_subdirectory(src)

@@ -3,9 +3,6 @@
 # Licensed under the MIT license.
 #
 
-cmake_minimum_required(VERSION 3.2)
-project(@{target_name})
-
 include(CheckCXXCompilerFlag)
 include(CheckTypeSize)
 include(CheckIncludeFile)
@@ -118,6 +115,8 @@ endif()
 
 @{defines}
 @{include_directories}
+
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 
 include(SourceFiles.cmake)
 include(SourceGroups.cmake)
