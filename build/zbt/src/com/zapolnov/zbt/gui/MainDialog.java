@@ -88,7 +88,7 @@ public class MainDialog extends JDialog
         contentPanel.add(scrollArea, BorderLayout.CENTER);
 
         JPanel buttonContainer = new JPanel(new GridBagLayout());
-        buttonContainer.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+        buttonContainer.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
         contentPanel.add(buttonContainer, BorderLayout.PAGE_END);
 
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));

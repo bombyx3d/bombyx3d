@@ -141,14 +141,14 @@ public class CMakeGenerator extends Generator
     {
         selectedBuildTool = selectedBuildTool();
         if (selectedBuildTool == null)
-            throw new RuntimeException("Please select valid build tool.");
+            throw new RuntimeException("Build tool has not been selected.");
 
         if (!selectedBuildTool.acceptsBuildType) {
             selectedBuildType = null;
         } else {
             selectedBuildType = selectedBuildType();
             if (selectedBuildType == null)
-                throw new RuntimeException("Please select valid build type.");
+                throw new RuntimeException("Build type has not been selected.");
         }
 
         cmakeExecutable = findCMakeExecutable();
@@ -247,7 +247,6 @@ public class CMakeGenerator extends Generator
                     cmakeCommand.add(String.format("-D%s", define));
                 cmakeCommand.add(".");
 
-                System.out.println(String.join("\" \"", cmakeCommand));
                 CommandInvoker commandInvoker = new CommandInvoker(outputDirectory, printer);
                 commandInvoker.invoke(cmakeCommand.toArray(new String[cmakeCommand.size()]));
 
@@ -257,7 +256,6 @@ public class CMakeGenerator extends Generator
                     cmakeCommand.add("--build");
                     cmakeCommand.add(".");
 
-                    System.out.println(String.join("\" \"", cmakeCommand));
                     commandInvoker = new CommandInvoker(outputDirectory, printer);
                     commandInvoker.invoke(cmakeCommand.toArray(new String[cmakeCommand.size()]));
                 }

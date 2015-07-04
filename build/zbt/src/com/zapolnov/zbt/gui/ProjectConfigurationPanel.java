@@ -284,7 +284,7 @@ public final class ProjectConfigurationPanel extends JPanel
         Map<String, String> selectedOptions = selectedOptions();
 
         if (selectedGenerator == null)
-            throw new RuntimeException("Please select valid generator.");
+            throw new RuntimeException("No generator has been selected.");
 
         project.database().setOption(Database.OPTION_GENERATOR_NAME, selectedGenerator.name());
         for (Map.Entry<String, String> option : selectedOptions.entrySet()) {

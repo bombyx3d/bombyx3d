@@ -49,9 +49,34 @@ public final class CommandInvoker
         this.printer = printer;
     }
 
+    public static String commandToString(String... args)
+    {
+        StringBuilder builder = new StringBuilder();
+        String prefix = "";
+
+        for (String string : args) {
+            builder.append(prefix);
+            prefix = " ";
+
+            if (!string.contains(" "))
+                builder.append(string);
+            else {
+                builder.append('"');
+                builder.append(string);
+                builder.append('"');
+            }
+        }
+
+        return builder.toString();
+    }
+
     public void invoke(String... command)
     {
+        int exitValue;
         try {
+            System.out.println(String.format("Invoking command: %s", commandToString(command)));
+            System.out.println(String.format("Working directory: %s", Utility.getCanonicalPath(workingDirectory)));
+
             ProcessBuilder builder = new ProcessBuilder(command);
             builder.directory(workingDirectory);
             builder.redirectErrorStream(true);
@@ -88,11 +113,15 @@ public final class CommandInvoker
             process.waitFor();
             future.waitFuture();
 
-            int exitValue = process.exitValue();
-            if (exitValue != 0)
-                throw new RuntimeException(String.format("Command exited with code %d", exitValue));
+            exitValue = process.exitValue();
+            System.out.println(String.format("Command has exited with code %d", exitValue));
         } catch (Throwable t) {
-            throw new RuntimeException(String.format("Unable to invoke command [%s].", command), t);
+            throw new RuntimeException(String.format("Unable to invoke command [%s].", commandToString(command)), t);
+        }
+
+        if (exitValue != 0) {
+            throw new RuntimeException(String.format("Command [%s] has exited with code %d",
+                commandToString(command), exitValue));
         }
     }
 }

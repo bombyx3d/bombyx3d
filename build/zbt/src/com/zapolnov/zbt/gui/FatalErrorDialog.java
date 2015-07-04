@@ -21,65 +21,110 @@
  */
 package com.zapolnov.zbt.gui;
 
+import com.zapolnov.zbt.utility.Utility;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 
 public class FatalErrorDialog extends JDialog
 {
     public static final String TITLE = "Fatal Error";
-    public static final String BUTTON_TITLE = "OK";
+    public static final String OK_BUTTON_TITLE = "Close";
+    public static final String DETAILS_BUTTON_TITLE_1 = "Show Details >>";
+    public static final String DETAILS_BUTTON_TITLE_2 = "<< Hide Details";
+
+    public static final int PREFERRED_WIDTH = 600;
+    public static final int PREFERRED_HEIGHT = 200;
 
     public FatalErrorDialog(JDialog parent, Throwable exception)
     {
         super(parent, TITLE, true);
-        init(makeMessageForException(exception));
+        init(Utility.getExceptionMessage(exception), makeMessageForException(exception));
     }
 
-    public FatalErrorDialog(JFrame parent, String message)
+    public FatalErrorDialog(Frame parent, Throwable exception)
     {
         super(parent, TITLE, true);
-        init(message);
+        init(Utility.getExceptionMessage(exception), makeMessageForException(exception));
     }
 
-    private void init(String message)
+    private void init(String shortMessage, String longMessage)
     {
-        System.err.println(message);
+        System.err.println(longMessage);
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         setContentPane(contentPanel);
+
+        JPanel messagePanel = new JPanel(new BorderLayout());
+        messagePanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 10, 0));
+        contentPanel.add(messagePanel, BorderLayout.CENTER);
+
+        JLabel messageLabel = new JLabel(shortMessage);
+        messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        messagePanel.add(messageLabel, BorderLayout.CENTER);
 
         JTextArea textArea = new JTextArea();
         textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         textArea.setEditable(false);
         textArea.setLineWrap(false);
         textArea.setWrapStyleWord(true);
-        textArea.setRows(10);
-        textArea.append(message);
+        textArea.setRows(20);
+        textArea.append(longMessage);
         textArea.setCaretPosition(0);
 
-        JScrollPane scrollArea = new JScrollPane(textArea);
+        final JScrollPane scrollArea = new JScrollPane(textArea);
+        scrollArea.setVisible(false);
         scrollArea.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        contentPanel.add(scrollArea, BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        contentPanel.add(buttonPanel, BorderLayout.PAGE_END);
+        JPanel buttonContainer = new JPanel(new GridBagLayout());
+        buttonContainer.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+        contentPanel.add(buttonContainer, BorderLayout.PAGE_END);
 
-        JButton button = new JButton(BUTTON_TITLE);
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
+        buttonContainer.add(buttonPanel);
+
+        JButton button = new JButton(OK_BUTTON_TITLE);
         button.addActionListener(e -> dispose());
         buttonPanel.add(button, BorderLayout.CENTER);
+
+        final JButton detailsButton = new JButton(DETAILS_BUTTON_TITLE_1);
+        detailsButton.addActionListener(e -> {
+            boolean visible = !scrollArea.isVisible();
+            messagePanel.remove(scrollArea);
+            contentPanel.remove(messagePanel);
+            if (!visible)
+                contentPanel.add(messagePanel, BorderLayout.CENTER);
+            else {
+                contentPanel.add(messagePanel, BorderLayout.PAGE_START);
+                contentPanel.add(scrollArea, BorderLayout.CENTER);
+            }
+            scrollArea.setVisible(visible);
+            detailsButton.setText(visible ? DETAILS_BUTTON_TITLE_2 : DETAILS_BUTTON_TITLE_1);
+            pack();
+            setLocationRelativeTo(getParent());
+        });
+        buttonPanel.add(detailsButton);
 
         pack();
         setLocationRelativeTo(getParent());
@@ -88,19 +133,14 @@ public class FatalErrorDialog extends JDialog
     private static String makeMessageForException(Throwable exception)
     {
         StringWriter writer = new StringWriter();
-        exception .printStackTrace(new PrintWriter(writer));
+        exception.printStackTrace(new PrintWriter(writer));
         return writer.toString();
     }
 
     public static void run(Throwable exception)
     {
-        run(makeMessageForException(exception));
-    }
-
-    public static void run(String message)
-    {
         JFrame dummyFrame = new DummyFrame(TITLE);
-        FatalErrorDialog mainDialog = new FatalErrorDialog(dummyFrame, message);
+        FatalErrorDialog mainDialog = new FatalErrorDialog(dummyFrame, exception);
         mainDialog.setVisible(true);
         System.exit(1);
     }
