@@ -108,16 +108,11 @@ public class MainDialog extends JDialog
 
     private void generateProject(boolean build)
     {
-        ConsoleDialog consoleDialog = null;
+        final ConsoleDialog consoleDialog = new ConsoleDialog(this);
+        boolean consoleDialogInitialized = false;
+
         try {
             setEnabled(false);
-
-            consoleDialog = new ConsoleDialog(this);
-            consoleDialog.button.setEnabled(false);
-            consoleDialog.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-            consoleDialog.setModal(false);
-            consoleDialog.setVisible(true);
-            consoleDialog.setLocationRelativeTo(this);
 
             Generator generator;
             Map<String, String> options;
@@ -125,45 +120,48 @@ public class MainDialog extends JDialog
             try {
                 generator = projectConfigurationPanel.selectedGenerator();
                 options = projectConfigurationPanel.selectedOptions();
-
-                if (!projectConfigurationPanel.validateAndSaveOptions()) {
-                    project.database().rollbackSafe();
-                    return;
-                }
-
+                projectConfigurationPanel.validateAndSaveOptions();
                 project.database().commit();
             } catch (Throwable t) {
                 project.database().rollbackSafe();
                 throw t;
             }
 
-            final ConsoleDialog consoleDialog_ = consoleDialog;
+            consoleDialog.button.setEnabled(false);
+            consoleDialog.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+            consoleDialog.setModal(false);
+            consoleDialog.setVisible(true);
+            consoleDialog.setLocationRelativeTo(this);
+            consoleDialogInitialized = true;
+
             project.generate(generator, options, consoleDialog, error ->
                 SwingUtilities.invokeLater(() -> {
                     if (error == null) {
-                        consoleDialog_.dispose();
+                        consoleDialog.dispose();
                         dispose();
                         System.exit(0);
                     } else {
-                        JDialog dialog = new FatalErrorDialog(consoleDialog_, error);
+                        JDialog dialog = new FatalErrorDialog(consoleDialog, error);
                         dialog.setVisible(true);
-                        consoleDialog_.button.setEnabled(true);
-                        consoleDialog_.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-                        consoleDialog_.setModal(true);
-                        consoleDialog_.setVisible(true);
+                        consoleDialog.button.setEnabled(true);
+                        consoleDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                        consoleDialog.setModal(true);
+                        consoleDialog.setVisible(true);
                     }
                     setEnabled(true);
                 }),
                 build
             );
         } catch (Throwable t) {
-            consoleDialog.button.setEnabled(true);
-            consoleDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            consoleDialog.setVisible(true);
-            FatalErrorDialog dialog = new FatalErrorDialog(consoleDialog != null ? consoleDialog : this, t);
-            consoleDialog.setModal(true);
-            dialog.setVisible(true);
             setEnabled(true);
+            if (consoleDialogInitialized) {
+                consoleDialog.button.setEnabled(true);
+                consoleDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                consoleDialog.setModal(true);
+                consoleDialog.setVisible(true);
+            }
+            FatalErrorDialog dialog = new FatalErrorDialog(consoleDialogInitialized ? consoleDialog : this, t);
+            dialog.setVisible(true);
         }
     }
 

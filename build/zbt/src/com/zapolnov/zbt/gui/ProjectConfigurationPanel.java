@@ -278,17 +278,13 @@ public final class ProjectConfigurationPanel extends JPanel
         return options;
     }
 
-    public boolean validateAndSaveOptions()
+    public void validateAndSaveOptions()
     {
         Generator selectedGenerator = selectedGenerator();
         Map<String, String> selectedOptions = selectedOptions();
 
-        if (selectedGenerator == null) {
-            JOptionPane messageBox = new JOptionPane("Please select valid generator.", JOptionPane.ERROR_MESSAGE);
-            JDialog dialog = messageBox.createDialog(this, "Error");
-            dialog.setVisible(true);
-            return false;
-        }
+        if (selectedGenerator == null)
+            throw new RuntimeException("Please select valid generator.");
 
         project.database().setOption(Database.OPTION_GENERATOR_NAME, selectedGenerator.name());
         for (Map.Entry<String, String> option : selectedOptions.entrySet()) {
@@ -296,6 +292,6 @@ public final class ProjectConfigurationPanel extends JPanel
             project.database().setOption(key, option.getValue());
         }
 
-        return selectedGenerator.validateAndSaveSettings(this, project.database());
+        selectedGenerator.validateAndSaveSettings(project.database());
     }
 }

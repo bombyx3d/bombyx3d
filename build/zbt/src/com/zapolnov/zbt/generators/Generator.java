@@ -26,7 +26,6 @@ import com.zapolnov.zbt.generators.dummy.DummyGenerator;
 import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.utility.CommandInvoker;
 import com.zapolnov.zbt.utility.Database;
-import java.awt.Container;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.JPanel;
@@ -43,8 +42,7 @@ public abstract class Generator
     public abstract void generate(Project project, CommandInvoker.Printer printer, boolean build);
 
     public JPanel createSettingsPanel(Database database) { return null; }
-    public boolean validateAndSaveSettings(Container panel, Database database)
-        { return createSettingsPanel(database) == null; }
+    public void validateAndSaveSettings(Database database) { assert(createSettingsPanel(database) == null); }
 
     private static Map<String, Generator> allGenerators;
     public static Map<String, Generator> allGenerators()

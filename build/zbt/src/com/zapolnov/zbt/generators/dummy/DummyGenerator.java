@@ -44,7 +44,7 @@ public class DummyGenerator extends Generator
         return NAME;
     }
 
-    @Override public void generate(final Project project, CommandInvoker.Printer printer)
+    @Override public void generate(final Project project, CommandInvoker.Printer printer, boolean build)
     {
     }
 }

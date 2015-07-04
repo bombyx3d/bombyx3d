@@ -137,41 +137,27 @@ public class CMakeGenerator extends Generator
         return panel;
     }
 
-    @Override public boolean validateAndSaveSettings(Container panel, Database database)
+    @Override public void validateAndSaveSettings(Database database)
     {
         selectedBuildTool = selectedBuildTool();
-        if (selectedBuildTool == null) {
-            JOptionPane messageBox = new JOptionPane("Please select valid build tool.", JOptionPane.ERROR_MESSAGE);
-            JDialog dialog = messageBox.createDialog(panel, "Error");
-            dialog.setVisible(true);
-            return false;
-        }
+        if (selectedBuildTool == null)
+            throw new RuntimeException("Please select valid build tool.");
 
         if (!selectedBuildTool.acceptsBuildType) {
             selectedBuildType = null;
         } else {
             selectedBuildType = selectedBuildType();
-            if (selectedBuildType == null) {
-                JOptionPane messageBox = new JOptionPane("Please select valid build type.", JOptionPane.ERROR_MESSAGE);
-                JDialog dialog = messageBox.createDialog(panel, "Error");
-                dialog.setVisible(true);
-                return false;
-            }
+            if (selectedBuildType == null)
+                throw new RuntimeException("Please select valid build type.");
         }
 
         cmakeExecutable = findCMakeExecutable();
-        if (cmakeExecutable == null) {
-            JOptionPane messageBox = new JOptionPane("CMake was not found in PATH.", JOptionPane.ERROR_MESSAGE);
-            JDialog dialog = messageBox.createDialog(panel, "Error");
-            dialog.setVisible(true);
-            return false;
-        }
+        if (cmakeExecutable == null)
+            throw new RuntimeException("CMake was not found in PATH.");
 
         database.setOption(Database.OPTION_CMAKE_BUILD_TOOL, (String) buildToolCombo.getSelectedItem());
         if (selectedBuildType != null)
             database.setOption(Database.OPTION_CMAKE_BUILD_TYPE, selectedBuildType);
-
-        return true;
     }
 
     public void setSelectedBuildTool(String buildTool, String buildType)
