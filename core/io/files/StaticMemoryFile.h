@@ -49,7 +49,7 @@ namespace Engine
         size_t rawDataSize() const override;
         const void* rawDataPointer() const override;
         uint64_t size() const override;
-        bool read(uint64_t offset, void* buffer, size_t size) override;
+        bool read(uint64_t offset, void* buffer, size_t bytesToRead) override;
 
     private:
         std::string m_Name;         /**< File name. */

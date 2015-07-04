@@ -78,24 +78,24 @@ namespace Engine
         return true;
     }
 
-    size_t StaticMemoryInputStream::read(void* buffer, size_t size)
+    size_t StaticMemoryInputStream::read(void* buffer, size_t bytesToRead)
     {
-        if (m_BytesLeft == 0 || size == 0)
+        if (m_BytesLeft == 0 || bytesToRead == 0)
             return 0;
 
-        if (size > m_BytesLeft)
-            size = m_BytesLeft;
+        if (bytesToRead > m_BytesLeft)
+            bytesToRead = m_BytesLeft;
 
-        if (!StaticMemoryFile::read(m_Offset, buffer, size))
+        if (!StaticMemoryFile::read(m_Offset, buffer, bytesToRead))
         {
             m_BytesLeft = 0;
             return 0;
         }
 
-        m_Offset += size;
-        m_BytesLeft -= size;
+        m_Offset += bytesToRead;
+        m_BytesLeft -= bytesToRead;
 
-        return size;
+        return bytesToRead;
     }
 
     bool StaticMemoryInputStream::read(uint64_t offset, void* buffer, size_t bytesToRead)

@@ -29,8 +29,8 @@
 
 namespace Engine
 {
-    QtOpenGLWindow::QtOpenGLWindow(const ViewportSettings& viewportSettings, const Ptr<IViewportDelegate>& delegate)
-        : m_Delegate(delegate)
+    QtOpenGLWindow::QtOpenGLWindow(const ViewportSettings& viewportSettings, const Ptr<IViewportDelegate>& delegateInstance)
+        : m_Delegate(delegateInstance)
         , m_RenderThread(this, m_Delegate)
     {
         std::atomic_store_explicit(&m_ViewportWidth, 0, std::memory_order_seq_cst);
@@ -110,14 +110,14 @@ namespace Engine
         return std::atomic_load_explicit(&m_ViewportHeight, std::memory_order_relaxed);
     }
 
-    void QtOpenGLWindow::resizeEvent(QResizeEvent* resizeEvent)
+    void QtOpenGLWindow::resizeEvent(QResizeEvent* e)
     {
         if (m_Initialized) {
-            int width = resizeEvent->size().width();
-            int height = resizeEvent->size().height();
-            std::atomic_store_explicit(&m_ViewportWidth, 0, std::memory_order_seq_cst);
-            std::atomic_store_explicit(&m_ViewportHeight, 0, std::memory_order_seq_cst);
-            m_RenderThread.resize(width, height);
+            int newWidth = e->size().width();
+            int newHeight = e->size().height();
+            std::atomic_store_explicit(&m_ViewportWidth, newWidth, std::memory_order_seq_cst);
+            std::atomic_store_explicit(&m_ViewportHeight, newHeight, std::memory_order_seq_cst);
+            m_RenderThread.resize(newWidth, newHeight);
         }
     }
 
@@ -155,11 +155,11 @@ namespace Engine
     void QtOpenGLWindow::mousePressEvent(QMouseEvent* e)
     {
         if (m_Initialized && e->button() == Qt::LeftButton) {
-            auto delegate = m_Delegate;
-            float x = e->pos().x();
-            float y = e->pos().y();
-            m_RenderThread.post([delegate, x, y]() {
-                delegate->onPointerPressed(0, x, y);
+            auto delegateInstance = m_Delegate;
+            float mouseX = float(e->pos().x());
+            float mouseY = float(e->pos().y());
+            m_RenderThread.post([delegateInstance, mouseX, mouseY]() {
+                delegateInstance->onPointerPressed(0, mouseX, mouseY);
             });
         }
     }
@@ -167,11 +167,11 @@ namespace Engine
     void QtOpenGLWindow::mouseMoveEvent(QMouseEvent* e)
     {
         if (m_Initialized) {
-            auto delegate = m_Delegate;
-            float x = e->pos().x();
-            float y = e->pos().y();
-            m_RenderThread.post([delegate, x, y]() {
-                delegate->onPointerMoved(0, x, y);
+            auto delegateInstance = m_Delegate;
+            float mouseX = float(e->pos().x());
+            float mouseY = float(e->pos().y());
+            m_RenderThread.post([delegateInstance, mouseX, mouseY]() {
+                delegateInstance->onPointerMoved(0, mouseX, mouseY);
             });
         }
     }
@@ -179,36 +179,40 @@ namespace Engine
     void QtOpenGLWindow::mouseReleaseEvent(QMouseEvent* e)
     {
         if (m_Initialized && e->button() == Qt::LeftButton) {
-            auto delegate = m_Delegate;
-            float x = e->pos().x();
-            float y = e->pos().y();
-            m_RenderThread.post([delegate, x, y]() {
-                delegate->onPointerReleased(0, x, y);
+            auto delegateInstance = m_Delegate;
+            float mouseX = float(e->pos().x());
+            float mouseY = float(e->pos().y());
+            m_RenderThread.post([delegateInstance, mouseX, mouseY]() {
+                delegateInstance->onPointerReleased(0, mouseX, mouseY);
             });
         }
     }
 
-    void QtOpenGLWindow::keyPressEvent(QKeyEvent* keyEvent)
+    void QtOpenGLWindow::keyPressEvent(QKeyEvent*)
     {
         if (m_Initialized) {
-            auto delegate = m_Delegate;
-            int key = keyEvent->key();
-            m_RenderThread.post([delegate, key]() {
+            /*
+            auto delegateInstance = m_Delegate;
+            int key = e->key();
+            m_RenderThread.post([delegateInstance, key]() {
                 //FIXME
-                //delegate->onKeyPressed(key);
+                //delegateInstance->onKeyPressed(key);
             });
+            */
         }
     }
 
-    void QtOpenGLWindow::keyReleaseEvent(QKeyEvent* keyEvent)
+    void QtOpenGLWindow::keyReleaseEvent(QKeyEvent*)
     {
         if (m_Initialized) {
-            auto delegate = m_Delegate;
-            int key = keyEvent->key();
-            m_RenderThread.post([delegate, key]() {
+            /*
+            auto delegateInstance = m_Delegate;
+            int key = e->key();
+            m_RenderThread.post([delegateInstance, key]() {
                 //FIXME
-                //delegate->onKeyReleased(key);
+                //delegateInstance->onKeyReleased(key);
             });
+            */
         }
     }
 }

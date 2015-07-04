@@ -28,14 +28,14 @@
 
 namespace Z
 {
-    Match3Field::Match3Field(int width, int height, int8_t numUniqueElements)
-        : m_Width(width)
-        , m_Height(height)
+    Match3Field::Match3Field(int fieldWidth, int fieldHeight, int8_t numUniqueElements)
+        : m_Width(fieldWidth)
+        , m_Height(fieldHeight)
         , m_NumUniqueElements(numUniqueElements)
     {
         Z_CHECK(numUniqueElements > 0);
-        Z_CHECK(width > 0);
-        Z_CHECK(height > 0);
+        Z_CHECK(fieldWidth > 0);
+        Z_CHECK(fieldHeight > 0);
 
         if (m_NumUniqueElements < 1)
             m_NumUniqueElements = 1;

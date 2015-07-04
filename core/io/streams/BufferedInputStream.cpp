@@ -122,20 +122,20 @@ namespace Engine
         return m_Stream->skip(count - bytesBuffered);
     }
 
-    size_t BufferedInputStream::read(void* buffer, size_t size)
+    size_t BufferedInputStream::read(void* buffer, size_t bytesToRead)
     {
-        if (!m_Stream || size == 0)
+        if (!m_Stream || bytesToRead == 0)
             return 0;
 
         size_t bytesBuffered = m_BufferEnd - m_BufferStart;
-        if (bytesBuffered >= size)
+        if (bytesBuffered >= bytesToRead)
         {
-            memcpy(buffer, m_Buffer.get() + m_BufferStart, size);
-            m_BufferStart += size;
-            return size;
+            memcpy(buffer, m_Buffer.get() + m_BufferStart, bytesToRead);
+            m_BufferStart += bytesToRead;
+            return bytesToRead;
         }
 
-        size_t bytesLeft = size;
+        size_t bytesLeft = bytesToRead;
         uint8_t* p = reinterpret_cast<uint8_t*>(buffer);
         if (bytesBuffered > 0)
         {
@@ -159,15 +159,15 @@ namespace Engine
                 m_BufferStart = 0;
                 m_BufferEnd = bytesRead;
 
-                size_t bytesAvailable = std::min(bytesRead, bytesLeft);
-                memcpy(p, m_Buffer.get(), bytesAvailable);
-                p += bytesAvailable;
-                m_BufferStart += bytesAvailable;
-                bytesLeft -= bytesAvailable;
+                size_t bytesAvailableToRead = std::min(bytesRead, bytesLeft);
+                memcpy(p, m_Buffer.get(), bytesAvailableToRead);
+                p += bytesAvailableToRead;
+                m_BufferStart += bytesAvailableToRead;
+                bytesLeft -= bytesAvailableToRead;
             }
         }
 
-        return size - bytesLeft;
+        return bytesToRead - bytesLeft;
     }
 
     void* BufferedInputStream::queryInterface(TypeID typeID)

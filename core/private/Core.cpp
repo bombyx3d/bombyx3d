@@ -39,11 +39,11 @@ namespace Engine
         m_FileSystem.release();
     }
 
-    void Core::registerFileSystem(const Ptr<IFileSystem>& fileSystem)
+    void Core::registerFileSystem(const Ptr<IFileSystem>& fileSystemInstance)
     {
-        Z_CHECK(fileSystem != nullptr);
-        if (fileSystem)
-            m_FileSystem->add(fileSystem);
+        Z_CHECK(fileSystemInstance != nullptr);
+        if (fileSystemInstance)
+            m_FileSystem->add(fileSystemInstance);
     }
 
     void Core::registerTextureLoader(const Ptr<ITextureLoader>& loader)

@@ -25,8 +25,8 @@
 
 namespace Engine
 {
-    StaticMemoryFile::StaticMemoryFile(const void* data, size_t length, const std::string& name)
-        : m_Name(name)
+    StaticMemoryFile::StaticMemoryFile(const void* data, size_t length, const std::string& fileName)
+        : m_Name(fileName)
         , m_Data(reinterpret_cast<const char*>(data))
         , m_Length(length)
     {
@@ -57,14 +57,14 @@ namespace Engine
         return m_Length;
     }
 
-    bool StaticMemoryFile::read(uint64_t offset, void* buffer, size_t size)
+    bool StaticMemoryFile::read(uint64_t offset, void* buffer, size_t bytesToRead)
     {
-        if (offset + size > m_Length) {
+        if (offset + bytesToRead > m_Length) {
             Z_LOG("Incomplete read in file \"" << m_Name << "\".");
             return false;
         }
 
-        memcpy(buffer, m_Data + offset, size);
+        memcpy(buffer, m_Data + offset, bytesToRead);
 
         return true;
     }

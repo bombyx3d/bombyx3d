@@ -78,9 +78,9 @@ namespace Engine
         return (faceIndex == 0 ? 1 : 0);
     }
 
-    IImage* SimpleImage::mipmapLevel(size_t faceIndex, size_t mipmapLevel) const
+    IImage* SimpleImage::mipmapLevel(size_t faceIndex, size_t level) const
     {
-        return (faceIndex == 0 && mipmapLevel == 0 ? const_cast<SimpleImage*>(this) : nullptr);
+        return (faceIndex == 0 && level == 0 ? const_cast<SimpleImage*>(this) : nullptr);
     }
 
     ImagePixelFormat SimpleImage::pixelFormat() const

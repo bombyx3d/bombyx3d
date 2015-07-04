@@ -32,10 +32,10 @@ namespace Engine
         , m_Offset(0)
     {
         fseek(m_Handle, 0, SEEK_END);
-        long size = ftell(m_Handle);
+        long fileSize = ftell(m_Handle);
         rewind(m_Handle);
 
-        m_Size = (size >= 0 ? uint64_t(size) : 0);
+        m_Size = (fileSize >= 0 ? uint64_t(fileSize) : 0);
     }
 
     StdioFileReader::~StdioFileReader()

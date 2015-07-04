@@ -55,9 +55,9 @@ namespace Engine
         /**
          * Retrieves data for the specified mipmap level of the specified face of the texture.
          * @param faceIndex Index of a face.
-         * @param mipmapLevel Mipmap level.
+         * @param level Mipmap level.
          * @return Data for the specified mipmap level.
          */
-        virtual IImage* mipmapLevel(size_t faceIndex, size_t mipmapLevel) const = 0;
+        virtual IImage* mipmapLevel(size_t faceIndex, size_t level) const = 0;
     };
 }

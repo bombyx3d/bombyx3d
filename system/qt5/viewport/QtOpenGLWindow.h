@@ -38,9 +38,9 @@ namespace Engine
         /**
          * Constructor.
          * @param viewportSettings Viewport settings.
-         * @param delegate Viewport delegate.
+         * @param delegateInstance Viewport delegate.
          */
-        QtOpenGLWindow(const ViewportSettings& viewportSettings, const Ptr<IViewportDelegate>& delegate);
+        QtOpenGLWindow(const ViewportSettings& viewportSettings, const Ptr<IViewportDelegate>& delegateInstance);
 
         /** Destructor. */
         ~QtOpenGLWindow();
@@ -59,19 +59,19 @@ namespace Engine
 
     protected:
         /** @cond */
-        void resizeEvent(QResizeEvent* resizeEvent) override;
-        void paintEvent(QPaintEvent* paintEvent) override;
+        void resizeEvent(QResizeEvent* e) override;
+        void paintEvent(QPaintEvent* e) override;
 
-        void showEvent(QShowEvent* showEvent) override;
-        void hideEvent(QHideEvent* hideEvent) override;
-        void closeEvent(QCloseEvent* closeEvent) override;
+        void showEvent(QShowEvent* e) override;
+        void hideEvent(QHideEvent* e) override;
+        void closeEvent(QCloseEvent* e) override;
 
-        void mousePressEvent(QMouseEvent* mouseEvent) override;
-        void mouseMoveEvent(QMouseEvent* mouseEvent) override;
-        void mouseReleaseEvent(QMouseEvent* mouseEvent) override;
+        void mousePressEvent(QMouseEvent* e) override;
+        void mouseMoveEvent(QMouseEvent* e) override;
+        void mouseReleaseEvent(QMouseEvent* e) override;
 
-        void keyPressEvent(QKeyEvent* keyEvent) override;
-        void keyReleaseEvent(QKeyEvent* keyEvent) override;
+        void keyPressEvent(QKeyEvent* e) override;
+        void keyReleaseEvent(QKeyEvent* e) override;
         /** @endcond */
 
     private:

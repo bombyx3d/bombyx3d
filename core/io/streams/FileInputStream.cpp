@@ -103,24 +103,24 @@ namespace Engine
         return true;
     }
 
-    size_t FileInputStream::read(void* buffer, size_t size)
+    size_t FileInputStream::read(void* buffer, size_t bytesToRead)
     {
-        if (!m_Reader || m_BytesLeft == 0 || size == 0)
+        if (!m_Reader || m_BytesLeft == 0 || bytesToRead == 0)
             return 0;
 
-        if (uint64_t(size) > m_BytesLeft)
-            size = size_t(m_BytesLeft);
+        if (uint64_t(bytesToRead) > m_BytesLeft)
+            bytesToRead = size_t(m_BytesLeft);
 
-        if (!m_Reader->read(m_Offset, buffer, size))
+        if (!m_Reader->read(m_Offset, buffer, bytesToRead))
         {
             m_BytesLeft = 0;
             return 0;
         }
 
-        m_Offset += uint64_t(size);
-        m_BytesLeft -= uint64_t(size);
+        m_Offset += uint64_t(bytesToRead);
+        m_BytesLeft -= uint64_t(bytesToRead);
 
-        return size;
+        return bytesToRead;
     }
 
     void* FileInputStream::queryInterface(TypeID typeID)

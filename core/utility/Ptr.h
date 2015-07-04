@@ -327,15 +327,6 @@ namespace Engine
         }
 
         /**
-         * Compares this pointer with `nullptr`.
-         * @return Result of comparison.
-         */
-        bool operator<(const std::nullptr_t&) const
-        {
-            return reinterpret_cast<const char*>(m_Object) < nullptr;
-        }
-
-        /**
          * Compares this pointer with another one.
          * @param other Pointer to compare with.
          * @return Result of comparison.

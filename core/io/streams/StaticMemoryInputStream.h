@@ -51,7 +51,7 @@ namespace Engine
         uint64_t bytesAvailable() const override;
         uint64_t size() const override;
         bool skip(size_t count) override;
-        size_t read(void* buffer, size_t size) override;
+        size_t read(void* buffer, size_t bytesToRead) override;
         bool read(uint64_t offset, void* buffer, size_t bytesToRead) override;
 
     private:

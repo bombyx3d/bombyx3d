@@ -82,7 +82,7 @@ namespace Engine
         bool atEnd() const override;
         uint64_t bytesAvailable() const override;
         bool skip(size_t count) override;
-        size_t read(void* buffer, size_t size) override;
+        size_t read(void* buffer, size_t bytesToRead) override;
 
     private:
         Ptr<IInputStream> m_Stream;             /**< Pointer to the source stream. */

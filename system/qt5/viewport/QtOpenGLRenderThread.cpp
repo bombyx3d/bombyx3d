@@ -155,7 +155,7 @@ namespace Engine
 
                 // Run frame
                 auto time = m_Timer.restart();
-                m_Delegate->onViewportShouldRender(time * 0.001);
+                m_Delegate->onViewportShouldRender(double(time) * 0.001);
                 m_GL->context()->swapBuffers();
             }
 

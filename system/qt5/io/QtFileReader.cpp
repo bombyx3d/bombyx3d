@@ -27,14 +27,14 @@
 
 namespace Engine
 {
-    QtFileReader::QtFileReader(const std::string& name, std::unique_ptr<QFile>&& file)
-        : m_Name(name)
+    QtFileReader::QtFileReader(const std::string& fileName, std::unique_ptr<QFile>&& file)
+        : m_Name(fileName)
         , m_File(std::move(file))
         , m_Offset(0)
     {
         Z_ASSERT(m_File.get() != nullptr);
-        qint64 size = m_File->size();
-        m_Size = (size >= 0 ? uint64_t(size) : 0);
+        qint64 fileSize = m_File->size();
+        m_Size = (fileSize >= 0 ? uint64_t(fileSize) : 0);
     }
 
     QtFileReader::~QtFileReader()
@@ -52,7 +52,7 @@ namespace Engine
         return m_Size;
     }
 
-    bool QtFileReader::read(uint64_t offset, void* buffer, size_t size)
+    bool QtFileReader::read(uint64_t offset, void* buffer, size_t bytesToRead)
     {
         std::lock_guard<decltype(m_Mutex)> guard(m_Mutex);
 
@@ -66,7 +66,7 @@ namespace Engine
             m_Offset = offset;
         }
 
-        qint64 bytesRead = m_File->read(reinterpret_cast<char*>(buffer), qint64(size));
+        qint64 bytesRead = m_File->read(reinterpret_cast<char*>(buffer), qint64(bytesToRead));
         if (bytesRead < 0)
         {
             Z_LOG("Error reading file \"" << m_Name << "\": " << zqUtf8(m_File->errorString()));
@@ -75,7 +75,7 @@ namespace Engine
 
         m_Offset += uint64_t(bytesRead);
 
-        if (size_t(bytesRead) != size)
+        if (size_t(bytesRead) != bytesToRead)
         {
             Z_LOG("Incomplete read in file \"" << m_Name << "\".");
             return false;

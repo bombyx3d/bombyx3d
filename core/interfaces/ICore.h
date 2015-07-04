@@ -48,9 +48,9 @@ namespace Engine
 
         /**
          * Registers an additional filesystem for engine use.
-         * @param fileSystem Pointer to the filesystem.
+         * @param fileSystemInstance Pointer to the filesystem.
          */
-        virtual void registerFileSystem(const Ptr<IFileSystem>& fileSystem) = 0;
+        virtual void registerFileSystem(const Ptr<IFileSystem>& fileSystemInstance) = 0;
 
         /**
          * Retrieves a reference to the file system.

@@ -84,7 +84,7 @@ namespace Engine
                     luminance = (luminance <= 0xFF ? luminance : 0xFF);
 
                     *d++ = uint8_t(luminance);
-                    *d++ = a;
+                    *d++ = uint8_t(a);
                 }
                 src += bytesPerRow;
                 dst += 2 * width;

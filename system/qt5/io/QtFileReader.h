@@ -37,17 +37,17 @@ namespace Engine
 
         /**
          * Constructor.
-         * @param name File name.
+         * @param fileName File name.
          * @param file Pointer to the corresponding `QFile`.
          */
-        QtFileReader(const std::string& name, std::unique_ptr<QFile>&& file);
+        QtFileReader(const std::string& fileName, std::unique_ptr<QFile>&& file);
 
         /** Destructor. */
         ~QtFileReader();
 
         const std::string& name() const override;
         uint64_t size() const override;
-        bool read(uint64_t offset, void* buffer, size_t size) override;
+        bool read(uint64_t offset, void* buffer, size_t bytesToRead) override;
 
     private:
         std::mutex m_Mutex;

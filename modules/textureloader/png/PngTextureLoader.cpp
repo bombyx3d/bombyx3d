@@ -25,6 +25,10 @@
 #include "3rdparty/libpng/png.h"
 #include <setjmp.h>
 
+#ifdef _MSC_VER
+#pragma warning(disable:4611)           // interaction between _strjmp and C++ object destruction is non-portable
+#endif
+
 namespace Engine
 {
     bool PngTextureLoader::supportsFormat(const std::string& extension) const

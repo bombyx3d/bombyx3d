@@ -115,7 +115,7 @@ namespace Engine
 
         size_t faceCount() const override;
         size_t mipmapLevelCount(size_t faceIndex) const override;
-        IImage* mipmapLevel(size_t faceIndex, size_t mipmapLevel) const override;
+        IImage* mipmapLevel(size_t faceIndex, size_t level) const override;
 
         ImagePixelFormat pixelFormat() const override;
         size_t width() const override;

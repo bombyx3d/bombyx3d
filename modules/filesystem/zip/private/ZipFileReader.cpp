@@ -26,8 +26,8 @@
 
 namespace Engine
 {
-    ZipFileReader::ZipFileReader(const std::string& name, const Ptr<IFileReader>& reader, void* handle)
-        : m_Name(name)
+    ZipFileReader::ZipFileReader(const std::string& fileName, const Ptr<IFileReader>& reader, void* handle)
+        : m_Name(fileName)
         , m_Handle(handle)
         , m_ZipReader(reader)
         , m_Size(0)
@@ -54,7 +54,7 @@ namespace Engine
         return m_Size;
     }
 
-    bool ZipFileReader::read(uint64_t offset, void* buffer, size_t size)
+    bool ZipFileReader::read(uint64_t offset, void* buffer, size_t bytesToRead)
     {
         std::lock_guard<decltype(m_Mutex)> guard(m_Mutex);
 
@@ -82,15 +82,15 @@ namespace Engine
                 else
                     bufferSize = size_t(m_Offset - offset);
 
-                std::vector<char> buffer(bufferSize);
+                std::vector<char> buf(bufferSize);
                 while (m_Offset < offset) {
-                    size_t bytesToRead;
-                    if (m_Offset - offset >= buffer.size())
-                        bytesToRead = buffer.size();
+                    size_t bytesToConsume;
+                    if (m_Offset - offset >= buf.size())
+                        bytesToConsume = buf.size();
                     else
-                        bytesToRead = size_t(m_Offset - offset);
+                        bytesToConsume = size_t(m_Offset - offset);
 
-                    int r = unzReadCurrentFile(m_Handle, buffer.data(), static_cast<unsigned int>(bytesToRead));
+                    int r = unzReadCurrentFile(m_Handle, buf.data(), static_cast<unsigned int>(bytesToConsume));
                     if (r <= 0) {
                         Z_LOG("Error reading file \"" << m_Name << "\".");
                         return false;
@@ -102,14 +102,14 @@ namespace Engine
             Z_ASSERT(m_Offset == offset);
         }
 
-        int r = unzReadCurrentFile(m_Handle, buffer, static_cast<unsigned int>(size));
+        int r = unzReadCurrentFile(m_Handle, buffer, static_cast<unsigned int>(bytesToRead));
         if (r <= 0) {
             Z_LOG("Error reading file \"" << m_Name << "\".");
             return false;
         }
 
         m_Offset += r;
-        if (size_t(r) != size)
+        if (size_t(r) != bytesToRead)
         {
             Z_LOG("Incomplete read in file \"" << m_Name << "\".");
             return false;

@@ -36,13 +36,13 @@ namespace Engine
     public:
         Z_IMPLEMENTATION(ZipFileReader)
 
-        ZipFileReader(const std::string& name, const Ptr<IFileReader>& reader, void* handle);
+        ZipFileReader(const std::string& fileName, const Ptr<IFileReader>& reader, void* handle);
         ~ZipFileReader();
 
         const std::string& name() const override;
 
         uint64_t size() const override;
-        bool read(uint64_t offset, void* buffer, size_t size) override;
+        bool read(uint64_t offset, void* buffer, size_t bytesToRead) override;
 
     private:
         std::mutex m_Mutex;

@@ -40,7 +40,7 @@ namespace Engine
         /** Destructor. */
         ~Core();
 
-        void registerFileSystem(const Ptr<IFileSystem>& fileSystem) override;
+        void registerFileSystem(const Ptr<IFileSystem>& fileSystemInstance) override;
         IFileSystem& fileSystem() override { return *m_FileSystem; }
 
         void registerTextureLoader(const Ptr<ITextureLoader>& loader) override;

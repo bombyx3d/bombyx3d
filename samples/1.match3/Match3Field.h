@@ -41,7 +41,7 @@ namespace Z
             std::vector<glm::ivec2> cells;
         };
 
-        Match3Field(int width, int height, int8_t numUniqueElements);
+        Match3Field(int fieldWidth, int fieldHeight, int8_t numUniqueElements);
         ~Match3Field();
 
         int width() const { return m_Width; }
