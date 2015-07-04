@@ -1,2 +1,4 @@
 
 import: [ 'core', 'system' ]
+
+header_search_paths: '.'

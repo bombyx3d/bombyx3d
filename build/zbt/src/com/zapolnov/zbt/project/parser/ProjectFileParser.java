@@ -27,6 +27,7 @@ import com.zapolnov.zbt.project.parser.directives.CMakeUseQt5Directive;
 import com.zapolnov.zbt.project.parser.directives.DefineDirective;
 import com.zapolnov.zbt.project.parser.directives.EnumerationDirective;
 import com.zapolnov.zbt.project.parser.directives.GeneratorSelectorDirective;
+import com.zapolnov.zbt.project.parser.directives.HeaderPathsDirective;
 import com.zapolnov.zbt.project.parser.directives.TargetNameDirective;
 import com.zapolnov.zbt.project.parser.directives.ImportDirective;
 import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
@@ -111,6 +112,7 @@ public final class ProjectFileParser
                 case "import": directive = processImport(basePath, directiveList, valueOption); break;
                 case "define": directive = processDefine(valueOption); break;
                 case "source_directories": directive = processSourceDirectories(basePath, valueOption); break;
+                case "header_search_paths": directive = processHeaderSearchPaths(basePath, valueOption); break;
                 case "target_name": directive = processTargetName(valueOption); break;
                 case "cmake-use-opengl": directive = processCMakeUseOpenGL(valueOption); break;
                 case "cmake-use-qt5": directive = processCMakeUseQt5(valueOption); break;
@@ -368,6 +370,40 @@ public final class ProjectFileParser
         }
 
         return new SourceDirectoriesDirective(directories);
+    }
+
+    private ProjectDirective processHeaderSearchPaths(File basePath, YamlParser.Option valueOption)
+    {
+        List<YamlParser.Option> paths;
+        if (valueOption.isSequence())
+            paths = valueOption.toSequence();
+        else {
+            if (valueOption.toString() == null)
+                throw new YamlParser.Error(valueOption, "Expected string or sequence of strings.");
+            paths = new ArrayList<>(1);
+            paths.add(valueOption);
+        }
+
+        List<File> directories = new ArrayList<>();
+        for (YamlParser.Option path : paths) {
+            String name = path.toString();
+            if (name == null)
+                throw new YamlParser.Error(path, "Expected string.");
+
+            File file = new File(basePath, name);
+            if (!file.exists()) {
+                String fileName = Utility.getCanonicalPath(file);
+                throw new YamlParser.Error(path, String.format("Directory \"%s\" does not exist.", fileName));
+            }
+            if (!file.isDirectory()) {
+                String fileName = Utility.getCanonicalPath(file);
+                throw new YamlParser.Error(path, String.format("\"%s\" is not a directory.", fileName));
+            }
+
+            directories.add(Utility.getCanonicalFile(file));
+        }
+
+        return new HeaderPathsDirective(directories);
     }
 
     private ProjectDirective processTargetName(YamlParser.Option valueOption)

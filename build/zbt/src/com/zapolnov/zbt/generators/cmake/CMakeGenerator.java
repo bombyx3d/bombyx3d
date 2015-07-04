@@ -83,6 +83,7 @@ public class CMakeGenerator extends Generator
     private Project project;
     private Map<String, String> defines;
     private List<File> sourceFiles;
+    private List<File> headerPaths;
     private boolean useQt5;
     private boolean useOpenGL;
     private final Template template;
@@ -192,6 +193,7 @@ public class CMakeGenerator extends Generator
             targetName = "App";
             defines = new HashMap<>();
             sourceFiles = new ArrayList<>();
+            headerPaths = new ArrayList<>();
             useQt5 = false;
             useOpenGL = false;
 
@@ -213,6 +215,9 @@ public class CMakeGenerator extends Generator
                 }
                 @Override protected void visitSourceFile(File file) {
                     sourceFiles.add(Utility.getCanonicalFile(file));
+                }
+                @Override protected void visitHeaderPath(File directory) {
+                    headerPaths.add(Utility.getCanonicalFile(directory));
                 }
                 @Override public void visitTargetName(TargetNameDirective directive) {
                     targetName = directive.name();
@@ -257,6 +262,9 @@ public class CMakeGenerator extends Generator
         } finally {
             targetName = null;
             outputDirectory = null;
+            defines = null;
+            sourceFiles = null;
+            headerPaths = null;
             this.project = null;
         }
     }
@@ -265,12 +273,22 @@ public class CMakeGenerator extends Generator
     {
         StringBuilder definitions = new StringBuilder();
         if (!defines.isEmpty()) {
-            definitions.append("add_definitions(");
+            definitions.append("add_definitions(\n");
             for (Map.Entry<String, String> define : defines.entrySet()) {
                 String value = define.getValue().replace("\\", "\\\\").replace("\"", "\\\"");
-                definitions.append(String.format("\n    \"-D%s=%s\"", define.getKey(), value));
+                definitions.append(String.format("    \"-D%s=%s\"\n", define.getKey(), value));
             }
             definitions.append(")");
+        }
+
+        StringBuilder includeDirectories = new StringBuilder();
+        if (!headerPaths.isEmpty()) {
+            includeDirectories.append("include_directories(\n");
+            for (File directory : headerPaths) {
+                String relativePath = Utility.getRelativePath(outputDirectory, directory);
+                includeDirectories.append(String.format("    \"%s\"\n", relativePath));
+            }
+            includeDirectories.append(")");
         }
 
         List<String> sourcePaths = new ArrayList<>();
@@ -299,6 +317,7 @@ public class CMakeGenerator extends Generator
         options.put("use_qt5", useQt5 ? "YES" : "NO");
         options.put("use_opengl", useOpenGL ? "YES" : "NO");
         options.put("defines", definitions.toString());
+        options.put("include_directories", includeDirectories.toString());
         template.emit(builder, options);
 
         builder.commit(project.database());

@@ -29,6 +29,7 @@ THE SOFTWARE.
         <!-- Compile source code -->
         <javac
             includeantruntime="false"
+            depend="off"
             srcdir="src"
             destdir="bin/classes"
             encoding="UTF-8"

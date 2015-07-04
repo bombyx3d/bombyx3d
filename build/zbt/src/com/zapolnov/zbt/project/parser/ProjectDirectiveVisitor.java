@@ -25,6 +25,7 @@ import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.project.parser.directives.DefineDirective;
 import com.zapolnov.zbt.project.parser.directives.GeneratorSelectorDirective;
+import com.zapolnov.zbt.project.parser.directives.HeaderPathsDirective;
 import com.zapolnov.zbt.project.parser.directives.ImportDirective;
 import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.SourceDirectoriesDirective;
@@ -38,6 +39,7 @@ public abstract class ProjectDirectiveVisitor extends AbstractProjectDirectiveVi
     private final Project project;
     private final Generator generator;
     private final Set<String> visitedSourceFiles = new HashSet<>();
+    private final Set<String> visitedHeaderPaths = new HashSet<>();
     private final Set<String> importedModule = new HashSet<>();
 
     public ProjectDirectiveVisitor(Project project, Generator generator)
@@ -48,6 +50,7 @@ public abstract class ProjectDirectiveVisitor extends AbstractProjectDirectiveVi
 
     protected void visitDefine(String name, String value) {}
     protected void visitSourceFile(File file) {}
+    protected void visitHeaderPath(File directory) {}
 
     @Override public void visitDefine(DefineDirective directive)
     {
@@ -69,6 +72,15 @@ public abstract class ProjectDirectiveVisitor extends AbstractProjectDirectiveVi
             String canonicalPath = Utility.getCanonicalPath(file);
             if (visitedSourceFiles.add(canonicalPath))
                 visitSourceFile(file);
+        }
+    }
+
+    @Override public void visitHeaderPaths(HeaderPathsDirective directive)
+    {
+        for (File file : directive.headerPaths()) {
+            String canonicalPath = Utility.getCanonicalPath(file);
+            if (visitedHeaderPaths.add(canonicalPath))
+                visitHeaderPath(file);
         }
     }
 

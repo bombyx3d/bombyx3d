@@ -133,6 +133,8 @@ public class MainDialog extends JDialog
                 SwingUtilities.invokeLater(() -> {
                     if (error == null) {
                         consoleDialog_.dispose();
+                        dispose();
+                        System.exit(0);
                     } else {
                         JDialog dialog = new FatalErrorDialog(consoleDialog_, error);
                         dialog.setVisible(true);

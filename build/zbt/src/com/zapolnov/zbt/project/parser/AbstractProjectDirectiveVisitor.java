@@ -25,6 +25,7 @@ import com.zapolnov.zbt.project.parser.directives.CMakeUseOpenGLDirective;
 import com.zapolnov.zbt.project.parser.directives.CMakeUseQt5Directive;
 import com.zapolnov.zbt.project.parser.directives.DefineDirective;
 import com.zapolnov.zbt.project.parser.directives.EnumerationDirective;
+import com.zapolnov.zbt.project.parser.directives.HeaderPathsDirective;
 import com.zapolnov.zbt.project.parser.directives.TargetNameDirective;
 import com.zapolnov.zbt.project.parser.directives.GeneratorSelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.ImportDirective;
@@ -36,6 +37,7 @@ public abstract class AbstractProjectDirectiveVisitor
     public void visitDirective(ProjectDirective directive) {}
     public void visitDefine(DefineDirective directive) {}
     public void visitSourceDirectories(SourceDirectoriesDirective directive) {}
+    public void visitHeaderPaths(HeaderPathsDirective directive) {}
     public void visitEnumeration(EnumerationDirective directive) {}
     public void visitImport(ImportDirective directive) {}
     public void visitSelector(SelectorDirective directive) {}

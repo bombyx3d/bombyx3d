@@ -1,2 +1,4 @@
 
+import: [ '3rdparty/glm' ]
+
 source_directories: '.'
