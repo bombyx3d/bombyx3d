@@ -1,5 +1,6 @@
+#!/bin/sh
 #
-# Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+# Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,28 +21,37 @@
 # THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.2)
-project(Sample1)
+set -e
 
-set(source_files
-    Game.cpp
-    Game.h
-    Match3Field.cpp
-    Match3Field.h
-    Match3Listener.h
-    Match3SpriteFactory.h
-    Match3View.cpp
-    Match3View.h
-)
+pwd=`pwd`
+cd `dirname "$0"`
+dir=`pwd`
 
-z_set_source_groups(${source_files})
-add_executable(Sample1 ${source_files})
+cleanup() { cd "$pwd" }
+trap cleanup EXIT INT HUP QUIT TERM
 
-set_target_properties(Sample1 PROPERTIES CXX_STANDARD 11)
-target_link_libraries(Sample1 libengine libMain)
+## Checkout documentation
 
-get_filename_component(path "${CMAKE_CURRENT_SOURCE_DIR}" ABSOLUTE)
-if(WIN32)
-    string(REPLACE "\\" "/" path "${path}")
-endif()
-target_compile_definitions(Sample1 PUBLIC "Z_DEBUG_ASSETS_PATH=\"${path}\"")
+svn checkout -q https://github.com/zapolnov/game_engine/branches/gh-pages/doxygen "$dir/doc"
+find "$dir/doc/html" -mindepth 1 -name '.svn' -prune -o -print0 | xargs -0 rm -rf
+find "$dir/doc/html" -mindepth 1 -name '.svn' -prune -o -type d -empty -print0 | xargs -0 rm -rf
+
+## Update documentation
+
+cd "$dir/.."
+doxygen Doxyfile
+
+## SVN: add new files, remove missing files
+
+for file in `svn status "$dir/doc" | grep "^\!" | awk '{ print $2; }'`; do
+    svn delete -q "$file"
+done
+
+for file in `svn status "$dir/doc" | grep "^\?" | awk '{ print $2; }'`; do
+    svn add -q "$file"
+done
+
+## Commit documentation
+
+svn commit --non-interactive --username zapolnov --password `cat "$dir/id"` \
+    -q -m "[Travis] Update doxygen documentation." "$dir/doc"

@@ -48,6 +48,7 @@ public class Main
         System.out.println("  -b, --batch               Batch mode (no GUI).");
         System.out.println("  -g, --generator           Specify generator to use.");
         System.out.println("  -p, --project             Path to the source directory of the project.");
+        System.out.println("  --build                   Actually build the project.");
         System.out.println("  --cmake-build-tool        Build tool for CMake.");
         System.out.println("  --cmake-build-type        Build type for CMake.");
         System.out.println("  --cmake-qt5-path          Specify path to Qt5 installation.");
@@ -89,15 +90,16 @@ public class Main
             String cmakeBuildType = null;
             String cmakeQt5Path = null;
             Generator generator = null;
+            boolean build = false;
 
             // Parse command-line arguments
 
             for (int i = 0; i < args.length; i++) {
-                if ("--verbose".equals(args[i]) || "-v".equals(args[i]))
+                if ("--verbose".equals(args[i]) || "-v".equals(args[i])) {
                     verbose = true;
-                else if ("--batch".equals(args[i]) || "-b".equals(args[i]))
+                } else if ("--batch".equals(args[i]) || "-b".equals(args[i])) {
                     batch = true;
-                else if ("--generator".equals(args[i]) || "-g".equals(args[i])) {
+                } else if ("--generator".equals(args[i]) || "-g".equals(args[i])) {
                     if (i == args.length - 1)
                         throw new RuntimeException(String.format("Missing value after the \"%s\" option.", args[i]));
                     String generatorName = args[++i];
@@ -112,6 +114,8 @@ public class Main
                         throw new RuntimeException(String.format("Directory does not exist: \"%s\".", projectPath));
                     if (!projectPath.isDirectory())
                         throw new RuntimeException(String.format("\"%s\" is not a directory.", projectPath));
+                } else if ("--build".equals(args[i])) {
+                    build = true;
                 } else if ("--cmake-build-tool".equals(args[i])) {
                     if (i == args.length - 1)
                         throw new RuntimeException(String.format("Missing value after the \"%s\" option.", args[i]));
@@ -179,12 +183,12 @@ public class Main
                             cmakeGenerator.setQt5Path(cmakeQt5Path);
                     }
 
-                    project.build(generator, options, null, error -> {
+                    project.generate(generator, options, null, error -> {
                         project.closeDatabase();
                         if (error != null)
                             handleFatalException(error);
                         System.exit(0);
-                    });
+                    }, build);
 
                     for (;;)
                         Thread.sleep(1000);

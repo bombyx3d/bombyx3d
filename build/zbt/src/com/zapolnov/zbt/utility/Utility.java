@@ -29,6 +29,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
@@ -70,6 +71,22 @@ public final class Utility
         } catch (Throwable ignored) {
             return file.getAbsolutePath();
         }
+    }
+
+    public static boolean fileHasExtension(File file, String extension)
+    {
+        String fileName = file.getName();
+        return (fileName.endsWith(extension) && fileName.length() > extension.length());
+    }
+
+    public static boolean fileHasExtension(File file, String[] extensions)
+    {
+        String fileName = file.getName();
+        for (String extension : extensions) {
+            if (fileName.endsWith(extension) && fileName.length() > extension.length())
+                return true;
+        }
+        return false;
     }
 
     public static String getRelativePath(File fromFile, File toFile)
@@ -121,6 +138,39 @@ public final class Utility
             relativePathStack.addAll(Arrays.asList(toPathStack).subList(same, toPathStack.length));
 
             return getPath(relativePathStack);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean isFileInsideDirectory(File file, File directory)
+    {
+        // This method is based on code from FileUtils.java of Apache Ant 1.9.5
+        // Original code was licensed under the Apache 2.0 license
+        //
+        // --------------------------------------------------------------------
+        // Apache Ant
+        // Copyright 1999-2015 The Apache Software Foundation
+        //
+        // This product includes software developed at
+        // The Apache Software Foundation (http://www.apache.org/).
+        // --------------------------------------------------------------------
+
+        try {
+            String[] directoryPathStack = getPathStack(directory.getCanonicalPath());
+            String[] filePathStack = getPathStack(file.getCanonicalPath());
+
+            if (directoryPathStack.length == 0 || filePathStack.length == 0)
+                return false;
+            if (!directoryPathStack[0].equals(filePathStack[0]))
+                return false;
+
+            int minLength = Math.min(directoryPathStack.length, filePathStack.length);
+            int same = 1;
+            while (same < minLength && directoryPathStack[same].equals(filePathStack[same]))
+                ++same;
+
+            return same == directoryPathStack.length;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -226,6 +276,19 @@ public final class Utility
         if (!directory.isDirectory()) {
             throw new RuntimeException(String.format("\"%s\" is not a directory.",
                 Utility.getCanonicalPath(directory)));
+        }
+    }
+
+    public static void makeDirectoryHidden(File directory)
+    {
+        if (IS_WINDOWS) {
+            String path = Utility.getCanonicalPath(directory);
+            try {
+                Files.setAttribute(Paths.get(path), "dos:hidden", true, LinkOption.NOFOLLOW_LINKS);
+            } catch (IOException e) {
+                throw new RuntimeException(
+                    String.format("Unable to apply 'hidden' attribute to directory \"%s\".", path), e);
+            }
         }
     }
 

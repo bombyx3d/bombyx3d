@@ -34,9 +34,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 public class Project
 {
@@ -64,6 +61,8 @@ public class Project
         parser.parseFile(projectFile);
 
         Utility.ensureDirectoryExists(outputDirectory);
+        Utility.makeDirectoryHidden(outputDirectory);
+
         database = new Database(outputDirectory);
     }
 
@@ -107,8 +106,8 @@ public class Project
         return directives;
     }
 
-    public void build(final Generator generator, Map<String, String> options, final CommandInvoker.Printer printer,
-        final BuildCompletionListener listener)
+    public void generate(final Generator generator, Map<String, String> options, final CommandInvoker.Printer printer,
+        final BuildCompletionListener listener, final boolean build)
     {
         try {
             System.out.println(String.format("Generating project for %s.", generator.name()));
@@ -136,7 +135,7 @@ public class Project
 
             Thread thread = new Thread(() -> {
                 try {
-                    generator.generate(this, printer);
+                    generator.generate(this, printer, build);
                     database.commit();
                 } catch (Throwable t) {
                     database.rollbackSafe();

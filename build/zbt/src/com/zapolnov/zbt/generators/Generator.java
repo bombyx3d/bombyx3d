@@ -40,7 +40,7 @@ public abstract class Generator
 
     public abstract String id();
     public abstract String name();
-    public abstract void generate(Project project, CommandInvoker.Printer printer);
+    public abstract void generate(Project project, CommandInvoker.Printer printer, boolean build);
 
     public JPanel createSettingsPanel(Database database) { return null; }
     public boolean validateAndSaveSettings(Container panel, Database database)

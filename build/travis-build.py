@@ -38,40 +38,20 @@ on_windows = (sys.platform == 'win32' or sys.platform == 'cygwin')
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-b', '--build', help='Value for CMAKE_BUILD_TYPE')
-parser.add_argument('-p', '--platform', help='Value for Z_TARGET_PLATFORM')
+parser.add_argument('-s', '--system', help='Value for "system" enumeration')
 parser.add_argument('-q', '--qt5path', help='Path to Qt5 installation')
 parser.add_argument('-x', '--doxygen', help='Build documentation only', action='store_true')
 args = parser.parse_args()
 
-if args.build:
-    build = args.build
-else:
-    build = 'Debug'
+#############################################################################################################
+## Build documentation if requested
 
-platform = False
-if args.platform:
-    platform = args.platform
-elif args.doxygen:
-    platform = 'dummy'
-
-print('build    = %s' % build)
-
-if platform:
-    print('platform = %s' % platform)
-if args.qt5path:
-    print('qt5path  = %s' % args.qt5path)
+if args.doxygen:
+    subprocess.check_call('doc-build.sh', shell=True)
+    os.exit(0)
 
 #############################################################################################################
-## Setup build environment
-
-script_dir = os.path.dirname(os.path.abspath(__file__))
-build_dir = os.path.join(script_dir, '.cmake-build')
-
-try:
-    os.makedirs(build_dir)
-except:
-    pass
-os.chdir(build_dir)
+## Generate and build the project
 
 if sys.platform == 'linux2':
     if os.environ['CC'] == 'gcc':
@@ -79,52 +59,36 @@ if sys.platform == 'linux2':
     if os.environ['CXX'] == 'g++':
         os.environ['CXX'] = 'g++-4.8'
 
-if args.doxygen:
-    subprocess.check_call('../doc-checkout.sh', shell=True)
+generator = 'CMake 3.2+'
 
-#############################################################################################################
-## Run CMake
-
-cmake = [
-    'cmake',
-    '-DCMAKE_BUILD_TYPE=%s' % build,
-    '-DZ_BUILD_SAMPLES=NO'
-]
-
-if platform:
-    cmake.append('-DZ_TARGET_PLATFORM=%s' % platform)
-if args.qt5path:
-    cmake.append('-DCMAKE_PREFIX_PATH="%s"' % args.qt5path)
-
-if args.doxygen:
-    cmake.append('-DZ_BUILD_DOCUMENTATION=YES')
-else:
-    cmake.append('-DZ_BUILD_DOCUMENTATION=NO')
-
-cmake.append('-DZ_BUILD_SAMPLES=YES')
-
-if not on_windows:
-    cmake.extend(['-G', '"Unix Makefiles"'])
-else:
-    cmake.extend(['-G', '"MinGW Makefiles"'])
-
-cmake.append('../..')
-subprocess.check_call(' '.join(cmake), shell=True)
-
-#############################################################################################################
-## Run make
-
-make = 'make'
 if on_windows:
-    make = 'mingw32-make'
-
-if args.doxygen:
-    subprocess.check_call(('%s doc' % make), shell=True)
+    cmake_build_tool = 'MinGW (32-bit)'
 else:
-    subprocess.check_call(make, shell=True)
+    cmake_build_tool = 'Unix Makefiles'
 
-#############################################################################################################
-## Upload documentation
+print('generator        = %s' % generator)
+if cmake_build_tool:
+    print('cmake_build_tool = %s' % cmake_build_tool)
+if args.build:
+    print('build            = %s' % args.build)
+if args.system:
+    print('system           = %s' % args.system)
+if args.qt5path:
+    print('qt5path          = %s' % args.qt5path)
 
-if args.doxygen:
-    subprocess.check_call('../doc-commit.sh', shell=True)
+command = 'java -jar ../build/zbt/bin/zbt.jar'
+command += ' -v'                                    # Verbose error reporting
+command += ' -b'                                    # Batch mode
+command += ' -p ../samples/1.match3'                # Path to the project
+command += (' -g "%s"' % generator)                 # Generator to use
+command += ' --build'
+
+if cmake_build_tool:
+    command += (' --cmake-build-tool "%s"' % cmake_build_tool)
+if args.build:
+    command += (' --cmake-build-type "%s"' % build)
+if args.qt5path:
+    command += (' --cmake-qt5-path "%s"' % args.qt5path)
+
+print(command)
+subprocess.check_call(command, shell=True)

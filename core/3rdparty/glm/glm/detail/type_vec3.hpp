@@ -43,6 +43,11 @@
 #endif //GLM_SWIZZLE
 #include <cstddef>
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable:4201)       // non-standard extension used : nameless struct/union
+#endif
+
 namespace glm
 {
 	template <typename T, precision P = defaultp>
@@ -423,3 +428,7 @@ namespace glm
 #ifndef GLM_EXTERNAL_TEMPLATE
 #include "type_vec3.inl"
 #endif//GLM_EXTERNAL_TEMPLATE
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif

@@ -29,18 +29,23 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.text.DefaultCaret;
 
 public final class ConsoleDialog extends JDialog implements CommandInvoker.Printer
 {
+    public static final String TITLE = "Console";
+
     private final JTextArea textArea;
     public final JButton button;
 
     public ConsoleDialog(JDialog parent)
     {
         super(parent);
+        setTitle(TITLE);
 
         textArea = new JTextArea();
         textArea.setEditable(false);
@@ -48,7 +53,12 @@ public final class ConsoleDialog extends JDialog implements CommandInvoker.Print
         textArea.setWrapStyleWord(true);
         textArea.setRows(25);
         textArea.setColumns(80);
-        getContentPane().add(textArea, BorderLayout.CENTER);
+
+        JScrollPane scrollArea = new JScrollPane(textArea);
+        scrollArea.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        scrollArea.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollArea.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        getContentPane().add(scrollArea, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));

@@ -21,18 +21,19 @@
  */
 package com.zapolnov.zbt.gui;
 
-import com.zapolnov.zbt.Main;
 import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.project.Project;
-import com.zapolnov.zbt.utility.CommandInvoker;
 import com.zapolnov.zbt.utility.GuiUtility;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Map;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -44,7 +45,8 @@ import javax.swing.SwingUtilities;
 public class MainDialog extends JDialog
 {
     public static final String TITLE = "Generate Project Files";
-    public static final String BUTTON_TITLE = "Generate";
+    public static final String GENERATE_BUTTON_TITLE = "Generate";
+    public static final String BUILD_BUTTON_TITLE = "Build";
 
     public static final int PREFERRED_WIDTH = GuiUtility.LABEL_PREFERRED_WIDTH +
         GuiUtility.COMBOBOX_PREFERRED_WIDTH + 70;
@@ -85,19 +87,26 @@ public class MainDialog extends JDialog
         scrollArea.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         contentPanel.add(scrollArea, BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        contentPanel.add(buttonPanel, BorderLayout.PAGE_END);
+        JPanel buttonContainer = new JPanel(new GridBagLayout());
+        buttonContainer.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+        contentPanel.add(buttonContainer, BorderLayout.PAGE_END);
 
-        JButton button = new JButton(BUTTON_TITLE);
-        button.addActionListener(e -> generateProject());
-        buttonPanel.add(button, BorderLayout.CENTER);
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
+        buttonContainer.add(buttonPanel);
+
+        JButton generateButton = new JButton(GENERATE_BUTTON_TITLE);
+        generateButton.addActionListener(e -> generateProject(false));
+        buttonPanel.add(generateButton);
+
+        JButton buildButton = new JButton(BUILD_BUTTON_TITLE);
+        buildButton.addActionListener(e -> generateProject(true));
+        buttonPanel.add(buildButton);
 
         pack();
         setLocationRelativeTo(getParent());
     }
 
-    private void generateProject()
+    private void generateProject(boolean build)
     {
         ConsoleDialog consoleDialog = null;
         try {
@@ -129,7 +138,7 @@ public class MainDialog extends JDialog
             }
 
             final ConsoleDialog consoleDialog_ = consoleDialog;
-            project.build(generator, options, consoleDialog, error ->
+            project.generate(generator, options, consoleDialog, error ->
                 SwingUtilities.invokeLater(() -> {
                     if (error == null) {
                         consoleDialog_.dispose();
@@ -144,7 +153,8 @@ public class MainDialog extends JDialog
                         consoleDialog_.setVisible(true);
                     }
                     setEnabled(true);
-                })
+                }),
+                build
             );
         } catch (Throwable t) {
             consoleDialog.button.setEnabled(true);

@@ -2,7 +2,7 @@
   <configuration default="false" name="ZBT Console" type="JarApplication" factoryName="JAR Application" singleton="true">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <option name="JAR_PATH" value="$PROJECT_DIR$/bin/zbt.jar" />
-    <option name="PROGRAM_PARAMETERS" value="-p ../.. -b --cmake-qt5-path &quot;C:\Qt\5.4\mingw491_32&quot; -g &quot;CMake 3.2+&quot; --cmake-build-tool &quot;MinGW (32-bit)&quot; --cmake-build-type &quot;Debug&quot; system=qt5" />
+    <option name="PROGRAM_PARAMETERS" value="-p ../../samples/1.match3 -b --cmake-qt5-path &quot;C:\Qt\5.4\mingw491_32&quot; -g &quot;CMake 3.2+&quot; --cmake-build-tool &quot;MinGW (32-bit)&quot; --cmake-build-type &quot;Debug&quot; system=qt5" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     <envs />
     <method>

@@ -1,3 +1,4 @@
 
-cmake-use-qt5: true
+import: [ '../..' ]
+
 source_directories: '.'

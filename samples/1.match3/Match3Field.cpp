@@ -55,7 +55,7 @@ namespace Z
             for (int x = 0; x < m_Width; x++) {
                 int8_t index;
                 do {
-                    index = static_cast<int>(distribution(generator));
+                    index = static_cast<int8_t>(distribution(generator));
                 } while (cellWillMatch(x, y, index));
                 m_Elements[y * m_Width + x] = index;
             }
@@ -366,7 +366,7 @@ namespace Z
 
                     if (chainIndices[newOffset] != size_t(-1)) {
                         if (y == 0 || m_Elements[oldOffset] < 0) {
-                            m_Elements[newOffset] = distribution(generator);
+                            m_Elements[newOffset] = static_cast<int8_t>(distribution(generator));
                             chainIndices[newOffset] = size_t(-1);
                             spawnedItems.emplace_back(x, y);
                             hadFallenItems = true;

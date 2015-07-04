@@ -29,6 +29,7 @@ import com.zapolnov.zbt.project.parser.directives.HeaderPathsDirective;
 import com.zapolnov.zbt.project.parser.directives.ImportDirective;
 import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.SourceDirectoriesDirective;
+import com.zapolnov.zbt.project.parser.directives.ThirdPartySourceDirectoriesDirective;
 import com.zapolnov.zbt.utility.Utility;
 import java.io.File;
 import java.util.HashSet;
@@ -50,6 +51,7 @@ public abstract class ProjectDirectiveVisitor extends AbstractProjectDirectiveVi
 
     protected void visitDefine(String name, String value) {}
     protected void visitSourceFile(File file) {}
+    protected void visitThirdPartySourceFile(File file) {}
     protected void visitHeaderPath(File directory) {}
 
     @Override public void visitDefine(DefineDirective directive)
@@ -70,8 +72,21 @@ public abstract class ProjectDirectiveVisitor extends AbstractProjectDirectiveVi
     {
         for (File file : directive.sourceFiles()) {
             String canonicalPath = Utility.getCanonicalPath(file);
-            if (visitedSourceFiles.add(canonicalPath))
-                visitSourceFile(file);
+            if (visitedSourceFiles.add(canonicalPath)) {
+                if (!Utility.isFileInsideDirectory(file, project.outputDirectory()))
+                    visitSourceFile(file);
+            }
+        }
+    }
+
+    @Override public void visitThirdPartySourceDirectories(ThirdPartySourceDirectoriesDirective directive)
+    {
+        for (File file : directive.sourceFiles()) {
+            String canonicalPath = Utility.getCanonicalPath(file);
+            if (visitedSourceFiles.add(canonicalPath)) {
+                if (!Utility.isFileInsideDirectory(file, project.outputDirectory()))
+                    visitThirdPartySourceFile(file);
+            }
         }
     }
 

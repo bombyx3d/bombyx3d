@@ -1,15 +1,22 @@
 <component name="ProjectDictionaryState">
   <dictionary name="zapol_000">
     <words>
+      <w>automoc</w>
       <w>dcmake</w>
+      <w>libm</w>
       <w>makefiles</w>
       <w>msys</w>
       <w>nikolay</w>
       <w>noninfringement</w>
+      <w>nonstdc</w>
       <w>opengl</w>
       <w>pathext</w>
+      <w>rdparty</w>
+      <w>wconversion</w>
+      <w>wextra</w>
       <w>winphone</w>
       <w>winstore</w>
+      <w>wshadow</w>
       <w>zapolnov</w>
     </words>
   </dictionary>

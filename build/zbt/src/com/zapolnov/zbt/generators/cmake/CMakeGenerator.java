@@ -83,6 +83,9 @@ public class CMakeGenerator extends Generator
     private Project project;
     private Map<String, String> defines;
     private List<File> sourceFiles;
+    private List<File> headerFiles;
+    private List<File> thirdPartySourceFiles;
+    private List<File> thirdPartyHeaderFiles;
     private List<File> headerPaths;
     private boolean useQt5;
     private boolean useOpenGL;
@@ -186,13 +189,16 @@ public class CMakeGenerator extends Generator
         qt5Path = path;
     }
 
-    @Override public void generate(final Project project, CommandInvoker.Printer printer)
+    @Override public void generate(final Project project, CommandInvoker.Printer printer, boolean build)
     {
         try {
             this.project = project;
             targetName = "App";
             defines = new HashMap<>();
             sourceFiles = new ArrayList<>();
+            headerFiles = new ArrayList<>();
+            thirdPartySourceFiles = new ArrayList<>();
+            thirdPartyHeaderFiles = new ArrayList<>();
             headerPaths = new ArrayList<>();
             useQt5 = false;
             useOpenGL = false;
@@ -214,7 +220,16 @@ public class CMakeGenerator extends Generator
                     defines.put(name, value != null ? value : "1");
                 }
                 @Override protected void visitSourceFile(File file) {
-                    sourceFiles.add(Utility.getCanonicalFile(file));
+                    if (isSourceFile(file))
+                        sourceFiles.add(Utility.getCanonicalFile(file));
+                    else if (isHeaderFile(file))
+                        headerFiles.add(Utility.getCanonicalFile(file));
+                }
+                @Override protected void visitThirdPartySourceFile(File file) {
+                    if (isSourceFile(file))
+                        thirdPartySourceFiles.add(Utility.getCanonicalFile(file));
+                    else if (isHeaderFile(file))
+                        thirdPartyHeaderFiles.add(Utility.getCanonicalFile(file));
                 }
                 @Override protected void visitHeaderPath(File directory) {
                     headerPaths.add(Utility.getCanonicalFile(directory));
@@ -246,10 +261,20 @@ public class CMakeGenerator extends Generator
                     cmakeCommand.add(String.format("-D%s", define));
                 cmakeCommand.add(".");
 
-                System.out.println(String.format("Invoking: \"%s\"", String.join("\" \"", cmakeCommand)));
-
-                final CommandInvoker commandInvoker = new CommandInvoker(outputDirectory, printer);
+                System.out.println(String.join("\" \"", cmakeCommand));
+                CommandInvoker commandInvoker = new CommandInvoker(outputDirectory, printer);
                 commandInvoker.invoke(cmakeCommand.toArray(new String[cmakeCommand.size()]));
+
+                if (build) {
+                    cmakeCommand = new ArrayList<>();
+                    cmakeCommand.add(cmakeExecutable);
+                    cmakeCommand.add("--build");
+                    cmakeCommand.add(".");
+
+                    System.out.println(String.join("\" \"", cmakeCommand));
+                    commandInvoker = new CommandInvoker(outputDirectory, printer);
+                    commandInvoker.invoke(cmakeCommand.toArray(new String[cmakeCommand.size()]));
+                }
 
                 if (!Main.batchMode()) {
                     try {
@@ -264,6 +289,9 @@ public class CMakeGenerator extends Generator
             outputDirectory = null;
             defines = null;
             sourceFiles = null;
+            headerFiles = null;
+            thirdPartySourceFiles = null;
+            thirdPartyHeaderFiles = null;
             headerPaths = null;
             this.project = null;
         }
@@ -291,21 +319,16 @@ public class CMakeGenerator extends Generator
             includeDirectories.append(")");
         }
 
-        List<String> sourcePaths = new ArrayList<>();
         Map<String, List<String>> sourceGroups = new HashMap<>();
-        for (File source : sourceFiles) {
-            String path = Utility.getRelativePath(outputDirectory, source);
-            sourcePaths.add(path);
+        List<String> sourcePaths = new ArrayList<>();
+        List<String> headerPaths = new ArrayList<>();
+        List<String> thirdPartySourcePaths = new ArrayList<>();
+        List<String> thirdPartyHeaderPaths = new ArrayList<>();
 
-            File file = Utility.getCanonicalFile(source);
-            String sourceGroup = Utility.getRelativePath(project.projectDirectory(), file.getParentFile());
-            List<String> list = sourceGroups.get(sourceGroup);
-            if (list == null) {
-                list = new ArrayList<>();
-                sourceGroups.put(sourceGroup, list);
-            }
-            list.add(path);
-        }
+        enumerateSourceFiles(sourceFiles, sourcePaths, sourceGroups);
+        enumerateSourceFiles(headerFiles, headerPaths, sourceGroups);
+        enumerateSourceFiles(thirdPartySourceFiles, thirdPartySourcePaths, sourceGroups);
+        enumerateSourceFiles(thirdPartyHeaderFiles, thirdPartyHeaderPaths, sourceGroups);
 
         // Write CMakeLists.txt
 
@@ -326,13 +349,10 @@ public class CMakeGenerator extends Generator
 
         builder = new FileBuilder(outputDirectory, "SourceFiles.cmake");
         writeAutoGeneratedHeader(builder);
-
-        builder.append("set(source_files");
-        for (String path : sourcePaths) {
-            builder.append(String.format("\n    \"%s\"", path));
-        }
-        builder.append(")\n");
-
+        writeSourcePaths(builder, "source_files", sourcePaths);
+        writeSourcePaths(builder, "header_files", headerPaths);
+        writeSourcePaths(builder, "third_party_source_files", thirdPartySourcePaths);
+        writeSourcePaths(builder, "third_party_header_files", thirdPartyHeaderPaths);
         builder.commit(project.database());
 
         // Write SourceGroups.cmake
@@ -341,11 +361,13 @@ public class CMakeGenerator extends Generator
         writeAutoGeneratedHeader(builder);
 
         for (Map.Entry<String, List<String>> sourceGroup : sourceGroups.entrySet()) {
-            String groupName = sourceGroup.getKey().replace("/", "\\\\");
-            builder.append(String.format("source_group(\"%s\" FILES", groupName));
-            for (String file : sourceGroup.getValue())
-                builder.append(String.format("\n    \"%s\"", file));
-            builder.append(")\n\n");
+            if (!sourceGroup.getValue().isEmpty()) {
+                String groupName = sourceGroup.getKey().replace("/", "\\\\");
+                builder.append(String.format("source_group(\"%s\" FILES\n", groupName));
+                for (String file : sourceGroup.getValue())
+                    builder.append(String.format("    \"%s\"\n", file));
+                builder.append(")\n\n");
+            }
         }
 
         builder.commit(project.database());
@@ -358,6 +380,47 @@ public class CMakeGenerator extends Generator
         builder.append("# THIS IS AN AUTOMATICALLY GENERATED FILE. DO NOT EDIT!\n");
         builder.append("# ------------------------------------------------------\n");
         builder.append('\n');
+    }
+
+    private void writeSourcePaths(FileBuilder builder, String variableName, List<String> sourcePaths)
+    {
+        if (sourcePaths.isEmpty()) {
+            builder.append(String.format("set(%s)\n", variableName));
+        } else {
+            builder.append(String.format("set(%s\n", variableName));
+            for (String path : sourcePaths)
+                builder.append(String.format("    \"%s\"\n", path));
+            builder.append(")\n");
+        }
+    }
+
+    public static boolean isSourceFile(File file)
+    {
+        final String[] extensions = new String[]{ ".c", ".cc", ".cpp", ".cxx" };
+        return Utility.fileHasExtension(file, extensions);
+    }
+
+    public static boolean isHeaderFile(File file)
+    {
+        final String[] extensions = new String[]{ ".h", ".hpp", ".inl" };
+        return Utility.fileHasExtension(file, extensions);
+    }
+
+    private void enumerateSourceFiles(List<File> inFiles, List<String> outPaths, Map<String, List<String>> outGroups)
+    {
+        for (File source : inFiles) {
+            String path = Utility.getRelativePath(outputDirectory, source);
+            outPaths.add(path);
+
+            File file = Utility.getCanonicalFile(source);
+            String sourceGroup = Utility.getRelativePath(project.projectDirectory(), file.getParentFile());
+            List<String> list = outGroups.get(sourceGroup);
+            if (list == null) {
+                list = new ArrayList<>();
+                outGroups.put(sourceGroup, list);
+            }
+            list.add(path);
+        }
     }
 
     public static boolean isValidBuildTool(String name)
@@ -447,7 +510,7 @@ public class CMakeGenerator extends Generator
                 g.put("MinGW (64-bit)", new BuildTool("mingw64", mingwGenerator, true, "Z_MINGW_CFLAGS=-m64"));
             }
 
-            if (g.isEmpty())
+            if (!Utility.IS_WINDOWS)
                 g.put("Unix Makefiles", new BuildTool("makefiles", "Unix Makefiles", true));
 
             buildTools = g;
