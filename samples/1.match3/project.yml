@@ -1,4 +1,8 @@
 
-import: [ '../..' ]
+import:
+    - '../..'
+    - '../../modules/filesystem/zip'
+    - '../../modules/imageconverter/rgb2luminance'
+    - '../../modules/imageconverter/rgba2luminance'
 
 source_directories: '.'

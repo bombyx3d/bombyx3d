@@ -7,6 +7,8 @@ cmake_minimum_required(VERSION 3.2)
 project(@{target_name})
 
 include(CheckCXXCompilerFlag)
+include(CheckTypeSize)
+include(CheckIncludeFile)
 
 if(NOT MSVC AND Z_MINGW_CFLAGS)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${Z_MINGW_CFLAGS}")
@@ -61,6 +63,19 @@ else()
 endif()
 
 find_package(Threads)
+
+check_include_file(unistd.h HAVE_UNISTD_H)
+if(HAVE_UNISTD_H)
+    add_definitions("-DZ_HAVE_UNISTD_H")
+endif()
+
+set(CMAKE_REQUIRED_DEFINITIONS "-D_LARGEFILE64_SOURCE=1")
+check_type_size(off64_t OFF64_T)
+if(HAVE_OFF64_T)
+    add_definitions("-D_LARGEFILE64_SOURCE=1")
+else()
+    set(CMAKE_REQUIRED_DEFINITIONS)
+endif()
 
 set(Z_USE_QT5 @{use_qt5})
 set(Z_USE_OPENGL @{use_opengl})

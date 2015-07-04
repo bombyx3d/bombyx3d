@@ -1,0 +1,4 @@
+
+import: [ '../zlib', '../bzip2' ]
+header_search_paths: '.'
+3rdparty_source_directories: '.'

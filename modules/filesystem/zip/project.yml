@@ -1,0 +1,3 @@
+
+import: [ '../../../3rdparty/minizip' ]
+source_directories: '.'

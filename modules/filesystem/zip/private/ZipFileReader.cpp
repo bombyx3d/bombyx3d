@@ -20,9 +20,9 @@
  * THE SOFTWARE.
  */
 #include "ZipFileReader.h"
-#include "../3rdparty/minizip/unzip.h"
 #include "core/utility/debug.h"
 #include <vector>
+#include <unzip.h>
 
 namespace Engine
 {
