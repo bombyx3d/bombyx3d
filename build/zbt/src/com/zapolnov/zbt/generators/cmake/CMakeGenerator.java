@@ -277,10 +277,27 @@ public class CMakeGenerator extends Generator
                 }
 
                 if (!Main.batchMode()) {
+                    File fileToOpen = outputDirectory;
+
+                    if (!build) {
+                        if (Utility.IS_WINDOWS) {
+                            File file = new File(outputDirectory, "App.sln");
+                            if (file.exists() && !file.isDirectory())
+                                fileToOpen = file;
+                        }
+                    }
+
                     try {
-                        Desktop.getDesktop().open(outputDirectory);
+                        Desktop.getDesktop().open(fileToOpen);
                     } catch (IOException e) {
                         e.printStackTrace(System.err);
+                        if (fileToOpen != outputDirectory) {
+                            try {
+                                Desktop.getDesktop().open(fileToOpen);
+                            } catch (IOException ee) {
+                                ee.printStackTrace(System.err);
+                            }
+                        }
                     }
                 }
             }
@@ -363,6 +380,8 @@ public class CMakeGenerator extends Generator
         for (Map.Entry<String, List<String>> sourceGroup : sourceGroups.entrySet()) {
             if (!sourceGroup.getValue().isEmpty()) {
                 String groupName = sourceGroup.getKey().replace("/", "\\\\");
+                while (groupName.startsWith("..\\\\"))
+                    groupName = groupName.substring(4);
                 builder.append(String.format("source_group(\"%s\" FILES\n", groupName));
                 for (String file : sourceGroup.getValue())
                     builder.append(String.format("    \"%s\"\n", file));
