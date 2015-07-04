@@ -177,7 +177,7 @@ namespace Z
         return true;
     }
 
-    bool GLTexture::isUncompressedFormatSupported(GL::Enum format, GL::Enum type)
+    bool GLTexture::isUncompressedFormatSupported(GL::Enum format, GL::Enum)
     {
         switch (long(format))
         {

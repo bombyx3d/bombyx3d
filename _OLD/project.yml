@@ -20,13 +20,5 @@
 # THE SOFTWARE.
 #
 
-import:
-    - '../..'
-    - '../../3rdparty/tinyxml'
-    - '../../modules/filesystem/zip'
-    - '../../modules/imageconverter/rgb2luminance'
-    - '../../modules/imageconverter/rgba2luminance'
-    - '../../modules/textureloader/png'
-    - '../../_OLD'
-
-source_directories: '.'
+source_directories: [ 'canvas', 'game', 'renderer' ]
+header_search_paths: [ '.', 'game' ]

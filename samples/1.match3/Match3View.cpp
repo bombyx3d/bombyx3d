@@ -150,7 +150,7 @@ namespace Z
         }
     }
 
-    void Match3View::Item::onPointerReleased(int id, const glm::vec2& pos)
+    void Match3View::Item::onPointerReleased(int id, const glm::vec2&)
     {
         if (id == 0 && m_Dragging) {
             m_Dragging = false;
@@ -521,7 +521,7 @@ namespace Z
             glm::vec2 spritePosition = newItem->localTransform().transform(newItem->sprite()->position());
 
             float posX = float(item.x) * (m_CellWidth + m_CellSpacing);
-            float oldPosY = float(item.y + 0) * (m_CellHeight + m_CellSpacing);
+            //float oldPosY = float(item.y + 0) * (m_CellHeight + m_CellSpacing);
             float newPosY = float(item.y + 1) * (m_CellHeight + m_CellSpacing);
             newItem->setPosition(posX, newPosY);
             newItem->setSpritePosition(newItem->inverseLocalTransform().transform(spritePosition));
@@ -565,7 +565,7 @@ namespace Z
     {
         validateSprites();
 
-        m_Animations.push_back([this](double time) -> bool {
+        m_Animations.push_back([this](double) -> bool {
             Z_CHECK(m_Field);
             if (m_Field)
                 m_Field->killAllMatches();
