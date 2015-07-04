@@ -1,4 +1,4 @@
 
-import: [ '3rdparty/glm' ]
+import: [ '../3rdparty/glm' ]
 
 source_directories: '.'
