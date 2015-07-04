@@ -30,6 +30,7 @@ import com.zapolnov.zbt.project.parser.directives.ImportDirective;
 import com.zapolnov.zbt.project.parser.directives.RootProjectSelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.SourceDirectoriesDirective;
+import com.zapolnov.zbt.project.parser.directives.ThirdPartyHeaderPathsDirective;
 import com.zapolnov.zbt.project.parser.directives.ThirdPartySourceDirectoriesDirective;
 import com.zapolnov.zbt.utility.Utility;
 import java.io.File;
@@ -54,6 +55,7 @@ public abstract class ProjectDirectiveVisitor extends AbstractProjectDirectiveVi
     protected void visitSourceFile(File file) {}
     protected void visitThirdPartySourceFile(File file) {}
     protected void visitHeaderPath(File directory) {}
+    protected void visitThirdPartyHeaderPath(File directory) {}
 
     @Override public void visitDefine(DefineDirective directive)
     {
@@ -97,6 +99,15 @@ public abstract class ProjectDirectiveVisitor extends AbstractProjectDirectiveVi
             String canonicalPath = Utility.getCanonicalPath(file);
             if (visitedHeaderPaths.add(canonicalPath))
                 visitHeaderPath(file);
+        }
+    }
+
+    @Override public void visitThirdPartyHeaderPaths(ThirdPartyHeaderPathsDirective directive)
+    {
+        for (File file : directive.headerPaths()) {
+            String canonicalPath = Utility.getCanonicalPath(file);
+            if (visitedHeaderPaths.add(canonicalPath))
+                visitThirdPartyHeaderPath(file);
         }
     }
 

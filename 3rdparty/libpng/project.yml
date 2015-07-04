@@ -21,5 +21,6 @@
 #
 
 import: [ '../zlib' ]
-header_search_paths: '.'
+
+3rdparty_header_search_paths: '.'
 3rdparty_source_directories: '.'

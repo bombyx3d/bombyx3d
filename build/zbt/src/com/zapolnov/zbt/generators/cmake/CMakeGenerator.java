@@ -85,6 +85,7 @@ public class CMakeGenerator extends Generator
     private List<File> thirdPartySourceFiles;
     private List<File> thirdPartyHeaderFiles;
     private List<File> headerPaths;
+    private List<File> thirdPartyHeaderPaths;
     private boolean useQt5;
     private boolean useOpenGL;
     private final Template template;
@@ -184,6 +185,7 @@ public class CMakeGenerator extends Generator
             thirdPartySourceFiles = new ArrayList<>();
             thirdPartyHeaderFiles = new ArrayList<>();
             headerPaths = new ArrayList<>();
+            thirdPartyHeaderPaths = new ArrayList<>();
             useQt5 = false;
             useOpenGL = false;
 
@@ -217,6 +219,9 @@ public class CMakeGenerator extends Generator
                 }
                 @Override protected void visitHeaderPath(File directory) {
                     headerPaths.add(Utility.getCanonicalFile(directory));
+                }
+                @Override protected void visitThirdPartyHeaderPath(File directory) {
+                    thirdPartyHeaderPaths.add(Utility.getCanonicalFile(directory));
                 }
                 @Override public void visitTargetName(TargetNameDirective directive) {
                     targetName = directive.name();
@@ -295,6 +300,7 @@ public class CMakeGenerator extends Generator
             thirdPartySourceFiles = null;
             thirdPartyHeaderFiles = null;
             headerPaths = null;
+            thirdPartyHeaderPaths = null;
             this.project = null;
         }
     }
@@ -318,7 +324,15 @@ public class CMakeGenerator extends Generator
                 String relativePath = Utility.getRelativePath(outputDirectory, directory);
                 includeDirectories.append(String.format("    \"%s\"\n", relativePath));
             }
-            includeDirectories.append(")");
+            includeDirectories.append(")\n");
+        }
+        if (!thirdPartyHeaderPaths.isEmpty()) {
+            includeDirectories.append("include_directories(SYSTEM\n");
+            for (File directory : thirdPartyHeaderPaths) {
+                String relativePath = Utility.getRelativePath(outputDirectory, directory);
+                includeDirectories.append(String.format("    \"%s\"\n", relativePath));
+            }
+            includeDirectories.append(")\n");
         }
 
         Map<String, List<String>> sourceGroups = new HashMap<>();

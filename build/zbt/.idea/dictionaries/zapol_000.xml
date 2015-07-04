@@ -3,6 +3,7 @@
     <words>
       <w>automoc</w>
       <w>dcmake</w>
+      <w>largefile</w>
       <w>libm</w>
       <w>makefiles</w>
       <w>msys</w>
@@ -12,6 +13,7 @@
       <w>opengl</w>
       <w>pathext</w>
       <w>rdparty</w>
+      <w>unistd</w>
       <w>wconversion</w>
       <w>wextra</w>
       <w>winphone</w>
