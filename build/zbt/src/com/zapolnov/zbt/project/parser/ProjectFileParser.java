@@ -39,6 +39,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -57,6 +58,7 @@ public final class ProjectFileParser
         TargetNameDirective.PATTERN));
 
     private final Project project;
+    private final Set<String> moduleImportStack = new LinkedHashSet<>();
 
     public ProjectFileParser(Project project)
     {
@@ -74,16 +76,22 @@ public final class ProjectFileParser
         if (root == null)
             return;
 
-        try {
-            if (!root.isMapping())
-                throw new YamlParser.Error(root, "Expected mapping at the root level.");
-            processOptions(file.getAbsoluteFile().getParentFile(), directiveList, root.toMapping());
-        } catch (YamlParser.Error e) {
-            throw e;
-        } catch (Throwable t) {
-            String fileName = Utility.getCanonicalPath(file);
-            String msg = Utility.getExceptionMessage(t);
-            throw new RuntimeException(String.format("Unable to parse YAML file \"%s\".\nError: %s", fileName, msg), t);
+        String moduleName = Utility.getCanonicalPath(file);
+        if (!moduleImportStack.contains(moduleName)) {
+            moduleImportStack.add(moduleName);
+            try {
+                if (!root.isMapping())
+                    throw new YamlParser.Error(root, "Expected mapping at the root level.");
+                processOptions(file.getAbsoluteFile().getParentFile(), directiveList, root.toMapping());
+            } catch (YamlParser.Error e) {
+                throw e;
+            } catch (Throwable t) {
+                String fileName = Utility.getCanonicalPath(file);
+                String msg = Utility.getExceptionMessage(t);
+                throw new RuntimeException(String.format("Unable to parse YAML file \"%s\".\nError: %s", fileName, msg), t);
+            } finally {
+                moduleImportStack.remove(moduleName);
+            }
         }
     }
 
