@@ -26,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -338,5 +339,31 @@ public final class Utility
         }
 
         return files;
+    }
+
+    public static String getJavaExecutable()
+    {
+        String javaHome = System.getProperty("java.home");
+        if (javaHome != null) {
+            File executableFile;
+            if (!Utility.IS_WINDOWS)
+                executableFile = new File(new File(javaHome), "bin/java");
+            else
+                executableFile = new File(new File(javaHome), "bin/java.exe");
+
+            if (executableFile.exists())
+                return Utility.getCanonicalPath(executableFile);
+        }
+        return "java";
+    }
+
+    public static File getApplicationJarFile()
+    {
+        try {
+            File jar = new File(Utility.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+            return Utility.getCanonicalFile(jar);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Unable to determine path to the application JAR file.", e);
+        }
     }
 }

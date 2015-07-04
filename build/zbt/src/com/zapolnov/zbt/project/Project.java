@@ -31,6 +31,7 @@ import com.zapolnov.zbt.utility.CommandInvoker;
 import com.zapolnov.zbt.utility.Database;
 import com.zapolnov.zbt.utility.Utility;
 import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -89,6 +90,11 @@ public class Project
     public String getConfigurationOption(String name)
     {
         return options.get(name);
+    }
+
+    public Map<String, String> configurationOptions()
+    {
+        return Collections.unmodifiableMap(options);
     }
 
     public ImportDirective getImportedModule(String modulePath)

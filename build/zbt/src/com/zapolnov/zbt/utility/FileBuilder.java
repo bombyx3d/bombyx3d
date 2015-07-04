@@ -67,6 +67,7 @@ public final class FileBuilder
                     return;
             }
 
+            System.out.println(String.format("Writing %s", Utility.getRelativePath(database.directory, file)));
             try (FileOutputStream stream = new FileOutputStream(file)) {
                 stream.write(bytes);
                 stream.flush();

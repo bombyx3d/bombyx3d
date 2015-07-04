@@ -40,10 +40,12 @@ public class Database
     private final static String OUTPUT_FILES_TABLE = "<OutputFiles>";
     private final static String OPTIONS_TABLE = "<Options>";
 
+    public final File directory;
     protected DB db;
 
     public Database(File directory)
     {
+        this.directory = directory;
         db = DBMaker.newFileDB(new File(directory, FILE_NAME))
             .closeOnJvmShutdown()
             .make();

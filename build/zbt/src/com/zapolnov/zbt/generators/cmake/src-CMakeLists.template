@@ -133,6 +133,8 @@ add_executable(@{target_name} WIN32 MACOSX_BUNDLE
     ${third_party_header_files}
 )
 
+add_dependencies(@{target_name} ZbtCheck)
+
 find_library(LIBM m)
 if(LIBM)
     target_link_libraries(@{target_name} ${LIBM})

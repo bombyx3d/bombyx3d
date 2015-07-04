@@ -56,6 +56,7 @@ public abstract class ProjectDirectiveVisitor extends AbstractProjectDirectiveVi
     protected void visitThirdPartySourceFile(File file) {}
     protected void visitHeaderPath(File directory) {}
     protected void visitThirdPartyHeaderPath(File directory) {}
+    protected void visitProjectFile(File file) {}
 
     @Override public void visitDefine(DefineDirective directive)
     {
@@ -113,8 +114,10 @@ public abstract class ProjectDirectiveVisitor extends AbstractProjectDirectiveVi
 
     @Override public void visitImport(ImportDirective directive)
     {
-        if (importedModule.add(directive.modulePath()))
+        if (importedModule.add(directive.modulePath())) {
+            visitProjectFile(new File(directive.modulePath()));
             directive.innerDirectives().visitDirectives(this);
+        }
     }
 
     @Override public void visitSelector(SelectorDirective directive)

@@ -25,6 +25,7 @@ import com.zapolnov.zbt.Main;
 import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.project.parser.ProjectDirectiveVisitor;
+import com.zapolnov.zbt.project.parser.ProjectFileParser;
 import com.zapolnov.zbt.project.parser.directives.CMakeUseOpenGLDirective;
 import com.zapolnov.zbt.project.parser.directives.CMakeUseQt5Directive;
 import com.zapolnov.zbt.project.parser.directives.TargetNameDirective;
@@ -50,22 +51,24 @@ public class CMakeGenerator extends Generator
 {
     private enum BuildTool
     {
-        UNIX_MAKEFILES("makefiles", "Unix Makefiles", true),
-        XCODE("xcode", "Xcode", false),
-        MINGW32("mingw32", cmakeMinGWGenerator(), true, "Z_MINGW_CFLAGS=-m32"),
-        MINGW64("mingw64", cmakeMinGWGenerator(), true, "Z_MINGW_CFLAGS=-m64"),
-        VS2013_WIN32("vs2013_win32", "Visual Studio 12 2013", false),
-        VS2013_WIN64("vs2013_win64", "Visual Studio 12 2013 Win64", false),
-        VS2015_WIN32("vs2015_win32", "Visual Studio 14 2015", false),
-        VS2015_WIN64("vs2015_win64", "Visual Studio 14 2015 Win64", false);
+        UNIX_MAKEFILES("Unix Makefiles", "makefiles", "Unix Makefiles", true),
+        XCODE("Xcode", "xcode", "Xcode", false),
+        MINGW32("MinGW (32-bit)", "mingw32", cmakeMinGWGenerator(), true, "Z_MINGW_CFLAGS=-m32"),
+        MINGW64("MinGW (64-bit)", "mingw64", cmakeMinGWGenerator(), true, "Z_MINGW_CFLAGS=-m64"),
+        VS2013_WIN32("Visual Studio 2013 (32-bit)", "vs2013_win32", "Visual Studio 12 2013", false),
+        VS2013_WIN64("Visual Studio 2013 (64-bit)", "vs2013_win64", "Visual Studio 12 2013 Win64", false),
+        VS2015_WIN32("Visual Studio 2015 (32-bit)", "vs2015_win32", "Visual Studio 14 2015", false),
+        VS2015_WIN64("Visual Studio 2015 (64-bit)", "vs2015_win64", "Visual Studio 14 2015 Win64", false);
 
+        public final String title;
         public final String directoryName;
         public final String cmakeGenerator;
         public final boolean acceptsBuildType;
         public final String[] defines;
 
-        BuildTool(String directoryName, String cmakeGenerator, boolean acceptsBuildType, String... defines)
+        BuildTool(String title, String directoryName, String cmakeGenerator, boolean acceptsBuildType, String... defines)
         {
+            this.title = title;
             this.directoryName = directoryName;
             this.cmakeGenerator = cmakeGenerator;
             this.acceptsBuildType = acceptsBuildType;
@@ -87,6 +90,7 @@ public class CMakeGenerator extends Generator
     private List<File> thirdPartyHeaderFiles;
     private List<File> headerPaths;
     private List<File> thirdPartyHeaderPaths;
+    private List<File> projectFiles;
     private boolean useQt5;
     private boolean useOpenGL;
     private final Template rootTemplate;
@@ -182,15 +186,18 @@ public class CMakeGenerator extends Generator
         try {
             this.project = project;
             targetName = "App";
-            defines = new HashMap<>();
+            defines = new LinkedHashMap<>();
             sourceFiles = new ArrayList<>();
             headerFiles = new ArrayList<>();
             thirdPartySourceFiles = new ArrayList<>();
             thirdPartyHeaderFiles = new ArrayList<>();
             headerPaths = new ArrayList<>();
             thirdPartyHeaderPaths = new ArrayList<>();
+            projectFiles = new ArrayList<>();
             useQt5 = false;
             useOpenGL = false;
+
+            // Create output directory
 
             String outputDirectoryName;
             if (selectedBuildTool == null) {
@@ -203,6 +210,8 @@ public class CMakeGenerator extends Generator
 
             outputDirectory = new File(project.outputDirectory(), outputDirectoryName);
             Utility.ensureDirectoryExists(outputDirectory);
+
+            // Collect information from the project file
 
             project.directives().visitDirectives(new ProjectDirectiveVisitor(project, this) {
                 @Override protected void visitDefine(String name, String value) {
@@ -229,6 +238,9 @@ public class CMakeGenerator extends Generator
                 @Override public void visitTargetName(TargetNameDirective directive) {
                     targetName = directive.name();
                 }
+                @Override public void visitProjectFile(File file) {
+                    projectFiles.add(Utility.getCanonicalFile(file));
+                }
                 @Override public void visitCMakeUseQt5Directive(CMakeUseQt5Directive directive) {
                     useQt5 = directive.value();
                 }
@@ -237,11 +249,20 @@ public class CMakeGenerator extends Generator
                 }
             });
 
-            writeCMakeLists();
+            // Try to find Qt5 installation directory
+
+            if (qt5Path == null && selectedBuildTool != null && useQt5)
+                qt5Path = findQt5InstallationDirectory(selectedBuildTool);
+
+            // Generate files
+
+            writeCMakeLists(selectedBuildTool, selectedBuildType, qt5Path);
+
+            // Run CMake
 
             if (cmakeExecutable != null && selectedBuildTool != null) {
-                if (qt5Path == null && useQt5)
-                    qt5Path = findQt5InstallationDirectory(selectedBuildTool);
+
+                // Run CMake to generate project files
 
                 List<String> cmakeCommand = new ArrayList<>();
                 cmakeCommand.add(cmakeExecutable);
@@ -259,6 +280,8 @@ public class CMakeGenerator extends Generator
                 CommandInvoker commandInvoker = new CommandInvoker(outputDirectory, printer);
                 commandInvoker.invoke(cmakeCommand.toArray(new String[cmakeCommand.size()]));
 
+                // Run CMake to build project
+
                 if (build) {
                     cmakeCommand = new ArrayList<>();
                     cmakeCommand.add(cmakeExecutable);
@@ -269,12 +292,14 @@ public class CMakeGenerator extends Generator
                     commandInvoker.invoke(cmakeCommand.toArray(new String[cmakeCommand.size()]));
                 }
 
+                // Open the generated project file
+
                 if (!Main.batchMode()) {
                     File fileToOpen = outputDirectory;
 
                     if (!build) {
                         if (Utility.IS_WINDOWS) {
-                            File file = new File(outputDirectory, "App.sln");
+                            File file = new File(outputDirectory, String.format("%s.sln", targetName));
                             if (file.exists() && !file.isDirectory())
                                 fileToOpen = file;
                         }
@@ -304,28 +329,33 @@ public class CMakeGenerator extends Generator
             thirdPartyHeaderFiles = null;
             headerPaths = null;
             thirdPartyHeaderPaths = null;
+            projectFiles = null;
             this.project = null;
         }
     }
 
-    private void writeCMakeLists()
+    private void writeCMakeLists(BuildTool selectedBuildTool, String selectedBuildType, String qt5Path)
     {
+        // Build list of ADD_DEFINITIONS() commands
+
         StringBuilder definitions = new StringBuilder();
         if (!defines.isEmpty()) {
             definitions.append("add_definitions(\n");
             for (Map.Entry<String, String> define : defines.entrySet()) {
                 String value = define.getValue().replace("\\", "\\\\").replace("\"", "\\\"");
-                definitions.append(String.format("    \"-D%s=%s\"\n", define.getKey(), value));
+                definitions.append(String.format("    \"-D%s=%s\"\n", cmakeEscape(define.getKey()), cmakeEscape(value)));
             }
             definitions.append(")");
         }
+
+        // Build list of INCLUDE_DIRECTORIES() commands
 
         StringBuilder includeDirectories = new StringBuilder();
         if (!headerPaths.isEmpty()) {
             includeDirectories.append("include_directories(\n");
             for (File directory : headerPaths) {
                 String relativePath = Utility.getRelativePath(new File(outputDirectory, SOURCE_DIRECTORY), directory);
-                includeDirectories.append(String.format("    \"%s\"\n", relativePath));
+                includeDirectories.append(String.format("    \"%s\"\n", cmakeEscapePath(relativePath)));
             }
             includeDirectories.append(")\n");
         }
@@ -333,12 +363,50 @@ public class CMakeGenerator extends Generator
             includeDirectories.append("include_directories(SYSTEM\n");
             for (File directory : thirdPartyHeaderPaths) {
                 String relativePath = Utility.getRelativePath(new File(outputDirectory, SOURCE_DIRECTORY), directory);
-                includeDirectories.append(String.format("    \"%s\"\n", relativePath));
+                includeDirectories.append(String.format("    \"%s\"\n", cmakeEscapePath(relativePath)));
             }
             includeDirectories.append(")\n");
         }
 
-        Map<String, List<String>> sourceGroups = new HashMap<>();
+        // Build list of project files
+
+        Map<String, List<String>> projectFileGroups = new LinkedHashMap<>();
+        StringBuilder projectFileList = new StringBuilder();
+        projectFileList.append(String.format("\"%s\"\n", cmakeEscapePath(
+            Utility.getCanonicalPath(new File(project.projectDirectory(), ProjectFileParser.PROJECT_FILE_NAME)))));
+        for (File projectDirectory : projectFiles) {
+            List<String> items = new ArrayList<>();
+            File projectFile = new File(projectDirectory, ProjectFileParser.PROJECT_FILE_NAME);
+            extractSourceFileRelativePaths(outputDirectory, projectFile, items, projectFileGroups);
+            projectFileList.append(String.format("        \"%s\"\n", cmakeEscapePath(items.get(0))));
+        }
+
+        // Build list of SOURCE_GROUP() commands for source files
+
+        StringBuilder projectFileGroupsString = new StringBuilder();
+        for (Map.Entry<String, List<String>> sourceGroup : projectFileGroups.entrySet()) {
+            if (!sourceGroup.getValue().isEmpty()) {
+                String groupName = sourceGroup.getKey().replace("/", "\\");
+                while (groupName.startsWith("..\\"))
+                    groupName = groupName.substring(3);
+                projectFileGroupsString.append(String.format("source_group(\"%s\" FILES\n", cmakeEscape(groupName)));
+                for (String file : sourceGroup.getValue())
+                    projectFileGroupsString.append(String.format("    \"%s\"\n", cmakeEscapePath(file)));
+                projectFileGroupsString.append(")\n\n");
+            }
+        }
+
+        // Build list of configuration options
+
+        StringBuilder projectOptions = new StringBuilder();
+        for (Map.Entry<String, String> it : project.configurationOptions().entrySet()) {
+            projectOptions.append(String.format("\"%s=%s\"\n        ",
+                cmakeEscape(it.getKey()), cmakeEscape(it.getValue())));
+        }
+
+        // Build list of source files and SOURCE_GROUPs for them
+
+        Map<String, List<String>> sourceGroups = new LinkedHashMap<>();
         List<String> sourcePaths = new ArrayList<>();
         List<String> headerPaths = new ArrayList<>();
         List<String> thirdPartySourcePaths = new ArrayList<>();
@@ -354,8 +422,32 @@ public class CMakeGenerator extends Generator
         FileBuilder builder = new FileBuilder(outputDirectory, "CMakeLists.txt");
         writeAutoGeneratedHeader(builder);
 
-        Map<String, String> options = new HashMap<>();
-        options.put("target_name", targetName);
+        Map<String, String> options = new LinkedHashMap<>();
+        options.put("target_name", cmakeEscape(targetName));
+        options.put("zbt_generator", cmakeEscape(NAME));
+        options.put("zbt_java_executable", cmakeEscapePath(Utility.getJavaExecutable()));
+        options.put("zbt_jar",
+            cmakeEscapePath(Utility.getRelativePath(project.projectDirectory(), Utility.getApplicationJarFile())));
+        options.put("zbt_project_directory", cmakeEscapePath(Utility.getCanonicalPath(project.projectDirectory())));
+        if (selectedBuildTool == null)
+            options.put("zbt_cmake_build_tool", "");
+        else {
+            options.put("zbt_cmake_build_tool",
+                String.format("--cmake-build-tool \"%s\"", cmakeEscapePath(selectedBuildTool.title)));
+        }
+        if (selectedBuildType == null)
+            options.put("zbt_cmake_build_type", "");
+        else {
+            options.put("zbt_cmake_build_type",
+                String.format("--cmake-build-type \"%s\"", cmakeEscapePath(selectedBuildType)));
+        }
+        if (qt5Path == null)
+            options.put("zbt_cmake_qt5_path", "");
+        else
+            options.put("zbt_cmake_qt5_path", String.format("--cmake-qt5-path \"%s\"", cmakeEscapePath(qt5Path)));
+        options.put("zbt_project_files", projectFileList.toString());
+        options.put("zbt_project_options", projectOptions.toString());
+        options.put("source_groups", projectFileGroupsString.toString());
         rootTemplate.emit(builder, options);
 
         builder.commit(project.database());
@@ -366,7 +458,7 @@ public class CMakeGenerator extends Generator
         writeAutoGeneratedHeader(builder);
 
         options = new HashMap<>();
-        options.put("target_name", targetName);
+        options.put("target_name", cmakeEscape(targetName));
         options.put("use_qt5", useQt5 ? "YES" : "NO");
         options.put("use_opengl", useOpenGL ? "YES" : "NO");
         options.put("defines", definitions.toString());
@@ -392,12 +484,12 @@ public class CMakeGenerator extends Generator
 
         for (Map.Entry<String, List<String>> sourceGroup : sourceGroups.entrySet()) {
             if (!sourceGroup.getValue().isEmpty()) {
-                String groupName = sourceGroup.getKey().replace("/", "\\\\");
-                while (groupName.startsWith("..\\\\"))
-                    groupName = groupName.substring(4);
-                builder.append(String.format("source_group(\"%s\" FILES\n", groupName));
+                String groupName = sourceGroup.getKey().replace("/", "\\");
+                while (groupName.startsWith("..\\"))
+                    groupName = groupName.substring(3);
+                builder.append(String.format("source_group(\"%s\" FILES\n", cmakeEscape(groupName)));
                 for (String file : sourceGroup.getValue())
-                    builder.append(String.format("    \"%s\"\n", file));
+                    builder.append(String.format("    \"%s\"\n", cmakeEscapePath(file)));
                 builder.append(")\n\n");
             }
         }
@@ -421,7 +513,7 @@ public class CMakeGenerator extends Generator
         } else {
             builder.append(String.format("set(%s\n", variableName));
             for (String path : sourcePaths)
-                builder.append(String.format("    \"%s\"\n", path));
+                builder.append(String.format("    \"%s\"\n", cmakeEscapePath(path)));
             builder.append(")\n");
         }
     }
@@ -434,25 +526,32 @@ public class CMakeGenerator extends Generator
 
     public static boolean isHeaderFile(File file)
     {
-        final String[] extensions = new String[]{ ".h", ".hpp", ".inl" };
+        final String[] extensions = new String[]{ ".h", ".hh", ".hpp", ".hxx", ".inl" };
         return Utility.fileHasExtension(file, extensions);
     }
 
     private void enumerateSourceFiles(List<File> inFiles, List<String> outPaths, Map<String, List<String>> outGroups)
     {
-        for (File source : inFiles) {
-            String path = Utility.getRelativePath(new File(outputDirectory, SOURCE_DIRECTORY), source);
+        File baseDirectory = new File(outputDirectory, SOURCE_DIRECTORY);
+        for (File source : inFiles)
+            extractSourceFileRelativePaths(baseDirectory, Utility.getCanonicalFile(source), outPaths, outGroups);
+    }
+
+    private void extractSourceFileRelativePaths(File baseDirectory, File file, List<String> outPaths,
+        Map<String, List<String>> outGroups)
+    {
+        String path = Utility.getRelativePath(baseDirectory, file);
+
+        if (outPaths != null)
             outPaths.add(path);
 
-            File file = Utility.getCanonicalFile(source);
-            String sourceGroup = Utility.getRelativePath(project.projectDirectory(), file.getParentFile());
-            List<String> list = outGroups.get(sourceGroup);
-            if (list == null) {
-                list = new ArrayList<>();
-                outGroups.put(sourceGroup, list);
-            }
-            list.add(path);
+        String sourceGroup = Utility.getRelativePath(project.projectDirectory(), file.getParentFile());
+        List<String> list = outGroups.get(sourceGroup);
+        if (list == null) {
+            list = new ArrayList<>();
+            outGroups.put(sourceGroup, list);
         }
+        list.add(path);
     }
 
     public static boolean isValidBuildTool(String name)
@@ -575,6 +674,39 @@ public class CMakeGenerator extends Generator
         return (String)buildTypeCombo.getSelectedItem();
     }
 
+    public static String cmakeEscape(String string)
+    {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < string.length(); i++) {
+            char ch = string.charAt(i);
+            switch (ch)
+            {
+            case '\\': builder.append("\\\\"); break;
+            case '"': builder.append("\\\""); break;
+            default: builder.append(ch); break;
+            }
+        }
+        return builder.toString();
+    }
+
+    public static String cmakeEscapePath(String string)
+    {
+        if (!Utility.IS_WINDOWS)
+            return cmakeEscape(string);
+
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < string.length(); i++) {
+            char ch = string.charAt(i);
+            switch (ch)
+            {
+            case '\\': builder.append("/"); break;
+            case '"': builder.append("\\\""); break;
+            default: builder.append(ch); break;
+            }
+        }
+        return builder.toString();
+    }
+
     private static String cmakeMinGWGenerator;
     private static String cmakeMinGWGenerator()
     {
@@ -590,20 +722,20 @@ public class CMakeGenerator extends Generator
             Map<String, BuildTool> g = new LinkedHashMap<>();
 
             if (Utility.IS_OSX) {
-                g.put("Xcode", BuildTool.XCODE);
+                g.put(BuildTool.XCODE.title, BuildTool.XCODE);
             }
 
             if (Utility.IS_WINDOWS) {
-                g.put("Visual Studio 2013 (32-bit)", BuildTool.VS2013_WIN32);
-                g.put("Visual Studio 2013 (64-bit)", BuildTool.VS2013_WIN64);
-                g.put("Visual Studio 2015 (32-bit)", BuildTool.VS2015_WIN32);
-                g.put("Visual Studio 2015 (64-bit)", BuildTool.VS2015_WIN64);
-                g.put("MinGW (32-bit)", BuildTool.MINGW32);
-                g.put("MinGW (64-bit)", BuildTool.MINGW64);
+                g.put(BuildTool.VS2013_WIN32.title, BuildTool.VS2013_WIN32);
+                g.put(BuildTool.VS2013_WIN64.title, BuildTool.VS2013_WIN64);
+                g.put(BuildTool.VS2015_WIN32.title, BuildTool.VS2015_WIN32);
+                g.put(BuildTool.VS2015_WIN64.title, BuildTool.VS2015_WIN64);
+                g.put(BuildTool.MINGW32.title, BuildTool.MINGW32);
+                g.put(BuildTool.MINGW64.title, BuildTool.MINGW64);
             }
 
             if (!Utility.IS_WINDOWS)
-                g.put("Unix Makefiles", BuildTool.UNIX_MAKEFILES);
+                g.put(BuildTool.UNIX_MAKEFILES.title, BuildTool.UNIX_MAKEFILES);
 
             buildTools = g;
         }
