@@ -34,7 +34,6 @@ import com.zapolnov.zbt.utility.FileBuilder;
 import com.zapolnov.zbt.utility.GuiUtility;
 import com.zapolnov.zbt.utility.Template;
 import com.zapolnov.zbt.utility.Utility;
-import java.awt.Container;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -45,35 +44,34 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class CMakeGenerator extends Generator
 {
-    private final static class BuildTool
+    private enum BuildTool
     {
+        UNIX_MAKEFILES("makefiles", "Unix Makefiles", true),
+        XCODE("xcode", "Xcode", false),
+        MINGW32("mingw32", cmakeMinGWGenerator(), true, "Z_MINGW_CFLAGS=-m32"),
+        MINGW64("mingw64", cmakeMinGWGenerator(), true, "Z_MINGW_CFLAGS=-m64"),
+        VS2013_WIN32("vs2013_win32", "Visual Studio 12 2013", false),
+        VS2013_WIN64("vs2013_win64", "Visual Studio 12 2013 Win64", false),
+        VS2015_WIN32("vs2015_win32", "Visual Studio 14 2015", false),
+        VS2015_WIN64("vs2015_win64", "Visual Studio 14 2015 Win64", false);
+
         public final String directoryName;
         public final String cmakeGenerator;
         public final boolean acceptsBuildType;
         public final String[] defines;
 
-        public BuildTool(String directoryName, String cmakeGenerator, boolean acceptsBuildType)
-        {
-            this.directoryName = directoryName;
-            this.cmakeGenerator = cmakeGenerator;
-            this.acceptsBuildType = acceptsBuildType;
-            this.defines = new String[0];
-        }
-
-        public BuildTool(String directoryName, String cmakeGenerator, boolean acceptsBuildType, String... defines)
+        BuildTool(String directoryName, String cmakeGenerator, boolean acceptsBuildType, String... defines)
         {
             this.directoryName = directoryName;
             this.cmakeGenerator = cmakeGenerator;
             this.acceptsBuildType = acceptsBuildType;
             this.defines = defines;
         }
-    };
+    }
 
     public static final String ID = "cmake3.2";
     public static final String NAME = "CMake 3.2+";
@@ -234,6 +232,9 @@ public class CMakeGenerator extends Generator
             writeCMakeLists();
 
             if (cmakeExecutable != null && selectedBuildTool != null) {
+                if (qt5Path == null && useQt5)
+                    qt5Path = findQt5InstallationDirectory(selectedBuildTool);
+
                 List<String> cmakeCommand = new ArrayList<>();
                 cmakeCommand.add(cmakeExecutable);
                 cmakeCommand.add("-G");
@@ -428,9 +429,7 @@ public class CMakeGenerator extends Generator
 
     public static boolean isValidBuildTool(String name)
     {
-        if (name == null)
-            return false;
-        return buildTools().get(name) != null;
+        return name != null && buildTools().get(name) != null;
     }
 
     public static boolean isValidBuildType(String name)
@@ -474,6 +473,61 @@ public class CMakeGenerator extends Generator
         return path;
     }
 
+    private String findQt5InstallationDirectory(BuildTool buildTool)
+    {
+        if (Utility.IS_WINDOWS) {
+            for (String dir : new String[]{ "C:/Qt", "C:/Qt5" }) {
+                File qtDir = new File(dir);
+                if (!qtDir.exists() || !qtDir.isDirectory())
+                    continue;
+
+                for (String subdir : qtDir.list()) {
+                    if (!subdir.matches("^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"))
+                        continue;
+
+                    File qtVersionDir = new File(qtDir, subdir);
+                    if (!qtVersionDir.isDirectory())
+                        continue;
+
+                    String pattern = null;
+                    switch (buildTool)
+                    {
+                    case UNIX_MAKEFILES: break;
+                    case XCODE: break;
+                    case MINGW32: pattern = "^mingw[0-9]+_32$"; break;
+                    case MINGW64: pattern = "^mingw[0-9]+_64$"; break;
+                    case VS2013_WIN32: pattern = "^msvc2013$"; break;
+                    case VS2013_WIN64: pattern = "^msvc2013_64$"; break;
+                    case VS2015_WIN32: pattern = "^msvc2015$"; break;
+                    case VS2015_WIN64: pattern = "^msvc2015_64$"; break;
+                    }
+                    if (pattern == null)
+                        continue;
+
+                    for (String subdir2 : qtVersionDir.list()) {
+                        if (!subdir2.matches(pattern))
+                            continue;
+
+                        File qtPrefixPath = new File(qtVersionDir, subdir2);
+                        if (!qtPrefixPath.isDirectory())
+                            continue;
+
+                        if (isCMakePrefixPath(qtPrefixPath))
+                            return Utility.getCanonicalPath(qtPrefixPath);
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private boolean isCMakePrefixPath(File path)
+    {
+        File cmakeFile = new File(path, "lib/cmake/Qt5/Qt5Config.cmake");
+        return (cmakeFile.exists() && !cmakeFile.isDirectory());
+    }
+
     private void updateUI()
     {
         BuildTool selectedBuildTool = selectedBuildTool();
@@ -493,28 +547,35 @@ public class CMakeGenerator extends Generator
         return (String)buildTypeCombo.getSelectedItem();
     }
 
+    private static String cmakeMinGWGenerator;
+    private static String cmakeMinGWGenerator()
+    {
+        if (cmakeMinGWGenerator == null)
+            cmakeMinGWGenerator = (Utility.resolveExecutable("sh") != null ? "MSYS Makefiles" : "MinGW Makefiles");
+        return cmakeMinGWGenerator;
+    }
+
     private static Map<String, BuildTool> buildTools;
     private static Map<String, BuildTool> buildTools()
     {
         if (buildTools == null) {
-            Map<String, BuildTool> g = new LinkedHashMap<String, BuildTool>();
+            Map<String, BuildTool> g = new LinkedHashMap<>();
 
             if (Utility.IS_OSX) {
-                g.put("Xcode", new BuildTool("xcode", "Xcode", false));
+                g.put("Xcode", BuildTool.XCODE);
             }
 
             if (Utility.IS_WINDOWS) {
-                String mingwGenerator = Utility.resolveExecutable("sh") != null ? "MSYS Makefiles" : "MinGW Makefiles";
-                g.put("Visual Studio 2013 (32-bit)", new BuildTool("vs2013_win32", "Visual Studio 12 2013", false));
-                g.put("Visual Studio 2013 (64-bit)", new BuildTool("vs2013_win64", "Visual Studio 12 2013 Win64", false));
-                g.put("Visual Studio 2015 (32-bit)", new BuildTool("vs2015_win32", "Visual Studio 14 2015", false));
-                g.put("Visual Studio 2015 (64-bit)", new BuildTool("vs2015_win64", "Visual Studio 14 2015 Win64", false));
-                g.put("MinGW (32-bit)", new BuildTool("mingw32", mingwGenerator, true, "Z_MINGW_CFLAGS=-m32"));
-                g.put("MinGW (64-bit)", new BuildTool("mingw64", mingwGenerator, true, "Z_MINGW_CFLAGS=-m64"));
+                g.put("Visual Studio 2013 (32-bit)", BuildTool.VS2013_WIN32);
+                g.put("Visual Studio 2013 (64-bit)", BuildTool.VS2013_WIN64);
+                g.put("Visual Studio 2015 (32-bit)", BuildTool.VS2015_WIN32);
+                g.put("Visual Studio 2015 (64-bit)", BuildTool.VS2015_WIN64);
+                g.put("MinGW (32-bit)", BuildTool.MINGW32);
+                g.put("MinGW (64-bit)", BuildTool.MINGW64);
             }
 
             if (!Utility.IS_WINDOWS)
-                g.put("Unix Makefiles", new BuildTool("makefiles", "Unix Makefiles", true));
+                g.put("Unix Makefiles", BuildTool.UNIX_MAKEFILES);
 
             buildTools = g;
         }
