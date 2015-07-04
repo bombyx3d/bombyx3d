@@ -27,6 +27,7 @@ import com.zapolnov.zbt.project.parser.directives.DefineDirective;
 import com.zapolnov.zbt.project.parser.directives.GeneratorSelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.HeaderPathsDirective;
 import com.zapolnov.zbt.project.parser.directives.ImportDirective;
+import com.zapolnov.zbt.project.parser.directives.RootProjectSelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.SourceDirectoriesDirective;
 import com.zapolnov.zbt.project.parser.directives.ThirdPartySourceDirectoriesDirective;
@@ -122,5 +123,11 @@ public abstract class ProjectDirectiveVisitor extends AbstractProjectDirectiveVi
 
         if (list != null)
             list.visitDirectives(this);
+    }
+
+    @Override public void visitRootProjectSelector(RootProjectSelectorDirective directive)
+    {
+        if (directive.isTrue)
+            directive.innerDirectives().visitDirectives(this);
     }
 }

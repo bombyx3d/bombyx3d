@@ -28,6 +28,7 @@ import com.zapolnov.zbt.project.parser.directives.DefineDirective;
 import com.zapolnov.zbt.project.parser.directives.EnumerationDirective;
 import com.zapolnov.zbt.project.parser.directives.GeneratorSelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.HeaderPathsDirective;
+import com.zapolnov.zbt.project.parser.directives.RootProjectSelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.TargetNameDirective;
 import com.zapolnov.zbt.project.parser.directives.ImportDirective;
 import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
@@ -39,7 +40,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -117,6 +117,7 @@ public final class ProjectFileParser
                 switch (key)
                 {
                 case "+generator": directive = processGeneratorSelector(basePath, directiveList, valueOption); break;
+                case "+if(root_project)": directive = processRootProjectSelector(basePath, directiveList, valueOption); break;
                 case "enum": directive = processEnum(directiveList, keyOption, valueOption); break;
                 case "import": directive = processImport(basePath, directiveList, valueOption); break;
                 case "define": directive = processDefine(valueOption); break;
@@ -184,6 +185,18 @@ public final class ProjectFileParser
         }
 
         return new GeneratorSelectorDirective(mapping);
+    }
+
+    private ProjectDirective processRootProjectSelector(File basePath, ProjectDirectiveList directiveList,
+        YamlParser.Option valueOption)
+    {
+        if (!valueOption.isMapping())
+            throw new YamlParser.Error(valueOption, "Expected mapping.");
+
+        ProjectDirectiveList innerDirectives = new ProjectDirectiveList(directiveList, false);
+        processOptions(basePath, innerDirectives, valueOption.toMapping());
+
+        return new RootProjectSelectorDirective(innerDirectives, moduleImportStack.size() == 1);
     }
 
     private ProjectDirective processEnum(ProjectDirectiveList directiveList,

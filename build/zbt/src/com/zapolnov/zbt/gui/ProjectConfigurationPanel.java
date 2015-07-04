@@ -28,10 +28,10 @@ import com.zapolnov.zbt.project.parser.AbstractProjectDirectiveVisitor;
 import com.zapolnov.zbt.project.parser.directives.EnumerationDirective;
 import com.zapolnov.zbt.project.parser.directives.GeneratorSelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.ImportDirective;
+import com.zapolnov.zbt.project.parser.directives.RootProjectSelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.SelectorDirective;
 import com.zapolnov.zbt.utility.Database;
 import com.zapolnov.zbt.utility.GuiUtility;
-import java.awt.BorderLayout;
 import java.awt.Container;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,8 +44,6 @@ import java.util.Map;
 import java.util.Set;
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public final class ProjectConfigurationPanel extends JPanel
@@ -119,6 +117,9 @@ public final class ProjectConfigurationPanel extends JPanel
             }
             @Override public void visitGeneratorSelector(GeneratorSelectorDirective directive) {
                 directive.mapping().values().forEach(ProjectConfigurationPanel.this::createWidgets);
+            }
+            @Override public void visitRootProjectSelector(RootProjectSelectorDirective directive) {
+                createWidgets(directive.innerDirectives());
             }
         });
     }
@@ -216,6 +217,10 @@ public final class ProjectConfigurationPanel extends JPanel
                     directives = directive.mapping().get(GeneratorSelectorDirective.DEFAULT);
                 if (directives != null)
                     updateWidgetsVisibility(visible, directives);
+            }
+            @Override public void visitRootProjectSelector(RootProjectSelectorDirective directive) {
+                if (directive.isTrue)
+                    updateWidgetsVisibility(visible, directive.innerDirectives());
             }
         });
     }
