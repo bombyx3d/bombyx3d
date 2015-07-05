@@ -27,7 +27,7 @@ pwd=`pwd`
 cd `dirname "$0"`
 dir=`pwd`
 
-cleanup() { cd "$pwd" }
+cleanup() { cd "$pwd"; }
 trap cleanup EXIT INT HUP QUIT TERM
 
 ## Checkout documentation

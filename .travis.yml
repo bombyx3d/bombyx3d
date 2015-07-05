@@ -1,42 +1,23 @@
 
-language: cpp
+language: android
 
 sudo: required
+jdk: 'oraclejdk8'
 
 matrix:
   include:
     # linux/gcc/debug/dummy
-    - compiler: gcc
-      os: linux
+    - os: linux
       env: I='-c -g' C='-b Debug -s dummy'
     # linux/gcc/debug/qt5
-    - compiler: gcc
-      os: linux
+    - os: linux
       env: I='-c -g -q' C='-b Debug -s qt5 -q /opt/qt54/lib/cmake'
     # linux/gcc/release/dummy
-#    - compiler: gcc
-#      os: linux
-#      env: I='-c -g' C='-b Release -s dummy'
     # linux/gcc/release/qt5
-#    - compiler: gcc
-#      os: linux
-#      env: I='-c -g -q' C='-b Release -s qt5 -q /opt/qt54/lib/cmake'
     # linux/clang/debug/dummy
-#    - compiler: clang
-#      os: linux
-#      env: I='-c' C='-b Debug -s dummy'
     # linux/clang/debug/qt5
-#    - compiler: clang
-#      os: linux
-#      env: I='-c -q' C='-b Debug -s qt5 -q /opt/qt54/lib/cmake'
     # linux/clang/release/dummy
-#    - compiler: clang
-#      os: linux
-#      env: I='-c' C='-b Release -s dummy'
     # linux/clang/release/qt5
-#    - compiler: clang
-#      os: linux
-#      env: I='-c' C='-b Release -s qt5 -q /opt/qt54/lib/cmake'
     # linux/mingw-w32/debug/dummy
     # linux/mingw-w32/debug/qt5
     # linux/mingw-w32/release/dummy
@@ -46,8 +27,7 @@ matrix:
     # osx/clang/release/dummy
     # osx/clang/release/qt5
     # documentation
-    - compiler: clang
-      os: linux
+    - os: linux
       env: I='-x' C='-x'
 
 before_install:

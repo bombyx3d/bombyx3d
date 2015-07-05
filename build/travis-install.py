@@ -33,6 +33,7 @@ parser.add_argument('-c', '--cmake', help='Install CMake', action='store_true')
 parser.add_argument('-q', '--qt5', help='Install Qt5', action='store_true')
 parser.add_argument('-x', '--doxygen', help='Install Doxygen', action='store_true')
 parser.add_argument('-g', '--gcc', help='Install GCC', action='store_true')
+parser.add_argument('-l', '--clang', help='Install Clang', action='store_true')
 parser.add_argument('-m', '--mingw', help='Install MinGW', action='store_true')
 args = parser.parse_args()
 
@@ -59,6 +60,10 @@ if sys.platform == 'linux2':
     if args.gcc:
         subprocess.check_call('sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test', shell=True)
         packages.extend(['g++-4.8'])
+
+    if args.clang:
+        subprocess.check_call('sudo apt-add-repository -y ppa:h-rayflood/llvm', shell=True)
+        packages.extend(['clang++-3.4'])
 
     if args.mingw:
         subprocess.check_call('sudo apt-add-repository -y ppa:tobydox/mingw-x-precise', shell=True)
