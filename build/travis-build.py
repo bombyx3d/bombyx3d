@@ -44,6 +44,12 @@ parser.add_argument('-x', '--doxygen', help='Build documentation only', action='
 args = parser.parse_args()
 
 #############################################################################################################
+## Change to the script directory
+
+dir = os.path.dirname(os.path.realpath(__file__))
+os.chdir(dir)
+
+#############################################################################################################
 ## Build documentation if requested
 
 if args.doxygen:
@@ -76,7 +82,7 @@ if args.system:
 if args.qt5path:
     print('qt5path          = %s' % args.qt5path)
 
-command = 'java -jar ../build/zbt/bin/zbt.jar'
+command = 'java -jar zbt/bin/zbt.jar'
 command += ' -v'                                    # Verbose error reporting
 command += ' -b'                                    # Batch mode
 command += ' -p ../samples/1.match3'                # Path to the project
@@ -86,7 +92,7 @@ command += ' --build'
 if cmake_build_tool:
     command += (' --cmake-build-tool "%s"' % cmake_build_tool)
 if args.build:
-    command += (' --cmake-build-type "%s"' % build)
+    command += (' --cmake-build-type "%s"' % args.build)
 if args.qt5path:
     command += (' --cmake-qt5-path "%s"' % args.qt5path)
 
