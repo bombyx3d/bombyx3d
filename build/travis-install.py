@@ -29,6 +29,7 @@ import sys
 ## Parse command-line arguments
 
 parser = argparse.ArgumentParser()
+parser.add_argument('-c', '--cmake', help='Install CMake', action='store_true')
 parser.add_argument('-q', '--qt5', help='Install Qt5', action='store_true')
 parser.add_argument('-x', '--doxygen', help='Install Doxygen', action='store_true')
 parser.add_argument('-g', '--gcc', help='Install GCC', action='store_true')
@@ -70,17 +71,20 @@ if sys.platform == 'linux2':
 
     subprocess.check_call(('sudo apt-get -qq install --no-install-recommends %s' % (' '.join(packages))), shell=True)
 
-    subprocess.check_call('wget http://www.cmake.org/files/v3.2/cmake-3.2.2-Linux-i386.tar.gz', shell=True)
-    subprocess.check_call('tar -xzf cmake-3.2.2-Linux-i386.tar.gz', shell=True)
-    subprocess.check_call('sudo cp -fR cmake-3.2.2-Linux-i386/* /usr', shell=True)
+    if args.cmake:
+        subprocess.check_call('wget http://www.cmake.org/files/v3.2/cmake-3.2.2-Linux-i386.tar.gz', shell=True)
+        subprocess.check_call('tar -xzf cmake-3.2.2-Linux-i386.tar.gz', shell=True)
+        subprocess.check_call('sudo cp -fR cmake-3.2.2-Linux-i386/* /usr', shell=True)
 
 #############################################################################################################
 ## Apple OSX
 
 if sys.platform == 'darwin':
     subprocess.check_call('brew update', shell=True)
-    subprocess.call('brew unlink cmake', shell=True)
-    subprocess.check_call('brew install cmake', shell=True)
+
+    if args.cmake:
+        subprocess.call('brew unlink cmake', shell=True)
+        subprocess.check_call('brew install cmake', shell=True)
 
     if args.gcc:
         print('ERROR: --gcc is not supported on OSX host.')

@@ -53,7 +53,7 @@ os.chdir(dir)
 ## Build documentation if requested
 
 if args.doxygen:
-    subprocess.check_call('doc-build.sh', shell=True)
+    subprocess.check_call('./doc-build.sh', shell=True)
     os.exit(0)
 
 #############################################################################################################
