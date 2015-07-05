@@ -24,8 +24,8 @@
 
 namespace Z
 {
-    CanvasSprite::CanvasSprite(const SpritePtr& sprite)
-        : m_Sprite(sprite)
+    CanvasSprite::CanvasSprite(const SpritePtr& aSprite)
+        : m_Sprite(aSprite)
     {
         setSize(m_Sprite->size());
     }

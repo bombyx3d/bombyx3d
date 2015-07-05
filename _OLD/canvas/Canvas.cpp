@@ -28,8 +28,8 @@ namespace Z
     Canvas::Canvas()
         : m_RootElement(std::make_shared<CanvasElement>())
         , m_NumPressedPointers(0)
-        , m_ClearBits(GL::COLOR_BUFFER_BIT)
         , m_ClearColor(0.0f, 0.0f, 0.0f, 0.0f)
+        , m_ClearBits(GL::COLOR_BUFFER_BIT)
     {
     }
 

@@ -30,7 +30,7 @@ namespace Z
     class GLShader
     {
     public:
-        explicit GLShader(GL::Enum type);
+        explicit GLShader(GL::Enum shaderType);
         ~GLShader();
 
         GL::UInt handle() const { return m_Handle; }

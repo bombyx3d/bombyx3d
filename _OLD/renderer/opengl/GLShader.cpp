@@ -29,10 +29,10 @@
 
 namespace Z
 {
-    GLShader::GLShader(GL::Enum type)
-        : m_Type(type)
+    GLShader::GLShader(GL::Enum shaderType)
+        : m_Type(shaderType)
     {
-        m_Handle = gl::CreateShader(type);
+        m_Handle = gl::CreateShader(shaderType);
     }
 
     GLShader::~GLShader()

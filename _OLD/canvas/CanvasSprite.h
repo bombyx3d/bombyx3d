@@ -29,7 +29,7 @@ namespace Z
     class CanvasSprite : public CanvasElement
     {
     public:
-        explicit CanvasSprite(const SpritePtr& sprite);
+        explicit CanvasSprite(const SpritePtr& aSprite);
          ~CanvasSprite();
 
          const SpritePtr& sprite() const { return m_Sprite; }

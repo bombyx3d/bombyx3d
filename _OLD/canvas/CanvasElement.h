@@ -53,11 +53,11 @@ namespace Z
         CanvasElement* parent() const { return m_Parent; }
 
         const glm::vec2& position() const { return m_Position; }
-        void setPosition(const glm::vec2& position);
+        void setPosition(const glm::vec2& pos);
         void setPosition(float x, float y) { setPosition(glm::vec2(x, y)); }
 
         const glm::vec2& size() const { return m_Size; }
-        void setSize(const glm::vec2& size);
+        void setSize(const glm::vec2& sz);
         void setSize(float x, float y) { setSize(glm::vec2(x, y)); }
 
         float rotation() const { return m_Rotation; }
@@ -65,11 +65,11 @@ namespace Z
 
         const glm::vec2& scale() const { return m_Scale; }
         void setScale(const glm::vec2& scale);
-        void setScale(float scale) { setScale(glm::vec2(scale)); }
+        void setScale(float s) { setScale(glm::vec2(s)); }
         void setScale(float x, float y) { setScale(glm::vec2(x, y)); }
 
         const glm::vec4& color() const { return m_Color; }
-        void setColor(const glm::vec4& color) { m_Color = color; }
+        void setColor(const glm::vec4& c) { m_Color = c; }
 
         const ::Engine::AffineTransform& localTransform() const;
         const ::Engine::AffineTransform& worldTransform() const;

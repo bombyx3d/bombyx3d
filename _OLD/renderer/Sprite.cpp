@@ -37,8 +37,8 @@ namespace Z
         if (!m_Shader)
             m_Shader = Engine::instance().renderer().loadShader(Renderer::DEFAULT_TEXTURED_2D_SHADER);
 
-        glm::vec2 size = glm::vec2(float(texture->width()), float(texture->height()));
-        m_Position.setCenterAndSize(glm::vec2(0.0f, 0.0f), size);
+        glm::vec2 spriteSize = glm::vec2(float(texture->width()), float(texture->height()));
+        m_Position.setCenterAndSize(glm::vec2(0.0f, 0.0f), spriteSize);
         m_TexCoords.setTopLeftAndBottomRight(0.0f, 0.0f, 1.0f, 1.0f);
     }
 

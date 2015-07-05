@@ -40,24 +40,24 @@ namespace Z
 
     CanvasElement::~CanvasElement()
     {
-        for (const auto& children : m_Children) {
-            Z_CHECK(children->m_Parent == this);
-            children->m_Parent = nullptr;
+        for (const auto& child : m_Children) {
+            Z_CHECK(child->m_Parent == this);
+            child->m_Parent = nullptr;
         }
     }
 
-    void CanvasElement::setPosition(const glm::vec2& position)
+    void CanvasElement::setPosition(const glm::vec2& pos)
     {
-        if (m_Position != position) {
-            m_Position = position;
+        if (m_Position != pos) {
+            m_Position = pos;
             invalidateLocalTransform();
         }
     }
 
-    void CanvasElement::setSize(const glm::vec2& size)
+    void CanvasElement::setSize(const glm::vec2& sz)
     {
-        if (m_Size != size) {
-            m_Size = size;
+        if (m_Size != sz) {
+            m_Size = sz;
             if (!(m_Flags & InSizeChanged)) {
                 m_Flags |= InSizeChanged;
                 onSizeChanged();

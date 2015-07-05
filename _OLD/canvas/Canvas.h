@@ -38,7 +38,7 @@ namespace Z
         void setClearBits(GL::Bitfield bits) { m_ClearBits = bits; }
 
         const glm::vec4& clearColor() const { return m_ClearColor; }
-        void setClearColor(const glm::vec4& clearColor) { m_ClearColor = clearColor; }
+        void setClearColor(const glm::vec4& c) { m_ClearColor = c; }
 
         const CanvasElementPtr& rootElement() const { return m_RootElement; }
         void setRootElement(const CanvasElementPtr& element) { m_RootElement = element; }
