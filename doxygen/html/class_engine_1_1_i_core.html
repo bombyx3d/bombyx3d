@@ -73,9 +73,9 @@ Inheritance diagram for Engine::ICore:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab15055d40020c5dc15b46209dcc44421"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_core.html#ab15055d40020c5dc15b46209dcc44421">registerFileSystem</a> (const <a class="el" href="class_engine_1_1_ptr.html">Ptr</a>&lt; <a class="el" href="class_engine_1_1_i_file_system.html">IFileSystem</a> &gt; &amp;<a class="el" href="class_engine_1_1_i_core.html#af52bd5c80f4bcf2aec05d58e98679d54">fileSystem</a>)=0</td></tr>
-<tr class="memdesc:ab15055d40020c5dc15b46209dcc44421"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers an additional filesystem for engine use.  <a href="#ab15055d40020c5dc15b46209dcc44421">More...</a><br/></td></tr>
-<tr class="separator:ab15055d40020c5dc15b46209dcc44421"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad29a1d4fbca60b08002a8dd7d5efac2a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_core.html#ad29a1d4fbca60b08002a8dd7d5efac2a">registerFileSystem</a> (const <a class="el" href="class_engine_1_1_ptr.html">Ptr</a>&lt; <a class="el" href="class_engine_1_1_i_file_system.html">IFileSystem</a> &gt; &amp;fileSystemInstance)=0</td></tr>
+<tr class="memdesc:ad29a1d4fbca60b08002a8dd7d5efac2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers an additional filesystem for engine use.  <a href="#ad29a1d4fbca60b08002a8dd7d5efac2a">More...</a><br/></td></tr>
+<tr class="separator:ad29a1d4fbca60b08002a8dd7d5efac2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af52bd5c80f4bcf2aec05d58e98679d54"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_engine_1_1_i_file_system.html">IFileSystem</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_core.html#af52bd5c80f4bcf2aec05d58e98679d54">fileSystem</a> ()=0</td></tr>
 <tr class="memdesc:af52bd5c80f4bcf2aec05d58e98679d54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a reference to the file system.  <a href="#af52bd5c80f4bcf2aec05d58e98679d54">More...</a><br/></td></tr>
 <tr class="separator:af52bd5c80f4bcf2aec05d58e98679d54"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -146,7 +146,7 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab15055d40020c5dc15b46209dcc44421"></a>
+<a class="anchor" id="ad29a1d4fbca60b08002a8dd7d5efac2a"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -157,7 +157,7 @@ Static Public Member Functions</h2></td></tr>
           <td class="memname">virtual void Engine::ICore::registerFileSystem </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="class_engine_1_1_ptr.html">Ptr</a>&lt; <a class="el" href="class_engine_1_1_i_file_system.html">IFileSystem</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>fileSystem</em></td><td>)</td>
+          <td class="paramname"><em>fileSystemInstance</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -171,7 +171,7 @@ Static Public Member Functions</h2></td></tr>
 <p>Registers an additional filesystem for engine use. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">fileSystem</td><td>Pointer to the filesystem. </td></tr>
+    <tr><td class="paramname">fileSystemInstance</td><td>Pointer to the filesystem. </td></tr>
   </table>
   </dd>
 </dl>

@@ -78,9 +78,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aadfe8480c3e99b107fe651b22247daa3"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_texture_image.html#aadfe8480c3e99b107fe651b22247daa3">mipmapLevelCount</a> (size_t faceIndex) const =0</td></tr>
 <tr class="memdesc:aadfe8480c3e99b107fe651b22247daa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves number of mipmap levels for the specified face of the texture.  <a href="#aadfe8480c3e99b107fe651b22247daa3">More...</a><br/></td></tr>
 <tr class="separator:aadfe8480c3e99b107fe651b22247daa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbbb0c2d4b1e928722d5a3f61f39cbeb"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_engine_1_1_i_image.html">IImage</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_texture_image.html#adbbb0c2d4b1e928722d5a3f61f39cbeb">mipmapLevel</a> (size_t faceIndex, size_t mipmapLevel) const =0</td></tr>
-<tr class="memdesc:adbbb0c2d4b1e928722d5a3f61f39cbeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves data for the specified mipmap level of the specified face of the texture.  <a href="#adbbb0c2d4b1e928722d5a3f61f39cbeb">More...</a><br/></td></tr>
-<tr class="separator:adbbb0c2d4b1e928722d5a3f61f39cbeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a0eb7023132b70489d88c00b6326dba"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_engine_1_1_i_image.html">IImage</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_texture_image.html#a2a0eb7023132b70489d88c00b6326dba">mipmapLevel</a> (size_t faceIndex, size_t level) const =0</td></tr>
+<tr class="memdesc:a2a0eb7023132b70489d88c00b6326dba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves data for the specified mipmap level of the specified face of the texture.  <a href="#a2a0eb7023132b70489d88c00b6326dba">More...</a><br/></td></tr>
+<tr class="separator:a2a0eb7023132b70489d88c00b6326dba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad881320f598a1efa3aa809def924343"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_unknown.html#aad881320f598a1efa3aa809def924343">addRef</a> () const </td></tr>
 <tr class="memdesc:aad881320f598a1efa3aa809def924343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increments reference counter for this object.  <a href="#aad881320f598a1efa3aa809def924343">More...</a><br/></td></tr>
 <tr class="separator:aad881320f598a1efa3aa809def924343"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -167,7 +167,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="adbbb0c2d4b1e928722d5a3f61f39cbeb"></a>
+<a class="anchor" id="a2a0eb7023132b70489d88c00b6326dba"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -184,7 +184,7 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>mipmapLevel</em>&#160;</td>
+          <td class="paramname"><em>level</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -203,13 +203,13 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">faceIndex</td><td>Index of a face. </td></tr>
-    <tr><td class="paramname">mipmapLevel</td><td>Mipmap level. </td></tr>
+    <tr><td class="paramname">level</td><td>Mipmap level. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Data for the specified mipmap level. </dd></dl>
 
-<p>Implemented in <a class="el" href="class_engine_1_1_simple_image.html#a74f98ac12f0c5cc51e44649b80446b95">Engine::SimpleImage</a>.</p>
+<p>Implemented in <a class="el" href="class_engine_1_1_simple_image.html#a2d6bfc1e31182d63c98d40e7a67ad7b6">Engine::SimpleImage</a>.</p>
 
 </div>
 </div>
