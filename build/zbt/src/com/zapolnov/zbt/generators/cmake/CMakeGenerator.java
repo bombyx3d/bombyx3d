@@ -568,7 +568,11 @@ public class CMakeGenerator extends Generator
     public static boolean isValidQt5Directory(String path)
     {
         File file = new File(new File(path), "lib/cmake/Qt5/Qt5Config.cmake");
-        return file.exists() && !file.isDirectory();
+        if (file.exists() && !file.isDirectory())
+            return true;
+
+        file = new File(new File(path), "Qt5/Qt5Config.cmake");
+        return (file.exists() && !file.isDirectory());
     }
 
     private static String findCMakeExecutable()
