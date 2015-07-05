@@ -64,7 +64,7 @@ namespace Z
         void setRotation(float angle);
 
         const glm::vec2& scale() const { return m_Scale; }
-        void setScale(const glm::vec2& scale);
+        void setScale(const glm::vec2& s);
         void setScale(float s) { setScale(glm::vec2(s)); }
         void setScale(float x, float y) { setScale(glm::vec2(x, y)); }
 

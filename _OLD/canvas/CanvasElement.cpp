@@ -74,10 +74,10 @@ namespace Z
         }
     }
 
-    void CanvasElement::setScale(const glm::vec2& scale)
+    void CanvasElement::setScale(const glm::vec2& s)
     {
-        if (m_Scale != scale) {
-            m_Scale = scale;
+        if (m_Scale != s) {
+            m_Scale = s;
             invalidateLocalTransform();
         }
     }
