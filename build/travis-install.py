@@ -63,7 +63,7 @@ if sys.platform == 'linux2':
 
     if args.clang:
         subprocess.check_call('sudo apt-add-repository -y ppa:h-rayflood/llvm', shell=True)
-        packages.extend(['clang++-3.4'])
+        packages.extend(['clang-3.4'])
 
     if args.mingw:
         subprocess.check_call('sudo apt-add-repository -y ppa:tobydox/mingw-x-precise', shell=True)

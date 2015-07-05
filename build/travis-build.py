@@ -40,6 +40,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-b', '--build', help='Value for CMAKE_BUILD_TYPE')
 parser.add_argument('-s', '--system', help='Value for "system" enumeration')
 parser.add_argument('-q', '--qt5path', help='Path to Qt5 installation')
+parser.add_argument('-l', '--clang', help='Compile with Clang')
 parser.add_argument('-x', '--doxygen', help='Build documentation only', action='store_true')
 args = parser.parse_args()
 
@@ -54,15 +55,17 @@ os.chdir(dir)
 
 if args.doxygen:
     subprocess.check_call('./doc-build.sh', shell=True)
-    os.exit(0)
+    sys.exit(0)
 
 #############################################################################################################
 ## Generate and build the project
 
 if sys.platform == 'linux2':
-    if os.environ['CC'] == 'gcc':
+    if args.clang:
+        os.environ['CC'] = 'clang-3.4'
+        os.environ['CXX'] = 'clang++-3.4'
+    else:
         os.environ['CC'] = 'gcc-4.8'
-    if os.environ['CXX'] == 'g++':
         os.environ['CXX'] = 'g++-4.8'
 
 generator = 'CMake 3.2+'

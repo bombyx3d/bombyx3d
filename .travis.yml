@@ -2,15 +2,18 @@
 language: android
 
 sudo: required
-jdk: 'oraclejdk8'
 
 matrix:
   include:
     # linux/gcc/debug/dummy
     - os: linux
+      build-tools: build-tools-22.0.1
+      jdk: 'oraclejdk8'
       env: I='-c -g' C='-b Debug -s dummy'
     # linux/gcc/debug/qt5
     - os: linux
+      build-tools: build-tools-22.0.1
+      jdk: 'oraclejdk8'
       env: I='-c -g -q' C='-b Debug -s qt5 -q /opt/qt54/lib/cmake'
     # linux/gcc/release/dummy
     # linux/gcc/release/qt5
@@ -28,6 +31,8 @@ matrix:
     # osx/clang/release/qt5
     # documentation
     - os: linux
+      build-tools: build-tools-22.0.1
+      jdk: 'oraclejdk8'
       env: I='-x' C='-x'
 
 before_install:
