@@ -32,7 +32,7 @@ trap cleanup EXIT INT HUP QUIT TERM
 
 ## Checkout documentation
 
-svn checkout -q https://github.com/zapolnov/game_engine/branches/gh-pages/doxygen "$dir/doc"
+svn checkout -q https://github.com/bombyx3d/bombyx3d/branches/gh-pages/doxygen "$dir/doc"
 find "$dir/doc/html" -mindepth 1 -name '.svn' -prune -o -print0 | xargs -0 rm -rf
 find "$dir/doc/html" -mindepth 1 -name '.svn' -prune -o -type d -empty -print0 | xargs -0 rm -rf
 

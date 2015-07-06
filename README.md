@@ -1,15 +1,15 @@
 ﻿
-Game Engine
-===========
+Bombyx3D Game Engine
+====================
 
-<a href="https://travis-ci.org/zapolnov/game_engine" target="_blank">
- <img src="https://travis-ci.org/zapolnov/game_engine.svg?branch=master" alt="Build Status" />
+<a href="https://travis-ci.org/bombyx3d/bombyx3d" target="_blank">
+ <img src="https://travis-ci.org/bombyx3d/bombyx3d.svg?branch=master" alt="Build Status" />
 </a>
 
 This is a game engine.
 
-Doxygen documentation: <a href="https://zapolnov.github.io/game_engine/doxygen/html/"
-    target="_blank">https://zapolnov.github.io/game_engine/doxygen/html/</a>
+Doxygen documentation: <a href="https://www.bombyx3d.com/bombyx3d/doxygen/html/"
+    target="_blank">https://www.bombyx3d.com/bombyx3d/doxygen/html/</a>
 
 License
 -------
