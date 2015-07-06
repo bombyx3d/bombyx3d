@@ -45,7 +45,7 @@ doxygen Doxyfile
 
 cd "$dir/doc/doxygen/html"
 cp -f "$dir/doc/_config.yml.orig" "$dir/doc/_config.yml"
-echo -e include:"\n"$(ls -1 _* | awk -F'/' '{ print "\\40- ", $1, "\\n"; }') >> "$dir/doc/_config.yml"
+echo include:"\n "$(ls -1 _* | awk -F'/' '{ print "\\40- ", $1, "\\n"; }') >> "$dir/doc/_config.yml"
 
 ## SVN: add new files, remove missing files
 
