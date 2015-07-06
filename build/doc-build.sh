@@ -32,14 +32,20 @@ trap cleanup EXIT INT HUP QUIT TERM
 
 ## Checkout documentation
 
-svn checkout -q https://github.com/bombyx3d/bombyx3d/branches/gh-pages/doxygen "$dir/doc"
-find "$dir/doc/html" -mindepth 1 -name '.svn' -prune -o -print0 | xargs -0 rm -rf
-find "$dir/doc/html" -mindepth 1 -name '.svn' -prune -o -type d -empty -print0 | xargs -0 rm -rf
+svn checkout -q https://github.com/bombyx3d/bombyx3d/branches/gh-pages "$dir/doc"
+find "$dir/doc/doxygen/html" -mindepth 1 -name '.svn' -prune -o -print0 | xargs -0 rm -rf
+find "$dir/doc/doxygen/html" -mindepth 1 -name '.svn' -prune -o -type d -empty -print0 | xargs -0 rm -rf
 
 ## Update documentation
 
 cd "$dir/.."
 doxygen Doxyfile
+
+## Update _config.yml
+
+cd "$dir/doc/doxygen/html"
+cp -f "$dir/doc/_config.yml.orig" "$dir/doc/_config.yml"
+echo -e include:"\n"$(ls -1 _* | awk -F'/' '{ print "\\40- ", $1, "\\n"; }') >> "$dir/doc/_config.yml"
 
 ## SVN: add new files, remove missing files
 
