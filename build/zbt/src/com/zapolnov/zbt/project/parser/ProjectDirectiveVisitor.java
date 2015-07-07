@@ -23,6 +23,7 @@ package com.zapolnov.zbt.project.parser;
 
 import com.zapolnov.zbt.generators.Generator;
 import com.zapolnov.zbt.project.Project;
+import com.zapolnov.zbt.project.parser.directives.CustomDirectiveWrapper;
 import com.zapolnov.zbt.project.parser.directives.DefineDirective;
 import com.zapolnov.zbt.project.parser.directives.GeneratorSelectorDirective;
 import com.zapolnov.zbt.project.parser.directives.HeaderPathsDirective;
@@ -40,14 +41,16 @@ import java.util.Set;
 public abstract class ProjectDirectiveVisitor extends AbstractProjectDirectiveVisitor
 {
     private final Project project;
+    private final File outputDirectory;
     private final Generator generator;
     private final Set<String> visitedSourceFiles = new HashSet<>();
     private final Set<String> visitedHeaderPaths = new HashSet<>();
     private final Set<String> importedModule = new HashSet<>();
 
-    public ProjectDirectiveVisitor(Project project, Generator generator)
+    public ProjectDirectiveVisitor(Project project, File outputDirectory, Generator generator)
     {
         this.project = project;
+        this.outputDirectory = outputDirectory;
         this.generator = generator;
     }
 
@@ -143,5 +146,10 @@ public abstract class ProjectDirectiveVisitor extends AbstractProjectDirectiveVi
     {
         if (directive.isTrue)
             directive.innerDirectives().visitDirectives(this);
+    }
+
+    @Override public void visitCustomDirectiveWrapper(CustomDirectiveWrapper directive)
+    {
+        directive.directive.run(project, outputDirectory);
     }
 }

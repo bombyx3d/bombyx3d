@@ -23,6 +23,7 @@ package com.zapolnov.zbt.project.parser;
 
 import com.zapolnov.zbt.project.parser.directives.CMakeUseOpenGLDirective;
 import com.zapolnov.zbt.project.parser.directives.CMakeUseQt5Directive;
+import com.zapolnov.zbt.project.parser.directives.CustomDirectiveWrapper;
 import com.zapolnov.zbt.project.parser.directives.DefineDirective;
 import com.zapolnov.zbt.project.parser.directives.EnumerationDirective;
 import com.zapolnov.zbt.project.parser.directives.HeaderPathsDirective;
@@ -51,4 +52,5 @@ public abstract class AbstractProjectDirectiveVisitor
     public void visitTargetName(TargetNameDirective directive) {}
     public void visitCMakeUseOpenGLDirective(CMakeUseOpenGLDirective directive) {}
     public void visitCMakeUseQt5Directive(CMakeUseQt5Directive directive) {}
+    public void visitCustomDirectiveWrapper(CustomDirectiveWrapper directive) {}
 }

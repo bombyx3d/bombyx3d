@@ -213,7 +213,7 @@ public class CMakeGenerator extends Generator
 
             // Collect information from the project file
 
-            project.directives().visitDirectives(new ProjectDirectiveVisitor(project, this) {
+            project.directives().visitDirectives(new ProjectDirectiveVisitor(project, outputDirectory, this) {
                 @Override protected void visitDefine(String name, String value) {
                     defines.put(name, value != null ? value : "1");
                 }

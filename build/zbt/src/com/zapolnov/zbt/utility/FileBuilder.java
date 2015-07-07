@@ -54,6 +54,12 @@ public final class FileBuilder
         stringBuilder.append(string);
     }
 
+    public void appendHex(byte value)
+    {
+        stringBuilder.append(Utility.HEX_CHARACTERS[(value >> 4) & 0xF]);
+        stringBuilder.append(Utility.HEX_CHARACTERS[value & 0xF]);
+    }
+
     public void commit(Database database)
     {
         try {

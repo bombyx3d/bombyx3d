@@ -22,6 +22,7 @@
 package com.zapolnov.zbt.utility;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +44,7 @@ import java.util.List;
 public final class Utility
 {
     public static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
+    public static final char[] HEX_CHARACTERS = "0123456789abcdef".toCharArray();
 
     public static final String OS_NAME = System.getProperty("os.name");
     public static final boolean IS_LINUX = startsWith(OS_NAME, "Linux") || startsWith(OS_NAME, "LINUX");
@@ -290,6 +292,22 @@ public final class Utility
                 throw new RuntimeException(
                     String.format("Unable to apply 'hidden' attribute to directory \"%s\".", path), e);
             }
+        }
+    }
+
+    public static byte[] byteArrayFromFile(File file)
+    {
+        try (FileInputStream stream = new FileInputStream(file)) {
+            int fileLength = (int)file.length();
+            byte[] buffer = new byte[fileLength];
+            int bytesRead = stream.read(buffer, 0, fileLength);
+            if (bytesRead != fileLength) {
+                throw new RuntimeException(String.format("Incomplete read in file \"%s\".",
+                    Utility.getCanonicalPath(file)));
+            }
+            return buffer;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

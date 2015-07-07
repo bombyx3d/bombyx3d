@@ -2,6 +2,8 @@
   <dictionary name="zapol_000">
     <words>
       <w>automoc</w>
+      <w>cstddef</w>
+      <w>cstdint</w>
       <w>dcmake</w>
       <w>largefile</w>
       <w>libm</w>

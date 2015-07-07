@@ -21,9 +21,12 @@
  */
 package com.zapolnov.zbt.project.parser;
 
+import com.zapolnov.zbt.plugins.Plugin;
 import com.zapolnov.zbt.project.Project;
 import com.zapolnov.zbt.project.parser.directives.CMakeUseOpenGLDirective;
 import com.zapolnov.zbt.project.parser.directives.CMakeUseQt5Directive;
+import com.zapolnov.zbt.project.parser.directives.CustomDirective;
+import com.zapolnov.zbt.project.parser.directives.CustomDirectiveWrapper;
 import com.zapolnov.zbt.project.parser.directives.DefineDirective;
 import com.zapolnov.zbt.project.parser.directives.EnumerationDirective;
 import com.zapolnov.zbt.project.parser.directives.GeneratorSelectorDirective;
@@ -60,6 +63,7 @@ public final class ProjectFileParser
 
     private final Project project;
     private final Set<String> moduleImportStack = new LinkedHashSet<>();
+    private final Set<Plugin> plugins = new LinkedHashSet<>();
 
     public ProjectFileParser(Project project)
     {
@@ -129,7 +133,18 @@ public final class ProjectFileParser
                 case "target_name": directive = processTargetName(valueOption); break;
                 case "cmake-use-opengl": directive = processCMakeUseOpenGL(valueOption); break;
                 case "cmake-use-qt5": directive = processCMakeUseQt5(valueOption); break;
-                default: throw new YamlParser.Error(keyOption, String.format("Unknown option \"%s\".", key));
+                case "plugin": processPlugin(valueOption); break;
+                default:
+                    for (Plugin plugin : plugins) {
+                        CustomDirective pluginDirective =
+                            plugin.processDirective(project, basePath, key, keyOption, valueOption);
+                        if (pluginDirective != null) {
+                            directive = new CustomDirectiveWrapper(pluginDirective);
+                            break;
+                        }
+                    }
+                    if (directive == null)
+                        throw new YamlParser.Error(keyOption, String.format("Unknown option \"%s\".", key));
                 }
             }
 
@@ -540,5 +555,19 @@ public final class ProjectFileParser
             throw new YamlParser.Error(valueOption, "Expected 'true' or 'false'.");
 
         return new CMakeUseQt5Directive(value);
+    }
+
+    private void processPlugin(YamlParser.Option valueOption)
+    {
+        String className = valueOption.toString();
+        if (className == null)
+            throw new YamlParser.Error(valueOption, "Expected string.");
+
+        try {
+            Plugin plugin = project.loadPlugin(className);
+            plugins.add(plugin);
+        } catch (ClassNotFoundException|InstantiationException|IllegalAccessException e) {
+            throw new YamlParser.Error(valueOption, e);
+        }
     }
 }

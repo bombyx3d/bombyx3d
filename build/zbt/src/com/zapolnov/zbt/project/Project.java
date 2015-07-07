@@ -22,6 +22,7 @@
 package com.zapolnov.zbt.project;
 
 import com.zapolnov.zbt.generators.Generator;
+import com.zapolnov.zbt.plugins.Plugin;
 import com.zapolnov.zbt.project.parser.AbstractProjectDirectiveVisitor;
 import com.zapolnov.zbt.project.parser.ProjectDirective;
 import com.zapolnov.zbt.project.parser.ProjectDirectiveList;
@@ -30,6 +31,7 @@ import com.zapolnov.zbt.project.parser.directives.ImportDirective;
 import com.zapolnov.zbt.utility.CommandInvoker;
 import com.zapolnov.zbt.utility.Database;
 import com.zapolnov.zbt.utility.Utility;
+import com.zapolnov.zbt.utility.YamlParser;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
@@ -49,6 +51,7 @@ public class Project
     private final File projectDirectory;
     private final Database database;
     private final Map<String, ImportDirective> importedModules = new HashMap<>();
+    private final Map<String, Plugin> plugins = new HashMap<>();
     private final ProjectDirectiveList directives = new ProjectDirectiveList(null, false);
     private Map<String, String> options = new HashMap<>();
 
@@ -110,6 +113,21 @@ public class Project
     public ProjectDirectiveList directives()
     {
         return directives;
+    }
+
+    public Plugin loadPlugin(String className)
+        throws ClassNotFoundException, InstantiationException, IllegalAccessException
+    {
+        Plugin plugin = plugins.get(className);
+        if (plugin != null)
+            return plugin;
+
+        Class<?> pluginClass = Class.forName(className);
+        plugin = (Plugin)pluginClass.newInstance();
+
+        plugins.put(className, plugin);
+
+        return plugin;
     }
 
     public void generate(final Generator generator, Map<String, String> options, final CommandInvoker.Printer printer,

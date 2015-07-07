@@ -22,3 +22,15 @@
 
 source_directories: [ 'canvas', 'game', 'renderer' ]
 header_search_paths: [ '.', 'game' ]
+
+plugin: com.zapolnov.zbt.plugins.file2c.FileToCPlugin
+file2c:
+    input: 'renderer/shaders/colored2d.glsl'
+    output: 'shaders/colored2d.glsl.h'
+    identifier: 'colored2d_glsl'
+    namespace: ZF
+file2c:
+    input: 'renderer/shaders/textured2d.glsl'
+    output: 'shaders/textured2d.glsl.h'
+    identifier: 'textured2d_glsl'
+    namespace: ZF
