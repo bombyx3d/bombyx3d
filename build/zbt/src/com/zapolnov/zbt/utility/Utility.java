@@ -36,6 +36,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -52,6 +54,33 @@ public final class Utility
     public static final boolean IS_WINDOWS = startsWith(OS_NAME, "Windows");
 
     private Utility() {}
+
+    public static byte[] md5ForString(String string)
+    {
+        try {
+            return MessageDigest.getInstance("MD5").digest(string.getBytes(UTF8_CHARSET));
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static byte[] makeOptionsHash(Object... parameters)
+    {
+        StringBuilder builder = new StringBuilder();
+        for (Object parameter : parameters) {
+            if (parameter == null)
+                builder.append('\2');
+            else {
+                builder.append('\3');
+                if (parameter instanceof File)
+                    builder.append(Utility.getCanonicalPath((File)parameter));
+                else
+                    builder.append(parameter.toString());
+            }
+            builder.append('\1');
+        }
+        return md5ForString(builder.toString());
+    }
 
     public static boolean startsWith(String string, String prefix)
     {

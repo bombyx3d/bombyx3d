@@ -49,7 +49,8 @@ public class FileToCDirective extends CustomDirective
         File headerFile = new File(outputDirectory, String.format("file2c/include/%s", output));
         File sourceFile = new File(outputDirectory, String.format("file2c/%s.cpp", output));
 
-        if (!headerFile.exists() || !sourceFile.exists() || project.database().didInputFileChange(input)) {
+        byte[] optionsHash = Utility.makeOptionsHash(input, output, identifier, namespace, compressionMethod.name);
+        if (!headerFile.exists() || !sourceFile.exists() || project.database().didInputFileChange(input, optionsHash)) {
             byte[] data = Utility.byteArrayFromFile(input);
 
             switch (compressionMethod)

@@ -37,6 +37,7 @@ public class Database
     public static final String PROJECT_OPTION_FORMAT = "ProjectOption:%s";
 
     private final static String INPUT_FILES_TABLE = "<InputFiles>";
+    private final static String INPUT_FILES_OPTIONS_HASHES_TABLE = "<InputFilesOptionsHashes>";
     private final static String OUTPUT_FILES_TABLE = "<OutputFiles>";
     private final static String OPTIONS_TABLE = "<Options>";
 
@@ -103,14 +104,12 @@ public class Database
         try {
             ConcurrentNavigableMap<String, Long> table = db.getTreeMap(INPUT_FILES_TABLE);
 
-            String path = file.getCanonicalPath();
+            String path = Utility.getCanonicalPath(file);
             Long expectedLastModificationTime = table.get(path);
             long actualLastModificationTime = file.lastModified();
 
-            if (expectedLastModificationTime != null) {
-                if (expectedLastModificationTime == actualLastModificationTime)
-                    return false;
-            }
+            if (expectedLastModificationTime != null && expectedLastModificationTime == actualLastModificationTime)
+                return false;
 
             table.put(path, actualLastModificationTime);
         } catch (Throwable t) {
@@ -120,6 +119,37 @@ public class Database
         return true;
     }
 
+    public boolean didInputFileChange(File file, byte[] optionsHash)
+    {
+        boolean result = false;
+
+        if (!file.exists())
+            return true;
+
+        try {
+            String path = Utility.getCanonicalPath(file);
+
+            ConcurrentNavigableMap<String, byte[]> hashesTable = db.getTreeMap(INPUT_FILES_OPTIONS_HASHES_TABLE);
+            byte[] previousHash = hashesTable.get(path);
+            if (previousHash == null || !Arrays.equals(optionsHash, previousHash)) {
+                hashesTable.put(path, optionsHash);
+                result = true;
+            }
+
+            ConcurrentNavigableMap<String, Long> table = db.getTreeMap(INPUT_FILES_TABLE);
+            Long expectedLastModificationTime = table.get(path);
+            long actualLastModificationTime = file.lastModified();
+            if (expectedLastModificationTime == null || expectedLastModificationTime != actualLastModificationTime) {
+                table.put(path, actualLastModificationTime);
+                result = true;
+            }
+
+            return result;
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return true;
+        }
+    }
 
     public boolean didOutputFileChange(File file, byte[] md5)
     {
