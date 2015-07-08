@@ -117,7 +117,7 @@ public final class YamlParser
             // Construct the YAML parser
             Yaml yaml = new Yaml(new Constructor() {
                 @Override protected List<Object> createDefaultList(int size) {
-                    return new ArrayList<>();
+                    return new ArrayList<>(size);
                 }
                 @Override protected Map<Object, Object> createDefaultMap() {
                     return new LinkedHashMap<>();

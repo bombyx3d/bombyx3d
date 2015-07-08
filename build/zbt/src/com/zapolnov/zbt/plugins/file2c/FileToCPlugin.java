@@ -116,6 +116,9 @@ public class FileToCPlugin extends Plugin
                             String.join("\", \"", validValues)));
                     }
                     break;
+
+                default:
+                    throw new YamlParser.Error(subKeyOption, String.format("Unknown option \"%s\".", subKey));
                 }
             }
 

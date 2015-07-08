@@ -8,7 +8,7 @@ Bombyx3D Game Engine
 
 This is a game engine.
 
-Doxygen documentation: <a href="https://www.bombyx3d.com/bombyx3d/doxygen/html/"
+Doxygen documentation: <a href="http://www.bombyx3d.com/bombyx3d/doxygen/html/"
     target="_blank">https://www.bombyx3d.com/bombyx3d/doxygen/html/</a>
 
 License
