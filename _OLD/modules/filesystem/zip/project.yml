@@ -20,9 +20,5 @@
 # THE SOFTWARE.
 #
 
-import: [ 'core', 'system' ]
-
-header_search_paths: '.'
-
-import: 'samples/1.match3'
-target-name: Bombyx3d
+import: [ '../../../../3rdparty/minizip' ]
+source_directories: '.'

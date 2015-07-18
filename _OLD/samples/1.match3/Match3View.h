@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#include "_OLD/canvas/CanvasElement.h"
-#include "_OLD/canvas/CanvasSprite.h"
+#include "canvas/CanvasElement.h"
+#include "canvas/CanvasSprite.h"
 #include "Match3Field.h"
 #include "Match3SpriteFactory.h"
 #include "Match3Listener.h"

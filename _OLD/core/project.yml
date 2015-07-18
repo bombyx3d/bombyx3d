@@ -20,5 +20,6 @@
 # THE SOFTWARE.
 #
 
-import: [ '../../../3rdparty/minizip' ]
+import: [ '../../3rdparty/glm' ]
+
 source_directories: '.'

@@ -20,5 +20,12 @@
 # THE SOFTWARE.
 #
 
-import: [ '../../../3rdparty/libpng' ]
+import:
+    - '../..'
+    - '../../../3rdparty/tinyxml'
+    - '../../modules/filesystem/zip'
+    - '../../modules/imageconverter/rgb2luminance'
+    - '../../modules/imageconverter/rgba2luminance'
+    - '../../modules/textureloader/png'
+
 source_directories: '.'

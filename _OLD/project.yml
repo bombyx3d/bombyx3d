@@ -20,8 +20,12 @@
 # THE SOFTWARE.
 #
 
+target-name: Bombyx3d
+
+import: [ 'core', 'system', 'samples/1.match3' ]
+
 source_directories: [ 'canvas', 'game', 'renderer' ]
-header_search_paths: [ '.', 'game' ]
+header_search_paths: [ '.', '..', 'game' ]
 
 plugin: file2c
 file2c:
