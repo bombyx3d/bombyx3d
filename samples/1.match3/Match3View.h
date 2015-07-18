@@ -44,7 +44,7 @@ namespace Z
 
             int x() const { return m_X; }
             int y() const { return m_Y; }
-            void setXY(int x, int y) { m_X = x; m_Y = y; }
+            void setXY(int posX, int posY) { m_X = posX; m_Y = posY; }
 
             void setSpritePosition(float x, float y);
             void setSpritePosition(const glm::vec2& pos);

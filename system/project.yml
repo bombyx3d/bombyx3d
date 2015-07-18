@@ -20,24 +20,5 @@
 # THE SOFTWARE.
 #
 
-+generator:
-  +cmake3.2:
-    enum:
-      id: system
-      title: 'System module'
-      default: qt5
-      values: { dummy: 'Dummy', qt5: 'Qt5' }
-  +:
-    enum:
-      id: system
-      title: 'System module'
-      default: dummy
-      values: { dummy: 'Dummy' }
-
-^system(dummy):
-  import: 'dummy'
-  define: 'Z_TARGET_DUMMY'
-
-^system(qt5):
-  import: 'qt5'
-  define: 'Z_TARGET_QT5'
+import: 'qt5'
+define: 'Z_TARGET_QT5'

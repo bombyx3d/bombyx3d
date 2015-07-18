@@ -24,13 +24,5 @@ import: [ 'core', 'system' ]
 
 header_search_paths: '.'
 
-+if(root_project):
-  enum:
-    id: sample
-    title: 'Sample to build'
-    default: match3
-    values:
-      match3: 'Match 3'
-
-  ^sample(match3):
-    import: [ 'samples/1.match3' ]
+import: 'samples/1.match3'
+target-name: Bombyx3d

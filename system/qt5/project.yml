@@ -20,5 +20,4 @@
 # THE SOFTWARE.
 #
 
-cmake-use-qt5: true
 source_directories: '.'
