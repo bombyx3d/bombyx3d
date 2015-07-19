@@ -10,7 +10,6 @@ PROJECT_BRIEF          =
 PROJECT_LOGO           =
 OUTPUT_DIRECTORY       = build/doc/doxygen
 CREATE_SUBDIRS         = NO
-ALLOW_UNICODE_NAMES    = NO
 OUTPUT_LANGUAGE        = English
 BRIEF_MEMBER_DESC      = YES
 REPEAT_BRIEF           = YES
@@ -63,7 +62,6 @@ HIDE_IN_BODY_DOCS      = YES
 INTERNAL_DOCS          = NO
 CASE_SENSE_NAMES       = NO
 HIDE_SCOPE_NAMES       = NO
-HIDE_COMPOUND_REFERENCE= NO
 SHOW_INCLUDE_FILES     = YES
 SHOW_GROUPED_MEMB_INC  = NO
 FORCE_LOCAL_INCLUDES   = YES
@@ -226,7 +224,6 @@ RTF_EXTENSIONS_FILE    =
 GENERATE_MAN           = NO
 MAN_OUTPUT             = man
 MAN_EXTENSION          = .3
-MAN_SUBDIR             =
 MAN_LINKS              = NO
 #---------------------------------------------------------------------------
 # Configuration options related to the XML output
@@ -239,7 +236,6 @@ XML_PROGRAMLISTING     = YES
 #---------------------------------------------------------------------------
 GENERATE_DOCBOOK       = NO
 DOCBOOK_OUTPUT         = docbook
-DOCBOOK_PROGRAMLISTING = NO
 #---------------------------------------------------------------------------
 # Configuration options for the AutoGen Definitions output
 #---------------------------------------------------------------------------
@@ -299,8 +295,6 @@ INTERACTIVE_SVG        = NO
 DOTFILE_DIRS           =
 MSCFILE_DIRS           =
 DIAFILE_DIRS           =
-PLANTUML_JAR_PATH      =
-PLANTUML_INCLUDE_PATH  =
 DOT_GRAPH_MAX_NODES    = 50
 MAX_DOT_GRAPH_DEPTH    = 0
 DOT_TRANSPARENT        = NO
