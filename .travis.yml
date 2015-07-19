@@ -6,20 +6,16 @@ sudo: required
 android:
   components:
     - build-tools-22.0.1
-    - android-15
-    - extra-google-google_play_services
-    - addon-google_apis-google-15
+#    - android-15
+#    - extra-google-google_play_services
+#    - addon-google_apis-google-15
 
 matrix:
   include:
-    # linux/gcc/debug/dummy
-    - os: linux
-      jdk: 'oraclejdk8'
-      env: I='-c -g' C='-b Debug -s dummy'
     # linux/gcc/debug/qt5
     - os: linux
       jdk: 'oraclejdk8'
-      env: I='-c -g -q' C='-b Debug -s qt5 -q /opt/qt54/lib/cmake'
+      env: I='-b -c -g -q' C='-b Debug -q /opt/qt54/lib/cmake'
     # linux/gcc/release/dummy
     # linux/gcc/release/qt5
     # linux/clang/debug/dummy
@@ -37,7 +33,7 @@ matrix:
     # documentation
     - os: linux
       jdk: 'oraclejdk8'
-      env: I='-x' C='-x'
+      env: I='-b -x' C='-x'
 
 before_install:
   - openssl aes-256-cbc -K $encrypted_b705a8d4577f_key -iv $encrypted_b705a8d4577f_iv -in build/id.enc -out build/id -d

@@ -24,7 +24,7 @@
 #include "core/utility/debug.h"
 
 /**
- * Deletes copy and move constructors and assignment operators in the class or struct.
+ * Deletes copy and move constructors and assignment operators in a class or struct.
  *
  * @param NAME Name of the class or struct.
  *

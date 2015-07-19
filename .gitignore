@@ -1,1 +1,6 @@
-/build
+/build/.cache
+/build/id
+/build/doc
+/build/qt5-cmake
+/build/qt5-cmake-build
+/build/Doxyfile.inc

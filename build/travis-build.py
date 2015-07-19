@@ -37,28 +37,47 @@ on_windows = (sys.platform == 'win32' or sys.platform == 'cygwin')
 ## Parse command-line arguments
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-b', '--build', help='Value for CMAKE_BUILD_TYPE')
-parser.add_argument('-s', '--system', help='Value for "system" enumeration')
-parser.add_argument('-q', '--qt5path', help='Path to Qt5 installation')
+parser.add_argument('-b', '--cmake_build_type', help='Value for CMAKE_BUILD_TYPE')
+parser.add_argument('-g', '--cmake_generator', help='CMake generator to use')
 parser.add_argument('-l', '--clang', help='Compile with Clang')
+parser.add_argument('-q', '--qt5path', help='Path to Qt5 installation')
 parser.add_argument('-x', '--doxygen', help='Build documentation only', action='store_true')
 args = parser.parse_args()
 
 #############################################################################################################
-## Change to the script directory
+## Change to the project directory
 
-dir = os.path.dirname(os.path.realpath(__file__))
+dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 os.chdir(dir)
+
+#############################################################################################################
+## Generate the project
+
+generator = 'com.zapolnov.buildsystem.build.qt5.Qt5CMakeGenerator'
+project_dir = 'qt5-cmake'
+
+command = 'java -jar buildsystem.jar'
+command += ' -b'                                    # Batch mode
+command += ' -p .'                                  # Path to the project
+command += (' -g "%s"' % generator)                 # Generator to use
+print(command)
+subprocess.check_call(command, shell=True)
 
 #############################################################################################################
 ## Build documentation if requested
 
 if args.doxygen:
-    subprocess.check_call('./doc-build.sh', shell=True)
+    if on_windows:
+        subprocess.check_call('build\\doc-build.cmd', shell=True)
+    else:
+        subprocess.check_call('build/doc-build.sh', shell=True)
     sys.exit(0)
 
 #############################################################################################################
-## Generate and build the project
+## Build the project
+
+os.mkdir('build/%s-build' % project_dir)
+os.chdir('build/%s-build' % project_dir)
 
 if sys.platform == 'linux2':
     if args.clang:
@@ -68,36 +87,17 @@ if sys.platform == 'linux2':
         os.environ['CC'] = 'gcc-4.8'
         os.environ['CXX'] = 'g++-4.8'
 
-generator = 'CMake 3.2+'
-
-if on_windows:
-    cmake_build_tool = 'MinGW (32-bit)'
-else:
-    cmake_build_tool = 'Unix Makefiles'
-
-print('generator        = %s' % generator)
-if cmake_build_tool:
-    print('cmake_build_tool = %s' % cmake_build_tool)
-if args.build:
-    print('build            = %s' % args.build)
-if args.system:
-    print('system           = %s' % args.system)
+command = 'cmake'
+if args.cmake_generator:
+    command += (' -G "%s"' % args.cmake_generator)
+if args.cmake_build_type:
+    command += (' -DCMAKE_BUILD_TYPE="%s"' % args.cmake_build_type)
 if args.qt5path:
-    print('qt5path          = %s' % args.qt5path)
+    command += (' -DCMAKE_PREFIX_PATH="%s"' % args.cmake_prefix_path)
+command += (' ../%s' % project_dir)
+print(command)
+subprocess.check_call(command, shell=True)
 
-command = 'java -jar zbt/bin/zbt.jar'
-command += ' -v'                                    # Verbose error reporting
-command += ' -b'                                    # Batch mode
-command += ' -p ../samples/1.match3'                # Path to the project
-command += (' -g "%s"' % generator)                 # Generator to use
-command += ' --build'
-
-if cmake_build_tool:
-    command += (' --cmake-build-tool "%s"' % cmake_build_tool)
-if args.build:
-    command += (' --cmake-build-type "%s"' % args.build)
-if args.qt5path:
-    command += (' --cmake-qt5-path "%s"' % args.qt5path)
-
+command = ('cmake --build ../%s' % project_dir)
 print(command)
 subprocess.check_call(command, shell=True)

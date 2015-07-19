@@ -49,13 +49,6 @@
 
 namespace Engine
 {
-    void* IUnknown::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<IUnknown>())
-            return this;
-        return nullptr;
-    }
-
     void* IBlob::queryInterface(TypeID typeID)
     {
         if (typeID == typeOf<IBlob>())

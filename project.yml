@@ -22,4 +22,7 @@
 
 target-name: Bombyx3D
 
+load-plugins: [ 'file2c', 'doxygen' ]
 import: [ 'core', 'system' ]
+
+header_search_paths: '.'

@@ -22,4 +22,9 @@ rem THE SOFTWARE.
 rem
 
 cd "%~dp0.."
-tools\win32\doxygen.cmd Doxyfile
+
+if exist build\doc\doxygen goto exist
+mkdir build\doc\doxygen
+:exist
+
+build\tools\win32\doxygen.cmd Doxyfile

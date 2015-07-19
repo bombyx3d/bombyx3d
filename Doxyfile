@@ -99,27 +99,11 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = core/doc/Logging.dox \
-                         core/doc/Textures.dox \
-                         core/image \
-                         core/interfaces \
-                         core/io \
-                         core/math \
-                         core/resource \
-                         core/utility \
-                         system/dummy \
-                         system/qt5 \
-                         modules/filesystem/zip \
-                         modules/imageconverter/rgb2luminance \
-                         modules/imageconverter/rgba2luminance \
-                         modules/textureloader/png \
-                         README.md
+INPUT                  = README.md
+@INCLUDE               = build/Doxyfile.inc
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.h
 RECURSIVE              = YES
-EXCLUDE                = modules/filesystem/zip/3rdparty \
-                         modules/filesystem/zip/private \
-                         modules/textureloader/png/3rdparty
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
 EXCLUDE_SYMBOLS        =

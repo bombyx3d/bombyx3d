@@ -29,12 +29,13 @@ import sys
 ## Parse command-line arguments
 
 parser = argparse.ArgumentParser()
+parser.add_argument('-b', '--buildsystem', help='Install Bombyx3D build system', action='store_true')
 parser.add_argument('-c', '--cmake', help='Install CMake', action='store_true')
-parser.add_argument('-q', '--qt5', help='Install Qt5', action='store_true')
-parser.add_argument('-x', '--doxygen', help='Install Doxygen', action='store_true')
 parser.add_argument('-g', '--gcc', help='Install GCC', action='store_true')
 parser.add_argument('-l', '--clang', help='Install Clang', action='store_true')
 parser.add_argument('-m', '--mingw', help='Install MinGW', action='store_true')
+parser.add_argument('-q', '--qt5', help='Install Qt5', action='store_true')
+parser.add_argument('-x', '--doxygen', help='Install Doxygen', action='store_true')
 args = parser.parse_args()
 
 if args.gcc and args.mingw:
@@ -75,6 +76,9 @@ if sys.platform == 'linux2':
     subprocess.check_call('sudo apt-get -qq update', shell=True)
 
     subprocess.check_call(('sudo apt-get -qq install --no-install-recommends %s' % (' '.join(packages))), shell=True)
+
+    if args.buildsystem:
+        subprocess.check_call('wget https://github.com/bombyx3d/buildsystem/releases/download/v0.9/buildsystem.jar')
 
     if args.cmake:
         subprocess.check_call('wget http://www.cmake.org/files/v3.2/cmake-3.2.2-Linux-i386.tar.gz', shell=True)

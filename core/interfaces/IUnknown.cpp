@@ -84,6 +84,7 @@ namespace Engine
     }
 
     static Z_THREADLOCAL AllocatedObjects g_AllocationStack;
+    static const TypeID g_IUnknownType = typeOf<IUnknown>();
 
 
     IUnknown::IUnknown()
@@ -141,6 +142,11 @@ namespace Engine
             std::atomic_thread_fence(std::memory_order_acquire);
             delete this;
         }
+    }
+
+    void* IUnknown::queryInterface(TypeID typeID)
+    {
+        return (typeID == g_IUnknownType ? this : nullptr);
     }
 
     void* IUnknown::operator new(size_t size)
