@@ -93,11 +93,11 @@ if args.cmake_generator:
 if args.cmake_build_type:
     command += (' -DCMAKE_BUILD_TYPE="%s"' % args.cmake_build_type)
 if args.qt5path:
-    command += (' -DCMAKE_PREFIX_PATH="%s"' % args.cmake_prefix_path)
+    command += (' -DCMAKE_PREFIX_PATH="%s"' % args.qt5path)
 command += (' ../%s' % project_dir)
 print(command)
 subprocess.check_call(command, shell=True)
 
-command = ('cmake --build ../%s' % project_dir)
+command = ('cmake --build .')
 print(command)
 subprocess.check_call(command, shell=True)
