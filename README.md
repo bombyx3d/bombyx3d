@@ -9,7 +9,17 @@ Bombyx3D Game Engine
 This is a game engine.
 
 Doxygen documentation: <a href="http://www.bombyx3d.com/bombyx3d/doxygen/html/"
-    target="_blank">https://www.bombyx3d.com/bombyx3d/doxygen/html/</a>
+    target="_blank">http://www.bombyx3d.com/bombyx3d/doxygen/html/</a>
+
+
+Building
+--------
+
+You will have to use the [custom build system](https://github.com/bombyx3d/buildsystem) to build Bombyx3D.
+
+Latest binary of the build system is always available on the
+[GitHub releases page](https://github.com/bombyx3d/buildsystem/releases).
+
 
 License
 -------
