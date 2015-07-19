@@ -55,6 +55,7 @@ for root, dirnames, filenames in os.walk('..'):
         '*.h',
         '*.hpp',
         '*.inl',
+        '*.java',
         '*.dox',
         '*.cmd',
         '*.sh',
