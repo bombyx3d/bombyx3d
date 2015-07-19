@@ -1,4 +1,4 @@
-﻿
+
 #pragma once
 #include "_OLD/game/Game.h"
 

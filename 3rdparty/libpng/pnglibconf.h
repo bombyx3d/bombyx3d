@@ -1,1 +1,1 @@
-﻿#include "scripts/pnglibconf.h.prebuilt"
+#include "scripts/pnglibconf.h.prebuilt"

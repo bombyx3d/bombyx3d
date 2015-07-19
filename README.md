@@ -1,4 +1,4 @@
-﻿
+
 Bombyx3D Game Engine
 ====================
 
