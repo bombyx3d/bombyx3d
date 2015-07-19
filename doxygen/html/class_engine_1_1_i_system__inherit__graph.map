@@ -1,5 +1,0 @@
-<map id="Engine::ISystem" name="Engine::ISystem">
-<area shape="rect" id="node5" href="$class_engine_1_1_dummy_system.html" title="Dummy implementation of ISystem. " alt="" coords="5,160,165,189"/>
-<area shape="rect" id="node7" href="$class_engine_1_1_qt_system.html" title="Implementation of ISystem for Qt5. " alt="" coords="189,160,317,189"/>
-<area shape="rect" id="node2" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="105,5,233,35"/>
-</map>

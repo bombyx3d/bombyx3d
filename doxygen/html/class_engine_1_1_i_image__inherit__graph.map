@@ -1,5 +1,0 @@
-<map id="Engine::IImage" name="Engine::IImage">
-<area shape="rect" id="node7" href="$class_engine_1_1_simple_image.html" title="Simple implementation of IImage and ITextureImage. " alt="" coords="5,237,152,267"/>
-<area shape="rect" id="node2" href="$class_engine_1_1_i_blob.html" title="A block of binary data. " alt="" coords="29,83,128,112"/>
-<area shape="rect" id="node4" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="15,5,143,35"/>
-</map>

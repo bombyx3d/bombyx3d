@@ -1,5 +1,0 @@
-<map id="Engine::IViewport" name="Engine::IViewport">
-<area shape="rect" id="node5" href="$class_engine_1_1_dummy_viewport.html" title="Dummy implementation of IViewport. " alt="" coords="5,160,171,189"/>
-<area shape="rect" id="node7" href="$class_engine_1_1_qt_open_g_l_window.html" title="An OpenGL&#45;based implementation of IViewport. " alt="" coords="195,160,373,189"/>
-<area shape="rect" id="node2" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="121,5,249,35"/>
-</map>
