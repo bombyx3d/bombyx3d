@@ -78,7 +78,7 @@ if sys.platform == 'linux2':
     subprocess.check_call(('sudo apt-get -qq install --no-install-recommends %s' % (' '.join(packages))), shell=True)
 
     if args.buildsystem:
-        subprocess.check_call('wget https://github.com/bombyx3d/buildsystem/releases/download/v0.9/buildsystem.jar')
+        subprocess.check_call('wget https://github.com/bombyx3d/buildsystem/releases/download/v0.9/buildsystem.jar', shell=True)
 
     if args.cmake:
         subprocess.check_call('wget http://www.cmake.org/files/v3.2/cmake-3.2.2-Linux-i386.tar.gz', shell=True)
