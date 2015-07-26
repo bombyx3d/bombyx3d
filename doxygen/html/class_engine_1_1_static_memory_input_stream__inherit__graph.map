@@ -1,0 +1,9 @@
+<map id="Engine::StaticMemoryInputStream" name="Engine::StaticMemoryInputStream">
+<area shape="rect" id="node2" href="$class_engine_1_1_i_input_stream.html" title="Base interface for input streams. " alt="" coords="5,237,149,267"/>
+<area shape="rect" id="node4" href="$class_engine_1_1_i_stream.html" title="Base interface for input and output streams. " alt="" coords="20,160,135,189"/>
+<area shape="rect" id="node6" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="100,5,228,35"/>
+<area shape="rect" id="node12" href="$class_engine_1_1_i_blob.html" title="A block of binary data. " alt="" coords="115,83,213,112"/>
+<area shape="rect" id="node15" href="$class_engine_1_1_i_file_reader.html" title="Base interface for file readers. " alt="" coords="237,83,373,112"/>
+<area shape="rect" id="node8" href="$class_engine_1_1_static_memory_file.html" title="A &quot;file&quot; based on static data. " alt="" coords="173,237,344,267"/>
+<area shape="rect" id="node10" href="$class_engine_1_1_i_memory_mapped_file.html" title="An interface to the memory&#45;mapped file. " alt="" coords="165,160,352,189"/>
+</map>

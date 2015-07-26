@@ -53,11 +53,11 @@
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_ptr.html">Ptr</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smart pointer for <a class="el" href="class_engine_1_1_i_unknown.html">IUnknown</a> descendants.  <a href="class_engine_1_1_ptr.html#details">More...</a><br/></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_engine_1_1_type_i_d.html">TypeID</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique identifier representing a data type.  <a href="struct_engine_1_1_type_i_d.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_ptr.html">Ptr</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smart pointer for <a class="el" href="class_engine_1_1_i_unknown.html">IUnknown</a> descendants.  <a href="class_engine_1_1_ptr.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_matrix_stack.html">MatrixStack</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A LIFO stack of 4x4 matrices.  <a href="class_engine_1_1_matrix_stack.html#details">More...</a><br/></td></tr>
@@ -65,21 +65,60 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_function_queue.html">FunctionQueue</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A FIFO queue of <code>std::function</code> objects.  <a href="class_engine_1_1_function_queue.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_unknown.html">IUnknown</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base interface for all engine interfaces.  <a href="class_engine_1_1_i_unknown.html#details">More...</a><br/></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_blob.html">IBlob</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A block of binary data.  <a href="class_engine_1_1_i_blob.html#details">More...</a><br/></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_engine_1_1_quad.html">Quad</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">2D quad consisting of four points.  <a href="struct_engine_1_1_quad.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_affine_transform.html">AffineTransform</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">2D affine transformation.  <a href="class_engine_1_1_affine_transform.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_static_memory_input_stream.html">StaticMemoryInputStream</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An implementation of <a class="el" href="class_engine_1_1_i_input_stream.html">IInputStream</a> based on static data.  <a href="class_engine_1_1_static_memory_input_stream.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_file_input_stream.html">FileInputStream</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An <a class="el" href="class_engine_1_1_i_input_stream.html">IInputStream</a> implemented as a wrapper for an instance of <a class="el" href="class_engine_1_1_i_file_reader.html">Engine::IFileReader</a>.  <a href="class_engine_1_1_file_input_stream.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_buffered_input_stream.html">BufferedInputStream</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrapper over <a class="el" href="class_engine_1_1_i_input_stream.html">IInputStream</a> providing buffered I/O.  <a href="class_engine_1_1_buffered_input_stream.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_file_system_list.html">FileSystemList</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A virtual filesystem combining multiple other filesystems.  <a href="class_engine_1_1_file_system_list.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_stdio_file_reader.html">StdioFileReader</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An implementation of <a class="el" href="class_engine_1_1_i_file_reader.html">IFileReader</a> using classic stdio <code>FILE*</code>.  <a href="class_engine_1_1_stdio_file_reader.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_static_memory_file.html">StaticMemoryFile</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A "file" based on static data.  <a href="class_engine_1_1_static_memory_file.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_memory_file.html">MemoryFile</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An in-memory, <code>std::vector</code>-based "file".  <a href="class_engine_1_1_memory_file.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_stream.html">IStream</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base interface for input and output streams.  <a href="class_engine_1_1_i_stream.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_memory_mapped_file.html">IMemoryMappedFile</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An interface to the memory-mapped file.  <a href="class_engine_1_1_i_memory_mapped_file.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_input_stream.html">IInputStream</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base interface for input streams.  <a href="class_engine_1_1_i_input_stream.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_file_system.html">IFileSystem</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base interface for filesystems.  <a href="class_engine_1_1_i_file_system.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_file_reader.html">IFileReader</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base interface for file readers.  <a href="class_engine_1_1_i_file_reader.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_blob.html">IBlob</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A block of binary data.  <a href="class_engine_1_1_i_blob.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_unknown.html">IUnknown</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base interface for all engine interfaces.  <a href="class_engine_1_1_i_unknown.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:affb996f41b351ba409d6148129e1f7f5"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_engine.html#affb996f41b351ba409d6148129e1f7f5">stringToLowerCase</a> (const std::string &amp;string)</td></tr>
+<tr class="memdesc:affb996f41b351ba409d6148129e1f7f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts string to lower case.  <a href="#affb996f41b351ba409d6148129e1f7f5">More...</a><br/></td></tr>
+<tr class="separator:affb996f41b351ba409d6148129e1f7f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16c72be2a3cf231c24f22e3e33004997"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_engine.html#a16c72be2a3cf231c24f22e3e33004997">pathFindLastDirectorySeparator</a> (const std::string &amp;path)</td></tr>
 <tr class="memdesc:a16c72be2a3cf231c24f22e3e33004997"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves offset of the last directory separator (usually '/' or '\').  <a href="#a16c72be2a3cf231c24f22e3e33004997">More...</a><br/></td></tr>
 <tr class="separator:a16c72be2a3cf231c24f22e3e33004997"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -89,21 +128,49 @@ Functions</h2></td></tr>
 <tr class="memitem:afff3fdc63a2c9554ba429de5d9838d7e"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_engine.html#afff3fdc63a2c9554ba429de5d9838d7e">pathGetFileNameExtension</a> (const std::string &amp;path)</td></tr>
 <tr class="memdesc:afff3fdc63a2c9554ba429de5d9838d7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts extension (the part after the last '.  <a href="#afff3fdc63a2c9554ba429de5d9838d7e">More...</a><br/></td></tr>
 <tr class="separator:afff3fdc63a2c9554ba429de5d9838d7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa90f21ec31179fc6b8132f9f658c428e"><td class="memTemplParams" colspan="2">template&lt;class TYPE &gt; </td></tr>
-<tr class="memitem:aa90f21ec31179fc6b8132f9f658c428e"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="struct_engine_1_1_type_i_d.html">TypeID</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_engine.html#aa90f21ec31179fc6b8132f9f658c428e">typeOf</a> ()</td></tr>
-<tr class="memdesc:aa90f21ec31179fc6b8132f9f658c428e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves an unique identifier representing the specified data type.  <a href="#aa90f21ec31179fc6b8132f9f658c428e">More...</a><br/></td></tr>
-<tr class="separator:aa90f21ec31179fc6b8132f9f658c428e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ac9cc8999b0024c2916dcf5b466eee3"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_engine.html#a3ac9cc8999b0024c2916dcf5b466eee3">ioReadLine</a> (<a class="el" href="class_engine_1_1_i_input_stream.html">IInputStream</a> *stream, bool includeEolMarker=false)</td></tr>
+<tr class="memdesc:a3ac9cc8999b0024c2916dcf5b466eee3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads single line of text from an input stream.  <a href="#a3ac9cc8999b0024c2916dcf5b466eee3">More...</a><br/></td></tr>
+<tr class="separator:a3ac9cc8999b0024c2916dcf5b466eee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afaaf43a595ddbb5dda10c0b7cc0aa032"><td class="memItemLeft" align="right" valign="top">std::vector&lt; char &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_engine.html#afaaf43a595ddbb5dda10c0b7cc0aa032">ioReadAll</a> (<a class="el" href="class_engine_1_1_i_input_stream.html">IInputStream</a> *stream)</td></tr>
+<tr class="memdesc:afaaf43a595ddbb5dda10c0b7cc0aa032"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads all remaining bytes from an input stream.  <a href="#afaaf43a595ddbb5dda10c0b7cc0aa032">More...</a><br/></td></tr>
+<tr class="separator:afaaf43a595ddbb5dda10c0b7cc0aa032"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdcc4ef6be20b8ef9b9022ed386bd1c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_engine.html#afdcc4ef6be20b8ef9b9022ed386bd1c8">setDebugPrinter</a> (const std::function&lt; void(const std::string &amp;)&gt; &amp;printer)</td></tr>
 <tr class="memdesc:afdcc4ef6be20b8ef9b9022ed386bd1c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a custom printer for debug messages.  <a href="#afdcc4ef6be20b8ef9b9022ed386bd1c8">More...</a><br/></td></tr>
 <tr class="separator:afdcc4ef6be20b8ef9b9022ed386bd1c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a11ec050fac8935a3d93fa0a63295ae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_engine.html#a9a11ec050fac8935a3d93fa0a63295ae">setDebugPrinter</a> (std::function&lt; void(const std::string &amp;)&gt; &amp;&amp;printer)</td></tr>
 <tr class="memdesc:a9a11ec050fac8935a3d93fa0a63295ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a custom printer for debug messages.  <a href="#a9a11ec050fac8935a3d93fa0a63295ae">More...</a><br/></td></tr>
 <tr class="separator:a9a11ec050fac8935a3d93fa0a63295ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:affb996f41b351ba409d6148129e1f7f5"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_engine.html#affb996f41b351ba409d6148129e1f7f5">stringToLowerCase</a> (const std::string &amp;string)</td></tr>
-<tr class="memdesc:affb996f41b351ba409d6148129e1f7f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts string to lower case.  <a href="#affb996f41b351ba409d6148129e1f7f5">More...</a><br/></td></tr>
-<tr class="separator:affb996f41b351ba409d6148129e1f7f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa90f21ec31179fc6b8132f9f658c428e"><td class="memTemplParams" colspan="2">template&lt;class TYPE &gt; </td></tr>
+<tr class="memitem:aa90f21ec31179fc6b8132f9f658c428e"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="struct_engine_1_1_type_i_d.html">TypeID</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_engine.html#aa90f21ec31179fc6b8132f9f658c428e">typeOf</a> ()</td></tr>
+<tr class="memdesc:aa90f21ec31179fc6b8132f9f658c428e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves an unique identifier representing the specified data type.  <a href="#aa90f21ec31179fc6b8132f9f658c428e">More...</a><br/></td></tr>
+<tr class="separator:aa90f21ec31179fc6b8132f9f658c428e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="affb996f41b351ba409d6148129e1f7f5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Engine::stringToLowerCase </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>string</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts string to lower case. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">string</td><td>Input string. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>String converted to lower case. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a16c72be2a3cf231c24f22e3e33004997"></a>
 <div class="memitem">
 <div class="memproto">
@@ -181,37 +248,60 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aa90f21ec31179fc6b8132f9f658c428e"></a>
+<a class="anchor" id="a3ac9cc8999b0024c2916dcf5b466eee3"></a>
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;class TYPE &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="struct_engine_1_1_type_i_d.html">TypeID</a> Engine::typeOf </td>
+          <td class="memname">std::string Engine::ioReadLine </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">IInputStream *&#160;</td>
+          <td class="paramname"><em>stream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>includeEolMarker</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p>Retrieves an unique identifier representing the specified data type. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">TYPE</td><td>Data type. </td></tr>
+<p>Reads single line of text from an input stream. </p>
+<p>This function interprets <code>LF</code> and <code>CR-LF</code> as line separators. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stream</td><td>Pointer to the input stream. </td></tr>
+    <tr><td class="paramname">includeEolMarker</td><td>Set to <code>true</code> to include '<br/>
+' into the returned string (if it was present in the input stream). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Unique identifier representing the specified data type. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The string that has been read. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="afaaf43a595ddbb5dda10c0b7cc0aa032"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;char&gt; Engine::ioReadAll </td>
+          <td>(</td>
+          <td class="paramtype">IInputStream *&#160;</td>
+          <td class="paramname"><em>stream</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reads all remaining bytes from an input stream. </p>
+<dl class="section return"><dt>Returns</dt><dd>Vector of bytes. </dd></dl>
 
 </div>
 </div>
@@ -265,28 +355,37 @@ template&lt;class TYPE &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="affb996f41b351ba409d6148129e1f7f5"></a>
+<a class="anchor" id="aa90f21ec31179fc6b8132f9f658c428e"></a>
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class TYPE &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string Engine::stringToLowerCase </td>
+          <td class="memname">static <a class="el" href="struct_engine_1_1_type_i_d.html">TypeID</a> Engine::typeOf </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>string</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Converts string to lower case. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">string</td><td>Input string. </td></tr>
+<p>Retrieves an unique identifier representing the specified data type. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">TYPE</td><td>Data type. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>String converted to lower case. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Unique identifier representing the specified data type. </dd></dl>
 
 </div>
 </div>

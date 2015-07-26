@@ -63,6 +63,9 @@ Macros</h2></td></tr>
 <tr class="memitem:aa9709c2029cbf60a992647251ec0e42e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="macros_8h.html#aa9709c2029cbf60a992647251ec0e42e">Z_IMPLEMENTATION</a>(NAME)</td></tr>
 <tr class="memdesc:aa9709c2029cbf60a992647251ec0e42e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper macro for interface implementations.  <a href="#aa9709c2029cbf60a992647251ec0e42e">More...</a><br/></td></tr>
 <tr class="separator:aa9709c2029cbf60a992647251ec0e42e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a346e2e58b0c666371b9362478130c06c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="macros_8h.html#a346e2e58b0c666371b9362478130c06c">Z_CUSTOM_IMPLEMENTATION</a>(NAME)</td></tr>
+<tr class="memdesc:a346e2e58b0c666371b9362478130c06c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper macro for interface implementations with complex logic behind the IUnknown::queryInterface method.  <a href="#a346e2e58b0c666371b9362478130c06c">More...</a><br/></td></tr>
+<tr class="separator:a346e2e58b0c666371b9362478130c06c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34d2daa80ef07361f68e5553bdc80f9d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="macros_8h.html#a34d2daa80ef07361f68e5553bdc80f9d">Z_INTERFACE</a>(NAME)</td></tr>
 <tr class="memdesc:a34d2daa80ef07361f68e5553bdc80f9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper macro for interfaces.  <a href="#a34d2daa80ef07361f68e5553bdc80f9d">More...</a><br/></td></tr>
 <tr class="separator:a34d2daa80ef07361f68e5553bdc80f9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -135,7 +138,52 @@ Macros</h2></td></tr>
 <div class="line"></div>
 <div class="line">    <span class="comment">// ...</span></div>
 <div class="line">};</div>
-</div><!-- fragment --><dl class="section see"><dt>See Also</dt><dd><a class="el" href="macros_8h.html#a34d2daa80ef07361f68e5553bdc80f9d">Z_INTERFACE</a>, <a class="el" href="macros_8h.html#a8ae2231d2c755c209380918f40b00b51">Z_SINGLETON_INTERFACE</a>. </dd></dl>
+</div><!-- fragment --><dl class="section see"><dt>See Also</dt><dd><a class="el" href="macros_8h.html#a346e2e58b0c666371b9362478130c06c">Z_CUSTOM_IMPLEMENTATION</a>, <a class="el" href="macros_8h.html#a34d2daa80ef07361f68e5553bdc80f9d">Z_INTERFACE</a>, <a class="el" href="macros_8h.html#a8ae2231d2c755c209380918f40b00b51">Z_SINGLETON_INTERFACE</a>. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a346e2e58b0c666371b9362478130c06c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define Z_CUSTOM_IMPLEMENTATION</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">NAME</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Helper macro for interface implementations with complex logic behind the IUnknown::queryInterface method. </p>
+<p>Classes using this macro instead of <a class="el" href="macros_8h.html#aa9709c2029cbf60a992647251ec0e42e">Z_IMPLEMENTATION</a> should additionally implement method named <code>_queryCustomInterface</code> (with underscore at the beginning) that should perform the complex logic.</p>
+<p>Signature of the <code>_queryCustomInterface</code> method should be the same as of the IUnknown::queryInterface method.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">NAME</td><td>Name of the implementation class.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This macro resets class' current protection level to <code>public</code>.</dd></dl>
+<p>Example usage: </p>
+<div class="fragment"><div class="line"><span class="keyword">class </span>UnknownImpl : <span class="keyword">public</span> IUnknown</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="macros_8h.html#a346e2e58b0c666371b9362478130c06c">Z_CUSTOM_IMPLEMENTATION</a>(UnknownImpl)</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// ...</span></div>
+<div class="line"></div>
+<div class="line">private:</div>
+<div class="line">    IStream* m_Stream;</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordtype">void</span>* _queryCustomInterface(TypeID typeID)</div>
+<div class="line">    {</div>
+<div class="line">        <span class="keywordflow">if</span> (m_Stream != null)</div>
+<div class="line">            <span class="keywordflow">return</span> m_Stream-&gt;queryInterface(typeID);</div>
+<div class="line">        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line">    }</div>
+<div class="line">};</div>
+</div><!-- fragment --><dl class="section see"><dt>See Also</dt><dd><a class="el" href="macros_8h.html#aa9709c2029cbf60a992647251ec0e42e">Z_IMPLEMENTATION</a>, <a class="el" href="macros_8h.html#a34d2daa80ef07361f68e5553bdc80f9d">Z_INTERFACE</a>, <a class="el" href="macros_8h.html#a8ae2231d2c755c209380918f40b00b51">Z_SINGLETON_INTERFACE</a>. </dd></dl>
 
 </div>
 </div>
@@ -169,7 +217,7 @@ Macros</h2></td></tr>
 <div class="line"></div>
 <div class="line">    <span class="comment">// ...</span></div>
 <div class="line">};</div>
-</div><!-- fragment --><dl class="section see"><dt>See Also</dt><dd><a class="el" href="macros_8h.html#a8ae2231d2c755c209380918f40b00b51">Z_SINGLETON_INTERFACE</a>, <a class="el" href="macros_8h.html#aa9709c2029cbf60a992647251ec0e42e">Z_IMPLEMENTATION</a>. </dd></dl>
+</div><!-- fragment --><dl class="section see"><dt>See Also</dt><dd><a class="el" href="macros_8h.html#a8ae2231d2c755c209380918f40b00b51">Z_SINGLETON_INTERFACE</a>, <a class="el" href="macros_8h.html#aa9709c2029cbf60a992647251ec0e42e">Z_IMPLEMENTATION</a>, <a class="el" href="macros_8h.html#a346e2e58b0c666371b9362478130c06c">Z_CUSTOM_IMPLEMENTATION</a>. </dd></dl>
 
 </div>
 </div>
