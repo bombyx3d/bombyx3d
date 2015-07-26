@@ -22,61 +22,61 @@
 
 #pragma once
 #include "core/utility/Ptr.h"
-#include "core/interfaces/IInputStream.h"
-#include "core/interfaces/IFileReader.h"
+#include "core/interfaces/io/IInputStream.h"
+#include <memory>
 
 namespace Engine
 {
-    /** An @ref IInputStream implemented as a wrapper for an instance of @ref Engine::IFileReader. */
-    class FileInputStream : public IInputStream
+    /** Wrapper over @ref IInputStream providing buffered I/O. */
+    class BufferedInputStream : public IInputStream
     {
     public:
-        Z_IMPLEMENTATION(FileInputStream)
+        Z_CUSTOM_IMPLEMENTATION(BufferedInputStream)
+
+        /** Default size of buffer. */
+        static const size_t DEFAULT_BUFFER_SIZE = 65536;
 
         /**
          * Constructor.
-         * @param reader File reader.
+         * @param stream Source stream.
          */
-        explicit FileInputStream(IFileReader* reader);
+        explicit BufferedInputStream(IInputStream* stream);
 
         /**
          * Constructor.
-         * @param reader File reader.
+         * @param stream Source stream.
          */
-        explicit FileInputStream(const Ptr<IFileReader>& reader);
+        explicit BufferedInputStream(const Ptr<IInputStream>& stream);
 
         /**
          * Constructor.
-         * @param reader File reader.
+         * @param stream Source stream.
          */
-        explicit FileInputStream(Ptr<IFileReader>&& reader);
+        explicit BufferedInputStream(Ptr<IInputStream>&& stream);
 
         /**
          * Constructor.
-         * @param reader File reader.
-         * @param offset Starting offset in file.
-         * @param limit Limit in bytes.
+         * @param stream Source stream.
+         * @param bufferSize Size of buffer.
          */
-        FileInputStream(IFileReader* reader, uint64_t offset, uint64_t limit);
+        BufferedInputStream(IInputStream* stream, size_t bufferSize);
 
         /**
          * Constructor.
-         * @param reader File reader.
-         * @param offset Starting offset in file.
-         * @param limit Limit in bytes.
+         * @param stream Source stream.
+         * @param bufferSize Size of buffer.
          */
-        FileInputStream(const Ptr<IFileReader>& reader, uint64_t offset, uint64_t limit);
+        BufferedInputStream(const Ptr<IInputStream>& stream, size_t bufferSize);
 
         /**
          * Constructor.
-         * @param reader File reader.
-         * @param offset Starting offset in file.
-         * @param limit Limit in bytes.
+         * @param stream Source stream.
+         * @param bufferSize Size of buffer.
          */
-        FileInputStream(Ptr<IFileReader>&& reader, uint64_t offset, uint64_t limit);
+        BufferedInputStream(Ptr<IInputStream>&& stream, size_t bufferSize);
 
         /** Destructor. */
-        ~FileInputStream() = default;
+        ~BufferedInputStream() = default;
 
         const std::string& name() const override;
         bool atEnd() const override;
@@ -85,8 +85,12 @@ namespace Engine
         size_t read(void* buffer, size_t bytesToRead) override;
 
     private:
-        Ptr<IFileReader> m_Reader;      /**< File reader. */
-        uint64_t m_Offset;              /**< Current offset from the beginning of stream. */
-        uint64_t m_BytesLeft;           /**< Number of bytes left in stream. */
+        Ptr<IInputStream> m_Stream;             /**< Pointer to the source stream. */
+        std::unique_ptr<uint8_t[]> m_Buffer;    /**< Buffer. */
+        size_t m_BufferSize;                    /**< Buffer size. */
+        size_t m_BufferStart = 0;               /**< Current starting position in the buffer. */
+        size_t m_BufferEnd = 0;                 /**< Current ending position in the buffer. */
+
+        void* _queryCustomInterface(TypeID typeID);
     };
 }

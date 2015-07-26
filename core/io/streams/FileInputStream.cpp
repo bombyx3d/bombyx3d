@@ -123,18 +123,10 @@ namespace Engine
         return bytesToRead;
     }
 
-    void* FileInputStream::queryInterface(TypeID typeID)
+    void* FileInputStream::_queryCustomInterface(TypeID typeID)
     {
-        if (typeID == typeOf<FileInputStream>())
-            return this;
-
-        void* stream = IInputStream::queryInterface(typeID);
-        if (stream)
-            return stream;
-
         if (m_Reader)
             return m_Reader->queryInterface(typeID);
-
         return nullptr;
     }
 }

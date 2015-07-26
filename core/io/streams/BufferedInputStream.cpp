@@ -170,18 +170,10 @@ namespace Engine
         return bytesToRead - bytesLeft;
     }
 
-    void* BufferedInputStream::queryInterface(TypeID typeID)
+    void* BufferedInputStream::_queryCustomInterface(TypeID typeID)
     {
-        if (typeID == typeOf<BufferedInputStream>())
-            return this;
-
-        void* stream = IInputStream::queryInterface(typeID);
-        if (stream)
-            return stream;
-
         if (m_Stream)
             return m_Stream->queryInterface(typeID);
-
         return nullptr;
     }
 }

@@ -75,9 +75,52 @@
  * };
  * @endcode
  *
- * @see @ref Z_INTERFACE, @ref Z_SINGLETON_INTERFACE.
+ * @see @ref Z_CUSTOM_IMPLEMENTATION, @ref Z_INTERFACE, @ref Z_SINGLETON_INTERFACE.
  */
 #define Z_IMPLEMENTATION(NAME) \
+    /** @cond */ \
+    Z_DISABLE_COPY(NAME) \
+    public: \
+        _Z_DECLARE_QUERY_INTERFACE_METHODS() \
+    /** @endcond */ \
+    public:
+
+/**
+ * Helper macro for interface implementations with complex logic behind the @ref IUnknown::queryInterface method.
+ *
+ * Classes using this macro instead of @ref Z_IMPLEMENTATION should additionally implement method named
+ * `_queryCustomInterface` (with underscore at the beginning) that should perform the complex logic.
+ *
+ * Signature of the `_queryCustomInterface` method should be the same as of the
+ * @ref IUnknown::queryInterface method.
+ *
+ * @param NAME Name of the implementation class.
+ *
+ * @note This macro resets class' current protection level to `public`.
+ *
+ * Example usage:
+ * @code{.cpp}
+ * class UnknownImpl : public IUnknown
+ * {
+ *     Z_CUSTOM_IMPLEMENTATION(UnknownImpl)
+ *
+ *     // ...
+ *
+ * private:
+ *     IStream* m_Stream;
+ *
+ *     void* _queryCustomInterface(TypeID typeID)
+ *     {
+ *         if (m_Stream != null)
+ *             return m_Stream->queryInterface(typeID);
+ *         return nullptr;
+ *     }
+ * };
+ * @endcode
+ *
+ * @see @ref Z_IMPLEMENTATION, @ref Z_INTERFACE, @ref Z_SINGLETON_INTERFACE.
+ */
+#define Z_CUSTOM_IMPLEMENTATION(NAME) \
     /** @cond */ \
     Z_DISABLE_COPY(NAME) \
     public: \
@@ -103,7 +146,7 @@
  * };
  * @endcode
  *
- * @see @ref Z_SINGLETON_INTERFACE, @ref Z_IMPLEMENTATION.
+ * @see @ref Z_SINGLETON_INTERFACE, @ref Z_IMPLEMENTATION, @ref Z_CUSTOM_IMPLEMENTATION.
  */
 #define Z_INTERFACE(NAME) \
     /** @cond */ \
