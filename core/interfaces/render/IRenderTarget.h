@@ -25,10 +25,10 @@
 
 namespace Engine
 {
-    /** Interface to the renderer. */
-    class IRenderer : public IUnknown
+    /** Interface to rendering targets. */
+    class IRenderTarget : public IUnknown
     {
     public:
-        Z_INTERFACE(IRenderer)
+        Z_INTERFACE(IRenderTarget)
     };
 }

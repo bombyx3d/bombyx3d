@@ -35,17 +35,19 @@ namespace Engine
          * Called immediately after viewport has been created.
          * @param width Width of the viewport.
          * @param height Height of the viewport.
+         * @return `true` on success or `false` on failure.
+         * In the latter case no other members of the delegate will ever be called.
          */
-        virtual bool onViewportCreated(int width, int height) = 0;
+        virtual bool onViewportCreated(int width, int height) { (void)width; (void)height; return true; }
 
         /** Called just before viewport will be destroyed. */
-        virtual void onViewportWillClose() = 0;
+        virtual void onViewportWillClose() {}
 
         /** Called just before viewport will be suspended. */
-        virtual void onViewportWillSuspend() = 0;
+        virtual void onViewportWillSuspend() {}
 
         /** Called immediately after viewport has been restored. */
-        virtual void onViewportDidResume() = 0;
+        virtual void onViewportDidResume() {}
 
         /**
          * Called when user begins a touch event inside the viewport.
@@ -53,7 +55,7 @@ namespace Engine
          * @param x X coordinate of the finger.
          * @param y Y coordinate of the finger.
          */
-        virtual void onPointerPressed(int id, float x, float y) = 0;
+        virtual void onPointerPressed(int id, float x, float y) { (void)id; (void)x; (void)y; }
 
         /**
          * Called when user moves a finger inside the viewport.
@@ -61,7 +63,7 @@ namespace Engine
          * @param x X coordinate of the finger.
          * @param y Y coordinate of the finger.
          */
-        virtual void onPointerMoved(int id, float x, float y) = 0;
+        virtual void onPointerMoved(int id, float x, float y) { (void)id; (void)x; (void)y; }
 
         /**
          * Called when user ends a touch event inside the viewport.
@@ -69,7 +71,7 @@ namespace Engine
          * @param x X coordinate of the finger.
          * @param y Y coordinate of the finger.
          */
-        virtual void onPointerReleased(int id, float x, float y) = 0;
+        virtual void onPointerReleased(int id, float x, float y) { (void)id; (void)x; (void)y; }
 
         /**
          * Called when touch event inside the viewport is cancelled.
@@ -77,19 +79,19 @@ namespace Engine
          * @param x X coordinate of the finger.
          * @param y Y coordinate of the finger.
          */
-        virtual void onPointerCancelled(int id, float x, float y) = 0;
+        virtual void onPointerCancelled(int id, float x, float y) { (void)id; (void)x; (void)y; }
 
         /**
          * Called when size of the viewport changes.
          * @param width New width of the viewport.
          * @param height New height of the viewport.
          */
-        virtual void onViewportDidResize(int width, int height) = 0;
+        virtual void onViewportDidResize(int width, int height) { (void)width; (void)height; }
 
         /**
          * Called each frame to update and render contents of the viewport.
          * @param frameTime Number of seconds passed from the previous frame.
          */
-        virtual void onViewportShouldRender(double frameTime) = 0;
+        virtual void onViewportShouldRender(double frameTime) { (void)frameTime; }
     };
 }
