@@ -22,28 +22,30 @@
 
 #pragma once
 #include "QtOpenGLRenderThread.h"
-#include "core/interfaces/IViewport.h"
+#include "core/interfaces/render/IRenderer.h"
+#include "core/interfaces/render/IViewport.h"
+#include "core/interfaces/render/IViewportConfiguration.h"
 #include <QGLWidget>
 #include <atomic>
 
 namespace Engine
 {
     /** An OpenGL-based implementation of @ref IViewport. */
-    class QtOpenGLWindow : public QGLWidget, public IViewport
+    class QtOpenGLViewport : public QGLWidget, public IViewport
     {
         Q_OBJECT
-        Z_IMPLEMENTATION(QtOpenGLWindow)
 
     public:
         /**
          * Constructor.
-         * @param viewportSettings Viewport settings.
-         * @param delegateInstance Viewport delegate.
+         * @param r Renderer.
+         * @param conf Viewport configuration.
+         * @param d Viewport delegate.
          */
-        QtOpenGLWindow(const ViewportSettings& viewportSettings, const Ptr<IViewportDelegate>& delegateInstance);
+        QtOpenGLViewport(IRenderer* r, IViewportConfiguration* conf, IViewportDelegate* d);
 
         /** Destructor. */
-        ~QtOpenGLWindow();
+        ~QtOpenGLViewport();
 
         /**
          * Retrieves pointer to the viewport delegate.
@@ -56,6 +58,7 @@ namespace Engine
 
         int viewportWidth() const override;
         int viewportHeight() const override;
+        IRenderer& renderer() override;
 
     protected:
         /** @cond */
@@ -76,6 +79,7 @@ namespace Engine
 
     private:
         Ptr<IViewportDelegate> m_Delegate;
+        Ptr<IRenderer> m_Renderer;
         QtOpenGLRenderThread m_RenderThread;
         volatile std::atomic<int> m_ViewportWidth;
         volatile std::atomic<int> m_ViewportHeight;

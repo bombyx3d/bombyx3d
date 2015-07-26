@@ -20,5 +20,4 @@
 # THE SOFTWARE.
 #
 
-import: '../../render/opengles2'
 source_directories: '.'

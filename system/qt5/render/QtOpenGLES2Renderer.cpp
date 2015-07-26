@@ -19,36 +19,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "core/interfaces/IUnknown.h"
-#include "core/interfaces/render/IViewport.h"
-#include "core/interfaces/render/IViewportConfiguration.h"
-#include "core/interfaces/render/IViewportDelegate.h"
-#include "core/utility/Ptr.h"
+#include "QtOpenGLES2Renderer.h"
+#include "QtOpenGLViewport.h"
 
 namespace Engine
 {
-    /** Interface to the renderer. */
-    class IRenderer : public IUnknown
+    QtOpenGLES2Renderer::QtOpenGLES2Renderer()
     {
-    public:
-        Z_INTERFACE(IRenderer)
+    }
 
-        /**
-         * Creates a viewport.
-         * @param configuration Desired viewport configuration.
-         * @param delegate Delegate for the viewport.
-         * @return Newly created viewport.
-         */
-        virtual Ptr<IViewport> createViewport(IViewportConfiguration* configuration, IViewportDelegate* delegate) = 0;
-
-        /**
-         * Activates the specified render target.
-         * After calling this method all rendering will go into the specified render target.
-         * @param target Render target. If set to `nullptr`, the following rendering commands will be discarded
-         * until valid render target will be set.
-         */
-        virtual void setRenderTarget(IRenderTarget* target) = 0;
-    };
+    Ptr<IViewport> QtOpenGLES2Renderer::createViewport(IViewportConfiguration* configuration,
+        IViewportDelegate* delegate)
+    {
+        Ptr<QtOpenGLViewport> viewport = new QtOpenGLViewport(this, configuration, delegate);
+        viewport->show();
+        return viewport;
+    }
 }

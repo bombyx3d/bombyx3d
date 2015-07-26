@@ -19,32 +19,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "QtSystem.h"
-#include "viewport/QtOpenGLWindow.h"
-#include "core/utility/debug.h"
-#include <QApplication>
+#include "OpenGLES2Renderer.h"
 
 namespace Engine
 {
-    QtSystem::QtSystem()
+    OpenGLES2Renderer::OpenGLES2Renderer()
     {
     }
 
-    Ptr<IViewport> QtSystem::createViewport(const ViewportSettings& viewportSettings,
-        const Ptr<IViewportDelegate>& delegate)
+    void OpenGLES2Renderer::setRenderTarget(IRenderTarget* target)
     {
-        Z_CHECK(delegate != nullptr);
-        if (!delegate)
-            return nullptr;
-
-        Ptr<QtOpenGLWindow> window = new QtOpenGLWindow(viewportSettings, delegate);
-        window->show();
-
-        return window;
-    }
-
-    void QtSystem::runEventLoop()
-    {
-        qApp->exec();
+        // FIXME
     }
 }

@@ -21,34 +21,18 @@
  */
 
 #pragma once
-#include "core/interfaces/IUnknown.h"
-#include "core/interfaces/render/IViewport.h"
-#include "core/interfaces/render/IViewportConfiguration.h"
-#include "core/interfaces/render/IViewportDelegate.h"
-#include "core/utility/Ptr.h"
+#include "render/opengles2/OpenGLES2Renderer.h"
 
 namespace Engine
 {
-    /** Interface to the renderer. */
-    class IRenderer : public IUnknown
+    /** Implementation of @ref IRenderer for Qt5 using OpenGL ES 2.0. */
+    class QtOpenGLES2Renderer : public OpenGLES2Renderer
     {
     public:
-        Z_INTERFACE(IRenderer)
+        Z_IMPLEMENTATION(QtOpenGLES2Renderer)
 
-        /**
-         * Creates a viewport.
-         * @param configuration Desired viewport configuration.
-         * @param delegate Delegate for the viewport.
-         * @return Newly created viewport.
-         */
-        virtual Ptr<IViewport> createViewport(IViewportConfiguration* configuration, IViewportDelegate* delegate) = 0;
+        QtOpenGLES2Renderer();
 
-        /**
-         * Activates the specified render target.
-         * After calling this method all rendering will go into the specified render target.
-         * @param target Render target. If set to `nullptr`, the following rendering commands will be discarded
-         * until valid render target will be set.
-         */
-        virtual void setRenderTarget(IRenderTarget* target) = 0;
+        Ptr<IViewport> createViewport(IViewportConfiguration* configuration, IViewportDelegate* delegate) override;
     };
 }

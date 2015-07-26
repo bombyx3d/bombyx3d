@@ -23,6 +23,9 @@
 #pragma once
 #include "core/utility/debug.h"
 
+namespace Engine
+{
+
 /**
  * Deletes copy and move constructors and assignment operators in a class or struct.
  *
@@ -75,9 +78,47 @@
  * };
  * @endcode
  *
- * @see @ref Z_CUSTOM_IMPLEMENTATION, @ref Z_INTERFACE, @ref Z_SINGLETON_INTERFACE.
+ * @see @ref Z_SINGLETON_IMPLEMENTATION, @ref Z_CUSTOM_IMPLEMENTATION, @ref Z_INTERFACE.
  */
 #define Z_IMPLEMENTATION(NAME) \
+    /** @cond */ \
+    Z_DISABLE_COPY(NAME) \
+    public: \
+        _Z_DECLARE_QUERY_INTERFACE_METHODS() \
+    /** @endcond */ \
+    public:
+
+/**
+ * Helper macro for singleton interface implementations.
+ *
+ * Instances of singletons are automatically constructed on the program startup and can be later queried
+ * from the engine using the @ref Core::querySingleton method.
+ *
+ * Singleton implementations should have a public constructor that accepts no arguments.
+ *
+ * If multiple singletons implement the same interface, all of them will be constructed but only one of them
+ * will be accessible through the @ref Core::querySingleton method (it is indeterminate which one of them).
+ *
+ * Singletons are constructed very early at the startup process and should not access any other parts of
+ * the engine in their constructors except the @ref Core class.
+ *
+ * @param NAME Name of the implementation class.
+ *
+ * @note This macro resets class' current protection level to `public`.
+ *
+ * Example usage:
+ * @code{.cpp}
+ * class UnknownImpl : public IUnknown
+ * {
+ *     Z_SINGLETON_IMPLEMENTATION(UnknownImpl)
+ *
+ *     // ...
+ * };
+ * @endcode
+ *
+ * @see @ref Z_IMPLEMENTATION, @ref Z_CUSTOM_IMPLEMENTATION, @ref Z_INTERFACE.
+ */
+#define Z_SINGLETON_IMPLEMENTATION(NAME) \
     /** @cond */ \
     Z_DISABLE_COPY(NAME) \
     public: \
@@ -118,7 +159,7 @@
  * };
  * @endcode
  *
- * @see @ref Z_IMPLEMENTATION, @ref Z_INTERFACE, @ref Z_SINGLETON_INTERFACE.
+ * @see @ref Z_IMPLEMENTATION, @ref Z_SINGLETON_IMPLEMENTATION, @ref Z_INTERFACE.
  */
 #define Z_CUSTOM_IMPLEMENTATION(NAME) \
     /** @cond */ \
@@ -146,7 +187,7 @@
  * };
  * @endcode
  *
- * @see @ref Z_SINGLETON_INTERFACE, @ref Z_IMPLEMENTATION, @ref Z_CUSTOM_IMPLEMENTATION.
+ * @see @ref Z_IMPLEMENTATION, @ref Z_SINGLETON_IMPLEMENTATION, @ref Z_CUSTOM_IMPLEMENTATION.
  */
 #define Z_INTERFACE(NAME) \
     /** @cond */ \
@@ -155,51 +196,6 @@
         NAME() = default; \
         virtual ~NAME() = default; \
     public: \
-        _Z_DECLARE_QUERY_INTERFACE_METHODS() \
-    /** @endcond */ \
-    public:
-
-/**
- * Helper macro for singleton interfaces.
- * Use this macro to add constructor, destructor and `instance` method to the interface.
- *
- * @param NAME Name of the interface.
- *
- * @note This macro resets class' current protection level to `public`.
- *
- * Example usage:
- * @code{.cpp}
- * class ISingletonInterface : public IUnknown
- * {
- *     Z_SINGLETON_INTERFACE(ISingletonInterface)
- *
- *     // ...
- * };
- * @endcode
- */
-#define Z_SINGLETON_INTERFACE(NAME) \
-    /** @cond */ \
-    Z_DISABLE_COPY(NAME) \
-    private: \
-        static NAME*& instancePtr() { \
-            static NAME* instance;\
-            return instance; \
-        } \
-    protected: \
-        NAME() { \
-            Z_CHECK(NAME::instancePtr() == nullptr); \
-            NAME::instancePtr() = this; \
-        } \
-        virtual ~NAME() { \
-            Z_CHECK(NAME::instancePtr() == this); \
-            NAME::instancePtr() = nullptr; \
-        } \
-    public: \
-        static NAME& instance() \
-        { \
-            Z_ASSERT(NAME::instancePtr() != nullptr); \
-            return *NAME::instancePtr(); \
-        } \
         _Z_DECLARE_QUERY_INTERFACE_METHODS() \
     /** @endcond */ \
     public:
@@ -214,3 +210,5 @@
 #else
  #define Z_THREADLOCAL __thread
 #endif
+
+}

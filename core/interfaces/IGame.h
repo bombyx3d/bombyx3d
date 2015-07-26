@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,33 +22,14 @@
 
 #pragma once
 #include "core/interfaces/IUnknown.h"
-#include "core/interfaces/render/IViewport.h"
-#include "core/interfaces/render/IViewportConfiguration.h"
-#include "core/interfaces/render/IViewportDelegate.h"
-#include "core/utility/Ptr.h"
+#include "core/Core.h"
 
 namespace Engine
 {
-    /** Interface to the renderer. */
-    class IRenderer : public IUnknown
+    /** Interface for game logic. */
+    class IGame : public IUnknown
     {
     public:
-        Z_INTERFACE(IRenderer)
-
-        /**
-         * Creates a viewport.
-         * @param configuration Desired viewport configuration.
-         * @param delegate Delegate for the viewport.
-         * @return Newly created viewport.
-         */
-        virtual Ptr<IViewport> createViewport(IViewportConfiguration* configuration, IViewportDelegate* delegate) = 0;
-
-        /**
-         * Activates the specified render target.
-         * After calling this method all rendering will go into the specified render target.
-         * @param target Render target. If set to `nullptr`, the following rendering commands will be discarded
-         * until valid render target will be set.
-         */
-        virtual void setRenderTarget(IRenderTarget* target) = 0;
+        Z_INTERFACE(IGame)
     };
 }

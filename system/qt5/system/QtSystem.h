@@ -21,39 +21,19 @@
  */
 
 #pragma once
-#include "core/interfaces/IUnknown.h"
-#include "core/interfaces/IViewport.h"
-#include "core/interfaces/IViewportDelegate.h"
-#include "core/utility/Ptr.h"
+#include "core/interfaces/system/ISystem.h"
 
 namespace Engine
 {
-    /** Interface to the operating system API. */
-    class ISystem : public IUnknown
+    /** Implementation of @ref ISystem for Qt5. */
+    class QtSystem : public ISystem
     {
     public:
-        Z_SINGLETON_INTERFACE(ISystem)
+        Z_SINGLETON_IMPLEMENTATION(QtSystem)
 
-      #ifdef DOXYGEN
-        /**
-         * Retrieves reference to the instance of the operating system API wrapper.
-         * @return Reference to the instance of the operating system API wrapper.
-         */
-        static ISystem& instance();
-      #endif
+        /** Constructor. */
+        QtSystem();
 
-        /**
-         * Creates new viewport.
-         * @param viewportSettings Desired settings of the viewport.
-         * @note Settings passed to this method are hints. Engine will do its best to enforce provided
-         * values, but operating system has the power to override any of them.
-         * @param delegate Viewport delegate.
-         * @return Pointer to the viewport or `nullptr` if error has occured.
-         */
-        virtual Ptr<IViewport> createViewport(const ViewportSettings& viewportSettings,
-            const Ptr<IViewportDelegate>& delegate) = 0;
-
-        /** Runs the event loop. */
-        virtual void runEventLoop() = 0;
+        int runEventLoop() override;
     };
 }

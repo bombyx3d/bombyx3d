@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,33 +19,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "QtSystem.h"
+#include "../render/QtOpenGLES2Renderer.h"
+#include "core/Core.h"
+#include "core/utility/debug.h"
+#include <QApplication>
 
-#pragma once
-#include <glm/glm.hpp>
-
-#define Z_GAME_CLASS(CLASS) \
-    ::Z::Game* ::Z::Game::create() { \
-        ::Z::Game* game = new ::CLASS; \
-        return game; \
+namespace Engine
+{
+    QtSystem::QtSystem()
+    {
+        Core::instance().addSingleton(new QtOpenGLES2Renderer());
     }
 
-namespace Z
-{
-    class Game
+    int QtSystem::runEventLoop()
     {
-    public:
-        Game() = default;
-        virtual ~Game() = default;
-
-        static Game* create();
-
-        virtual bool initialize() = 0;
-        virtual void shutdown() = 0;
-        virtual void runFrame(double time) = 0;
-
-        virtual void onPointerPressed(int id, const glm::vec2& pos);
-        virtual void onPointerMoved(int id, const glm::vec2& pos);
-        virtual void onPointerReleased(int id, const glm::vec2& pos);
-        virtual void onPointerCancelled(int id, const glm::vec2& pos);
-    };
+        return qApp->exec();
+    }
 }

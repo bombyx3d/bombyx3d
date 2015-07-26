@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "QtOpenGLWindow.h"
+#include "QtOpenGLViewport.h"
 #include "core/utility/debug.h"
 #include <QResizeEvent>
 #include <QKeyEvent>
@@ -29,19 +29,20 @@
 
 namespace Engine
 {
-    QtOpenGLWindow::QtOpenGLWindow(const ViewportSettings& viewportSettings, const Ptr<IViewportDelegate>& delegateInstance)
-        : m_Delegate(delegateInstance)
+    QtOpenGLViewport::QtOpenGLViewport(IRenderer* r, IViewportConfiguration* conf, IViewportDelegate* d)
+        : m_Delegate(d)
+        , m_Renderer(r)
         , m_RenderThread(this, m_Delegate)
     {
         std::atomic_store_explicit(&m_ViewportWidth, 0, std::memory_order_seq_cst);
         std::atomic_store_explicit(&m_ViewportHeight, 0, std::memory_order_seq_cst);
 
         QRect desktopGeometry = QDesktopWidget().availableGeometry();
-        int windowWidth = viewportSettings.desiredWidth();
-        int windowHeight = viewportSettings.desiredHeight();
+        int windowWidth = conf->desiredWidth();
+        int windowHeight = conf->desiredHeight();
         bool windowWidthValid = (windowWidth > 0 && windowWidth <= desktopGeometry.width());
         bool windowHeightValid = (windowHeight > 0 && windowHeight <= desktopGeometry.height());
-        if (viewportSettings.fullScreen() || !windowWidthValid || !windowHeightValid) {
+        if (conf->desiredFullScreen() || !windowWidthValid || !windowHeightValid) {
             windowWidth = desktopGeometry.width();
             windowHeight = desktopGeometry.height();
         }
@@ -57,35 +58,35 @@ namespace Engine
         openGLFormat.setDoubleBuffer(true);
         openGLFormat.setSwapInterval(1);
 
-        if (viewportSettings.desiredColorBits() >= 32) {
+        if (conf->desiredColorBits() >= 32) {
             openGLFormat.setRedBufferSize(8);
             openGLFormat.setGreenBufferSize(8);
             openGLFormat.setBlueBufferSize(8);
             openGLFormat.setAlphaBufferSize(8);
-        } else if (viewportSettings.desiredColorBits() >= 24) {
+        } else if (conf->desiredColorBits() >= 24) {
             openGLFormat.setRedBufferSize(8);
             openGLFormat.setGreenBufferSize(8);
             openGLFormat.setBlueBufferSize(8);
             openGLFormat.setAlphaBufferSize(0);
-        } else if (viewportSettings.desiredColorBits() >= 16) {
+        } else if (conf->desiredColorBits() >= 16) {
             openGLFormat.setRedBufferSize(5);
             openGLFormat.setGreenBufferSize(6);
             openGLFormat.setBlueBufferSize(5);
             openGLFormat.setAlphaBufferSize(0);
-        } else if (viewportSettings.desiredColorBits() >= 15) {
+        } else if (conf->desiredColorBits() >= 15) {
             openGLFormat.setRedBufferSize(5);
             openGLFormat.setGreenBufferSize(5);
             openGLFormat.setBlueBufferSize(5);
             openGLFormat.setAlphaBufferSize(0);
         }
 
-        int depthBits = viewportSettings.desiredDepthBits();
+        int depthBits = conf->desiredDepthBits();
         if (depthBits == 0)
             openGLFormat.setDepth(false);
         else
             openGLFormat.setDepthBufferSize(depthBits);
 
-        int stencilBits = viewportSettings.desiredStencilBits();
+        int stencilBits = conf->desiredStencilBits();
         if (stencilBits == 0)
             openGLFormat.setStencil(false);
         else
@@ -94,23 +95,28 @@ namespace Engine
         setFormat(openGLFormat);
     }
 
-    QtOpenGLWindow::~QtOpenGLWindow()
+    QtOpenGLViewport::~QtOpenGLViewport()
     {
         m_RenderThread.postShutdown();
         m_RenderThread.wait();
     }
 
-    int QtOpenGLWindow::viewportWidth() const
+    int QtOpenGLViewport::viewportWidth() const
     {
         return std::atomic_load_explicit(&m_ViewportWidth, std::memory_order_relaxed);
     }
 
-    int QtOpenGLWindow::viewportHeight() const
+    int QtOpenGLViewport::viewportHeight() const
     {
         return std::atomic_load_explicit(&m_ViewportHeight, std::memory_order_relaxed);
     }
 
-    void QtOpenGLWindow::resizeEvent(QResizeEvent* e)
+    IRenderer& QtOpenGLViewport::renderer()
+    {
+        return *m_Renderer;
+    }
+
+    void QtOpenGLViewport::resizeEvent(QResizeEvent* e)
     {
         if (m_Initialized) {
             int newWidth = e->size().width();
@@ -121,7 +127,7 @@ namespace Engine
         }
     }
 
-    void QtOpenGLWindow::paintEvent(QPaintEvent*)
+    void QtOpenGLViewport::paintEvent(QPaintEvent*)
     {
         if (!m_Initialized && !m_InitializationFailed) {
             if (!m_RenderThread.start(width(), height())) {
@@ -132,19 +138,19 @@ namespace Engine
         }
     }
 
-    void QtOpenGLWindow::showEvent(QShowEvent*)
+    void QtOpenGLViewport::showEvent(QShowEvent*)
     {
         if (m_Initialized)
             m_RenderThread.resume();
     }
 
-    void QtOpenGLWindow::hideEvent(QHideEvent*)
+    void QtOpenGLViewport::hideEvent(QHideEvent*)
     {
         if (m_Initialized)
             m_RenderThread.suspend();
     }
 
-    void QtOpenGLWindow::closeEvent(QCloseEvent*)
+    void QtOpenGLViewport::closeEvent(QCloseEvent*)
     {
         if (m_Initialized) {
             m_RenderThread.postShutdown();
@@ -152,7 +158,7 @@ namespace Engine
         }
     }
 
-    void QtOpenGLWindow::mousePressEvent(QMouseEvent* e)
+    void QtOpenGLViewport::mousePressEvent(QMouseEvent* e)
     {
         if (m_Initialized && e->button() == Qt::LeftButton) {
             auto delegateInstance = m_Delegate;
@@ -164,7 +170,7 @@ namespace Engine
         }
     }
 
-    void QtOpenGLWindow::mouseMoveEvent(QMouseEvent* e)
+    void QtOpenGLViewport::mouseMoveEvent(QMouseEvent* e)
     {
         if (m_Initialized) {
             auto delegateInstance = m_Delegate;
@@ -176,7 +182,7 @@ namespace Engine
         }
     }
 
-    void QtOpenGLWindow::mouseReleaseEvent(QMouseEvent* e)
+    void QtOpenGLViewport::mouseReleaseEvent(QMouseEvent* e)
     {
         if (m_Initialized && e->button() == Qt::LeftButton) {
             auto delegateInstance = m_Delegate;
@@ -188,7 +194,7 @@ namespace Engine
         }
     }
 
-    void QtOpenGLWindow::keyPressEvent(QKeyEvent*)
+    void QtOpenGLViewport::keyPressEvent(QKeyEvent*)
     {
         if (m_Initialized) {
             /*
@@ -202,7 +208,7 @@ namespace Engine
         }
     }
 
-    void QtOpenGLWindow::keyReleaseEvent(QKeyEvent*)
+    void QtOpenGLViewport::keyReleaseEvent(QKeyEvent*)
     {
         if (m_Initialized) {
             /*

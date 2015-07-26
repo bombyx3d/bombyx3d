@@ -22,33 +22,19 @@
 
 #pragma once
 #include "core/interfaces/IUnknown.h"
-#include "core/interfaces/render/IViewport.h"
-#include "core/interfaces/render/IViewportConfiguration.h"
-#include "core/interfaces/render/IViewportDelegate.h"
-#include "core/utility/Ptr.h"
 
 namespace Engine
 {
-    /** Interface to the renderer. */
-    class IRenderer : public IUnknown
+    /** Interface to the operating system API. */
+    class ISystem : public IUnknown
     {
     public:
-        Z_INTERFACE(IRenderer)
+        Z_INTERFACE(ISystem)
 
         /**
-         * Creates a viewport.
-         * @param configuration Desired viewport configuration.
-         * @param delegate Delegate for the viewport.
-         * @return Newly created viewport.
+         * Runs the event loop.
+         * @return Exit code.
          */
-        virtual Ptr<IViewport> createViewport(IViewportConfiguration* configuration, IViewportDelegate* delegate) = 0;
-
-        /**
-         * Activates the specified render target.
-         * After calling this method all rendering will go into the specified render target.
-         * @param target Render target. If set to `nullptr`, the following rendering commands will be discarded
-         * until valid render target will be set.
-         */
-        virtual void setRenderTarget(IRenderTarget* target) = 0;
+        virtual int runEventLoop() = 0;
     };
 }

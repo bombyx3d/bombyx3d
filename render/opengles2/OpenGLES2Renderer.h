@@ -21,22 +21,18 @@
  */
 
 #pragma once
-#include "core/interfaces/ISystem.h"
+#include "core/interfaces/render/IRenderer.h"
 
 namespace Engine
 {
-    /** Implementation of @ref ISystem for Qt5. */
-    class QtSystem : public ISystem
+    /** An OpenGL ES 2.0 renderer. */
+    class OpenGLES2Renderer : public IRenderer
     {
     public:
-        Z_IMPLEMENTATION(QtSystem)
+        Z_IMPLEMENTATION(OpenGLES2Renderer)
 
-        /** Constructor. */
-        QtSystem();
+        OpenGLES2Renderer();
 
-        Ptr<IViewport> createViewport(const ViewportSettings& viewportSettings,
-            const Ptr<IViewportDelegate>& delegate) override;
-
-        void runEventLoop() override;
+        void setRenderTarget(IRenderTarget* target) override;
     };
 }

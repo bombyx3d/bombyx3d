@@ -23,7 +23,7 @@
 #pragma once
 #include "core/utility/FunctionQueue.h"
 #include "core/utility/Ptr.h"
-#include "core/interfaces/IViewportDelegate.h"
+#include "core/interfaces/render/IViewportDelegate.h"
 #include <atomic>
 #include <future>
 #include <cstdint>

@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "core/Core.h"
 #include <QApplication>
 
 int main(int argc, char** argv)
@@ -27,7 +28,7 @@ int main(int argc, char** argv)
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
     QApplication app(argc, argv);
 
-    
+    Engine::Core::run();
 
-    return app.exec();
+    return 0;
 }

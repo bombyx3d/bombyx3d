@@ -57,6 +57,19 @@ namespace Engine
         }
     };
 
+    /** @cond */
+    namespace Internal
+    {
+        template <class TYPE> struct TypeID
+        {
+            static Engine::TypeID instance() {
+                static char id;
+                return Engine::TypeID{ &id };
+            }
+        };
+    };
+    /** @endcond */
+
     /**
      * Retrieves an unique identifier representing the specified data type.
      * @tparam TYPE Data type.
@@ -64,8 +77,7 @@ namespace Engine
      */
     template <class TYPE> static TypeID typeOf()
     {
-        static char id;
-        return TypeID{ &id };
+        return Internal::TypeID<TYPE>::instance();
     }
 }
 

@@ -26,20 +26,6 @@
 
 namespace Engine
 {
-    void* QtSystem::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<QtSystem>())
-            return this;
-        return ISystem::queryInterface(typeID);
-    }
-
-    void* QtOpenGLWindow::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<QtOpenGLWindow>())
-            return this;
-        return IViewport::queryInterface(typeID);
-    }
-
     void* QtFileReader::queryInterface(TypeID typeID)
     {
         if (typeID == typeOf<QtFileReader>())
