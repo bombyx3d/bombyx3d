@@ -21,38 +21,41 @@
  */
 
 #pragma once
-#include "core/interfaces/IFileReader.h"
+#include "core/interfaces/io/IInputStream.h"
+#include "core/io/files/StaticMemoryFile.h"
 #include <string>
-#include <mutex>
-#include <cstdio>
 
 namespace Engine
 {
-    /** An implementation of @ref IFileReader using classic stdio `FILE*`. */
-    class StdioFileReader : public IFileReader
+    /** An implementation of @ref IInputStream based on static data. */
+    class StaticMemoryInputStream : public IInputStream, public StaticMemoryFile
     {
     public:
-        Z_IMPLEMENTATION(StdioFileReader)
+        Z_IMPLEMENTATION(StaticMemoryInputStream)
 
         /**
          * Constructor.
+         * @param data Pointer to the data.
+         * @param length Length of the data.
          * @param fileName File name.
-         * @param fileHandle File handle. This class takes ownership of this handle and will close it as appropriate.
          */
-        StdioFileReader(const std::string& fileName, FILE* fileHandle);
+        StaticMemoryInputStream(const void* data, size_t length, const std::string& fileName = "<memory>");
 
         /** Destructor. */
-        ~StdioFileReader();
+        ~StaticMemoryInputStream() = default;
 
         const std::string& name() const override;
+        const void* rawDataPointer() const override;
+        size_t rawDataSize() const override;
+        bool atEnd() const override;
+        uint64_t bytesAvailable() const override;
         uint64_t size() const override;
+        bool skip(size_t count) override;
+        size_t read(void* buffer, size_t bytesToRead) override;
         bool read(uint64_t offset, void* buffer, size_t bytesToRead) override;
 
     private:
-        std::mutex m_Mutex;             /**< Mutex. */
-        std::string m_Name;             /**< File name. */
-        FILE* m_Handle;                 /**< File handle. */
-        uint64_t m_Size;                /**< File size. */
-        uint64_t m_Offset;              /**< Current position in the file. */
+        size_t m_Offset;            /**< Current offset from the beginning of stream. */
+        size_t m_BytesLeft;         /**< Number of bytes left left in stream. */
     };
 }

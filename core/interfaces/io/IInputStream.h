@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "core/interfaces/IStream.h"
+#include "core/interfaces/io/IStream.h"
 #include <string>
 #include <vector>
 #include <cstdint>
@@ -69,19 +69,5 @@ namespace Engine
          * @return Number of bytes actually read.
          */
         virtual size_t read(void* buffer, size_t bytesToRead) = 0;
-
-        /**
-         * Reads single line of text from stream.
-         * This method interpretes `LF` and `CRLF` as line separators.
-         * @param includeEolMarker Set to `true` to include '\n' into the read string.
-         * @return Read string.
-         */
-        virtual std::string readLine(bool includeEolMarker);
-
-        /**
-         * Reads all remaining bytes from stream.
-         * @return Vector of bytes.
-         */
-        virtual std::vector<char> readAll();
     };
 }

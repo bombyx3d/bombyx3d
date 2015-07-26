@@ -22,17 +22,14 @@
 
 #pragma once
 #include "core/utility/Ptr.h"
-#include "core/interfaces/IFileSystem.h"
+#include "core/interfaces/io/IFileSystem.h"
 #include <mutex>
 #include <vector>
 #include <memory>
 
 namespace Engine
 {
-    /**
-     * A list of filesystems.
-     * @see @ref Engine::ICore::registerFileSystem.
-     */
+    /** A virtual filesystem combining multiple other filesystems. */
     class FileSystemList : public IFileSystem
     {
     public:

@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+﻿/*
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,20 +19,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "IInputStream.h"
-#include "core/utility/debug.h"
+#include "io.h"
 #include <sstream>
-#include <algorithm>
 
 namespace Engine
 {
-    std::string IInputStream::readLine(bool includeEolMarker)
+    std::string ioReadLine(IInputStream* stream, bool includeEolMarker)
     {
         std::stringstream ss;
 
-        while (!atEnd()) {
+        if (!stream)
+            return ss.str();
+
+        while (!stream->atEnd()) {
             char ch = 0;
-            read(&ch, 1);
+            stream->read(&ch, 1);
             if (ch == '\n') {
                 if (includeEolMarker)
                     ss << ch;
@@ -57,22 +58,25 @@ namespace Engine
         return str;
     }
 
-    std::vector<char> IInputStream::readAll()
+    std::vector<char> ioReadAll(IInputStream* stream)
     {
         std::vector<char> result;
 
-        while (!atEnd()) {
-            uint64_t size = bytesAvailable();
+        if (!stream)
+            return result;
+
+        while (!stream->atEnd()) {
+            uint64_t size = stream->bytesAvailable();
             if (size == 0) {
                 char ch = 0;
-                size_t bytesRead = read(&ch, 1);
+                size_t bytesRead = stream->read(&ch, 1);
                 if (bytesRead > 0)
                     result.push_back(ch);
             } else {
                 size_t offset = result.size();
                 size_t bytesToRead = size_t(size);
                 result.resize(offset + bytesToRead);
-                size_t bytesRead = read(result.data() + offset, bytesToRead);
+                size_t bytesRead = stream->read(result.data() + offset, bytesToRead);
                 if (bytesRead != bytesToRead)
                     result.resize(offset + bytesRead);
             }

@@ -21,41 +21,72 @@
  */
 
 #pragma once
-#include "core/interfaces/IInputStream.h"
-#include "core/io/files/StaticMemoryFile.h"
+#include "core/interfaces/io/IMemoryMappedFile.h"
+#include "core/utility/macros.h"
+#include <cstdint>
 #include <string>
+#include <vector>
 
 namespace Engine
 {
-    /** An implementation of @ref IInputStream based on static data. */
-    class StaticMemoryInputStream : public IInputStream, public StaticMemoryFile
+    /** An in-memory, `std::vector`-based "file". */
+    class MemoryFile : public IMemoryMappedFile
     {
     public:
-        Z_IMPLEMENTATION(StaticMemoryInputStream)
+        Z_IMPLEMENTATION(MemoryFile)
 
         /**
          * Constructor.
-         * @param data Pointer to the data.
-         * @param length Length of the data.
          * @param fileName File name.
          */
-        StaticMemoryInputStream(const void* data, size_t length, const std::string& fileName = "<memory>");
+        explicit MemoryFile(const std::string& fileName = "<memory>");
+
+        /**
+         * Constructor.
+         * @param fileData File data.
+         * @param fileName File name.
+         */
+        explicit MemoryFile(std::vector<uint8_t>&& fileData, const std::string& fileName = "<memory>");
 
         /** Destructor. */
-        ~StaticMemoryInputStream() = default;
+        ~MemoryFile();
+
+        /**
+         * Retrieves reference to data.
+         * @return Reference to data.
+         */
+        std::vector<uint8_t>& data()
+        {
+            return m_Data;
+        }
+
+        /**
+         * Retrieves reference to data.
+         * @return Reference to data.
+         */
+        const std::vector<uint8_t>& data() const
+        {
+            return m_Data;
+        }
+
+        /**
+         * Retrieves reference to data.
+         * @return Reference to data.
+         */
+        const std::vector<uint8_t>& constData() const
+        {
+            return m_Data;
+        }
+
+        size_t rawDataSize() const override;
+        const void* rawDataPointer() const override;
 
         const std::string& name() const override;
-        const void* rawDataPointer() const override;
-        size_t rawDataSize() const override;
-        bool atEnd() const override;
-        uint64_t bytesAvailable() const override;
         uint64_t size() const override;
-        bool skip(size_t count) override;
-        size_t read(void* buffer, size_t bytesToRead) override;
         bool read(uint64_t offset, void* buffer, size_t bytesToRead) override;
 
     private:
-        size_t m_Offset;            /**< Current offset from the beginning of stream. */
-        size_t m_BytesLeft;         /**< Number of bytes left left in stream. */
+        std::string m_Name;             /**< File name. */
+        std::vector<uint8_t> m_Data;    /**< File data. */
     };
 }

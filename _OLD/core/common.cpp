@@ -20,15 +20,9 @@
  * THE SOFTWARE.
  */
 #include "interfaces/IUnknown.h"
-#include "interfaces/IBlob.h"
 #include "interfaces/ICore.h"
 #include "interfaces/IEvent.h"
-#include "interfaces/IFileReader.h"
-#include "interfaces/IFileSystem.h"
-#include "interfaces/IMemoryMappedFile.h"
 #include "interfaces/ISystem.h"
-#include "interfaces/IStream.h"
-#include "interfaces/IInputStream.h"
 #include "interfaces/IImage.h"
 #include "interfaces/IImageFormatConverter.h"
 #include "interfaces/ITextureImage.h"
@@ -40,22 +34,10 @@
 #include "interfaces/IViewportDelegate.h"
 #include "image/SimpleImage.h"
 #include "resource/TextureSourceFile.h"
-#include "io/FileSystemList.h"
-#include "io/files/MemoryFile.h"
-#include "io/files/StaticMemoryFile.h"
-#include "io/files/StdioFileReader.h"
-#include "io/streams/StaticMemoryInputStream.h"
 #include "private/Core.h"
 
 namespace Engine
 {
-    void* IBlob::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<IBlob>())
-            return this;
-        return IUnknown::queryInterface(typeID);
-    }
-
     void* ICore::queryInterface(TypeID typeID)
     {
         if (typeID == typeOf<ICore>())
@@ -70,51 +52,11 @@ namespace Engine
         return IUnknown::queryInterface(typeID);
     }
 
-    void* IFileReader::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<IFileReader>())
-            return this;
-        return IUnknown::queryInterface(typeID);
-    }
-
-    void* IFileSystem::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<IFileSystem>())
-            return this;
-        return IUnknown::queryInterface(typeID);
-    }
-
-    void* IMemoryMappedFile::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<IMemoryMappedFile>())
-            return this;
-
-        void* interface = IBlob::queryInterface(typeID);
-        if (interface)
-            return interface;
-
-        return IFileReader::queryInterface(typeID);
-    }
-
     void* ISystem::queryInterface(TypeID typeID)
     {
         if (typeID == typeOf<ISystem>())
             return this;
         return IUnknown::queryInterface(typeID);
-    }
-
-    void* IStream::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<IStream>())
-            return this;
-        return IUnknown::queryInterface(typeID);
-    }
-
-    void* IInputStream::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<IInputStream>())
-            return this;
-        return IStream::queryInterface(typeID);
     }
 
     void* IImage::queryInterface(TypeID typeID)
@@ -211,45 +153,5 @@ namespace Engine
         if (typeID == typeOf<TextureSourceFile>())
             return this;
         return ITextureSource::queryInterface(typeID);
-    }
-
-    void* FileSystemList::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<FileSystemList>())
-            return this;
-        return IFileSystem::queryInterface(typeID);
-    }
-
-    void* MemoryFile::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<MemoryFile>())
-            return this;
-        return IMemoryMappedFile::queryInterface(typeID);
-    }
-
-    void* StaticMemoryFile::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<StaticMemoryFile>())
-            return this;
-        return IMemoryMappedFile::queryInterface(typeID);
-    }
-
-    void* StdioFileReader::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<StdioFileReader>())
-            return this;
-        return IFileReader::queryInterface(typeID);
-    }
-
-    void* StaticMemoryInputStream::queryInterface(TypeID typeID)
-    {
-        if (typeID == typeOf<StaticMemoryInputStream>())
-            return this;
-
-        void* interface = IInputStream::queryInterface(typeID);
-        if (interface)
-            return interface;
-
-        return StaticMemoryFile::queryInterface(typeID);
     }
 }

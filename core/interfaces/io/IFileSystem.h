@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,22 +21,34 @@
  */
 
 #pragma once
-#include "core/interfaces/IBlob.h"
-#include "core/interfaces/IFileReader.h"
+#include "core/utility/Ptr.h"
+#include "core/interfaces/IUnknown.h"
+#include "core/interfaces/io/IFileReader.h"
+#include <string>
 
 namespace Engine
 {
-    /** An interface to the memory-mapped file. */
-    class IMemoryMappedFile : public IBlob, public IFileReader
+    /**
+     * Base interface for filesystems.
+     * @see @ref ICore::registerFileSystem.
+     */
+    class IFileSystem : public IUnknown
     {
     public:
-        Z_INTERFACE(IMemoryMappedFile)
+        Z_INTERFACE(IFileSystem)
 
-        virtual const std::string& name() const override = 0;
-        virtual uint64_t size() const override = 0;
-        virtual bool read(uint64_t offset, void* buffer, size_t bytesToRead) override = 0;
+        /**
+         * Checks whether the specified file exists.
+         * @param path Path to the file.
+         * @return `true` if file exists, otherwise returns `false`.
+         */
+        virtual bool fileExists(const std::string& path) = 0;
 
-        virtual const void* rawDataPointer() const override = 0;
-        virtual size_t rawDataSize() const override = 0;
+        /**
+         * Opens an existing file.
+         * @param path Path to the file.
+         * @return Pointer to an instance of @ref Engine::IFileReader or `nullptr` if file does not exist.
+         */
+        virtual Ptr<IFileReader> openFile(const std::string& path) = 0;
     };
 }

@@ -21,72 +21,39 @@
  */
 
 #pragma once
-#include "core/interfaces/IMemoryMappedFile.h"
+#include "core/interfaces/io/IMemoryMappedFile.h"
 #include "core/utility/macros.h"
-#include <cstdint>
 #include <string>
 #include <vector>
 
 namespace Engine
 {
-    /** An in-memory, `std::vector`-based file. */
-    class MemoryFile : public IMemoryMappedFile
+    /** A "file" based on static data. */
+    class StaticMemoryFile : public IMemoryMappedFile
     {
     public:
-        Z_IMPLEMENTATION(MemoryFile)
+        Z_IMPLEMENTATION(StaticMemoryFile)
 
         /**
          * Constructor.
-         * @param fileName File name.
-         */
-        explicit MemoryFile(const std::string& fileName = "<memory>");
-
-        /**
-         * Constructor.
-         * @param fileData File data.
-         * @param fileName File name.
-         */
-        explicit MemoryFile(std::vector<uint8_t>&& fileData, const std::string& fileName = "<memory>");
+         * @param data Pointer to the data.
+         * @param length Length of the data.
+          *@param fileName File name.
+          */
+        StaticMemoryFile(const void* data, size_t length, const std::string& fileName = "<memory>");
 
         /** Destructor. */
-        ~MemoryFile();
-
-        /**
-         * Retrieves reference to data.
-         * @return Reference to data.
-         */
-        std::vector<uint8_t>& data()
-        {
-            return m_Data;
-        }
-
-        /**
-         * Retrieves reference to data.
-         * @return Reference to data.
-         */
-        const std::vector<uint8_t>& data() const
-        {
-            return m_Data;
-        }
-
-        /**
-         * Retrieves reference to data.
-         * @return Reference to data.
-         */
-        const std::vector<uint8_t>& constData() const
-        {
-            return m_Data;
-        }
-
-        size_t rawDataSize() const override;
-        const void* rawDataPointer() const override;
+        ~StaticMemoryFile();
 
         const std::string& name() const override;
+        size_t rawDataSize() const override;
+        const void* rawDataPointer() const override;
         uint64_t size() const override;
         bool read(uint64_t offset, void* buffer, size_t bytesToRead) override;
 
     private:
-        std::string m_Name;             /**< File name. */
-        std::vector<uint8_t> m_Data;    /**< File data. */
+        std::string m_Name;         /**< File name. */
+        const char* m_Data;         /**< Pointer to the data. */
+        size_t m_Length;            /**< Size of the data. */
     };
 }
