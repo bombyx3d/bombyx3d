@@ -20,14 +20,18 @@
  * THE SOFTWARE.
  */
 #include "QtSystem.h"
-#include "../render/QtOpenGLES2Renderer.h"
-#include "core/Core.h"
-#include "core/utility/debug.h"
+#include "system/qt5/render/QtOpenGLES2Renderer.h"
+#include "system/qt5/render/QtOpenGLViewport.h"
 
 namespace Engine
 {
     QtSystem::QtSystem()
     {
-        Core::instance().addSingleton(new QtOpenGLES2Renderer());
+    }
+
+    Ptr<IViewport> QtSystem::createViewport(IViewportConfiguration* configuration, IViewportDelegate* delegate)
+    {
+        Ptr<IRenderer> renderer = new QtOpenGLES2Renderer();
+        return new QtOpenGLViewport(renderer, configuration, delegate);
     }
 }

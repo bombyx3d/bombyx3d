@@ -24,10 +24,6 @@
 
 namespace Engine
 {
-    QtSystemEventLoop::QtSystemEventLoop()
-    {
-    }
-
     int QtSystemEventLoop::runEventLoop()
     {
         return qApp->exec();

@@ -20,19 +20,10 @@
  * THE SOFTWARE.
  */
 #include "QtOpenGLES2Renderer.h"
-#include "QtOpenGLViewport.h"
 
 namespace Engine
 {
     QtOpenGLES2Renderer::QtOpenGLES2Renderer()
     {
-    }
-
-    Ptr<IViewport> QtOpenGLES2Renderer::createViewport(IViewportConfiguration* configuration,
-        IViewportDelegate* delegate)
-    {
-        Ptr<QtOpenGLViewport> viewport = new QtOpenGLViewport(this, configuration, delegate);
-        viewport->show();
-        return viewport;
     }
 }

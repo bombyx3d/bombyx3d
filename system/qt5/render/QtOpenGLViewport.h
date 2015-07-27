@@ -42,7 +42,7 @@ namespace Engine
          * @param conf Viewport configuration.
          * @param d Viewport delegate.
          */
-        QtOpenGLViewport(IRenderer* r, IViewportConfiguration* conf, IViewportDelegate* d);
+        QtOpenGLViewport(const Ptr<IRenderer>& r, IViewportConfiguration* conf, IViewportDelegate* d);
 
         /** Destructor. */
         ~QtOpenGLViewport();

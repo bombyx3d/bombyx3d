@@ -22,6 +22,10 @@
 
 #pragma once
 #include "core/interfaces/IUnknown.h"
+#include "core/interfaces/render/IViewport.h"
+#include "core/interfaces/render/IViewportConfiguration.h"
+#include "core/interfaces/render/IViewportDelegate.h"
+#include "core/utility/Ptr.h"
 
 namespace Engine
 {
@@ -30,5 +34,13 @@ namespace Engine
     {
     public:
         Z_INTERFACE(ISystem)
+
+        /**
+         * Creates a viewport.
+         * @param configuration Desired viewport configuration.
+         * @param delegate Delegate for the viewport.
+         * @return Newly created viewport.
+         */
+        virtual Ptr<IViewport> createViewport(IViewportConfiguration* configuration, IViewportDelegate* delegate) = 0;
     };
 }

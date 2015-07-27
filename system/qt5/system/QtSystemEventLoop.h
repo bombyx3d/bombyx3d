@@ -32,7 +32,7 @@ namespace Engine
         Z_IMPLEMENTATION(QtSystemEventLoop)
 
         /** Constructor. */
-        QtSystemEventLoop();
+        QtSystemEventLoop() = default;
 
         int runEventLoop() override;
     };

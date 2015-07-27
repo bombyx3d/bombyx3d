@@ -22,7 +22,6 @@
 
 #pragma once
 #include "core/interfaces/IUnknown.h"
-#include "core/interfaces/render/IRenderer.h"
 #include "core/interfaces/system/ISystem.h"
 #include "core/interfaces/system/ISystemEventLoop.h"
 #include "core/utility/TypeID.h"
@@ -58,16 +57,6 @@ namespace Engine
         {
             Z_ASSERT(m_System != nullptr);
             return *m_System;
-        }
-
-        /**
-         * Retrieves an instance of the renderer.
-         * @return Instance of the renderer.
-         */
-        static IRenderer& renderer()
-        {
-            Z_ASSERT(m_Renderer != nullptr);
-            return *m_Renderer;
         }
 
         /**
@@ -109,7 +98,6 @@ namespace Engine
         };
 
         static Core* m_Instance;
-        static IRenderer* m_Renderer;
         static ISystem* m_System;
 
         std::vector<Ptr<IUnknown>> m_SingletonList;

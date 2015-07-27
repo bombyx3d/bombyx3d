@@ -22,9 +22,7 @@
 
 #pragma once
 #include "core/interfaces/IUnknown.h"
-#include "core/interfaces/render/IViewport.h"
-#include "core/interfaces/render/IViewportConfiguration.h"
-#include "core/interfaces/render/IViewportDelegate.h"
+#include "core/interfaces/render/IRenderTarget.h"
 #include "core/utility/Ptr.h"
 
 namespace Engine
@@ -36,17 +34,9 @@ namespace Engine
         Z_INTERFACE(IRenderer)
 
         /**
-         * Creates a viewport.
-         * @param configuration Desired viewport configuration.
-         * @param delegate Delegate for the viewport.
-         * @return Newly created viewport.
-         */
-        virtual Ptr<IViewport> createViewport(IViewportConfiguration* configuration, IViewportDelegate* delegate) = 0;
-
-        /**
          * Activates the specified render target.
          * After calling this method all rendering will go into the specified render target.
-         * @param target Render target. If set to `nullptr`, the following rendering commands will be discarded
+         * @param target Render target. If set to `nullptr`, rendering commands will be discarded
          * until valid render target will be set.
          */
         virtual void setRenderTarget(IRenderTarget* target) = 0;

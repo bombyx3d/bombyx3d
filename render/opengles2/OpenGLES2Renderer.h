@@ -31,6 +31,7 @@ namespace Engine
     public:
         Z_IMPLEMENTATION(OpenGLES2Renderer)
 
+        /** Constructor. */
         OpenGLES2Renderer();
 
         void setRenderTarget(IRenderTarget* target) override;

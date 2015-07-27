@@ -26,7 +26,6 @@
 namespace Engine
 {
     Core* Core::m_Instance;
-    IRenderer* Core::m_Renderer;
     ISystem* Core::m_System;
 
     Core::Core()
@@ -39,7 +38,6 @@ namespace Engine
     Core::~Core()
     {
         Z_ASSERT(m_Instance == this);
-        m_Renderer = nullptr;
         m_System = nullptr;
         m_Instance = nullptr;
     }
@@ -72,9 +70,6 @@ namespace Engine
 
         m_System = core.querySingleton<ISystem>();
         Z_ASSERT(m_System != nullptr);
-
-        m_Renderer = core.querySingleton<IRenderer>();
-        Z_ASSERT(m_Renderer != nullptr);
 
         return eventLoop->runEventLoop();
     }

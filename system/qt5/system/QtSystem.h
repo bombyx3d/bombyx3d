@@ -33,5 +33,7 @@ namespace Engine
 
         /** Constructor. */
         QtSystem();
+
+        Ptr<IViewport> createViewport(IViewportConfiguration* configuration, IViewportDelegate* delegate) override;
     };
 }

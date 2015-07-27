@@ -29,7 +29,7 @@
 
 namespace Engine
 {
-    QtOpenGLViewport::QtOpenGLViewport(IRenderer* r, IViewportConfiguration* conf, IViewportDelegate* d)
+    QtOpenGLViewport::QtOpenGLViewport(const Ptr<IRenderer>& r, IViewportConfiguration* conf, IViewportDelegate* d)
         : m_Delegate(d)
         , m_Renderer(r)
         , m_RenderThread(this, m_Delegate)

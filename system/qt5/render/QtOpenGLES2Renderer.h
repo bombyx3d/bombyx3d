@@ -31,8 +31,7 @@ namespace Engine
     public:
         Z_IMPLEMENTATION(QtOpenGLES2Renderer)
 
+        /** Constructor. */
         QtOpenGLES2Renderer();
-
-        Ptr<IViewport> createViewport(IViewportConfiguration* configuration, IViewportDelegate* delegate) override;
     };
 }
