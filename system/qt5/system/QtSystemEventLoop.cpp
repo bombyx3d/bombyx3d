@@ -19,15 +19,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "QtSystem.h"
-#include "../render/QtOpenGLES2Renderer.h"
-#include "core/Core.h"
-#include "core/utility/debug.h"
+#include "QtSystemEventLoop.h"
+#include <QApplication>
 
 namespace Engine
 {
-    QtSystem::QtSystem()
+    QtSystemEventLoop::QtSystemEventLoop()
     {
-        Core::instance().addSingleton(new QtOpenGLES2Renderer());
+    }
+
+    int QtSystemEventLoop::runEventLoop()
+    {
+        return qApp->exec();
     }
 }

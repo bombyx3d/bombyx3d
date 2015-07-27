@@ -30,11 +30,5 @@ namespace Engine
     {
     public:
         Z_INTERFACE(ISystem)
-
-        /**
-         * Runs the event loop.
-         * @return Exit code.
-         */
-        virtual int runEventLoop() = 0;
     };
 }

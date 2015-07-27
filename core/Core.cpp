@@ -66,7 +66,7 @@ namespace Engine
         return nullptr;
     }
 
-    int Core::run()
+    int Core::run(ISystemEventLoop* eventLoop)
     {
         Core core;
 
@@ -76,6 +76,6 @@ namespace Engine
         m_Renderer = core.querySingleton<IRenderer>();
         Z_ASSERT(m_Renderer != nullptr);
 
-        return m_System->runEventLoop();
+        return eventLoop->runEventLoop();
     }
 }

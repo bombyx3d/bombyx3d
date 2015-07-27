@@ -33,7 +33,5 @@ namespace Engine
 
         /** Constructor. */
         QtSystem();
-
-        int runEventLoop() override;
     };
 }

@@ -19,15 +19,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "QtSystem.h"
-#include "../render/QtOpenGLES2Renderer.h"
-#include "core/Core.h"
-#include "core/utility/debug.h"
+
+#pragma once
+#include "core/interfaces/system/ISystemEventLoop.h"
 
 namespace Engine
 {
-    QtSystem::QtSystem()
+    /** Implementation of @ref ISystemEventLoop for Qt5. */
+    class QtSystemEventLoop : public ISystemEventLoop
     {
-        Core::instance().addSingleton(new QtOpenGLES2Renderer());
-    }
+    public:
+        Z_IMPLEMENTATION(QtSystemEventLoop)
+
+        /** Constructor. */
+        QtSystemEventLoop();
+
+        int runEventLoop() override;
+    };
 }

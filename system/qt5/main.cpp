@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  */
 #include "core/Core.h"
+#include "system/QtSystemEventLoop.h"
 #include <QApplication>
 
 int main(int argc, char** argv)
@@ -28,7 +29,8 @@ int main(int argc, char** argv)
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
     QApplication app(argc, argv);
 
-    Engine::Core::run();
+    Engine::QtSystemEventLoop eventLoop;
+    Engine::Core::run(&eventLoop);
 
     return 0;
 }
