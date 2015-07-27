@@ -20,8 +20,5 @@
 # THE SOFTWARE.
 #
 
-load-plugins: [ 'metacompiler' ]
-import: [ '../libs/glm' ]
-
-header_search_paths: '..'
+import: [ '..' ]
 source_directories: '.'

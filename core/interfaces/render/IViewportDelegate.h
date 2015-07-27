@@ -26,7 +26,7 @@
 namespace Engine
 {
     /** Viewport delegate. */
-    class IViewportDelegate : public IUnknown
+    class IViewportDelegate : public virtual IUnknown
     {
     public:
         Z_INTERFACE(IViewportDelegate)

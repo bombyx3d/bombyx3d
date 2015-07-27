@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
+ * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,21 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "QtSystem.h"
-#include "system/qt5/render/QtOpenGLES2Renderer.h"
-#include "system/qt5/render/QtOpenGLViewport.h"
+
+#pragma once
+#include "core/Game.h"
 
 namespace Engine
 {
-    QtSystem::QtSystem()
+    /** The editor application. */
+    class Editor : public Game
     {
-    }
+    public:
+        Z_SINGLETON_IMPLEMENTATION(Editor)
 
-    Ptr<IViewport> QtSystem::createViewport(IViewportConfiguration* configuration, IViewportDelegate* delegate)
-    {
-        Ptr<IRenderer> renderer = new QtOpenGLES2Renderer();
-        Ptr<QtOpenGLViewport> viewport = new QtOpenGLViewport(renderer, configuration, delegate);
-        viewport->show();
-        return viewport;
-    }
+        /** Constructor. */
+        Editor() = default;
+
+    protected:
+        void onGameDidStart() override;
+        void onGameWillExit() override;
+        void onGameWillSuspend() override;
+        void onGameDidResume() override;
+    };
 }

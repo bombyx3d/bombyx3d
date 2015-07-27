@@ -22,7 +22,5 @@
 
 target-name: Bombyx3D
 
-load-plugins: [ 'file2c', 'metacompiler', 'doxygen' ]
-import: [ 'core', 'system', 'libs/glm' ]
-
-header_search_paths: '.'
+load-plugins: [ 'doxygen' ]
+import: [ 'core', 'system', 'editor' ]

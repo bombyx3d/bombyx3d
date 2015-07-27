@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  */
 #include "Core.h"
+#include "core/interfaces/IGame.h"
 #include "core/utility/debug.h"
 #include <memory>
 
@@ -70,6 +71,10 @@ namespace Engine
 
         m_System = core.querySingleton<ISystem>();
         Z_ASSERT(m_System != nullptr);
+
+        IGame* game = core.querySingleton<IGame>();
+        Z_ASSERT(game != nullptr);
+        game->initialize();
 
         return eventLoop->runEventLoop();
     }

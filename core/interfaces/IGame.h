@@ -27,9 +27,15 @@
 namespace Engine
 {
     /** Interface for game logic. */
-    class IGame : public IUnknown
+    class IGame : public virtual IUnknown
     {
     public:
         Z_INTERFACE(IGame)
+
+        /**
+         * Initializes the game.
+         * This method is called immediately after engine initialization completes.
+         */
+        virtual void initialize() = 0;
     };
 }
