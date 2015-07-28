@@ -71,9 +71,9 @@ Inheritance diagram for Engine::ISystem:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a930037ab71a125ea4be48baf6ccb75f7"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_system.html#a930037ab71a125ea4be48baf6ccb75f7">runEventLoop</a> ()=0</td></tr>
-<tr class="memdesc:a930037ab71a125ea4be48baf6ccb75f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs the event loop.  <a href="#a930037ab71a125ea4be48baf6ccb75f7">More...</a><br/></td></tr>
-<tr class="separator:a930037ab71a125ea4be48baf6ccb75f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a006aa3b4daac7cd0e8e6e4c1c70ebb2e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_engine_1_1_ptr.html">Ptr</a>&lt; <a class="el" href="class_engine_1_1_i_viewport.html">IViewport</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_system.html#a006aa3b4daac7cd0e8e6e4c1c70ebb2e">createViewport</a> (<a class="el" href="class_engine_1_1_i_viewport_configuration.html">IViewportConfiguration</a> *configuration, <a class="el" href="class_engine_1_1_i_viewport_delegate.html">IViewportDelegate</a> *delegate)=0</td></tr>
+<tr class="memdesc:a006aa3b4daac7cd0e8e6e4c1c70ebb2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a viewport.  <a href="#a006aa3b4daac7cd0e8e6e4c1c70ebb2e">More...</a><br/></td></tr>
+<tr class="separator:a006aa3b4daac7cd0e8e6e4c1c70ebb2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad881320f598a1efa3aa809def924343"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_unknown.html#aad881320f598a1efa3aa809def924343">addRef</a> () const </td></tr>
 <tr class="memdesc:aad881320f598a1efa3aa809def924343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increments reference counter for this object.  <a href="#aad881320f598a1efa3aa809def924343">More...</a><br/></td></tr>
 <tr class="separator:aad881320f598a1efa3aa809def924343"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -91,7 +91,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface to the operating system API. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a930037ab71a125ea4be48baf6ccb75f7"></a>
+<a class="anchor" id="a006aa3b4daac7cd0e8e6e4c1c70ebb2e"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -99,10 +99,21 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual int Engine::ISystem::runEventLoop </td>
+          <td class="memname">virtual <a class="el" href="class_engine_1_1_ptr.html">Ptr</a>&lt;<a class="el" href="class_engine_1_1_i_viewport.html">IViewport</a>&gt; Engine::ISystem::createViewport </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="class_engine_1_1_i_viewport_configuration.html">IViewportConfiguration</a> *&#160;</td>
+          <td class="paramname"><em>configuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="class_engine_1_1_i_viewport_delegate.html">IViewportDelegate</a> *&#160;</td>
+          <td class="paramname"><em>delegate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -112,10 +123,17 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Runs the event loop. </p>
-<dl class="section return"><dt>Returns</dt><dd>Exit code. </dd></dl>
+<p>Creates a viewport. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">configuration</td><td>Desired viewport configuration. </td></tr>
+    <tr><td class="paramname">delegate</td><td>Delegate for the viewport. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Newly created viewport. </dd></dl>
 
-<p>Implemented in <a class="el" href="class_engine_1_1_qt_system.html#a4fa1a5c81ed1938f5247b80069760694">Engine::QtSystem</a>.</p>
+<p>Implemented in <a class="el" href="class_engine_1_1_qt_system.html#aa71972e015b4586dafd4fe3c9569b3ba">Engine::QtSystem</a>.</p>
 
 </div>
 </div>

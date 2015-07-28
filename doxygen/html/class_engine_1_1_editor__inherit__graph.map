@@ -1,0 +1,5 @@
+<map id="Engine::Editor" name="Engine::Editor">
+<area shape="rect" id="node2" href="$class_engine_1_1_game.html" title="Base class for games. " alt="" coords="17,160,121,189"/>
+<area shape="rect" id="node4" href="$class_engine_1_1_i_game.html" title="Interface for game logic. " alt="" coords="15,83,124,112"/>
+<area shape="rect" id="node6" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="5,5,133,35"/>
+</map>

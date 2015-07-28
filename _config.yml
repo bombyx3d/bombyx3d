@@ -2,9 +2,11 @@
   - _affine_transform_8h.html 
   - _buffered_input_stream_8h.html 
   - _core_8h.html 
+  - _editor_8h.html 
   - _file_input_stream_8h.html 
   - _file_system_list_8h.html 
   - _function_queue_8h.html 
+  - _game_8h.html 
   - _i_blob_8h.html 
   - _i_file_reader_8h.html 
   - _i_file_system_8h.html 
@@ -15,6 +17,7 @@
   - _i_render_target_8h.html 
   - _i_stream_8h.html 
   - _i_system_8h.html 
+  - _i_system_event_loop_8h.html 
   - _i_unknown_8h.html 
   - _i_viewport_8h.html 
   - _i_viewport_configuration_8h.html 
@@ -29,6 +32,7 @@
   - _qt_open_g_l_render_thread_8h.html 
   - _qt_open_g_l_viewport_8h.html 
   - _qt_system_8h.html 
+  - _qt_system_event_loop_8h.html 
   - _quad_8h.html 
   - _r_e_a_d_m_e_8md.html 
   - _static_memory_file_8h.html 

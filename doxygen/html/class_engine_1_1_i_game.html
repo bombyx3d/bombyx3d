@@ -53,7 +53,7 @@
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="class_engine_1_1_i_game-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Engine::IGame Class Reference</div>  </div>
+<div class="title">Engine::IGame Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -66,11 +66,14 @@ Inheritance diagram for Engine::IGame:</div>
 <div class="dyncontent">
 <div class="center"><img src="class_engine_1_1_i_game__inherit__graph.png" border="0" usemap="#_engine_1_1_i_game_inherit__map" alt="Inheritance graph"/></div>
 <map name="_engine_1_1_i_game_inherit__map" id="_engine_1_1_i_game_inherit__map">
-<area shape="rect" id="node2" href="class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="5,5,133,35"/></map>
+<area shape="rect" id="node5" href="class_engine_1_1_game.html" title="Base class for games. " alt="" coords="17,160,121,189"/><area shape="rect" id="node2" href="class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="5,5,133,35"/><area shape="rect" id="node7" href="class_engine_1_1_editor.html" title="The editor application. " alt="" coords="17,237,121,267"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:abca44304862f442b200f06a119cd652f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_game.html#abca44304862f442b200f06a119cd652f">initialize</a> ()=0</td></tr>
+<tr class="memdesc:abca44304862f442b200f06a119cd652f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the game.  <a href="#abca44304862f442b200f06a119cd652f">More...</a><br/></td></tr>
+<tr class="separator:abca44304862f442b200f06a119cd652f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad881320f598a1efa3aa809def924343"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_unknown.html#aad881320f598a1efa3aa809def924343">addRef</a> () const </td></tr>
 <tr class="memdesc:aad881320f598a1efa3aa809def924343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increments reference counter for this object.  <a href="#aad881320f598a1efa3aa809def924343">More...</a><br/></td></tr>
 <tr class="separator:aad881320f598a1efa3aa809def924343"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -88,6 +91,32 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface for game logic. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="abca44304862f442b200f06a119cd652f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Engine::IGame::initialize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initializes the game. </p>
+<p>This method is called immediately after engine initialization completes. </p>
+
+</div>
+</div>
 <a class="anchor" id="aad881320f598a1efa3aa809def924343"></a>
 <div class="memitem">
 <div class="memproto">

@@ -1,3 +1,5 @@
 <map id="Engine::IGame" name="Engine::IGame">
+<area shape="rect" id="node5" href="$class_engine_1_1_game.html" title="Base class for games. " alt="" coords="17,160,121,189"/>
 <area shape="rect" id="node2" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="5,5,133,35"/>
+<area shape="rect" id="node7" href="$class_engine_1_1_editor.html" title="The editor application. " alt="" coords="17,237,121,267"/>
 </map>

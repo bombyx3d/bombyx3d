@@ -72,10 +72,8 @@ Inheritance diagram for Engine::QtOpenGLES2Renderer:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:accb444bbe15d1eea613c1daab379da8d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_qt_open_g_l_e_s2_renderer.html#accb444bbe15d1eea613c1daab379da8d">QtOpenGLES2Renderer</a> ()</td></tr>
+<tr class="memdesc:accb444bbe15d1eea613c1daab379da8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#accb444bbe15d1eea613c1daab379da8d">More...</a><br/></td></tr>
 <tr class="separator:accb444bbe15d1eea613c1daab379da8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad778819a777b01cbef099e07f8149f9b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_engine_1_1_ptr.html">Ptr</a>&lt; <a class="el" href="class_engine_1_1_i_viewport.html">IViewport</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_qt_open_g_l_e_s2_renderer.html#ad778819a777b01cbef099e07f8149f9b">createViewport</a> (<a class="el" href="class_engine_1_1_i_viewport_configuration.html">IViewportConfiguration</a> *configuration, <a class="el" href="class_engine_1_1_i_viewport_delegate.html">IViewportDelegate</a> *delegate) override</td></tr>
-<tr class="memdesc:ad778819a777b01cbef099e07f8149f9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a viewport.  <a href="#ad778819a777b01cbef099e07f8149f9b">More...</a><br/></td></tr>
-<tr class="separator:ad778819a777b01cbef099e07f8149f9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34f6095e1cb90e84c5d34960f48a7bf1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_open_g_l_e_s2_renderer.html#a34f6095e1cb90e84c5d34960f48a7bf1">setRenderTarget</a> (<a class="el" href="class_engine_1_1_i_render_target.html">IRenderTarget</a> *target) override</td></tr>
 <tr class="memdesc:a34f6095e1cb90e84c5d34960f48a7bf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Activates the specified render target.  <a href="#a34f6095e1cb90e84c5d34960f48a7bf1">More...</a><br/></td></tr>
 <tr class="separator:a34f6095e1cb90e84c5d34960f48a7bf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -109,55 +107,11 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Constructor. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="ad778819a777b01cbef099e07f8149f9b"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_engine_1_1_ptr.html">Ptr</a>&lt;<a class="el" href="class_engine_1_1_i_viewport.html">IViewport</a>&gt; Engine::QtOpenGLES2Renderer::createViewport </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_engine_1_1_i_viewport_configuration.html">IViewportConfiguration</a> *&#160;</td>
-          <td class="paramname"><em>configuration</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_engine_1_1_i_viewport_delegate.html">IViewportDelegate</a> *&#160;</td>
-          <td class="paramname"><em>delegate</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Creates a viewport. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">configuration</td><td>Desired viewport configuration. </td></tr>
-    <tr><td class="paramname">delegate</td><td>Delegate for the viewport. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Newly created viewport. </dd></dl>
-
-<p>Implements <a class="el" href="class_engine_1_1_i_renderer.html#af3881d1f5dc3c1f875665297f794da06">Engine::IRenderer</a>.</p>
-
-</div>
-</div>
 <a class="anchor" id="a34f6095e1cb90e84c5d34960f48a7bf1"></a>
 <div class="memitem">
 <div class="memproto">
@@ -184,7 +138,7 @@ Public Member Functions</h2></td></tr>
 <p>After calling this method all rendering will go into the specified render target. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">target</td><td>Render target. If set to <code>nullptr</code>, the following rendering commands will be discarded until valid render target will be set. </td></tr>
+    <tr><td class="paramname">target</td><td>Render target. If set to <code>nullptr</code>, rendering commands will be discarded until valid render target will be set. </td></tr>
   </table>
   </dd>
 </dl>
