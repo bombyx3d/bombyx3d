@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Bombyx3D Game Engine: Engine::OpenGLES2Renderer Class Reference</title>
+<title>Bombyx3D Game Engine: Engine::IInitializable Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -45,29 +45,29 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="namespace_engine.html">Engine</a></li><li class="navelem"><a class="el" href="class_engine_1_1_open_g_l_e_s2_renderer.html">OpenGLES2Renderer</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespace_engine.html">Engine</a></li><li class="navelem"><a class="el" href="class_engine_1_1_i_initializable.html">IInitializable</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="class_engine_1_1_open_g_l_e_s2_renderer-members.html">List of all members</a>  </div>
+<a href="class_engine_1_1_i_initializable-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Engine::OpenGLES2Renderer Class Reference</div>  </div>
+<div class="title">Engine::IInitializable Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>An OpenGL ES 2.0 renderer.  
- <a href="class_engine_1_1_open_g_l_e_s2_renderer.html#details">More...</a></p>
+<p>Interface for objects with two-step initialization.  
+ <a href="class_engine_1_1_i_initializable.html#details">More...</a></p>
 
-<p><code>#include &quot;bombyx3d/render/opengles2/OpenGLES2Renderer.h&quot;</code></p>
+<p><code>#include &quot;bombyx3d/core/interfaces/IInitializable.h&quot;</code></p>
 <div class="dynheader">
-Inheritance diagram for Engine::OpenGLES2Renderer:</div>
+Inheritance diagram for Engine::IInitializable:</div>
 <div class="dyncontent">
-<div class="center"><img src="class_engine_1_1_open_g_l_e_s2_renderer__inherit__graph.png" border="0" usemap="#_engine_1_1_open_g_l_e_s2_renderer_inherit__map" alt="Inheritance graph"/></div>
-<map name="_engine_1_1_open_g_l_e_s2_renderer_inherit__map" id="_engine_1_1_open_g_l_e_s2_renderer_inherit__map">
-<area shape="rect" id="node7" href="class_engine_1_1_qt_open_g_l_e_s2_renderer.html" title="Implementation of IRenderer for Qt5 using OpenGL ES 2.0. " alt="" coords="5,237,216,267"/><area shape="rect" id="node2" href="class_engine_1_1_i_renderer.html" title="Interface to the renderer. " alt="" coords="48,83,173,112"/><area shape="rect" id="node4" href="class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="47,5,175,35"/></map>
+<div class="center"><img src="class_engine_1_1_i_initializable__inherit__graph.png" border="0" usemap="#_engine_1_1_i_initializable_inherit__map" alt="Inheritance graph"/></div>
+<map name="_engine_1_1_i_initializable_inherit__map" id="_engine_1_1_i_initializable_inherit__map">
+<area shape="rect" id="node5" href="class_engine_1_1_i_game.html" title="Interface for game logic. " alt="" coords="20,160,129,189"/><area shape="rect" id="node2" href="class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="11,5,139,35"/><area shape="rect" id="node7" href="class_engine_1_1_game.html" title="Base class for games. " alt="" coords="23,237,127,267"/><area shape="rect" id="node9" href="class_engine_1_1_editor.html" title="The editor application. " alt="" coords="23,315,127,344"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
@@ -78,12 +78,9 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9d0cf65360792444a1f96b8473720fd4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_open_g_l_e_s2_renderer.html#a9d0cf65360792444a1f96b8473720fd4">OpenGLES2Renderer</a> ()</td></tr>
-<tr class="memdesc:a9d0cf65360792444a1f96b8473720fd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a9d0cf65360792444a1f96b8473720fd4">More...</a><br/></td></tr>
-<tr class="separator:a9d0cf65360792444a1f96b8473720fd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34f6095e1cb90e84c5d34960f48a7bf1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_open_g_l_e_s2_renderer.html#a34f6095e1cb90e84c5d34960f48a7bf1">setRenderTarget</a> (<a class="el" href="class_engine_1_1_i_render_target.html">IRenderTarget</a> *target) override</td></tr>
-<tr class="memdesc:a34f6095e1cb90e84c5d34960f48a7bf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Activates the specified render target.  <a href="#a34f6095e1cb90e84c5d34960f48a7bf1">More...</a><br/></td></tr>
-<tr class="separator:a34f6095e1cb90e84c5d34960f48a7bf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b10099dc002e29496b2fbc3ee957b78"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_initializable.html#a6b10099dc002e29496b2fbc3ee957b78">initialize</a> ()=0</td></tr>
+<tr class="memdesc:a6b10099dc002e29496b2fbc3ee957b78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the object.  <a href="#a6b10099dc002e29496b2fbc3ee957b78">More...</a><br/></td></tr>
+<tr class="separator:a6b10099dc002e29496b2fbc3ee957b78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad881320f598a1efa3aa809def924343"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_unknown.html#aad881320f598a1efa3aa809def924343">addRef</a> () const </td></tr>
 <tr class="memdesc:aad881320f598a1efa3aa809def924343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increments reference counter for this object.  <a href="#aad881320f598a1efa3aa809def924343">More...</a><br/></td></tr>
 <tr class="separator:aad881320f598a1efa3aa809def924343"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -102,7 +99,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac6f3467b0b133047269767d00ee5c0ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>An OpenGL ES 2.0 renderer. </p>
+<div class="textblock"><p>Interface for objects with two-step initialization. </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a class="anchor" id="a334537b47479d09ac4be3cdb0fedf82e"></a>
 <div class="memitem">
@@ -126,26 +123,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a9d0cf65360792444a1f96b8473720fd4"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Engine::OpenGLES2Renderer::OpenGLES2Renderer </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Constructor. </p>
-
-</div>
-</div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a34f6095e1cb90e84c5d34960f48a7bf1"></a>
+<a class="anchor" id="a6b10099dc002e29496b2fbc3ee957b78"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -153,30 +132,22 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void Engine::OpenGLES2Renderer::setRenderTarget </td>
+          <td class="memname">virtual void Engine::IInitializable::initialize </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_engine_1_1_i_render_target.html">IRenderTarget</a> *&#160;</td>
-          <td class="paramname"><em>target</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Activates the specified render target. </p>
-<p>After calling this method all rendering will go into the specified render target. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">target</td><td>Render target. If set to <code>nullptr</code>, rendering commands will be discarded until valid render target will be set. </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Initializes the object. </p>
 
-<p>Implements <a class="el" href="class_engine_1_1_i_renderer.html#a1ae0517dcdffc569511de96696709906">Engine::IRenderer</a>.</p>
+<p>Implemented in <a class="el" href="class_engine_1_1_i_game.html#a4626fc5923ffac51e87dcc1b49b0e182">Engine::IGame</a>.</p>
 
 </div>
 </div>

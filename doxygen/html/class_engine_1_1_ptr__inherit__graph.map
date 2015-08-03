@@ -4,6 +4,5 @@
 <area shape="rect" id="node7" href="$class_engine_1_1_ptr.html" title="Engine::Ptr\&lt; Engine\l::IInputStream \&gt;" alt="" coords="396,127,535,174"/>
 <area shape="rect" id="node9" href="$class_engine_1_1_ptr.html" title="Engine::Ptr\&lt; Engine\l::IFileReader \&gt;" alt="" coords="396,197,535,243"/>
 <area shape="rect" id="node11" href="$class_engine_1_1_ptr.html" title="Engine::Ptr\&lt; Engine\l::IViewport \&gt;" alt="" coords="396,266,535,313"/>
-<area shape="rect" id="node13" href="$class_engine_1_1_ptr.html" title="Engine::Ptr\&lt; Engine\l::IUnknown \&gt;" alt="" coords="396,335,535,382"/>
-<area shape="rect" id="node15" href="$class_engine_1_1_ptr.html" title="Engine::Ptr\&lt; Engine\l::IRenderer \&gt;" alt="" coords="396,405,535,451"/>
+<area shape="rect" id="node13" href="$class_engine_1_1_ptr.html" title="Engine::Ptr\&lt; Engine\l::IRenderer \&gt;" alt="" coords="396,335,535,382"/>
 </map>

@@ -1,0 +1,6 @@
+<map id="Engine::IInitializable" name="Engine::IInitializable">
+<area shape="rect" id="node5" href="$class_engine_1_1_i_game.html" title="Interface for game logic. " alt="" coords="20,160,129,189"/>
+<area shape="rect" id="node2" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="11,5,139,35"/>
+<area shape="rect" id="node7" href="$class_engine_1_1_game.html" title="Base class for games. " alt="" coords="23,237,127,267"/>
+<area shape="rect" id="node9" href="$class_engine_1_1_editor.html" title="The editor application. " alt="" coords="23,315,127,344"/>
+</map>

@@ -50,6 +50,7 @@
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="class_engine_1_1_qt_system_event_loop-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -69,6 +70,12 @@ Inheritance diagram for Engine::QtSystemEventLoop:</div>
 <area shape="rect" id="node2" href="class_engine_1_1_i_system_event_loop.html" title="Interface to the event loop of the UI thread. " alt="" coords="9,83,191,112"/><area shape="rect" id="node4" href="class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="36,5,164,35"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a334537b47479d09ac4be3cdb0fedf82e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_unknown.html#a334537b47479d09ac4be3cdb0fedf82e">InterfaceList</a> = std::vector&lt; std::pair&lt; <a class="el" href="struct_engine_1_1_type_i_d.html">TypeID</a>, void * &gt;&gt;</td></tr>
+<tr class="memdesc:a334537b47479d09ac4be3cdb0fedf82e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A list of pairs <code>typeID -&gt; interfacePointer</code>.  <a href="#a334537b47479d09ac4be3cdb0fedf82e">More...</a><br/></td></tr>
+<tr class="separator:a334537b47479d09ac4be3cdb0fedf82e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a29385de0085fff4a620b78608c505971"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_qt_system_event_loop.html#a29385de0085fff4a620b78608c505971">QtSystemEventLoop</a> ()=default</td></tr>
@@ -90,10 +97,36 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acf53c162f19ecf8dff7d5c7ffe9f0cd3"><td class="memTemplItemLeft" align="right" valign="top">TYPE *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_unknown.html#acf53c162f19ecf8dff7d5c7ffe9f0cd3">queryInterface</a> ()</td></tr>
 <tr class="memdesc:acf53c162f19ecf8dff7d5c7ffe9f0cd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries a pointer to the specified interface.  <a href="#acf53c162f19ecf8dff7d5c7ffe9f0cd3">More...</a><br/></td></tr>
 <tr class="separator:acf53c162f19ecf8dff7d5c7ffe9f0cd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6f3467b0b133047269767d00ee5c0ec"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_i_unknown.html#ac6f3467b0b133047269767d00ee5c0ec">queryAllInterfaces</a> (<a class="el" href="class_engine_1_1_i_unknown.html#a334537b47479d09ac4be3cdb0fedf82e">InterfaceList</a> &amp;out)</td></tr>
+<tr class="memdesc:ac6f3467b0b133047269767d00ee5c0ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries a list of all interfaces implemented by this object.  <a href="#ac6f3467b0b133047269767d00ee5c0ec">More...</a><br/></td></tr>
+<tr class="separator:ac6f3467b0b133047269767d00ee5c0ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of <a class="el" href="class_engine_1_1_i_system_event_loop.html">ISystemEventLoop</a> for Qt5. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a class="anchor" id="a334537b47479d09ac4be3cdb0fedf82e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="class_engine_1_1_i_unknown.html#a334537b47479d09ac4be3cdb0fedf82e">Engine::IUnknown::InterfaceList</a> =  std::vector&lt;std::pair&lt;<a class="el" href="struct_engine_1_1_type_i_d.html">TypeID</a>, void*&gt;&gt;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A list of pairs <code>typeID -&gt; interfacePointer</code>. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a29385de0085fff4a620b78608c505971"></a>
 <div class="memitem">
 <div class="memproto">
@@ -263,6 +296,38 @@ template&lt;class TYPE &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the specified interface or <code>nullptr</code> if this object does not implement the requested interface. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ac6f3467b0b133047269767d00ee5c0ec"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Engine::IUnknown::queryAllInterfaces </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_engine_1_1_i_unknown.html#a334537b47479d09ac4be3cdb0fedf82e">InterfaceList</a> &amp;&#160;</td>
+          <td class="paramname"><em>out</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Queries a list of all interfaces implemented by this object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out</td><td>Reference to an output vector. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

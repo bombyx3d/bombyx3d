@@ -1,5 +1,6 @@
 <map id="Engine::IGame" name="Engine::IGame">
-<area shape="rect" id="node5" href="$class_engine_1_1_game.html" title="Base class for games. " alt="" coords="17,160,121,189"/>
-<area shape="rect" id="node2" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="5,5,133,35"/>
-<area shape="rect" id="node7" href="$class_engine_1_1_editor.html" title="The editor application. " alt="" coords="17,237,121,267"/>
+<area shape="rect" id="node7" href="$class_engine_1_1_game.html" title="Base class for games. " alt="" coords="23,237,127,267"/>
+<area shape="rect" id="node2" href="$class_engine_1_1_i_initializable.html" title="Interface for objects with two&#45;step initialization. " alt="" coords="5,83,144,112"/>
+<area shape="rect" id="node4" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="11,5,139,35"/>
+<area shape="rect" id="node9" href="$class_engine_1_1_editor.html" title="The editor application. " alt="" coords="23,315,127,344"/>
 </map>

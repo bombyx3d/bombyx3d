@@ -1,5 +1,6 @@
 <map id="Engine::Editor" name="Engine::Editor">
-<area shape="rect" id="node2" href="$class_engine_1_1_game.html" title="Base class for games. " alt="" coords="17,160,121,189"/>
-<area shape="rect" id="node4" href="$class_engine_1_1_i_game.html" title="Interface for game logic. " alt="" coords="15,83,124,112"/>
-<area shape="rect" id="node6" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="5,5,133,35"/>
+<area shape="rect" id="node2" href="$class_engine_1_1_game.html" title="Base class for games. " alt="" coords="23,237,127,267"/>
+<area shape="rect" id="node4" href="$class_engine_1_1_i_game.html" title="Interface for game logic. " alt="" coords="20,160,129,189"/>
+<area shape="rect" id="node6" href="$class_engine_1_1_i_initializable.html" title="Interface for objects with two&#45;step initialization. " alt="" coords="5,83,144,112"/>
+<area shape="rect" id="node8" href="$class_engine_1_1_i_unknown.html" title="Base interface for all engine interfaces. " alt="" coords="11,5,139,35"/>
 </map>

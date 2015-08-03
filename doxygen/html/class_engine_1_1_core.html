@@ -51,6 +51,7 @@
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="class_engine_1_1_core-members.html">List of all members</a>  </div>
@@ -64,18 +65,34 @@
 
 <p><code>#include &quot;bombyx3d/core/Core.h&quot;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a2e02dab0202f441b56845af6450db50b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_core.html#a2e02dab0202f441b56845af6450db50b">SingletonList</a> = std::vector&lt; <a class="el" href="class_engine_1_1_ptr.html">Ptr</a>&lt; <a class="el" href="class_engine_1_1_i_unknown.html">IUnknown</a> &gt;&gt;</td></tr>
+<tr class="memdesc:a2e02dab0202f441b56845af6450db50b"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of singletons.  <a href="#a2e02dab0202f441b56845af6450db50b">More...</a><br/></td></tr>
+<tr class="separator:a2e02dab0202f441b56845af6450db50b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a8344065fdaa130cff216bc9b934fce4d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_core.html#a8344065fdaa130cff216bc9b934fce4d">addSingleton</a> (<a class="el" href="class_engine_1_1_i_unknown.html">IUnknown</a> *singleton)</td></tr>
 <tr class="memdesc:a8344065fdaa130cff216bc9b934fce4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds an instance of the singleton to the core.  <a href="#a8344065fdaa130cff216bc9b934fce4d">More...</a><br/></td></tr>
 <tr class="separator:a8344065fdaa130cff216bc9b934fce4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a264ef7706494c6978115f42363859743"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_engine_1_1_core.html#a2e02dab0202f441b56845af6450db50b">SingletonList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_core.html#a264ef7706494c6978115f42363859743">allSingletons</a> () const </td></tr>
+<tr class="memdesc:a264ef7706494c6978115f42363859743"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a list of all singletons.  <a href="#a264ef7706494c6978115f42363859743">More...</a><br/></td></tr>
+<tr class="separator:a264ef7706494c6978115f42363859743"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe63d4b6cc768d7e5c0964bc827e1169"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_core.html#abe63d4b6cc768d7e5c0964bc827e1169">querySingleton</a> (<a class="el" href="struct_engine_1_1_type_i_d.html">TypeID</a> typeID)</td></tr>
 <tr class="memdesc:abe63d4b6cc768d7e5c0964bc827e1169"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries for singleton of the specified type from the core.  <a href="#abe63d4b6cc768d7e5c0964bc827e1169">More...</a><br/></td></tr>
 <tr class="separator:abe63d4b6cc768d7e5c0964bc827e1169"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b36b1ffc8cf10ef31bbaf3c7ef2beed"><td class="memItemLeft" align="right" valign="top">std::vector&lt; void * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_engine_1_1_core.html#a1b36b1ffc8cf10ef31bbaf3c7ef2beed">querySingletons</a> (<a class="el" href="struct_engine_1_1_type_i_d.html">TypeID</a> typeID)</td></tr>
+<tr class="memdesc:a1b36b1ffc8cf10ef31bbaf3c7ef2beed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries all singletons of the specified type from the core.  <a href="#a1b36b1ffc8cf10ef31bbaf3c7ef2beed">More...</a><br/></td></tr>
+<tr class="separator:a1b36b1ffc8cf10ef31bbaf3c7ef2beed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a740bbefb3c6dbc9d5b0e77f94c7ea3d3"><td class="memTemplParams" colspan="2">template&lt;class TYPE &gt; </td></tr>
 <tr class="memitem:a740bbefb3c6dbc9d5b0e77f94c7ea3d3"><td class="memTemplItemLeft" align="right" valign="top">TYPE *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_engine_1_1_core.html#a740bbefb3c6dbc9d5b0e77f94c7ea3d3">querySingleton</a> ()</td></tr>
 <tr class="memdesc:a740bbefb3c6dbc9d5b0e77f94c7ea3d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries for singleton of the specified type from the core.  <a href="#a740bbefb3c6dbc9d5b0e77f94c7ea3d3">More...</a><br/></td></tr>
 <tr class="separator:a740bbefb3c6dbc9d5b0e77f94c7ea3d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96d707a2147366bf466815018fa68c3f"><td class="memTemplParams" colspan="2">template&lt;class TYPE &gt; </td></tr>
+<tr class="memitem:a96d707a2147366bf466815018fa68c3f"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; TYPE * &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_engine_1_1_core.html#a96d707a2147366bf466815018fa68c3f">querySingletons</a> ()</td></tr>
+<tr class="memdesc:a96d707a2147366bf466815018fa68c3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries all singletons of the specified type from the core.  <a href="#a96d707a2147366bf466815018fa68c3f">More...</a><br/></td></tr>
+<tr class="separator:a96d707a2147366bf466815018fa68c3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -92,7 +109,22 @@ Static Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A core of the engine. </p>
 <p>This class provides global API to glue different components of the engine. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a class="anchor" id="a2e02dab0202f441b56845af6450db50b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="class_engine_1_1_core.html#a2e02dab0202f441b56845af6450db50b">Engine::Core::SingletonList</a> =  std::vector&lt;<a class="el" href="class_engine_1_1_ptr.html">Ptr</a>&lt;<a class="el" href="class_engine_1_1_i_unknown.html">IUnknown</a>&gt;&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>List of singletons. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="a0293d7f9a5ff1c1057c27876813fb131"></a>
 <div class="memitem">
 <div class="memproto">
@@ -169,6 +201,24 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a264ef7706494c6978115f42363859743"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_engine_1_1_core.html#a2e02dab0202f441b56845af6450db50b">SingletonList</a> Engine::Core::allSingletons </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves a list of all singletons. </p>
+<dl class="section return"><dt>Returns</dt><dd>List of all singletons. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="abe63d4b6cc768d7e5c0964bc827e1169"></a>
 <div class="memitem">
 <div class="memproto">
@@ -191,6 +241,31 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the singleton object or <code>nullptr</code> if there is no such singleton in the core. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a1b36b1ffc8cf10ef31bbaf3c7ef2beed"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;void*&gt; Engine::Core::querySingletons </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_engine_1_1_type_i_d.html">TypeID</a>&#160;</td>
+          <td class="paramname"><em>typeID</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Queries all singletons of the specified type from the core. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">typeID</td><td>Type of the singleton object. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>List of pointers to singleton objects. </dd></dl>
 
 </div>
 </div>
@@ -217,6 +292,32 @@ template&lt;class TYPE &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the singleton object or <code>nullptr</code> if there is no such singleton in the core. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a96d707a2147366bf466815018fa68c3f"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TYPE &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;TYPE*&gt; Engine::Core::querySingletons </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Queries all singletons of the specified type from the core. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">TYPE</td><td>Type of the singleton object. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>List of pointers to singleton objects. </dd></dl>
 
 </div>
 </div>
