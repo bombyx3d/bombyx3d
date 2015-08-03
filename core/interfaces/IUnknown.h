@@ -26,6 +26,7 @@
 #include "core/utility/TypeID.h"
 #include <atomic>
 #include <string>
+#include <vector>
 #include <cstdint>
 
 namespace Engine
@@ -34,6 +35,9 @@ namespace Engine
     class IUnknown
     {
     public:
+        /** A list of pairs `typeID -> interfacePointer`. */
+        using InterfaceList = std::vector<std::pair<TypeID, void*>>;
+
         /** @cond */
         IUnknown();
         virtual ~IUnknown();
@@ -66,6 +70,12 @@ namespace Engine
         {
             return reinterpret_cast<TYPE*>(queryInterface(typeOf<TYPE>()));
         }
+
+        /**
+         * Queries a list of all interfaces implemented by this object.
+         * @param out Reference to an output vector.
+         */
+        virtual void queryAllInterfaces(InterfaceList& out);
 
         /** @cond */
         void* operator new(size_t size);

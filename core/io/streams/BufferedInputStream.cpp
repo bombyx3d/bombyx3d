@@ -176,4 +176,10 @@ namespace Engine
             return m_Stream->queryInterface(typeID);
         return nullptr;
     }
+
+    void BufferedInputStream::_queryAllCustomInterfaces(IUnknown::InterfaceList& out)
+    {
+        if (m_Stream)
+            m_Stream->queryAllInterfaces(out);
+    }
 }

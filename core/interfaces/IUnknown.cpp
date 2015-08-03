@@ -149,6 +149,11 @@ namespace Engine
         return (typeID == g_IUnknownType ? this : nullptr);
     }
 
+    void IUnknown::queryAllInterfaces(InterfaceList& out)
+    {
+        out.emplace_back(g_IUnknownType, this);
+    }
+
     void* IUnknown::operator new(size_t size)
     {
         void* ptr = new void*[(size + sizeof(void*) - 1) / sizeof(void*)];

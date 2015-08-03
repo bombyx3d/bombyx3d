@@ -90,5 +90,6 @@ namespace Engine
         uint64_t m_BytesLeft;           /**< Number of bytes left in stream. */
 
         void* _queryCustomInterface(TypeID typeID);
+        void _queryAllCustomInterfaces(IUnknown::InterfaceList& out);
     };
 }

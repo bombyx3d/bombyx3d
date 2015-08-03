@@ -46,23 +46,30 @@ namespace Engine
     void Core::addSingleton(IUnknown* singleton)
     {
         m_SingletonList.push_back(singleton);
+
+        IUnknown::InterfaceList interfaces;
+        singleton->queryAllInterfaces(interfaces);
+        for (const auto& it : interfaces)
+            m_SingletonMap[it.first].push_back(it.second);
     }
 
     void* Core::querySingleton(TypeID typeID)
     {
         auto it = m_SingletonMap.find(typeID);
+        if (it != m_SingletonMap.end() && !it->second.empty())
+            return it->second.back();
+
+        return nullptr;
+    }
+
+    const std::vector<void*>& Core::querySingletons(TypeID typeID)
+    {
+        auto it = m_SingletonMap.find(typeID);
         if (it != m_SingletonMap.end())
             return it->second;
 
-        for (const Ptr<IUnknown>& singleton : m_SingletonList) {
-            void* ptr = singleton->queryInterface(typeID);
-            if (ptr != nullptr) {
-                m_SingletonMap.emplace(typeID, ptr);
-                return ptr;
-            }
-        }
-
-        return nullptr;
+        static const std::vector<void*> empty;
+        return empty;
     }
 
     int Core::run(ISystemEventLoop* eventLoop)

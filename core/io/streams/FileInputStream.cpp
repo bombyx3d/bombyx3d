@@ -129,4 +129,10 @@ namespace Engine
             return m_Reader->queryInterface(typeID);
         return nullptr;
     }
+
+    void FileInputStream::_queryAllCustomInterfaces(IUnknown::InterfaceList& out)
+    {
+        if (m_Reader)
+            m_Reader->queryAllInterfaces(out);
+    }
 }

@@ -56,6 +56,7 @@ namespace Engine
 #define _Z_DECLARE_QUERY_INTERFACE_METHODS() \
     /** @cond */ \
     virtual void* queryInterface(TypeID typeID) override; \
+    virtual void queryAllInterfaces(IUnknown::InterfaceList& out) override; \
     template <class TYPE> TYPE* queryInterface() \
         { return reinterpret_cast<TYPE*>(queryInterface(typeOf<TYPE>())); } \
     /** @endcond */

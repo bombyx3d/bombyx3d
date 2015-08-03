@@ -92,5 +92,6 @@ namespace Engine
         size_t m_BufferEnd = 0;                 /**< Current ending position in the buffer. */
 
         void* _queryCustomInterface(TypeID typeID);
+        void _queryAllCustomInterfaces(IUnknown::InterfaceList& out);
     };
 }

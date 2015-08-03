@@ -73,6 +73,13 @@ namespace Engine
         void* querySingleton(TypeID typeID);
 
         /**
+         * Queries all singletons of the specified type from the core.
+         * @param typeID Type of the singleton object.
+         * @return List of pointers to singleton objects.
+         */
+        const std::vector<void*>& querySingletons(TypeID typeID);
+
+        /**
          * Queries for singleton of the specified type from the core.
          * @tparam TYPE Type of the singleton object.
          * @return Pointer to the singleton object or `nullptr` if there is no such singleton in the core.
@@ -80,6 +87,22 @@ namespace Engine
         template <class TYPE> TYPE* querySingleton()
         {
             return reinterpret_cast<TYPE*>(querySingleton(typeOf<TYPE>()));
+        }
+
+        /**
+         * Queries all singletons of the specified type from the core.
+         * @tparam TYPE Type of the singleton object.
+         * @return List of pointers to singleton objects.
+         */
+        template <class TYPE> std::vector<TYPE*> querySingletons()
+        {
+            auto it = querySingletons(typeOf<TYPE>());
+
+            std::vector<TYPE*> values;
+            values.reserve(it.size());
+            std::copy(values.end(), it.begin(), it.end());
+
+            return values;
         }
 
         /**
@@ -101,7 +124,7 @@ namespace Engine
         static ISystem* m_System;
 
         std::vector<Ptr<IUnknown>> m_SingletonList;
-        std::unordered_map<TypeID, void*> m_SingletonMap;
+        std::unordered_map<TypeID, std::vector<void*>> m_SingletonMap;
 
         Core();
         ~Core();
