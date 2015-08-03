@@ -39,6 +39,9 @@ namespace Engine
     class Core
     {
     public:
+        /** List of singletons. */
+        using SingletonList = std::vector<Ptr<IUnknown>>;
+
         /**
          * Retrieves an instance of the singleton.
          * @return Instance of the Engine Core.
@@ -64,6 +67,15 @@ namespace Engine
          * @param singleton Singleton object to add.
          */
         void addSingleton(IUnknown* singleton);
+
+        /**
+         * Retrieves a list of all singletons.
+         * @return List of all singletons.
+         */
+        const SingletonList& allSingletons() const
+        {
+            return m_SingletonList;
+        }
 
         /**
          * Queries for singleton of the specified type from the core.
@@ -100,7 +112,8 @@ namespace Engine
 
             std::vector<TYPE*> values;
             values.reserve(it.size());
-            std::copy(values.end(), it.begin(), it.end());
+            for (void* p : it)
+                values.push_back(reinterpret_cast<TYPE*>(p));
 
             return values;
         }
@@ -123,7 +136,7 @@ namespace Engine
         static Core* m_Instance;
         static ISystem* m_System;
 
-        std::vector<Ptr<IUnknown>> m_SingletonList;
+        SingletonList m_SingletonList;
         std::unordered_map<TypeID, std::vector<void*>> m_SingletonMap;
 
         Core();

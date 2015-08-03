@@ -76,12 +76,25 @@ namespace Engine
     {
         Core core;
 
-        m_System = core.querySingleton<ISystem>();
-        Z_ASSERT(m_System != nullptr);
+        std::vector<ISystem*> systems = core.querySingletons<ISystem>();
+        Z_ASSERT(systems.size() == 1);
+        m_System = systems.front();
 
-        IGame* game = core.querySingleton<IGame>();
-        Z_ASSERT(game != nullptr);
-        game->initialize();
+        IGame* gameInterface = nullptr;
+        for (const auto& p : core.allSingletons()) {
+            IGame* game = p->queryInterface<IGame>();
+            if (game) {
+                Z_ASSERT(gameInterface == nullptr);
+                gameInterface = game;
+            }
+
+            IInitializable* initializable = p->queryInterface<IInitializable>();
+            if (initializable && !game)
+                initializable->initialize();
+        }
+
+        Z_ASSERT(gameInterface != nullptr);
+        gameInterface->initialize();
 
         return eventLoop->runEventLoop();
     }

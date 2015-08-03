@@ -21,21 +21,17 @@
  */
 
 #pragma once
-#include "core/interfaces/IInitializable.h"
-#include "core/Core.h"
+#include "core/interfaces/IUnknown.h"
 
 namespace Engine
 {
-    /** Interface for game logic. */
-    class IGame : public virtual IInitializable
+    /** Interface for objects with two-step initialization. */
+    class IInitializable : public virtual IUnknown
     {
     public:
-        Z_INTERFACE(IGame)
+        Z_INTERFACE(IInitializable)
 
-        /**
-         * Initializes the game.
-         * This method is called immediately after engine initialization completes.
-         */
-        void initialize() override = 0;
+        /** Initializes the object. */
+        virtual void initialize() = 0;
     };
 }

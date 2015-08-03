@@ -21,6 +21,7 @@
  */
 #include "Game.h"
 #include "core/render/ViewportConfiguration.h"
+#include "core/Core.h"
 
 namespace Engine
 {

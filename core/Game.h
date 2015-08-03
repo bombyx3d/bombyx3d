@@ -25,6 +25,7 @@
 #include "core/interfaces/render/IViewport.h"
 #include "core/interfaces/render/IViewportConfiguration.h"
 #include "core/interfaces/render/IViewportDelegate.h"
+#include "core/utility/Ptr.h"
 
 namespace Engine
 {
