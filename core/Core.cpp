@@ -45,16 +45,25 @@ namespace Engine
 
     void Core::addSingleton(IUnknown* singleton)
     {
-        m_SingletonList.push_back(singleton);
-
         IUnknown::InterfaceList interfaces;
         singleton->queryAllInterfaces(interfaces);
+
+        std::lock_guard<decltype(m_Mutex)> lock(m_Mutex);
+        m_SingletonList.push_back(singleton);
         for (const auto& it : interfaces)
             m_SingletonMap[it.first].push_back(it.second);
     }
 
+    Core::SingletonList Core::allSingletons() const
+    {
+        std::lock_guard<decltype(m_Mutex)> lock(m_Mutex);
+        return m_SingletonList;
+    }
+
     void* Core::querySingleton(TypeID typeID)
     {
+        std::lock_guard<decltype(m_Mutex)> lock(m_Mutex);
+
         auto it = m_SingletonMap.find(typeID);
         if (it != m_SingletonMap.end() && !it->second.empty())
             return it->second.back();
@@ -62,8 +71,10 @@ namespace Engine
         return nullptr;
     }
 
-    const std::vector<void*>& Core::querySingletons(TypeID typeID)
+    std::vector<void*> Core::querySingletons(TypeID typeID)
     {
+        std::lock_guard<decltype(m_Mutex)> lock(m_Mutex);
+
         auto it = m_SingletonMap.find(typeID);
         if (it != m_SingletonMap.end())
             return it->second;

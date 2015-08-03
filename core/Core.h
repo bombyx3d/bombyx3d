@@ -29,6 +29,7 @@
 #include "core/utility/debug.h"
 #include <vector>
 #include <unordered_map>
+#include <mutex>
 
 namespace Engine
 {
@@ -72,10 +73,7 @@ namespace Engine
          * Retrieves a list of all singletons.
          * @return List of all singletons.
          */
-        const SingletonList& allSingletons() const
-        {
-            return m_SingletonList;
-        }
+        SingletonList allSingletons() const;
 
         /**
          * Queries for singleton of the specified type from the core.
@@ -89,7 +87,7 @@ namespace Engine
          * @param typeID Type of the singleton object.
          * @return List of pointers to singleton objects.
          */
-        const std::vector<void*>& querySingletons(TypeID typeID);
+        std::vector<void*> querySingletons(TypeID typeID);
 
         /**
          * Queries for singleton of the specified type from the core.
@@ -108,7 +106,7 @@ namespace Engine
          */
         template <class TYPE> std::vector<TYPE*> querySingletons()
         {
-            auto it = querySingletons(typeOf<TYPE>());
+            const auto& it = querySingletons(typeOf<TYPE>());
 
             std::vector<TYPE*> values;
             values.reserve(it.size());
@@ -138,6 +136,7 @@ namespace Engine
 
         SingletonList m_SingletonList;
         std::unordered_map<TypeID, std::vector<void*>> m_SingletonMap;
+        mutable std::mutex m_Mutex;
 
         Core();
         ~Core();
