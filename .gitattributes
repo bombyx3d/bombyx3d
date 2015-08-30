@@ -13,3 +13,4 @@
 *.cmd text eol=crlf
 make text eol=lf
 LICENSE text
+COPYING text
