@@ -1,0 +1,11 @@
+* text=auto
+*.c text
+*.h text
+*.cc text
+*.cpp text
+*.hpp text
+*.py text
+*.yml text
+*.md text
+*.bat text eol=crlf
+*.cmd text eol=crlf
