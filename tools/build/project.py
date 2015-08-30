@@ -73,11 +73,13 @@ class ProjectReader:
     def _readImport(self, value):
         for name in self._yamlSequence(value):
             isRootProject = self._isRootProject
+            projectPath = self._projectPath
             try:
                 self._isRootProject = False
                 self.read(os.path.join(self._projectPath, name))
             finally:
                 self._isRootProject = isRootProject
+                self._projectPath = projectPath
 
     def _readProjectName(self, value):
         if self._isRootProject:
