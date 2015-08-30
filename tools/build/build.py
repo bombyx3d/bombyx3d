@@ -71,7 +71,7 @@ def main():
         project = ProjectReader().read(projectPath)
         projectPath = os.path.abspath(projectPath)
 
-        outputDirectory = os.path.join(projectPath, '.build')
+        outputDirectory = os.path.join(projectPath, 'build')
         if platform != 'auto' and compiler != 'auto':
             outputDirectory = os.path.join(outputDirectory, '%s-%s' % (platform, compiler))
         elif platform != 'auto':
