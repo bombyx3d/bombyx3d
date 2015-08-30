@@ -26,5 +26,7 @@ Import:
   - 'libs/cppunit'
   - 'libs/zlib'
 
+TestsSources: 'tests'
+
 ProjectIncludeDirectories: '.'
 ProjectSources: 'engine'

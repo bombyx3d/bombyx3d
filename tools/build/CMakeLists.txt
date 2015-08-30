@@ -34,7 +34,7 @@ find_package(OpenAL)
 ##############################################################################
 # Re-run the build.py script to update CMakeLists.txt if required
 
-add_custom_target("${projectName}_prebuild" ALL
+add_custom_target("${projectName}-prebuild" ALL
     "${pythonExecutable}" "${buildPy}"
         -n
         -p "${projectPath}"
@@ -105,58 +105,87 @@ ${defines})
 ##############################################################################
 # Create target for third-party libraries
 
-add_library("${projectName}_libraries" STATIC
+add_library("${projectName}-libraries" STATIC
 ${librarySourceFiles})
 
-set_target_properties("${projectName}_libraries" PROPERTIES CXX_STANDARD 11)
-add_dependencies("${projectName}_libraries" "${projectName}_prebuild")
+set_target_properties("${projectName}-libraries" PROPERTIES CXX_STANDARD 11)
+add_dependencies("${projectName}-libraries" "${projectName}-prebuild")
 
 # Disable all warnings for third-party code
 if(MSVC)
-    target_compile_options("${projectName}_libraries" PUBLIC "/w" "/W0")
+    target_compile_options("${projectName}-libraries" PUBLIC "/w" "/W0")
 else()
-    target_compile_options("${projectName}_libraries" PUBLIC "-w")
+    target_compile_options("${projectName}-libraries" PUBLIC "-w")
 endif()
 
 
 ##############################################################################
 # Create target for the project
 
-add_executable("${projectName}" MACOSX_BUNDLE
+add_library("${projectName}-code" STATIC
 ${projectSourceFiles})
 
-set_target_properties("${projectName}" PROPERTIES CXX_STANDARD 11)
-add_dependencies("${projectName}" "${projectName}_prebuild")
-target_link_libraries("${projectName}" "${projectName}_libraries")
+set_target_properties("${projectName}-code" PROPERTIES CXX_STANDARD 11)
+add_dependencies("${projectName}-code" "${projectName}-prebuild")
+target_link_libraries("${projectName}-code" "${projectName}-libraries")
 
 # Enable all warnings for project code
 if(MSVC)
-    target_compile_options("${projectName}" PUBLIC "/W4")
+    target_compile_options("${projectName}-code" PUBLIC "/W4")
 else()
-    target_compile_options("${projectName}" PUBLIC "-pedantic" "-Wall" "-Wextra" "-Wconversion")
+    target_compile_options("${projectName}-code" PUBLIC "-pedantic" "-Wall" "-Wextra" "-Wconversion")
     if(NOT CMAKE_COMPILER_IS_GNUCC AND NOT CMAKE_COMPILER_IS_GNUCXX)
         # Implementation of the -Wshadow flag in GCC is too strict.
         # On the other side, this flag is quite usable with Clang.
-        target_compile_options("${projectName}" PUBLIC "-Wshadow")
+        target_compile_options("${projectName}-code" PUBLIC "-Wshadow")
     endif()
 endif()
 
 
 ##############################################################################
+# Create executable
+
+if(NOT EXISTS "$${CMAKE_CURRENT_BINARY_DIR}/dummy.cpp")
+    file(WRITE "$${CMAKE_CURRENT_BINARY_DIR}/dummy.cpp"
+        "extern const char _________dummy_cpp__; const char _________dummy_cpp__ = 0;\n")
+endif()
+
+add_executable("${projectName}" MACOSX_BUNDLE "$${CMAKE_CURRENT_BINARY_DIR}/dummy.cpp")
+
+set_target_properties("${projectName}" PROPERTIES CXX_STANDARD 11)
+add_dependencies("${projectName}" "${projectName}-prebuild")
+target_link_libraries("${projectName}" "${projectName}-code" "${projectName}-libraries")
+
+
+##############################################################################
+# Create target for tests
+
+add_executable("${projectName}-tests"
+${testsSourceFiles})
+
+set_target_properties("${projectName}-tests" PROPERTIES CXX_STANDARD 11)
+add_dependencies("${projectName}-tests" "${projectName}-prebuild")
+target_link_libraries("${projectName}-tests" "${projectName}-code" "${projectName}-libraries")
+
+
+##############################################################################
 # Specify header search paths
 
-target_include_directories("${projectName}_libraries" SYSTEM BEFORE PUBLIC
+target_include_directories("${projectName}-libraries" SYSTEM BEFORE PUBLIC
 ${libraryIncludeDirectories})
 
-target_include_directories("${projectName}_libraries" BEFORE PUBLIC
+target_include_directories("${projectName}-libraries" BEFORE PUBLIC
 ${projectIncludeDirectories})
 
+target_include_directories("${projectName}-tests" SYSTEM BEFORE PUBLIC
+${testsIncludeDirectories})
+
 if(OPENGL_FOUND)
-    target_include_directories("${projectName}_libraries" SYSTEM PUBLIC $${OPENGL_INCLUDE_DIR})
+    target_include_directories("${projectName}-libraries" SYSTEM PUBLIC $${OPENGL_INCLUDE_DIR})
 endif()
 
 if(OPENAL_FOUND)
-    target_include_directories("${projectName}_libraries" SYSTEM PUBLIC $${OPENAL_INCLUDE_DIR})
+    target_include_directories("${projectName}-libraries" SYSTEM PUBLIC $${OPENAL_INCLUDE_DIR})
 endif()
 
 
@@ -164,23 +193,33 @@ endif()
 # Link with system libraries
 
 target_link_libraries("${projectName}" $${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries("${projectName}_libraries" $${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries("${projectName}-code" $${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries("${projectName}-libraries" $${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries("${projectName}-tests" $${CMAKE_THREAD_LIBS_INIT})
 
 target_link_libraries("${projectName}" $${CMAKE_DL_LIBS})
-target_link_libraries("${projectName}_libraries" $${CMAKE_DL_LIBS})
+target_link_libraries("${projectName}-code" $${CMAKE_DL_LIBS})
+target_link_libraries("${projectName}-libraries" $${CMAKE_DL_LIBS})
+target_link_libraries("${projectName}-tests" $${CMAKE_DL_LIBS})
 
 find_library(LIBM m)
 if(LIBM)
     target_link_libraries("${projectName}" $${LIBM})
-    target_link_libraries("${projectName}_libraries" $${LIBM})
+    target_link_libraries("${projectName}-code" $${LIBM})
+    target_link_libraries("${projectName}-libraries" $${LIBM})
+    target_link_libraries("${projectName}-tests" $${LIBM})
 endif()
 
 if(OPENGL_FOUND)
     target_link_libraries("${projectName}" $${OPENGL_INCLUDE_DIR})
-    target_link_libraries("${projectName}_libraries" $${OPENGL_INCLUDE_DIR})
+    target_link_libraries("${projectName}-code" $${OPENGL_INCLUDE_DIR})
+    target_link_libraries("${projectName}-libraries" $${OPENGL_INCLUDE_DIR})
+    target_link_libraries("${projectName}-tests" $${OPENGL_INCLUDE_DIR})
 endif()
 
 if(OPENAL_FOUND)
     target_link_libraries("${projectName}" $${OPENAL_INCLUDE_DIR})
-    target_link_libraries("${projectName}_libraries" $${OPENAL_INCLUDE_DIR})
+    target_link_libraries("${projectName}-code" $${OPENAL_INCLUDE_DIR})
+    target_link_libraries("${projectName}-libraries" $${OPENAL_INCLUDE_DIR})
+    target_link_libraries("${projectName}-tests" $${OPENAL_INCLUDE_DIR})
 endif()

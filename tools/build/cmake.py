@@ -47,6 +47,10 @@ def generateCMakeLists(projectPath, outputDirectory, platform, compiler, target,
     for file in project.librarySources:
         librarySourceFiles += '    "%s"\n' % escapePath(os.path.realpath(file))
 
+    testsSourceFiles = ''
+    for file in project.testsSources:
+        testsSourceFiles += '    "%s"\n' % escapePath(os.path.realpath(file))
+
     projectIncludeDirectories = ''
     for path in project.projectIncludeDirectories:
         projectIncludeDirectories += '    "%s"\n' % escapePath(os.path.realpath(path))
@@ -54,6 +58,10 @@ def generateCMakeLists(projectPath, outputDirectory, platform, compiler, target,
     libraryIncludeDirectories = ''
     for path in project.libraryIncludeDirectories:
         libraryIncludeDirectories += '    "%s"\n' % escapePath(os.path.realpath(path))
+
+    testsIncludeDirectories = ''
+    for path in project.testsIncludeDirectories:
+        testsIncludeDirectories += '    "%s"\n' % escapePath(os.path.realpath(path))
 
     defines = ''
     for define in project.defines:
@@ -70,8 +78,10 @@ def generateCMakeLists(projectPath, outputDirectory, platform, compiler, target,
         'defines': defines,
         'projectSourceFiles': projectSourceFiles,
         'librarySourceFiles': librarySourceFiles,
+        'testsSourceFiles': testsSourceFiles,
         'projectIncludeDirectories': projectIncludeDirectories,
         'libraryIncludeDirectories': libraryIncludeDirectories,
+        'testsIncludeDirectories': testsIncludeDirectories,
     }
 
     templateFile = os.path.join(scriptDir, 'CMakeLists.txt')

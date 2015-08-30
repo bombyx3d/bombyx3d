@@ -32,8 +32,10 @@ class Project:
         self.defines = []
         self.projectSources = []
         self.librarySources = []
+        self.testsSources = []
         self.projectIncludeDirectories = []
         self.libraryIncludeDirectories = []
+        self.testsIncludeDirectories = []
 
 ##############################################################################
 
@@ -91,6 +93,9 @@ class ProjectReader:
     def _readLibrarySources(self, value):
         self._project.librarySources.extend(self._enumerateFiles(value))
 
+    def _readTestsSources(self, value):
+        self._project.testsSources.extend(self._enumerateFiles(value))
+
     def _readProjectIncludeDirectories(self, value):
         for name in self._yamlSequence(value):
             path = os.path.join(self._projectPath, name)
@@ -100,6 +105,11 @@ class ProjectReader:
         for name in self._yamlSequence(value):
             path = os.path.join(self._projectPath, name)
             self._project.libraryIncludeDirectories.append(path)
+
+    def _readTestsIncludeDirectories(self, value):
+        for name in self._yamlSequence(value):
+            path = os.path.join(self._projectPath, name)
+            self._project.testsIncludeDirectories.append(path)
 
     #############################
 
@@ -125,8 +135,10 @@ class ProjectReader:
                 'ProjectName': self._readProjectName,
                 'ProjectSources': self._readProjectSources,
                 'LibrarySources': self._readLibrarySources,
+                'TestsSources': self._readTestsSources,
                 'ProjectIncludeDirectories': self._readProjectIncludeDirectories,
                 'LibraryIncludeDirectories': self._readLibraryIncludeDirectories,
+                'TestsIncludeDirectories': self._readTestsIncludeDirectories,
             }
 
             config = yaml.load(fileHandle)

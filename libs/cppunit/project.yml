@@ -20,5 +20,5 @@
 # THE SOFTWARE.
 #
 
-LibraryIncludeDirectories: 'include'
-LibrarySources: [ 'src', 'include' ]
+TestsIncludeDirectories: 'include'
+TestsSources: [ 'src', 'include' ]
