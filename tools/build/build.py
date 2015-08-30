@@ -71,7 +71,7 @@ def main():
 
         target = args.t if args.t else 'release'
         if target != 'debug' and target != 'release':
-            raise BuildError('Invalid target "%s". Valid values are: debug, release.')
+            raise BuildError('Invalid target "%s". Valid values are: debug, release.' % target)
 
         project = ProjectReader().read(projectPath)
         projectPath = os.path.abspath(projectPath)
