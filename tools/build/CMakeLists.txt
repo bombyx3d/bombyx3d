@@ -39,6 +39,7 @@ add_custom_target("${projectName}_prebuild" ALL
         -n
         -p "${projectPath}"
         -c "${compiler}"
+        -t "${target}"
         "${platform}"
     WORKING_DIRECTORY
         "${projectPath}"

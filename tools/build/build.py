@@ -38,7 +38,7 @@ import cmake
 
 compilers = {
     'auto': [ 'auto' ],
-    'win32': [ 'auto', 'msvc2013' ]
+    'win32': [ 'auto', 'msvc2013', 'msvc2013-64', 'msvc2015', 'msvc2015-64', 'mingw' ]
 }
 
 def main():
@@ -46,6 +46,7 @@ def main():
         parser = argparse.ArgumentParser()
         parser.add_argument('-p', metavar='path', help='Path to the project directory')
         parser.add_argument('-c', metavar='compiler', help='Compiler to use to build the project')
+        parser.add_argument('-t', metavar='target', help='Target to build ("debug" or "release")')
         parser.add_argument('-n', help="Generate project but don't build", action='store_true')
         parser.add_argument('platform', nargs='?', metavar='platform', help='Target platform')
         args = parser.parse_args()
@@ -68,25 +69,31 @@ def main():
             raise BuildError('Compiler "%s" is not supported for platform "%s". Valid values are: %s'
                 % (compiler, platform, ', '.join(sorted(compilers[platform]))))
 
+        target = args.t if args.t else 'release'
+        if target != 'debug' and target != 'release':
+            raise BuildError('Invalid target "%s". Valid values are: debug, release.')
+
         project = ProjectReader().read(projectPath)
         projectPath = os.path.abspath(projectPath)
 
         outputDirectory = os.path.join(projectPath, 'build')
         if platform != 'auto' and compiler != 'auto':
-            outputDirectory = os.path.join(outputDirectory, '%s-%s' % (platform, compiler))
+            outputDirectory = os.path.join(outputDirectory, '%s-%s-%s' % (platform, compiler, target))
         elif platform != 'auto':
-            outputDirectory = os.path.join(outputDirectory, platform)
+            outputDirectory = os.path.join(outputDirectory, '%s-%s' % (platform, target))
         elif compiler != 'auto':
-            outputDirectory = os.path.join(outputDirectory, compiler)
+            outputDirectory = os.path.join(outputDirectory, '%s-%s' % (compiler, target))
         else:
-            outputDirectory = os.path.join(outputDirectory, 'default')
+            outputDirectory = os.path.join(outputDirectory, target)
         utility.createDirectory(outputDirectory)
 
-        cmake.generateCMakeLists(projectPath, outputDirectory, platform, compiler, project)
-        cmake.runCMakeGenerate(projectPath, outputDirectory, platform, compiler, project)
+        changed = cmake.generateCMakeLists(projectPath, outputDirectory, platform, compiler, target, project)
+
+        if changed:
+            cmake.runCMakeGenerate(projectPath, outputDirectory, platform, compiler, target, project)
 
         if not args.n:
-            cmake.runCMakeBuild(projectPath, outputDirectory, platform, compiler, project)
+            cmake.runCMakeBuild(projectPath, outputDirectory, platform, compiler, target, project)
 
     except BuildError as error:
         print('ERROR: %s' % error.message)

@@ -41,6 +41,7 @@ def writeFile(path, contents):
         with open(path, 'rb') as fileHandle:
             fileContents = fileHandle.read()
         if fileContents == contents:
-            return
+            return False
     with open(path, 'wb') as fileHandle:
         fileHandle.write(contents)
+    return True

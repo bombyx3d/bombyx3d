@@ -36,7 +36,7 @@ def escapePath(string):
     else:
         return escape(string.replace('\\', '/'))
 
-def generateCMakeLists(projectPath, outputDirectory, platform, compiler, project):
+def generateCMakeLists(projectPath, outputDirectory, platform, compiler, target, project):
     scriptDir = os.path.dirname(os.path.realpath(__file__))
 
     projectSourceFiles = ''
@@ -64,6 +64,7 @@ def generateCMakeLists(projectPath, outputDirectory, platform, compiler, project
         'buildPy': escapePath(os.path.join(scriptDir, 'build.py')),
         'platform': escape(platform),
         'compiler': escape(compiler),
+        'target': escape(target),
         'projectPath': escapePath(projectPath),
         'projectName': escape(project.name),
         'defines': defines,
@@ -84,12 +85,42 @@ def generateCMakeLists(projectPath, outputDirectory, platform, compiler, project
         '\n' +\
         string.Template(template).substitute(variables);
 
-    utility.writeFile(os.path.join(outputDirectory, 'CMakeLists.txt'), cmakelists)
+    return utility.writeFile(os.path.join(outputDirectory, 'CMakeLists.txt'), cmakelists)
 
-def runCMakeGenerate(projectPath, outputDirectory, platform, compiler, project):
+def runCMakeGenerate(projectPath, outputDirectory, platform, compiler, target, project):
     os.chdir(outputDirectory)
-    subprocess.check_call('cmake .', shell=True)
 
-def runCMakeBuild(projectPath, outputDirectory, platform, compiler, project):
+    buildType = ''
+    if target == 'debug':
+        buildType = '-DCMAKE_BUILD_TYPE=Debug'
+    elif target == 'release':
+        buildType = '-DCMAKE_BUILD_TYPE=Release'
+
+    generator = ''
+    if compiler == 'msvc2013':
+        generator = '-G "Visual Studio 12 2013"'
+        buildType = ''
+    elif compiler == 'msvc2013-64':
+        generator = '-G "Visual Studio 12 2013 Win64"'
+        buildType = ''
+    elif compiler == 'msvc2015':
+        generator = '-G "Visual Studio 14 2015"'
+        buildType = ''
+    elif compiler == 'msvc2015-64':
+        generator = '-G "Visual Studio 14 2015 Win64"'
+        buildType = ''
+    elif compiler == 'mingw':
+        generator = '-G "MinGW Makefiles"'
+
+    subprocess.check_call('cmake %s %s .' % (generator, buildType), shell=True)
+
+def runCMakeBuild(projectPath, outputDirectory, platform, compiler, target, project):
     os.chdir(outputDirectory)
-    subprocess.check_call('cmake --build .', shell=True)
+
+    config = ''
+    if target == 'debug':
+        config = '--config Debug'
+    elif target == 'release':
+        config = '--config Release'
+
+    subprocess.check_call('cmake --build . %s' % (config), shell=True)

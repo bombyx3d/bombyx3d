@@ -115,7 +115,6 @@ class ProjectReader:
             raise BuildError('Not a file: "%s".' % projectFile)
 
         # Parse the project file
-        print('Reading project file %s' % projectFile)
         with open(projectFile) as fileHandle:
 
             options = {
