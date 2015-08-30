@@ -7,5 +7,9 @@
 *.py text
 *.yml text
 *.md text
+*.txt text
+*.sh text eol=lf
 *.bat text eol=crlf
 *.cmd text eol=crlf
+make text eol=lf
+LICENSE text
