@@ -46,6 +46,7 @@ def main():
         parser = argparse.ArgumentParser()
         parser.add_argument('-p', metavar='path', help='Path to the project directory')
         parser.add_argument('-c', metavar='compiler', help='Compiler to use to build the project')
+        parser.add_argument('-n', help="Generate project but don't build", action='store_true')
         parser.add_argument('platform', nargs='?', metavar='platform', help='Target platform')
         args = parser.parse_args()
 
@@ -68,12 +69,24 @@ def main():
                 % (compiler, platform, ', '.join(sorted(compilers[platform]))))
 
         project = ProjectReader().read(projectPath)
-
         projectPath = os.path.abspath(projectPath)
+
         outputDirectory = os.path.join(projectPath, '.build')
+        if platform != 'auto' and compiler != 'auto':
+            outputDirectory = os.path.join(outputDirectory, '%s-%s' % (platform, compiler))
+        elif platform != 'auto':
+            outputDirectory = os.path.join(outputDirectory, platform)
+        elif compiler != 'auto':
+            outputDirectory = os.path.join(outputDirectory, compiler)
+        else:
+            outputDirectory = os.path.join(outputDirectory, 'default')
         utility.createDirectory(outputDirectory)
 
         cmake.generateCMakeLists(projectPath, outputDirectory, platform, compiler, project)
+        cmake.runCMakeGenerate(projectPath, outputDirectory, platform, compiler, project)
+
+        if not args.n:
+            cmake.runCMakeBuild(projectPath, outputDirectory, platform, compiler, project)
 
     except BuildError as error:
         print('ERROR: %s' % error.message)

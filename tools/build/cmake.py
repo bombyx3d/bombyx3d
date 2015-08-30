@@ -22,6 +22,7 @@
 
 import sys
 import os
+import subprocess
 import string
 import textwrap
 import utility
@@ -84,3 +85,11 @@ def generateCMakeLists(projectPath, outputDirectory, platform, compiler, project
         string.Template(template).substitute(variables);
 
     utility.writeFile(os.path.join(outputDirectory, 'CMakeLists.txt'), cmakelists)
+
+def runCMakeGenerate(projectPath, outputDirectory, platform, compiler, project):
+    os.chdir(outputDirectory)
+    subprocess.check_call('cmake .', shell=True)
+
+def runCMakeBuild(projectPath, outputDirectory, platform, compiler, project):
+    os.chdir(outputDirectory)
+    subprocess.check_call('cmake --build .', shell=True)

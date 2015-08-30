@@ -36,6 +36,7 @@ find_package(OpenAL)
 
 add_custom_target("${projectName}_prebuild" ALL
     "${pythonExecutable}" "${buildPy}"
+        -n
         -p "${projectPath}"
         -c "${compiler}"
         "${platform}"
@@ -120,7 +121,7 @@ endif()
 ##############################################################################
 # Create target for the project
 
-add_executable("${projectName}" WIN32 MACOSX_BUNDLE
+add_executable("${projectName}" MACOSX_BUNDLE
 ${projectSourceFiles})
 
 set_target_properties("${projectName}" PROPERTIES CXX_STANDARD 11)
