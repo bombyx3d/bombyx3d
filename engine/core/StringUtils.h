@@ -19,32 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include <cppunit/TestRunner.h>
-#include <cppunit/TestResult.h>
-#include <cppunit/TestResultCollector.h>
-#include <cppunit/TextOutputter.h>
-#include <cppunit/BriefTestProgressListener.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
-#include <fstream>
-#include <iostream>
-#include <cstdlib>
 
-int main()
+#pragma once
+#include "engine/core/macros.h"
+#include <string>
+
+/** Static class containing a set of utility methods for string manipulation. */
+class StringUtils
 {
-    CppUnit::TestResult result;
-    CppUnit::TestRunner runner;
-    runner.addTest(CppUnit::TestFactoryRegistry::getRegistry().makeTest());
+public:
+    /**
+     * Checks whether given string ends with the provided substring.
+     *
+     * @param string String to check.
+     * @param what Substring to search.
+     *
+     * @return `true` if given string ends with the provided substring, otherwise returns `false`.
+     */
+    static bool endsWith(const std::string& string, const std::string& what);
 
-    CppUnit::BriefTestProgressListener progressListener;
-    result.addListener(&progressListener);
-
-    CppUnit::TestResultCollector resultCollector;
-    result.addListener(&resultCollector);
-
-    runner.run(result);
-
-    CppUnit::TextOutputter textOutputter(&resultCollector, std::cout);
-    textOutputter.write();
-
-    return resultCollector.wasSuccessful() ? EXIT_SUCCESS : EXIT_FAILURE;
-}
+    Z_STATIC_CLASS(StringUtils);
+};

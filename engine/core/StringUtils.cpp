@@ -19,32 +19,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include <cppunit/TestRunner.h>
-#include <cppunit/TestResult.h>
-#include <cppunit/TestResultCollector.h>
-#include <cppunit/TextOutputter.h>
-#include <cppunit/BriefTestProgressListener.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
-#include <fstream>
-#include <iostream>
-#include <cstdlib>
+#include "StringUtils.h"
+#include <cstring>
 
-int main()
+bool StringUtils::endsWith(const std::string& string, const std::string& what)
 {
-    CppUnit::TestResult result;
-    CppUnit::TestRunner runner;
-    runner.addTest(CppUnit::TestFactoryRegistry::getRegistry().makeTest());
+    size_t stringLength = string.length();
+    size_t whatLength = what.length();
 
-    CppUnit::BriefTestProgressListener progressListener;
-    result.addListener(&progressListener);
+    if (whatLength > stringLength)
+        return false;
 
-    CppUnit::TestResultCollector resultCollector;
-    result.addListener(&resultCollector);
-
-    runner.run(result);
-
-    CppUnit::TextOutputter textOutputter(&resultCollector, std::cout);
-    textOutputter.write();
-
-    return resultCollector.wasSuccessful() ? EXIT_SUCCESS : EXIT_FAILURE;
+    const char* p = string.c_str() + stringLength - whatLength;
+    return !memcmp(p, what.data(), whatLength);
 }
