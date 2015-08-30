@@ -133,4 +133,4 @@ def runCMakeBuild(projectPath, outputDirectory, platform, compiler, target, proj
     elif target == 'release':
         config = '--config Release'
 
-    subprocess.check_call('cmake --build . %s' % (config), shell=True)
+    subprocess.check_call('cmake --build . %s --target "%s-tests"' % (config, project.name), shell=True)

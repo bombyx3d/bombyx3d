@@ -44,7 +44,7 @@ add_custom_target("${projectName}-prebuild" ALL
     WORKING_DIRECTORY
         "${projectPath}"
     COMMENT
-        "Running build.py"
+        "Validating project configuration"
 )
 
 
@@ -160,12 +160,21 @@ target_link_libraries("${projectName}" "${projectName}-code" "${projectName}-lib
 ##############################################################################
 # Create target for tests
 
-add_executable("${projectName}-tests"
+add_executable("${projectName}-tests" EXCLUDE_FROM_ALL
 ${testsSourceFiles})
 
 set_target_properties("${projectName}-tests" PROPERTIES CXX_STANDARD 11)
-add_dependencies("${projectName}-tests" "${projectName}-prebuild")
+add_dependencies("${projectName}-tests" "${projectName}-prebuild" "${projectName}")
 target_link_libraries("${projectName}-tests" "${projectName}-code" "${projectName}-libraries")
+
+add_custom_command(TARGET
+        "${projectName}-tests"
+    POST_BUILD
+    COMMAND
+        "${projectName}-tests"
+    COMMENT
+        "Running unit tests"
+)
 
 
 ##############################################################################
