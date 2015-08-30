@@ -1,7 +1,8 @@
 #include <cstdio>
+#include <zlib.h>
 
 int main()
 {
-    printf("Hello, world!\n");
+    printf("Hello, world! %s\n", zlibVersion());
     return 1;
 }

@@ -20,10 +20,5 @@
 # THE SOFTWARE.
 #
 
-ProjectName: 'Bombyx3D'
-
-Import:
-  - 'libs/zlib'
-
-ProjectIncludeDirectories: '.'
-ProjectSources: 'engine'
+LibraryIncludeDirectories: '.'
+LibrarySources: '.'
