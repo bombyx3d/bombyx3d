@@ -11,4 +11,5 @@ endif()
 
 add_subdirectory(glfw)
 add_subdirectory(glm)
+add_subdirectory(libpng)
 add_subdirectory(zlib)
