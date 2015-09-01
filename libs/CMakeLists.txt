@@ -9,4 +9,5 @@ else()
     add_definitions(-w)
 endif()
 
+add_subdirectory(glfw)
 add_subdirectory(glm)
