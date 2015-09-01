@@ -5,6 +5,7 @@ project(GnomeFortress)
 find_package(Threads REQUIRED)
 
 add_subdirectory(cmake)
+add_subdirectory(libs)
 
 if(NOT MSVC)
     add_definitions(-pedantic -Wall -Wextra -Wconversion)
