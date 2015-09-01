@@ -9,6 +9,7 @@ else()
     add_definitions(-w)
 endif()
 
+add_subdirectory(bzip2)
 add_subdirectory(glfw)
 add_subdirectory(glm)
 add_subdirectory(libpng)
