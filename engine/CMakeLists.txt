@@ -7,6 +7,10 @@ set(source_files
     core/Log.cpp
     core/Log.h
     interfaces/core/IApplication.h
+    interfaces/render/IRenderer.h
+    render/opengl.h
+    render/Renderer.cpp
+    render/Renderer.h
 )
 
 add_library(engine STATIC EXCLUDE_FROM_ALL ${source_files})
