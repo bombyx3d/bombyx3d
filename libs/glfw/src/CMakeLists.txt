@@ -58,4 +58,4 @@ endif()
 
 add_library(glfw STATIC EXCLUDE_FROM_ALL ${glfw_SOURCES} ${glfw_HEADERS})
 target_link_libraries(glfw ${glfw_LIBRARIES})
-target_include_directories(glfw SYSTEM PUBLIC BEFORE ${glfw_INCLUDE_DIRS})
+target_include_directories(glfw SYSTEM PUBLIC BEFORE "${GLFW_SOURCE_DIR}/include" ${glfw_INCLUDE_DIRS})
