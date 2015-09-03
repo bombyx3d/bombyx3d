@@ -21,6 +21,9 @@ static const WORD RED = FOREGROUND_RED | FOREGROUND_INTENSITY;
 
 static int win32Main()
 {
+    setlocale(LC_ALL, "");
+    setlocale(LC_NUMERIC, "C");
+
     if (gIsConsoleApplication) {
         gConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
         GetConsoleScreenBufferInfo(gConsoleHandle, &gConsoleInitialSettings);

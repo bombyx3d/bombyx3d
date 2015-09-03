@@ -14,6 +14,26 @@ if(WIN32)
     )
 endif()
 
+if(APPLE)
+    list(APPEND defines "Z_PLATFORM_OSX")
+    list(APPEND libraries glfw)
+    list(APPEND source_files
+        shared/GlfwWrapper.cpp
+        shared/GlfwWrapper.h
+        osx/main.mm
+    )
+endif()
+
+if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+    list(APPEND defines "Z_PLATFORM_LINUX")
+    list(APPEND libraries glfw)
+    list(APPEND source_files
+        shared/GlfwWrapper.cpp
+        shared/GlfwWrapper.h
+        linux/main.cpp
+    )
+endif()
+
 add_library(platform STATIC EXCLUDE_FROM_ALL ${source_files})
 set_source_groups(${source_files})
 
