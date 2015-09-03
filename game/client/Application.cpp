@@ -3,18 +3,18 @@
 
 namespace Engine
 {
-    Application* Application::m_Instance;
+    Application* Application::mInstance;
 
     Application::Application()
     {
-        assert(m_Instance == nullptr);
-        m_Instance = this;
+        assert(mInstance == nullptr);
+        mInstance = this;
     }
 
     Application::~Application()
     {
-        assert(m_Instance == this);
-        m_Instance = nullptr;
+        assert(mInstance == this);
+        mInstance = nullptr;
     }
 
     glm::ivec2 Application::preferredScreenSize() const
@@ -34,23 +34,23 @@ namespace Engine
 
     void Application::initialize(const glm::ivec2& screenSize)
     {
-        m_ScreenSize = screenSize;
-        m_Renderer.reset(new Renderer);
+        mScreenSize = screenSize;
+        mRenderer.reset(new Renderer);
     }
 
     void Application::shutdown()
     {
-        m_Renderer.reset();
+        mRenderer.reset();
     }
 
     void Application::resize(const glm::ivec2& screenSize)
     {
-        m_ScreenSize = screenSize;
+        mScreenSize = screenSize;
     }
 
     void Application::runFrame(double)
     {
-        m_Renderer->setViewport(0, 0, m_ScreenSize.x, m_ScreenSize.y);
-        m_Renderer->clear();
+        mRenderer->setViewport(0, 0, mScreenSize.x, mScreenSize.y);
+        mRenderer->clear();
     }
 }

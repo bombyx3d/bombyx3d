@@ -13,9 +13,9 @@ namespace Engine
         Application();
         ~Application();
 
-        static IRenderer* renderer() { assert(m_Instance); return m_Instance->m_Renderer.get(); }
+        static IRenderer* renderer() { assert(mInstance); return mInstance->mRenderer.get(); }
 
-        static const glm::ivec2& screenSize() { assert(m_Instance); return m_Instance->m_ScreenSize; }
+        static const glm::ivec2& screenSize() { assert(mInstance); return mInstance->mScreenSize; }
 
         glm::ivec2 preferredScreenSize() const override;
         int preferredDepthBits() const override;
@@ -27,8 +27,8 @@ namespace Engine
         void runFrame(double time) override;
 
     private:
-        static Application* m_Instance;
-        std::unique_ptr<IRenderer> m_Renderer;
-        glm::ivec2 m_ScreenSize;
+        static Application* mInstance;
+        std::unique_ptr<IRenderer> mRenderer;
+        glm::ivec2 mScreenSize;
     };
 }
