@@ -1,4 +1,4 @@
-﻿#include "GlfwWrapper.h"
+#include "GlfwWrapper.h"
 #include "engine/core/Log.h"
 #include <cstdlib>
 #include <GLFW/glfw3.h>

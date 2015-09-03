@@ -1,4 +1,4 @@
-﻿
+
 #pragma once
 #include "engine/interfaces/core/IApplication.h"
 #include <glm/glm.hpp>

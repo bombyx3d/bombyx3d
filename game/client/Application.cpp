@@ -1,4 +1,4 @@
-﻿#include "Application.h"
+#include "Application.h"
 #include "engine/render/Renderer.h"
 
 namespace Engine

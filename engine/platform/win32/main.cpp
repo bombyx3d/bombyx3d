@@ -1,4 +1,4 @@
-﻿#include "WinAPI.h"
+#include "WinAPI.h"
 #include "engine/interfaces/core/IApplication.h"
 #include "engine/core/Log.h"
 #include "engine/platform/shared/GlfwWrapper.h"

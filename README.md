@@ -1,2 +1,2 @@
-﻿Gnome Fortress
+Gnome Fortress
 ==============

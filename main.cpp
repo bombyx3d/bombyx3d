@@ -1,4 +1,4 @@
-﻿#include "game/client/Application.h"
+#include "game/client/Application.h"
 
 using namespace Engine;
 
