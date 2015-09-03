@@ -6,6 +6,12 @@ include(cmake/SetSourceGroups.cmake)
 
 find_package(Threads REQUIRED)
 
+if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+    add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
+endif()
+
 add_subdirectory(libs)
 
 if(NOT MSVC)

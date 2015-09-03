@@ -1,5 +1,6 @@
 
 #pragma once
+#include "engine/core/macros.h"
 #include "engine/interfaces/io/IFile.h"
 #include <cstdio>
 
