@@ -4,6 +4,7 @@
 #include "engine/platform/shared/StdIoFileSystem.h"
 #include "engine/platform/shared/GlfwWrapper.h"
 #include "WinAPI.h"
+#include <GL/glew.h>
 #include <vector>
 #include <cstdlib>
 
@@ -71,8 +72,18 @@ static int win32Main()
 
     int exitCode = EXIT_SUCCESS;
     GlfwWrapper glfwWrapper;
-    if (!glfwWrapper.run()) {
-        MessageBoxW(nullptr, L"Game exited with an error.", L"Error", MB_ICONERROR | MB_OK);
+    if (glfwWrapper.createWindow()) {
+        glewExperimental = GL_TRUE;
+        if (glewInit() == GLEW_OK) {
+            glfwWrapper.run();
+        } else {
+            Z_LOGE("Unable to initialize GLEW.");
+            glfwWrapper.destroyWindow();
+            MessageBoxW(nullptr, L"Unable to initialize OpenGL.", L"Error", MB_ICONERROR | MB_OK);
+            exitCode = EXIT_FAILURE;
+        }
+    } else {
+        MessageBoxW(nullptr, L"Unable to initialize OpenGL.", L"Error", MB_ICONERROR | MB_OK);
         exitCode = EXIT_FAILURE;
     }
 

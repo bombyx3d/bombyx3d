@@ -5,7 +5,7 @@ set(libraries)
 
 if(WIN32)
     list(APPEND defines "Z_PLATFORM_WIN32")
-    list(APPEND libraries glfw)
+    list(APPEND libraries glfw glew)
     list(APPEND source_files
         shared/GlfwWrapper.cpp
         shared/GlfwWrapper.h

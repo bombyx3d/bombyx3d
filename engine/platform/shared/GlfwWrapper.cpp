@@ -1,6 +1,7 @@
 #include "GlfwWrapper.h"
 #include "engine/core/Log.h"
 #include <cstdlib>
+#include <cassert>
 #include <GLFW/glfw3.h>
 
 namespace Engine
@@ -25,46 +26,6 @@ namespace Engine
             destroyWindow();
             glfwTerminate();
         }
-    }
-
-    bool GlfwWrapper::run()
-    {
-        if (!createWindow()) {
-            destroyWindow();
-            return false;
-        }
-
-        glm::ivec2 screenSize(0);
-        glfwGetFramebufferSize(mWindow, &screenSize.x, &screenSize.y);
-
-        Z_LOGI("Initializing application with window size (" << screenSize.x << ", " << screenSize.y << ").");
-        mApplication->initialize(screenSize);
-
-        while (!glfwWindowShouldClose(mWindow)) {
-            double time = glfwGetTime();
-            mFrameTime = (time > mPrevTime ? time - mPrevTime : 0.0);
-            mPrevTime = time;
-
-            glm::ivec2 newScreenSize(0);
-            glfwGetFramebufferSize(mWindow, &newScreenSize.x, &newScreenSize.y);
-            if (screenSize != newScreenSize) {
-                screenSize = newScreenSize;
-                Z_LOGI("Application window has been resized to (" << screenSize.x << ", " << screenSize.y << ").");
-                mApplication->resize(screenSize);
-            }
-
-            mApplication->runFrame(time);
-
-            glfwSwapBuffers(mWindow);
-            glfwPollEvents();
-        }
-
-        Z_LOGI("Application is shutting down.");
-        mApplication->shutdown();
-
-        destroyWindow();
-
-        return true;
     }
 
     bool GlfwWrapper::createWindow()
@@ -116,6 +77,41 @@ namespace Engine
 
             Z_TRACE("Destroyed GLFW window.");
         }
+    }
+
+    void GlfwWrapper::run()
+    {
+        assert(mWindow != nullptr);
+
+        glm::ivec2 screenSize(0);
+        glfwGetFramebufferSize(mWindow, &screenSize.x, &screenSize.y);
+
+        Z_LOGI("Initializing application with window size (" << screenSize.x << ", " << screenSize.y << ").");
+        mApplication->initialize(screenSize);
+
+        while (!glfwWindowShouldClose(mWindow)) {
+            double time = glfwGetTime();
+            mFrameTime = (time > mPrevTime ? time - mPrevTime : 0.0);
+            mPrevTime = time;
+
+            glm::ivec2 newScreenSize(0);
+            glfwGetFramebufferSize(mWindow, &newScreenSize.x, &newScreenSize.y);
+            if (screenSize != newScreenSize) {
+                screenSize = newScreenSize;
+                Z_LOGI("Application window has been resized to (" << screenSize.x << ", " << screenSize.y << ").");
+                mApplication->resize(screenSize);
+            }
+
+            mApplication->runFrame(time);
+
+            glfwSwapBuffers(mWindow);
+            glfwPollEvents();
+        }
+
+        Z_LOGI("Application is shutting down.");
+        mApplication->shutdown();
+
+        destroyWindow();
     }
 
     void GlfwWrapper::keyCallback(GLFWwindow*, int, int, int, int)

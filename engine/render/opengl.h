@@ -5,6 +5,7 @@
  #include <OpenGL/gl.h>
 #elif defined(_WIN32)
  #include "engine/platform/win32/WinAPI.h"
+ #include <GL/glew.h>
  #include <GL/gl.h>
 #else
  #include <GL/gl.h>

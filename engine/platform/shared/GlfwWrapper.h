@@ -15,7 +15,10 @@ namespace Engine
         GlfwWrapper();
         ~GlfwWrapper();
 
-        bool run();
+        bool createWindow();
+        void destroyWindow();
+
+        void run();
 
     private:
         bool mInitialized = false;
@@ -23,9 +26,6 @@ namespace Engine
         double mPrevTime = 0.0;
         double mFrameTime = 0.0;
         std::unique_ptr<IApplication> mApplication;
-
-        bool createWindow();
-        void destroyWindow();
 
         static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
         static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);

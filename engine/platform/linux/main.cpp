@@ -33,7 +33,9 @@ int main()
 
     int exitCode = EXIT_SUCCESS;
     GlfwWrapper glfwWrapper;
-    if (!glfwWrapper.run())
+    if (glfwWrapper.createWindow())
+        glfwWrapper.run();
+    else
         exitCode = EXIT_FAILURE;
 
     IFileSystem::destroyInstance();
