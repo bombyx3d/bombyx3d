@@ -9,6 +9,10 @@ if(WIN32)
     list(APPEND source_files
         shared/GlfwWrapper.cpp
         shared/GlfwWrapper.h
+        shared/StdIoFile.cpp
+        shared/StdIoFile.h
+        shared/StdIoFileSystem.cpp
+        shared/StdIoFileSystem.h
         win32/main.cpp
         win32/WinAPI.h
     )
@@ -20,6 +24,10 @@ if(APPLE)
     list(APPEND source_files
         shared/GlfwWrapper.cpp
         shared/GlfwWrapper.h
+        shared/StdIoFile.cpp
+        shared/StdIoFile.h
+        shared/StdIoFileSystem.cpp
+        shared/StdIoFileSystem.h
         osx/main.mm
     )
 endif()
@@ -30,6 +38,10 @@ if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
     list(APPEND source_files
         shared/GlfwWrapper.cpp
         shared/GlfwWrapper.h
+        shared/StdIoFile.cpp
+        shared/StdIoFile.h
+        shared/StdIoFileSystem.cpp
+        shared/StdIoFileSystem.h
         linux/main.cpp
     )
 endif()

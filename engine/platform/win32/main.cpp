@@ -1,7 +1,9 @@
-#include "WinAPI.h"
-#include "engine/interfaces/core/IApplication.h"
 #include "engine/core/Log.h"
+#include "engine/interfaces/core/IApplication.h"
+#include "engine/interfaces/io/IFileSystem.h"
+#include "engine/platform/shared/StdIoFileSystem.h"
 #include "engine/platform/shared/GlfwWrapper.h"
+#include "WinAPI.h"
 #include <vector>
 #include <cstdlib>
 
@@ -65,12 +67,16 @@ static int win32Main()
         }
     });
 
+    IFileSystem::createInstance<StdIoFileSystem>(".");
+
     int exitCode = EXIT_SUCCESS;
     GlfwWrapper glfwWrapper;
     if (!glfwWrapper.run()) {
         MessageBoxW(nullptr, L"Game exited with an error.", L"Error", MB_ICONERROR | MB_OK);
         exitCode = EXIT_FAILURE;
     }
+
+    IFileSystem::destroyInstance();
 
     Log::setLogger(nullptr);
     if (gIsConsoleApplication) {

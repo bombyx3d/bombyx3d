@@ -1,5 +1,6 @@
 
 #pragma once
+#include "engine/core/macros.h"
 #include "engine/interfaces/core/IApplication.h"
 #include <glm/glm.hpp>
 #include <memory>
@@ -31,5 +32,7 @@ namespace Engine
         static void mouseScrollCallback(GLFWwindow* window, double x, double y);
         static void mouseMoveCallback(GLFWwindow* window, double x, double y);
         static void errorCallback(int error, const char* description);
+
+        Z_DISABLE_COPY(GlfwWrapper);
     };
 }

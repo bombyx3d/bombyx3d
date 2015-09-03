@@ -1,5 +1,7 @@
 #include "engine/core/Log.h"
 #include "engine/interfaces/core/IApplication.h"
+#include "engine/interfaces/io/IFileSystem.h"
+#include "engine/platform/shared/StdIoFileSystem.h"
 #include "engine/platform/shared/GlfwWrapper.h"
 #include <unistd.h>
 
@@ -27,10 +29,14 @@ int main()
             printf("%s%s\033[0m\n", ansi, message.c_str());
     });
 
+    IFileSystem::createInstance<StdIoFileSystem>(".");
+
     int exitCode = EXIT_SUCCESS;
     GlfwWrapper glfwWrapper;
     if (!glfwWrapper.run())
         exitCode = EXIT_FAILURE;
+
+    IFileSystem::destroyInstance();
 
     Log::setLogger(nullptr);
 

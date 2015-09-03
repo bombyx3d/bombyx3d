@@ -6,11 +6,15 @@ add_subdirectory(platform)
 set(source_files
     core/Log.cpp
     core/Log.h
+    core/macros.h
     interfaces/core/IApplication.h
+    interfaces/io/IFile.h
+    interfaces/io/IFileSystem.h
     interfaces/render/IRenderer.h
     render/opengl.h
     render/Renderer.cpp
     render/Renderer.h
+    utility/Singleton.h
 )
 
 add_library(engine STATIC EXCLUDE_FROM_ALL ${source_files})
