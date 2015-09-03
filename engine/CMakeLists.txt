@@ -11,9 +11,15 @@ set(source_files
     interfaces/io/IFile.h
     interfaces/io/IFileSystem.h
     interfaces/render/IRenderer.h
+    interfaces/render/IShader.h
+    interfaces/render/ITexture.h
     render/opengl.h
     render/Renderer.cpp
     render/Renderer.h
+    render/Shader.cpp
+    render/Shader.h
+    render/Texture.cpp
+    render/Texture.h
     utility/Singleton.h
 )
 

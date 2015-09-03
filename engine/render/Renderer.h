@@ -13,5 +13,8 @@ namespace Engine
         void setViewport(int x, int y, int w, int h) override;
 
         void clear() override;
+
+        ShaderPtr createShader() override;
+        TexturePtr createTexture() override;
     };
 }

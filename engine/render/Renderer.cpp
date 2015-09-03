@@ -1,4 +1,6 @@
 #include "Renderer.h"
+#include "Shader.h"
+#include "Texture.h"
 #include "opengl.h"
 
 namespace Engine
@@ -20,5 +22,15 @@ namespace Engine
     void Renderer::clear()
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    }
+
+    ShaderPtr Renderer::createShader()
+    {
+        return std::make_shared<Shader>();
+    }
+
+    TexturePtr Renderer::createTexture()
+    {
+        return std::make_shared<Texture>();
     }
 }
