@@ -37,6 +37,7 @@ namespace Engine
     void Application::initialize(const glm::ivec2& screenSize)
     {
         mScreenSize = screenSize;
+        //ResourceManager::instance()->getShader("shaders/BasicColored.glsl", true);
     }
 
     void Application::shutdown()
@@ -50,7 +51,9 @@ namespace Engine
 
     void Application::runFrame(double)
     {
+        IRenderer::instance()->beginFrame();
         IRenderer::instance()->setViewport(0, 0, mScreenSize.x, mScreenSize.y);
         IRenderer::instance()->clear();
+        IRenderer::instance()->endFrame();
     }
 }

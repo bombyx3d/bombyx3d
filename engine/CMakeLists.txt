@@ -29,6 +29,8 @@ set(source_files
     render/Shader.h
     render/Texture.cpp
     render/Texture.h
+    render/Uniform.cpp
+    render/Uniform.h
     utility/FileUtils.cpp
     utility/FileUtils.h
     utility/ProducerConsumerQueue.cpp

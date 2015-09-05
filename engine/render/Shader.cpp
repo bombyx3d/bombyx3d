@@ -2,7 +2,10 @@
 #include "opengl.h"
 #include "engine/core/Log.h"
 #include "engine/interfaces/core/IThreadManager.h"
+#include <utility>
+#include <algorithm>
 #include <iomanip>
+#include <cassert>
 
 namespace Engine
 {
@@ -32,13 +35,13 @@ namespace Engine
 
     void Shader::setVertexSource(const std::vector<std::string>& source)
     {
-        mProgramCompiled = false;
+        resetToUncompiledState();
         setSource(mVertexShader, source);
     }
 
     void Shader::setFragmentSource(const std::vector<std::string>& source)
     {
-        mProgramCompiled = false;
+        resetToUncompiledState();
         setSource(mFragmentShader, source);
     }
 
@@ -83,7 +86,9 @@ namespace Engine
         GLint status = GL_FALSE;
         glGetProgramiv(GLuint(mProgram), GL_LINK_STATUS, &status);
 
-        if (status != GL_TRUE) {
+        if (status == GL_TRUE) {
+            collectUniformsAndAttributes();
+        } else {
             std::stringstream ss;
             ss << "Unable to link shader program.\n";
             ss << "===============\n";
@@ -165,5 +170,66 @@ namespace Engine
         size_t length = source.length();
         if (length > 0 && source[length - 1] != '\n')
             stream << '\n';
+    }
+
+    void Shader::collectUniformsAndAttributes()
+    {
+        GLuint program = GLuint(mProgram);
+        GLint size;
+        GLenum type;
+
+        GLint maxUniformNameLength = 0, maxAttributeNameLength = 0;
+        glGetProgramiv(program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformNameLength);
+        glGetProgramiv(program, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxAttributeNameLength);
+
+        size_t maxNameLength = size_t(std::max(maxAttributeNameLength, maxUniformNameLength));
+        char* nameBuffer = reinterpret_cast<char*>(alloca(maxNameLength + 1));
+
+        GLint numUniforms = 0, numAttributes = 0;
+        glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numUniforms);
+        glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &numAttributes);
+
+        mUniforms.clear();
+        for (size_t i = 0; i < size_t(numUniforms); i++) {
+            GLsizei nameLength = 0;
+            glGetActiveUniform(program, i, GLsizei(maxNameLength), &nameLength, &size, &type, nameBuffer);
+            nameBuffer[nameLength] = 0;
+
+            if (nameLength == 0)
+                continue;
+            if (nameLength >= 3 && nameBuffer[0] == 'g' && nameBuffer[1] == 'l' && nameBuffer[2] == '_')
+                continue;
+
+            int location = glGetUniformLocation(program, nameBuffer);
+            assert(location >= 0);
+
+            Atom atom = AtomTable::instance()->getAtom(std::string(nameBuffer, nameLength));
+            mUniforms.emplace_back(atom, location);
+        }
+
+        mAttributes.clear();
+        for (size_t i = 0; i < size_t(numAttributes); i++) {
+            GLsizei nameLength = 0;
+            glGetActiveAttrib(program, i, GLsizei(maxNameLength), &nameLength, &size, &type, nameBuffer);
+            nameBuffer[nameLength] = 0;
+
+            if (nameLength == 0)
+                continue;
+            if (nameLength >= 3 && nameBuffer[0] == 'g' && nameBuffer[1] == 'l' && nameBuffer[2] == '_')
+                continue;
+
+            int location = glGetAttribLocation(program, nameBuffer);
+            assert(location >= 0);
+
+            Atom atom = AtomTable::instance()->getAtom(std::string(nameBuffer, nameLength));
+            mAttributes.emplace_back(atom, location);
+        }
+    }
+
+    void Shader::resetToUncompiledState()
+    {
+        mProgramCompiled = false;
+        mUniforms.clear();
+        mAttributes.clear();
     }
 }
