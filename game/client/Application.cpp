@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "engine/interfaces/render/IRenderer.h"
 
 namespace Engine
 {
