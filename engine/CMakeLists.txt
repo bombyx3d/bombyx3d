@@ -10,6 +10,7 @@ set(source_files
     core/ResourceManager.h
     core/macros.h
     interfaces/core/IApplication.h
+    interfaces/core/IThreadManager.h
     interfaces/io/IFile.h
     interfaces/io/IFileSystem.h
     interfaces/render/IRenderer.h
@@ -27,7 +28,11 @@ set(source_files
     render/Texture.h
     utility/FileUtils.cpp
     utility/FileUtils.h
+    utility/ProducerConsumerQueue.cpp
+    utility/ProducerConsumerQueue.h
     utility/Singleton.h
+    utility/WorkerThread.cpp
+    utility/WorkerThread.h
 )
 
 add_library(engine STATIC EXCLUDE_FROM_ALL ${source_files})

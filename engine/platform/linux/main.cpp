@@ -2,6 +2,7 @@
 #include "engine/interfaces/core/IApplication.h"
 #include "engine/interfaces/io/IFileSystem.h"
 #include "engine/platform/shared/StdIoFileSystem.h"
+#include "engine/platform/shared/CxxThreadManager.h"
 #include "engine/platform/shared/GlfwWrapper.h"
 #include <unistd.h>
 
@@ -29,16 +30,21 @@ int main()
             printf("%s%s\033[0m\n", ansi, message.c_str());
     });
 
+    IThreadManager::createInstance<CxxThreadManager>();
     IFileSystem::createInstance<StdIoFileSystem>(".");
 
     int exitCode = EXIT_SUCCESS;
     GlfwWrapper glfwWrapper;
-    if (glfwWrapper.createWindow())
-        glfwWrapper.run();
-    else
+    if (!glfwWrapper.createWindow())
         exitCode = EXIT_FAILURE;
+    else {
+        glfwWrapper.run([](){
+            static_cast<CxxThreadManager&>(*IThreadManager::instance()).flushRenderThreadQueue();
+        });
+    }
 
     IFileSystem::destroyInstance();
+    IThreadManager::destroyInstance();
 
     Log::setLogger(nullptr);
 

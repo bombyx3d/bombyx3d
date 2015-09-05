@@ -80,7 +80,7 @@ namespace Engine
         }
     }
 
-    void GlfwWrapper::run()
+    void GlfwWrapper::run(const std::function<void()>& frameCallback)
     {
         assert(mWindow != nullptr);
 
@@ -108,6 +108,9 @@ namespace Engine
 
             glfwSwapBuffers(mWindow);
             glfwPollEvents();
+
+            if (frameCallback)
+                frameCallback();
         }
 
         Z_LOGI("Application is shutting down.");

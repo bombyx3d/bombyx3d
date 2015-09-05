@@ -4,6 +4,7 @@
 #include "engine/interfaces/core/IApplication.h"
 #include <glm/glm.hpp>
 #include <memory>
+#include <functional>
 
 struct GLFWwindow;
 
@@ -18,7 +19,7 @@ namespace Engine
         bool createWindow();
         void destroyWindow();
 
-        void run();
+        void run(const std::function<void()>& frameCallback);
 
     private:
         bool mInitialized = false;

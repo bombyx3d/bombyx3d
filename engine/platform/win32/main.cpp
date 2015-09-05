@@ -2,6 +2,7 @@
 #include "engine/interfaces/core/IApplication.h"
 #include "engine/interfaces/io/IFileSystem.h"
 #include "engine/platform/shared/StdIoFileSystem.h"
+#include "engine/platform/shared/CxxThreadManager.h"
 #include "engine/platform/shared/GlfwWrapper.h"
 #include "WinAPI.h"
 #include <GL/glew.h>
@@ -68,6 +69,7 @@ static int win32Main()
         }
     });
 
+    IThreadManager::createInstance<CxxThreadManager>();
     IFileSystem::createInstance<StdIoFileSystem>(".");
 
     int exitCode = EXIT_SUCCESS;
@@ -75,7 +77,9 @@ static int win32Main()
     if (glfwWrapper.createWindow()) {
         glewExperimental = GL_TRUE;
         if (glewInit() == GLEW_OK) {
-            glfwWrapper.run();
+            glfwWrapper.run([](){
+                static_cast<CxxThreadManager&>(*IThreadManager::instance()).flushRenderThreadQueue();
+            });
         } else {
             Z_LOGE("Unable to initialize GLEW.");
             glfwWrapper.destroyWindow();
@@ -88,6 +92,7 @@ static int win32Main()
     }
 
     IFileSystem::destroyInstance();
+    IThreadManager::destroyInstance();
 
     Log::setLogger(nullptr);
     if (gIsConsoleApplication) {

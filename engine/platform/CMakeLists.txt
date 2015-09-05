@@ -7,6 +7,8 @@ if(WIN32)
     list(APPEND defines "Z_PLATFORM_WIN32")
     list(APPEND libraries glfw glew)
     list(APPEND source_files
+        shared/CxxThreadManager.cpp
+        shared/CxxThreadManager.h
         shared/GlfwWrapper.cpp
         shared/GlfwWrapper.h
         shared/StdIoFile.cpp
@@ -22,6 +24,8 @@ if(APPLE)
     list(APPEND defines "Z_PLATFORM_OSX")
     list(APPEND libraries glfw)
     list(APPEND source_files
+        shared/CxxThreadManager.cpp
+        shared/CxxThreadManager.h
         shared/GlfwWrapper.cpp
         shared/GlfwWrapper.h
         shared/StdIoFile.cpp
@@ -36,6 +40,8 @@ if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
     list(APPEND defines "Z_PLATFORM_LINUX")
     list(APPEND libraries glfw)
     list(APPEND source_files
+        shared/CxxThreadManager.cpp
+        shared/CxxThreadManager.h
         shared/GlfwWrapper.cpp
         shared/GlfwWrapper.h
         shared/StdIoFile.cpp
