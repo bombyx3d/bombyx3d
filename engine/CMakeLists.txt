@@ -17,6 +17,7 @@ set(source_files
     interfaces/render/ITexture.h
     material/ShaderLoader.cpp
     material/ShaderLoader.h
+    mesh/VertexFormat.h
     render/opengl.h
     render/Renderer.cpp
     render/Renderer.h
@@ -33,4 +34,4 @@ add_library(engine STATIC EXCLUDE_FROM_ALL ${source_files})
 set_source_groups(${source_files})
 
 set_target_properties(engine PROPERTIES CXX_STANDARD 11)
-target_link_libraries(engine platform glm)
+target_link_libraries(engine platform glm boost)
