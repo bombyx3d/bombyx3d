@@ -20,6 +20,8 @@ set(source_files
     render/Shader.h
     render/Texture.cpp
     render/Texture.h
+    utility/FileUtils.cpp
+    utility/FileUtils.h
     utility/Singleton.h
 )
 
