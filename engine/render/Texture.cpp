@@ -1,4 +1,5 @@
 #include "Texture.h"
+#include "engine/interfaces/core/IThreadManager.h"
 #include "opengl.h"
 
 namespace Engine
@@ -13,6 +14,8 @@ namespace Engine
     Texture::~Texture()
     {
         GLuint handle = GLuint(mHandle);
-        glDeleteTextures(1, &handle);
+        IThreadManager::instance()->performInRenderThread([handle]() {
+            glDeleteTextures(1, &handle);
+        });
     }
 }

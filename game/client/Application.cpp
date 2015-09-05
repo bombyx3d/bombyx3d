@@ -1,5 +1,7 @@
 #include "Application.h"
 #include "engine/interfaces/render/IRenderer.h"
+#include "engine/core/Log.h"
+#include "engine/core/ResourceManager.h"
 
 namespace Engine
 {

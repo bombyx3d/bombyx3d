@@ -4,9 +4,9 @@
 namespace Engine
 {
     WorkerThread::WorkerThread()
-        : mThread(std::bind(&WorkerThread::thread, this))
-        , mShouldExit(false)
+        : mShouldExit(false)
     {
+        mThread = std::thread(std::bind(&WorkerThread::thread, this));
     }
 
     WorkerThread::~WorkerThread()

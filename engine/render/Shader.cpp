@@ -1,6 +1,7 @@
 #include "Shader.h"
 #include "opengl.h"
 #include "engine/core/Log.h"
+#include "engine/interfaces/core/IThreadManager.h"
 #include <iomanip>
 
 namespace Engine
@@ -18,9 +19,15 @@ namespace Engine
 
     Shader::~Shader()
     {
-        glDeleteProgram(GLuint(mProgram));
-        glDeleteShader(GLuint(mFragmentShader));
-        glDeleteShader(GLuint(mVertexShader));
+        GLuint program = GLuint(mProgram);
+        GLuint fragmentShader = GLuint(mFragmentShader);
+        GLuint vertexShader = GLuint(mVertexShader);
+
+        IThreadManager::instance()->performInRenderThread([program, fragmentShader, vertexShader]() {
+            glDeleteProgram(program);
+            glDeleteShader(fragmentShader);
+            glDeleteShader(vertexShader);
+        });
     }
 
     void Shader::setVertexSource(const std::vector<std::string>& source)
