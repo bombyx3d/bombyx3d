@@ -4,6 +4,9 @@ project(Engine)
 add_subdirectory(platform)
 
 set(source_files
+    core/Atom.h
+    core/AtomTable.cpp
+    core/AtomTable.h
     core/Log.cpp
     core/Log.h
     core/ResourceManager.cpp
