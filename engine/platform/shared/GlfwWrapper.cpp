@@ -1,4 +1,5 @@
 #include "GlfwWrapper.h"
+#include "engine/render/Renderer.h"
 #include "engine/core/Log.h"
 #include <cstdlib>
 #include <cassert>
@@ -87,6 +88,7 @@ namespace Engine
         glfwGetFramebufferSize(mWindow, &screenSize.x, &screenSize.y);
 
         Z_LOGI("Initializing application with window size (" << screenSize.x << ", " << screenSize.y << ").");
+        IRenderer::createInstance<Renderer>();
         mApplication->initialize(screenSize);
 
         while (!glfwWindowShouldClose(mWindow)) {
@@ -110,6 +112,7 @@ namespace Engine
 
         Z_LOGI("Application is shutting down.");
         mApplication->shutdown();
+        IRenderer::destroyInstance();
 
         destroyWindow();
     }

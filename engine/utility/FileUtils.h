@@ -14,7 +14,7 @@ namespace Engine
 
         std::vector<char> loadFile(const std::string& fileName);
         std::vector<char> loadFile(IFile* file);
-        std::vector<char> loadFile(const FilePtr& file) { return loadFile(file.get()); }
+        std::vector<char> loadFile(const FilePtr& file);
 
         std::vector<std::string> loadFileLines(const std::string& fileName, bool includeEolMarker = true);
         std::vector<std::string> loadFileLines(IFile* file, bool includeEolMarker = true);

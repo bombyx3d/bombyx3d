@@ -6,6 +6,8 @@ add_subdirectory(platform)
 set(source_files
     core/Log.cpp
     core/Log.h
+    core/ResourceManager.cpp
+    core/ResourceManager.h
     core/macros.h
     interfaces/core/IApplication.h
     interfaces/io/IFile.h
@@ -13,6 +15,8 @@ set(source_files
     interfaces/render/IRenderer.h
     interfaces/render/IShader.h
     interfaces/render/ITexture.h
+    material/ShaderLoader.cpp
+    material/ShaderLoader.h
     render/opengl.h
     render/Renderer.cpp
     render/Renderer.h

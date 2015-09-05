@@ -1,12 +1,13 @@
 
 #pragma once
+#include "engine/utility/Singleton.h"
 #include "engine/interfaces/render/IShader.h"
 #include "engine/interfaces/render/ITexture.h"
 #include <glm/glm.hpp>
 
 namespace Engine
 {
-    class IRenderer
+    class IRenderer : public Singleton<IRenderer>
     {
     public:
         virtual ~IRenderer() = default;

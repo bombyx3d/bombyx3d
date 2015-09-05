@@ -1,7 +1,6 @@
 
 #pragma once
 #include "engine/interfaces/core/IApplication.h"
-#include "engine/interfaces/render/IRenderer.h"
 #include <memory>
 #include <cassert>
 
@@ -12,8 +11,6 @@ namespace Engine
     public:
         Application();
         ~Application();
-
-        static IRenderer* renderer() { assert(mInstance); return mInstance->mRenderer.get(); }
 
         static const glm::ivec2& screenSize() { assert(mInstance); return mInstance->mScreenSize; }
 
@@ -28,7 +25,6 @@ namespace Engine
 
     private:
         static Application* mInstance;
-        std::unique_ptr<IRenderer> mRenderer;
         glm::ivec2 mScreenSize;
     };
 }

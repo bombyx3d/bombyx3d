@@ -1,5 +1,4 @@
 #include "Application.h"
-#include "engine/render/Renderer.h"
 
 namespace Engine
 {
@@ -35,12 +34,10 @@ namespace Engine
     void Application::initialize(const glm::ivec2& screenSize)
     {
         mScreenSize = screenSize;
-        mRenderer.reset(new Renderer);
     }
 
     void Application::shutdown()
     {
-        mRenderer.reset();
     }
 
     void Application::resize(const glm::ivec2& screenSize)
@@ -50,7 +47,7 @@ namespace Engine
 
     void Application::runFrame(double)
     {
-        mRenderer->setViewport(0, 0, mScreenSize.x, mScreenSize.y);
-        mRenderer->clear();
+        IRenderer::instance()->setViewport(0, 0, mScreenSize.x, mScreenSize.y);
+        IRenderer::instance()->clear();
     }
 }
