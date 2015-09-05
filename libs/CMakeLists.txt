@@ -6,6 +6,7 @@ else()
     add_definitions(-w)
 endif()
 
+add_subdirectory(boost)
 add_subdirectory(bzip2)
 add_subdirectory(glew)
 add_subdirectory(glfw)
