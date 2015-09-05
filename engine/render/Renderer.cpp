@@ -33,4 +33,15 @@ namespace Engine
     {
         return std::make_shared<Texture>();
     }
+
+    void Renderer::useShader(const ShaderPtr& shader)
+    {
+        if (mCurrentShader != shader) {
+            mCurrentShader = shader;
+            if (!mCurrentShader)
+                glUseProgram(0);
+            else
+                glUseProgram(GLuint(static_cast<Shader&>(*mCurrentShader).handle()));
+        }
+    }
 }

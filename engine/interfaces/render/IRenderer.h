@@ -18,5 +18,7 @@ namespace Engine
 
         virtual ShaderPtr createShader() = 0;
         virtual TexturePtr createTexture() = 0;
+
+        virtual void useShader(const ShaderPtr& shader) = 0;
     };
 }

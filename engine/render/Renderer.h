@@ -1,6 +1,7 @@
 
 #pragma once
 #include "engine/interfaces/render/IRenderer.h"
+#include <glm/glm.hpp>
 
 namespace Engine
 {
@@ -16,5 +17,10 @@ namespace Engine
 
         ShaderPtr createShader() override;
         TexturePtr createTexture() override;
+
+        void useShader(const ShaderPtr& shader) override;
+
+    private:
+        ShaderPtr mCurrentShader;
     };
 }

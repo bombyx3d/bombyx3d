@@ -12,6 +12,8 @@ namespace Engine
         Shader();
         ~Shader();
 
+        size_t handle() const { return mProgram; }
+
         void setVertexSource(const std::vector<std::string>& source) override;
         void setFragmentSource(const std::vector<std::string>& source) override;
 
