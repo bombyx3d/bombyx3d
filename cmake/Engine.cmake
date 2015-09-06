@@ -21,4 +21,29 @@
 #
 
 cmake_minimum_required(VERSION 3.2)
-include(cmake/Engine.cmake)
+
+get_filename_component(CMakeScriptsPath "${CMAKE_CURRENT_LIST_FILE}" ABSOLUTE)
+get_filename_component(CMakeScriptsPath "${CMakeScriptsPath}" PATH)
+get_filename_component(EnginePath "${CMakeScriptsPath}" PATH)
+
+include("${CMakeScriptsPath}/SetSourceGroups.cmake")
+
+find_package(Threads REQUIRED)
+
+if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+    add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
+endif()
+
+add_subdirectory("${EnginePath}/libs" EngineLibs)
+
+if(NOT MSVC)
+    add_definitions(-pedantic -Wall -Wextra -Wconversion)
+    if(NOT CMAKE_COMPILER_IS_GNUCC AND NOT CMAKE_COMPILER_IS_GNUCC)
+        add_definitions(-Wshadow)
+    endif()
+endif()
+
+include_directories("${EnginePath}")
+add_subdirectory("${EnginePath}/engine" Engine)
