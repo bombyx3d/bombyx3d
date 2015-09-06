@@ -33,6 +33,7 @@ namespace Engine
         static Application* mInstance;
         glm::ivec2 mScreenSize;
         float mScreenAspect;
+        ScenePtr mPreviousScene;
         ScenePtr mCurrentScene;
 
         void initialize(const glm::ivec2& screenSize) final override;

@@ -36,6 +36,7 @@ namespace Engine
 
     void Application::setCurrentScene(const ScenePtr& scene)
     {
+        mPreviousScene = std::move(mCurrentScene);
         mCurrentScene = scene;
         if (mCurrentScene)
             mCurrentScene->resize(mScreenSize);
@@ -43,6 +44,7 @@ namespace Engine
 
     void Application::setCurrentScene(ScenePtr&& scene)
     {
+        mPreviousScene = std::move(mCurrentScene);
         mCurrentScene = std::move(scene);
         if (mCurrentScene)
             mCurrentScene->resize(mScreenSize);
@@ -58,6 +60,7 @@ namespace Engine
     void Application::shutdown()
     {
         setCurrentScene(ScenePtr());
+        mPreviousScene.reset();
     }
 
     void Application::resize(const glm::ivec2& screenSize)
@@ -81,6 +84,9 @@ namespace Engine
             mCurrentScene->update(time);
             mCurrentScene->draw(renderer);
         }
+
+        if (mPreviousScene)
+            mPreviousScene.reset();
 
         renderer->endFrame();
     }
