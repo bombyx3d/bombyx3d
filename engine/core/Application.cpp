@@ -52,8 +52,7 @@ namespace Engine
 
     void Application::initialize(const glm::ivec2& screenSize)
     {
-        mScreenSize = screenSize;
-        mScreenAspect = float(mScreenSize.x) / float(mScreenSize.y);
+        resize(screenSize);
         setCurrentScene(createInitialScene());
     }
 
@@ -66,7 +65,12 @@ namespace Engine
     void Application::resize(const glm::ivec2& screenSize)
     {
         mScreenSize = screenSize;
-        mScreenAspect = float(mScreenSize.x) / float(mScreenSize.y);
+
+        if (mScreenSize.x <= 0 || mScreenSize.y <= 0)
+            mScreenAspect = 1.0f;
+        else
+            mScreenAspect = float(mScreenSize.x) / float(mScreenSize.y);
+
         if (mCurrentScene)
             mCurrentScene->resize(screenSize);
     }
