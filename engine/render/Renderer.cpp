@@ -2,6 +2,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Buffer.h"
+#include "VertexSource.h"
 #include "engine/core/Log.h"
 #include "engine/core/AtomTable.h"
 #include "opengl.h"
@@ -9,11 +10,28 @@
 
 namespace Engine
 {
+    static GLenum primitiveTypeToGL(PrimitiveType primitiveType)
+    {
+        switch (primitiveType)
+        {
+        case PrimitiveType::Points: return GL_POINTS;
+        case PrimitiveType::Lines: return GL_LINES;
+        case PrimitiveType::LineStrip: return GL_LINE_STRIP;
+        case PrimitiveType::Triangles: return GL_TRIANGLES;
+        case PrimitiveType::TriangleStrip: return GL_TRIANGLE_STRIP;
+        }
+
+        assert(false);
+        return GL_POINTS;
+    }
+
     Renderer::Renderer()
         : mProjectionMatrixUniform(AtomTable::instance()->getAtom("uProjection"))
         , mModelViewMatrixUniform(AtomTable::instance()->getAtom("uModelView"))
         , mProjectionMatrix(1.0f)
         , mModelViewMatrix(1.0f)
+        , mShouldRebindUniforms(true)
+        , mShouldRebindAttributes(true)
     {
         glClearColor(0.7f, 0.3f, 0.1f, 1.0f);
     }
@@ -70,6 +88,11 @@ namespace Engine
         return std::make_shared<Buffer>(GL_ELEMENT_ARRAY_BUFFER);
     }
 
+    VertexSourcePtr Renderer::createVertexSource()
+    {
+        return std::make_shared<VertexSource>();
+    }
+
     const glm::mat4& Renderer::projectionMatrix() const
     {
         return mProjectionMatrix;
@@ -117,37 +140,88 @@ namespace Engine
     void Renderer::setUniform(const Atom& name, float value)
     {
         mUniforms[name].setFloat(value);
+        mShouldRebindUniforms = true;
     }
 
     void Renderer::setUniform(const Atom& name, const glm::vec2& value)
     {
         mUniforms[name].setVec2(value);
+        mShouldRebindUniforms = true;
     }
 
     void Renderer::setUniform(const Atom& name, const glm::vec3& value)
     {
         mUniforms[name].setVec3(value);
+        mShouldRebindUniforms = true;
     }
 
     void Renderer::setUniform(const Atom& name, const glm::vec4& value)
     {
         mUniforms[name].setVec4(value);
+        mShouldRebindUniforms = true;
     }
 
     void Renderer::setUniform(const Atom& name, const glm::mat4& value)
     {
         mUniforms[name].setMat4(value);
+        mShouldRebindUniforms = true;
     }
 
     void Renderer::useShader(const ShaderPtr& shader)
     {
         if (mCurrentShader != shader) {
-            mCurrentShader = shader;
+            mCurrentShader = std::static_pointer_cast<Shader>(shader);
+
             if (!mCurrentShader)
                 glUseProgram(0);
             else
-                glUseProgram(GLuint(static_cast<Shader&>(*mCurrentShader).handle()));
+                glUseProgram(GLuint(mCurrentShader->handle()));
+
+            mShouldRebindUniforms = true;
+            mShouldRebindAttributes = true;
         }
+    }
+
+    void Renderer::bindVertexSource(const VertexSourcePtr& source)
+    {
+        if (mCurrentVertexSource != source) {
+            if (mCurrentVertexSource)
+                mCurrentVertexSource->unbind();
+            mCurrentVertexSource = std::static_pointer_cast<VertexSource>(source);
+            mShouldRebindAttributes = true;
+        }
+    }
+
+    void Renderer::drawPrimitive(PrimitiveType primitiveType, size_t first, size_t count)
+    {
+        if (!setupDrawCall())
+            return;
+
+        GLenum mode = primitiveTypeToGL(primitiveType);
+        if (!mCurrentVertexSource->indexBuffer())
+            glDrawArrays(mode, first, count);
+        else
+            glDrawElements(mode, count, GL_UNSIGNED_SHORT, reinterpret_cast<void*>(first * sizeof(uint16_t)));
+    }
+
+    bool Renderer::setupDrawCall()
+    {
+        assert(mCurrentShader != nullptr);
+        assert(mCurrentVertexSource != nullptr);
+        if (!mCurrentShader || !mCurrentVertexSource)
+            return false;
+
+        if (mShouldRebindAttributes) {
+            mCurrentVertexSource->bind(*mCurrentShader);
+            mShouldRebindAttributes = false;
+        }
+
+        if (mShouldRebindUniforms) {
+            bindUniforms();
+            mShouldRebindUniforms = false;
+        }
+
+        return true;
     }
 
     void Renderer::bindUniforms()
@@ -155,8 +229,7 @@ namespace Engine
         if (!mCurrentShader)
             return;
 
-        const auto& currentShader = static_cast<Shader&>(*mCurrentShader);
-        for (const auto& uniform : currentShader.uniforms()) {
+        for (const auto& uniform : mCurrentShader->uniforms()) {
             bool bound = false;
 
             auto it = mUniforms.find(uniform.first);
@@ -171,8 +244,13 @@ namespace Engine
     void Renderer::resetOpenGLBindings()
     {
         mCurrentShader.reset();
+        mCurrentVertexSource.reset();
+
         glUseProgram(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+        mShouldRebindUniforms = true;
+        mShouldRebindAttributes = true;
     }
 }

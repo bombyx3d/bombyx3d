@@ -1,5 +1,6 @@
 
 #pragma once
+#include "engine/interfaces/render/IVertexSource.h"
 #include <exception>
 #include <cstddef>
 #include <glm/glm.hpp>
@@ -11,26 +12,17 @@
 
 namespace Engine
 {
-    enum class VertexFormatAttributeType
-    {
-        Float,
-        Float2,
-        Float3,
-        Float4,
-    };
-
-
     // Descriptor for a single attribute in a vertex format
 
     template <typename TYPE = void> struct VertexFormatAttribute;
     template <> struct VertexFormatAttribute<>
     {
         const char* const name;
-        const VertexFormatAttributeType type;
+        const VertexAttributeType type;
         const size_t offset;
         const bool normalize;
 
-        VertexFormatAttribute(const char* n, VertexFormatAttributeType t, size_t o, bool norm)
+        VertexFormatAttribute(const char* n, VertexAttributeType t, size_t o, bool norm)
             : name(n)
             , type(t)
             , offset(o)
@@ -41,7 +33,7 @@ namespace Engine
     #define Z_DECLARE_VERTEX_ATTRIBUTE_TYPE(CXX_TYPE, ATTRIBUTE_TYPE) \
         template <> struct VertexFormatAttribute<CXX_TYPE> : VertexFormatAttribute<> { \
             explicit VertexFormatAttribute(const char* n, size_t o) \
-                : VertexFormatAttribute<>(n, VertexFormatAttributeType::ATTRIBUTE_TYPE, o, false) \
+                : VertexFormatAttribute<>(n, VertexAttributeType::ATTRIBUTE_TYPE, o, false) \
             {} \
         }
 
@@ -89,17 +81,17 @@ namespace Engine
     #endif
 
     // This template is used to translate declarations like `float[2]` into valid C++ type.
-    template <typename TYPE> struct VertexFormatAttributeTypeResolver { using type = TYPE; };
+    template <typename TYPE> struct VertexAttributeTypeResolver { using type = TYPE; };
 
     // This macro declares a struct field
     #define Z_VERTEX_FORMAT_ELEMENT_DECLARATION(_, __, INDEX, E) \
-        ::Engine::VertexFormatAttributeTypeResolver<Z_VERTEX_FORMAT_ELEMENT_TYPE(E)>::type \
+        ::Engine::VertexAttributeTypeResolver<Z_VERTEX_FORMAT_ELEMENT_TYPE(E)>::type \
             Z_VERTEX_FORMAT_ELEMENT_NAME(E);
 
     // This macro defines a descriptor for a single attribute
     #define Z_VERTEX_FORMAT_ELEMENT_DESCRIPTOR(_, __, INDEX, E) \
         case (INDEX): { \
-            using Type = ::Engine::VertexFormatAttributeTypeResolver<Z_VERTEX_FORMAT_ELEMENT_TYPE(E)>::type; \
+            using Type = ::Engine::VertexAttributeTypeResolver<Z_VERTEX_FORMAT_ELEMENT_TYPE(E)>::type; \
             const char* const name = BOOST_PP_STRINGIZE(Z_VERTEX_FORMAT_ELEMENT_NAME(E)); \
             const size_t offset = offsetof(Self, Z_VERTEX_FORMAT_ELEMENT_NAME(E)); \
             static const ::Engine::VertexFormatAttribute<Type> attribute(name, offset); \

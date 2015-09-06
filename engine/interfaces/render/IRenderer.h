@@ -6,10 +6,20 @@
 #include "engine/interfaces/render/ITexture.h"
 #include "engine/interfaces/render/IVertexBuffer.h"
 #include "engine/interfaces/render/IIndexBuffer.h"
+#include "engine/interfaces/render/IVertexSource.h"
 #include <glm/glm.hpp>
 
 namespace Engine
 {
+    enum class PrimitiveType
+    {
+        Points,
+        Lines,
+        LineStrip,
+        Triangles,
+        TriangleStrip,
+    };
+
     class IRenderer : public Singleton<IRenderer>
     {
     public:
@@ -26,6 +36,7 @@ namespace Engine
         virtual TexturePtr createTexture() = 0;
         virtual VertexBufferPtr createVertexBuffer() = 0;
         virtual IndexBufferPtr createIndexBuffer() = 0;
+        virtual VertexSourcePtr createVertexSource() = 0;
 
         virtual const glm::mat4& projectionMatrix() const = 0;
         virtual void setProjectionMatrix(const glm::mat4& matrix) = 0;
@@ -44,5 +55,8 @@ namespace Engine
         virtual void setUniform(const Atom& name, const glm::mat4& value) = 0;
 
         virtual void useShader(const ShaderPtr& shader) = 0;
+        virtual void bindVertexSource(const VertexSourcePtr& source) = 0;
+
+        virtual void drawPrimitive(PrimitiveType primitiveType, size_t first, size_t count) = 0;
     };
 }

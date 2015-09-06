@@ -12,6 +12,8 @@ namespace Engine
         explicit Buffer(size_t target);
         ~Buffer();
 
+        size_t handle() const { return mHandle; }
+
         size_t currentSize() const override;
 
         void initEmpty(size_t size, BufferUsage usage) override;

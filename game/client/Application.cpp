@@ -2,6 +2,9 @@
 #include "engine/interfaces/render/IRenderer.h"
 #include "engine/core/Log.h"
 #include "engine/core/ResourceManager.h"
+#include "engine/render/Renderer.h"
+#include "engine/render/opengl.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Engine
 {
@@ -34,14 +37,35 @@ namespace Engine
         return 8;
     }
 
+    // FIXME: test code
+    static ShaderPtr gShader;
+    static VertexBufferPtr gVertexBuffer;
+    static VertexSourcePtr gVertexSource;
+
     void Application::initialize(const glm::ivec2& screenSize)
     {
         mScreenSize = screenSize;
-        //ResourceManager::instance()->getShader("shaders/BasicColored.glsl", true);
+
+        gShader = ResourceManager::instance()->getShader("shaders/BasicColored.glsl", true);
+
+        gVertexBuffer = IRenderer::instance()->createVertexBuffer();
+        static const glm::vec3 vertices[] = {
+            { -0.5f, -0.5f, -2.0f, },
+            {  0.5f, -0.5f, -2.0f, },
+            { -0.5f,  0.5f, -2.0f, },
+            {  0.5f,  0.5f, -2.0f, },
+        };
+        gVertexBuffer->setData(vertices, sizeof(vertices), BufferUsage::Static);
+
+        gVertexSource = IRenderer::instance()->createVertexSource();
+        gVertexSource->setAttribute(AtomTable::instance()->getAtom("position"), VertexAttributeType::Float3, gVertexBuffer);
     }
 
     void Application::shutdown()
     {
+        gShader.reset();
+        gVertexBuffer.reset();
+        gVertexSource.reset();
     }
 
     void Application::resize(const glm::ivec2& screenSize)
@@ -54,6 +78,19 @@ namespace Engine
         IRenderer::instance()->beginFrame();
         IRenderer::instance()->setViewport(0, 0, mScreenSize.x, mScreenSize.y);
         IRenderer::instance()->clear();
+
+        float aspect = float(mScreenSize.x) / float(mScreenSize.y);
+        glm::mat4 proj = glm::perspective(glm::radians(90.0f), aspect, 1.0f, 100.0f);
+        glm::mat4 mv = glm::mat4(1.0f);
+
+        IRenderer::instance()->useShader(gShader);
+        IRenderer::instance()->bindVertexSource(gVertexSource);
+
+        IRenderer::instance()->setUniform(AtomTable::instance()->getAtom("uProjection"), proj);
+        IRenderer::instance()->setUniform(AtomTable::instance()->getAtom("uModelView"), mv);
+        IRenderer::instance()->setUniform(AtomTable::instance()->getAtom("uColor"), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
+        IRenderer::instance()->drawPrimitive(PrimitiveType::TriangleStrip, 0, 4);
+
         IRenderer::instance()->endFrame();
     }
 }

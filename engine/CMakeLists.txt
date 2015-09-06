@@ -22,6 +22,7 @@ set(source_files
     interfaces/render/IShader.h
     interfaces/render/ITexture.h
     interfaces/render/IVertexBuffer.h
+    interfaces/render/IVertexSource.h
     material/ShaderLoader.cpp
     material/ShaderLoader.h
     mesh/VertexFormat.h
@@ -36,6 +37,8 @@ set(source_files
     render/Texture.h
     render/Uniform.cpp
     render/Uniform.h
+    render/VertexSource.cpp
+    render/VertexSource.h
     utility/FileUtils.cpp
     utility/FileUtils.h
     utility/MemoryPool.cpp

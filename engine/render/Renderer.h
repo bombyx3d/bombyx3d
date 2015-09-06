@@ -3,6 +3,8 @@
 #include "engine/core/macros.h"
 #include "engine/core/Atom.h"
 #include "engine/interfaces/render/IRenderer.h"
+#include "engine/render/Shader.h"
+#include "engine/render/VertexSource.h"
 #include "engine/render/Uniform.h"
 #include <vector>
 #include <unordered_map>
@@ -27,6 +29,7 @@ namespace Engine
         TexturePtr createTexture() override;
         VertexBufferPtr createVertexBuffer() override;
         IndexBufferPtr createIndexBuffer() override;
+        VertexSourcePtr createVertexSource() override;
 
         const glm::mat4& projectionMatrix() const override;
         void setProjectionMatrix(const glm::mat4& matrix) override;
@@ -45,6 +48,9 @@ namespace Engine
         void setUniform(const Atom& name, const glm::mat4& value) override;
 
         void useShader(const ShaderPtr& shader) override;
+        void bindVertexSource(const VertexSourcePtr& source) override;
+
+        void drawPrimitive(PrimitiveType primitiveType, size_t first, size_t count) override;
 
     private:
         Atom mProjectionMatrixUniform;
@@ -54,8 +60,12 @@ namespace Engine
         std::vector<glm::mat4> mProjectionMatrixStack;
         std::vector<glm::mat4> mModelViewMatrixStack;
         std::unordered_map<Atom, Uniform> mUniforms;
-        ShaderPtr mCurrentShader;
+        std::shared_ptr<Shader> mCurrentShader;
+        std::shared_ptr<VertexSource> mCurrentVertexSource;
+        bool mShouldRebindUniforms;
+        bool mShouldRebindAttributes;
 
+        bool setupDrawCall();
         void bindUniforms();
 
         void resetOpenGLBindings();
