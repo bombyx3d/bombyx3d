@@ -33,6 +33,9 @@ set(source_files
     render/Uniform.h
     utility/FileUtils.cpp
     utility/FileUtils.h
+    utility/MemoryPool.cpp
+    utility/MemoryPool.h
+    utility/PoolAllocator.h
     utility/ProducerConsumerQueue.cpp
     utility/ProducerConsumerQueue.h
     utility/Singleton.h
