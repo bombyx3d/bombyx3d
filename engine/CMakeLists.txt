@@ -25,6 +25,8 @@ project(Engine)
 add_subdirectory(platform)
 
 set(source_files
+    core/Application.cpp
+    core/Application.h
     core/Atom.h
     core/AtomTable.cpp
     core/AtomTable.h
@@ -44,6 +46,7 @@ set(source_files
     interfaces/render/ITexture.h
     interfaces/render/IVertexBuffer.h
     interfaces/render/IVertexSource.h
+    interfaces/scene/IScene.h
     material/ShaderLoader.cpp
     material/ShaderLoader.h
     mesh/VertexFormat.h
@@ -60,6 +63,8 @@ set(source_files
     render/Uniform.h
     render/VertexSource.cpp
     render/VertexSource.h
+    scene/AbstractScene.cpp
+    scene/AbstractScene.h
     utility/FileUtils.cpp
     utility/FileUtils.h
     utility/MemoryPool.cpp
