@@ -81,8 +81,9 @@ namespace Engine
         renderer->clear();
 
         if (mCurrentScene) {
-            mCurrentScene->update(time);
-            mCurrentScene->draw(renderer);
+            ScenePtr currentScene = mCurrentScene;
+            currentScene->update(time);
+            currentScene->draw(renderer);
         }
 
         if (mPreviousScene)
