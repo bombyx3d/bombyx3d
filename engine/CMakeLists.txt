@@ -35,8 +35,11 @@ set(source_files
     core/macros.h
     core/ResourceManager.cpp
     core/ResourceManager.h
+    image/Image.cpp
+    image/Image.h
     interfaces/core/IApplication.h
     interfaces/core/IThreadManager.h
+    interfaces/image/IImageLoader.h
     interfaces/io/IFile.h
     interfaces/io/IFileSystem.h
     interfaces/render/IBuffer.h
@@ -83,3 +86,5 @@ set_source_groups(${source_files})
 
 set_target_properties(engine PROPERTIES CXX_STANDARD 11)
 target_link_libraries(engine platform glm boost)
+
+add_subdirectory(image/loaders/png)
