@@ -155,8 +155,8 @@ namespace Engine
                 std::terminate(); \
             } \
             \
-            static const IVertexFormatAttributeList& attributes() { \
-                static VertexFormatAttributeList<NAME> list; \
+            static const ::Engine::IVertexFormatAttributeList& attributes() { \
+                static Engine::VertexFormatAttributeList<NAME> list; \
                 return list; \
             } \
         };
