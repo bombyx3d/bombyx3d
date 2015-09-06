@@ -32,7 +32,7 @@ namespace Engine
         void resize(const glm::ivec2& newSize) override;
 
         void update(double time) override;
-        void draw() const override;
+        void draw(IRenderer* renderer) const override;
 
     protected:
         AbstractScene();

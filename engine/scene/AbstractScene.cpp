@@ -39,7 +39,7 @@ namespace Engine
     {
     }
 
-    void AbstractScene::draw() const
+    void AbstractScene::draw(IRenderer*) const
     {
     }
 }

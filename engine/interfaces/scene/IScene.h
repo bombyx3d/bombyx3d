@@ -21,8 +21,9 @@
  */
 
 #pragma once
-#include <glm/glm.hpp>
+#include "engine/interfaces/render/IRenderer.h"
 #include <memory>
+#include <glm/glm.hpp>
 
 namespace Engine
 {
@@ -34,7 +35,7 @@ namespace Engine
         virtual void resize(const glm::ivec2& newSize) = 0;
 
         virtual void update(double time) = 0;
-        virtual void draw() const = 0;
+        virtual void draw(IRenderer* renderer) const = 0;
     };
 
     using ScenePtr = std::shared_ptr<IScene>;

@@ -70,16 +70,18 @@ namespace Engine
 
     void Application::runFrame(double time)
     {
-        IRenderer::instance()->beginFrame();
+        IRenderer* renderer =IRenderer::instance().get();
 
-        IRenderer::instance()->setViewport(0, 0, mScreenSize.x, mScreenSize.y);
-        IRenderer::instance()->clear();
+        renderer->beginFrame();
+
+        renderer->setViewport(0, 0, mScreenSize.x, mScreenSize.y);
+        renderer->clear();
 
         if (mCurrentScene) {
             mCurrentScene->update(time);
-            mCurrentScene->draw();
+            mCurrentScene->draw(renderer);
         }
 
-        IRenderer::instance()->endFrame();
+        renderer->endFrame();
     }
 }
