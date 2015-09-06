@@ -9,19 +9,24 @@ set(source_files
     core/AtomTable.h
     core/Log.cpp
     core/Log.h
+    core/macros.h
     core/ResourceManager.cpp
     core/ResourceManager.h
-    core/macros.h
     interfaces/core/IApplication.h
     interfaces/core/IThreadManager.h
     interfaces/io/IFile.h
     interfaces/io/IFileSystem.h
+    interfaces/render/IBuffer.h
+    interfaces/render/IIndexBuffer.h
     interfaces/render/IRenderer.h
     interfaces/render/IShader.h
     interfaces/render/ITexture.h
+    interfaces/render/IVertexBuffer.h
     material/ShaderLoader.cpp
     material/ShaderLoader.h
     mesh/VertexFormat.h
+    render/Buffer.cpp
+    render/Buffer.h
     render/opengl.h
     render/Renderer.cpp
     render/Renderer.h

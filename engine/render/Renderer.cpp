@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "Buffer.h"
 #include "engine/core/Log.h"
 #include "engine/core/AtomTable.h"
 #include "opengl.h"
@@ -31,13 +32,12 @@ namespace Engine
         for (auto& it : mUniforms)
             it.second.reset();
 
-        mCurrentShader.reset();
+        resetOpenGLBindings();
     }
 
     void Renderer::endFrame()
     {
-        mCurrentShader.reset();
-        glUseProgram(0);
+        resetOpenGLBindings();
     }
 
     void Renderer::setViewport(int x, int y, int w, int h)
@@ -58,6 +58,16 @@ namespace Engine
     TexturePtr Renderer::createTexture()
     {
         return std::make_shared<Texture>();
+    }
+
+    VertexBufferPtr Renderer::createVertexBuffer()
+    {
+        return std::make_shared<Buffer>(GL_ARRAY_BUFFER);
+    }
+
+    IndexBufferPtr Renderer::createIndexBuffer()
+    {
+        return std::make_shared<Buffer>(GL_ELEMENT_ARRAY_BUFFER);
     }
 
     const glm::mat4& Renderer::projectionMatrix() const
@@ -156,5 +166,13 @@ namespace Engine
             if (!bound)
                 Z_LOGW("Missing value for uniform \"" << uniform.first.text() << "\".");
         }
+    }
+
+    void Renderer::resetOpenGLBindings()
+    {
+        mCurrentShader.reset();
+        glUseProgram(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 }

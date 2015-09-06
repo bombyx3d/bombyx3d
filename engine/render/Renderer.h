@@ -25,6 +25,8 @@ namespace Engine
 
         ShaderPtr createShader() override;
         TexturePtr createTexture() override;
+        VertexBufferPtr createVertexBuffer() override;
+        IndexBufferPtr createIndexBuffer() override;
 
         const glm::mat4& projectionMatrix() const override;
         void setProjectionMatrix(const glm::mat4& matrix) override;
@@ -55,6 +57,8 @@ namespace Engine
         ShaderPtr mCurrentShader;
 
         void bindUniforms();
+
+        void resetOpenGLBindings();
 
         Z_DISABLE_COPY(Renderer);
     };

@@ -4,6 +4,8 @@
 #include "engine/core/Atom.h"
 #include "engine/interfaces/render/IShader.h"
 #include "engine/interfaces/render/ITexture.h"
+#include "engine/interfaces/render/IVertexBuffer.h"
+#include "engine/interfaces/render/IIndexBuffer.h"
 #include <glm/glm.hpp>
 
 namespace Engine
@@ -22,6 +24,8 @@ namespace Engine
 
         virtual ShaderPtr createShader() = 0;
         virtual TexturePtr createTexture() = 0;
+        virtual VertexBufferPtr createVertexBuffer() = 0;
+        virtual IndexBufferPtr createIndexBuffer() = 0;
 
         virtual const glm::mat4& projectionMatrix() const = 0;
         virtual void setProjectionMatrix(const glm::mat4& matrix) = 0;
