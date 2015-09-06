@@ -2,6 +2,7 @@
 #include "opengl.h"
 #include "engine/render/Buffer.h"
 #include "engine/core/Log.h"
+#include "engine/mesh/VertexFormat.h"
 #include <cassert>
 
 namespace Engine
@@ -15,7 +16,7 @@ namespace Engine
     }
 
     void VertexSource::setAttribute(const Atom& name, VertexAttributeType type,
-        const VertexBufferPtr& buffer, size_t offset, size_t stride)
+        const VertexBufferPtr& buffer, size_t offset, size_t stride, bool normalize)
     {
         assert(buffer != nullptr);
         if (buffer == nullptr)
@@ -26,6 +27,20 @@ namespace Engine
         attribute.type = type;
         attribute.offset = offset;
         attribute.stride = stride;
+        attribute.normalize = normalize;
+    }
+
+    void VertexSource::setAttributes(const IVertexFormatAttributeList& attributes, const VertexBufferPtr& buffer)
+    {
+        size_t stride = attributes.stride();
+        size_t attributeCount = attributes.attributeCount();
+
+        for (size_t i = 0; i < attributeCount; i++) {
+            const auto& attribute = attributes.attribute(i);
+
+            Atom name = AtomTable::instance()->getAtom(attribute.name);
+            setAttribute(name, attribute.type, buffer, attribute.offset, stride, attribute.normalize);
+        }
     }
 
     void VertexSource::setIndexBuffer(const IndexBufferPtr& indexBuffer)
@@ -47,6 +62,7 @@ namespace Engine
                 const auto& attr = jt->second;
 
                 const void* offset = reinterpret_cast<void*>(attr.offset);
+                bool normalize = (attr.normalize ? GL_TRUE : GL_FALSE);
                 int location = it.second;
 
                 size_t count = 0;
@@ -62,7 +78,7 @@ namespace Engine
                 assert(count != 0 && type != 0);
 
                 glBindBuffer(GL_ARRAY_BUFFER, attr.buffer->handle());
-                glVertexAttribPointer(location, count, type, GL_FALSE, GLsizei(attr.stride), offset);
+                glVertexAttribPointer(location, count, type, normalize, GLsizei(attr.stride), offset);
                 glEnableVertexAttribArray(location);
 
                 mEnabledArrays.push_back(location);

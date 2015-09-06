@@ -17,7 +17,9 @@ namespace Engine
         ~VertexSource();
 
         void setAttribute(const Atom& name, VertexAttributeType type,
-            const VertexBufferPtr& buffer, size_t offset = 0, size_t stride = 0) override;
+            const VertexBufferPtr& buffer, size_t offset = 0, size_t stride = 0, bool normalize = false) override;
+
+        void setAttributes(const IVertexFormatAttributeList& attributes, const VertexBufferPtr& buffer) override;
 
         const std::shared_ptr<Buffer>& indexBuffer() const { return mIndexBuffer; }
         void setIndexBuffer(const IndexBufferPtr& indexBuffer) override;
@@ -32,6 +34,7 @@ namespace Engine
             VertexAttributeType type;
             size_t offset;
             size_t stride;
+            bool normalize;
         };
 
         std::unordered_map<Atom, Attribute> mAttributes;

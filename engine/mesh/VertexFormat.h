@@ -46,6 +46,26 @@ namespace Engine
     Z_DECLARE_VERTEX_ATTRIBUTE_TYPE(glm::vec4, Float4);
 
 
+    // List of attributes
+
+    class IVertexFormatAttributeList
+    {
+    public:
+        virtual ~IVertexFormatAttributeList() = default;
+        virtual size_t stride() const = 0;
+        virtual size_t attributeCount() const = 0;
+        virtual const VertexFormatAttribute<>& attribute(size_t index) const = 0;
+    };
+
+    template <typename TYPE> class VertexFormatAttributeList : public IVertexFormatAttributeList
+    {
+    public:
+        size_t stride() const override { return sizeof(TYPE); }
+        size_t attributeCount() const override { return TYPE::ATTRIBUTE_COUNT; }
+        const VertexFormatAttribute<>& attribute(size_t index) const override { return TYPE::attribute(index); }
+    };
+
+
     // The code below is based on code from:
     // http://stackoverflow.com/questions/11031062/c-preprocessor-avoid-code-repetition-of-member-variable-list/11744832#11744832
     // ---------------------------------------------------------------------------------------------------------------
@@ -112,6 +132,11 @@ namespace Engine
                 } \
                 /* We get here if attribute index is out of range. */ \
                 std::terminate(); \
-            }; \
+            } \
+            \
+            static const IVertexFormatAttributeList& attributes() { \
+                static VertexFormatAttributeList<NAME> list; \
+                return list; \
+            } \
         };
 }

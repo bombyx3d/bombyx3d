@@ -2,8 +2,7 @@
 #include "engine/interfaces/render/IRenderer.h"
 #include "engine/core/Log.h"
 #include "engine/core/ResourceManager.h"
-#include "engine/render/Renderer.h"
-#include "engine/render/opengl.h"
+#include "engine/utility/RenderUtils.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Engine
@@ -42,23 +41,27 @@ namespace Engine
     static VertexBufferPtr gVertexBuffer;
     static VertexSourcePtr gVertexSource;
 
+    Z_VERTEX_FORMAT(MyVertexFormat,
+        (glm::vec3) position,
+        (glm::vec4) color
+    )
+
     void Application::initialize(const glm::ivec2& screenSize)
     {
         mScreenSize = screenSize;
 
-        gShader = ResourceManager::instance()->getShader("shaders/BasicColored.glsl", true);
+        gShader = ResourceManager::instance()->getShader("shaders/BasicPerVertexColored.glsl", true);
 
         gVertexBuffer = IRenderer::instance()->createVertexBuffer();
-        static const glm::vec3 vertices[] = {
-            { -0.5f, -0.5f, -2.0f, },
-            {  0.5f, -0.5f, -2.0f, },
-            { -0.5f,  0.5f, -2.0f, },
-            {  0.5f,  0.5f, -2.0f, },
+        static const MyVertexFormat vertices[] = {
+            { { -0.5f, -0.5f, -2.0f, }, { 1.0f, 0.0f, 0.0f, 1.0f }, },
+            { {  0.5f, -0.5f, -2.0f, }, { 0.0f, 1.0f, 0.0f, 1.0f }, },
+            { { -0.5f,  0.5f, -2.0f, }, { 0.0f, 0.0f, 0.0f, 1.0f, }, },
+            { {  0.5f,  0.5f, -2.0f, }, { 1.0f, 1.0f, 0.0f, 1.0f, }, },
         };
         gVertexBuffer->setData(vertices, sizeof(vertices), BufferUsage::Static);
 
-        gVertexSource = IRenderer::instance()->createVertexSource();
-        gVertexSource->setAttribute(AtomTable::instance()->getAtom("position"), VertexAttributeType::Float3, gVertexBuffer);
+        gVertexSource = RenderUtils::createVertexSource<MyVertexFormat>(gVertexBuffer);
     }
 
     void Application::shutdown()
@@ -88,7 +91,6 @@ namespace Engine
 
         IRenderer::instance()->setUniform(AtomTable::instance()->getAtom("uProjection"), proj);
         IRenderer::instance()->setUniform(AtomTable::instance()->getAtom("uModelView"), mv);
-        IRenderer::instance()->setUniform(AtomTable::instance()->getAtom("uColor"), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
         IRenderer::instance()->drawPrimitive(PrimitiveType::TriangleStrip, 0, 4);
 
         IRenderer::instance()->endFrame();

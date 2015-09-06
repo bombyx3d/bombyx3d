@@ -46,6 +46,7 @@ set(source_files
     utility/PoolAllocator.h
     utility/ProducerConsumerQueue.cpp
     utility/ProducerConsumerQueue.h
+    utility/RenderUtils.h
     utility/Singleton.h
     utility/WorkerThread.cpp
     utility/WorkerThread.h
