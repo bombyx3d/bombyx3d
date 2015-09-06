@@ -51,7 +51,7 @@ namespace Engine
         glm::mat4 mModelViewMatrix;
         std::vector<glm::mat4> mProjectionMatrixStack;
         std::vector<glm::mat4> mModelViewMatrixStack;
-        std::unordered_map<Atom, std::unique_ptr<Uniform>> m_Uniforms;
+        std::unordered_map<Atom, Uniform> mUniforms;
         ShaderPtr mCurrentShader;
 
         void bindUniforms();

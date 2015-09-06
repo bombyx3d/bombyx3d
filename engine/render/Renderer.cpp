@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "engine/core/Log.h"
 #include "engine/core/AtomTable.h"
 #include "opengl.h"
 #include <cassert>
@@ -26,6 +27,10 @@ namespace Engine
         mModelViewMatrix = glm::mat4(1.0f);
         mProjectionMatrixStack.clear();
         mModelViewMatrixStack.clear();
+
+        for (auto& it : mUniforms)
+            it.second.reset();
+
         mCurrentShader.reset();
     }
 
@@ -101,27 +106,27 @@ namespace Engine
 
     void Renderer::setUniform(const Atom& name, float value)
     {
-        // FIXME
+        mUniforms[name].setFloat(value);
     }
 
     void Renderer::setUniform(const Atom& name, const glm::vec2& value)
     {
-        // FIXME
+        mUniforms[name].setVec2(value);
     }
 
     void Renderer::setUniform(const Atom& name, const glm::vec3& value)
     {
-        // FIXME
+        mUniforms[name].setVec3(value);
     }
 
     void Renderer::setUniform(const Atom& name, const glm::vec4& value)
     {
-        // FIXME
+        mUniforms[name].setVec4(value);
     }
 
     void Renderer::setUniform(const Atom& name, const glm::mat4& value)
     {
-        // FIXME
+        mUniforms[name].setMat4(value);
     }
 
     void Renderer::useShader(const ShaderPtr& shader)
@@ -141,9 +146,15 @@ namespace Engine
             return;
 
         const auto& currentShader = static_cast<Shader&>(*mCurrentShader);
-
         for (const auto& uniform : currentShader.uniforms()) {
-            // FIXME
+            bool bound = false;
+
+            auto it = mUniforms.find(uniform.first);
+            if (it != mUniforms.end())
+                bound = it->second.upload(uniform.second);
+
+            if (!bound)
+                Z_LOGW("Missing value for uniform \"" << uniform.first.text() << "\".");
         }
     }
 }
