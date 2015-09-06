@@ -67,6 +67,7 @@ namespace Engine
         void setUniform(const Atom& name, const glm::vec3& value) override;
         void setUniform(const Atom& name, const glm::vec4& value) override;
         void setUniform(const Atom& name, const glm::mat4& value) override;
+        void setUniform(const Atom& name, const TexturePtr& texture) override;
 
         void useShader(const ShaderPtr& shader) override;
         void bindVertexSource(const VertexSourcePtr& source) override;

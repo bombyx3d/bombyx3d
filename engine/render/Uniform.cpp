@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  */
 #include "Uniform.h"
+#include "Texture.h"
 #include "engine/utility/PoolAllocator.h"
 #include "opengl.h"
 #include <cassert>
@@ -29,7 +30,7 @@ namespace Engine
     struct Uniform::IUniformValue
     {
         virtual ~IUniformValue() = default;
-        virtual void upload(int location) = 0;
+        virtual void upload(int location, int* textureCount) = 0;
 
         void* operator new(size_t size);
         void operator delete(void* ptr);
@@ -40,7 +41,7 @@ namespace Engine
         { \
             const TYPE value; \
             NAME(const TYPE& v) : value(v) {} \
-            void upload(int location) override { UPLOAD; } \
+            void upload(int location, int* textureCount) override { (void)textureCount; UPLOAD; } \
         }
 
     namespace
@@ -51,6 +52,13 @@ namespace Engine
         Z_UNIFORM_VALUE(Vec4Value, glm::vec4, glUniform4fv(location, 1, &value[0]));
         Z_UNIFORM_VALUE(Mat4Value, glm::mat4, glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]));
 
+        Z_UNIFORM_VALUE(TextureValue, TexturePtr, {
+            glActiveTexture(GL_TEXTURE0 + *textureCount);
+            glBindTexture(GL_TEXTURE_2D, static_cast<Texture&>(*value).handle());
+            glUniform1i(location, *textureCount);
+            ++*textureCount;
+        });
+
         union ValueUnion
         {
             // Stupid Visual Studio 2013 does not support non-POD members in unions
@@ -59,6 +67,7 @@ namespace Engine
             char vec3Value[sizeof(Vec3Value)];
             char vec4Value[sizeof(Vec4Value)];
             char mat4Value[sizeof(Mat4Value)];
+            char textureValue[sizeof(TextureValue)];
         };
 
         static PoolAllocator<ValueUnion> gValueAllocator;
@@ -141,13 +150,19 @@ namespace Engine
         mValue = new Mat4Value(value);
     }
 
-    bool Uniform::upload(int location)
+    void Uniform::setTexture(const TexturePtr& texture)
+    {
+        reset();
+        mValue = new TextureValue(texture);
+    }
+
+    bool Uniform::upload(int location, int* textureCount)
     {
         if (!mValue || location < 0)
             return false;
 
         if (mBoundToLocation != location) {
-            mValue->upload(location);
+            mValue->upload(location, textureCount);
             mBoundToLocation = location;
         }
 

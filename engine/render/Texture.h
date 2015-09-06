@@ -32,6 +32,10 @@ namespace Engine
         Texture();
         ~Texture();
 
+        size_t handle() const { return mHandle; }
+
+        void upload(const Image& image) override;
+
     private:
         size_t mHandle;
 

@@ -188,6 +188,12 @@ namespace Engine
         mShouldRebindUniforms = true;
     }
 
+    void Renderer::setUniform(const Atom& name, const TexturePtr& texture)
+    {
+        mUniforms[name].setTexture(texture);
+        mShouldRebindUniforms = true;
+    }
+
     void Renderer::useShader(const ShaderPtr& shader)
     {
         if (mCurrentShader != shader) {
@@ -250,12 +256,13 @@ namespace Engine
         if (!mCurrentShader)
             return;
 
+        int textureCount = 0;
         for (const auto& uniform : mCurrentShader->uniforms()) {
             bool bound = false;
 
             auto it = mUniforms.find(uniform.first);
             if (it != mUniforms.end())
-                bound = it->second.upload(uniform.second);
+                bound = it->second.upload(uniform.second, &textureCount);
 
             if (!bound)
                 Z_LOGW("Missing value for uniform \"" << uniform.first.text() << "\".");
@@ -270,6 +277,14 @@ namespace Engine
         glUseProgram(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+        GLint textureUnitCount = 0;
+        glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &textureUnitCount);
+
+        for (GLint i = 0; i < textureUnitCount; i++) {
+            glActiveTexture(GL_TEXTURE0 + i);
+            glBindTexture(GL_TEXTURE_2D, 0);
+        }
 
         mShouldRebindUniforms = true;
         mShouldRebindAttributes = true;

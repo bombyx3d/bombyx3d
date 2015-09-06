@@ -21,6 +21,7 @@
  */
 
 #pragma once
+#include "engine/image/Image.h"
 #include <memory>
 
 namespace Engine
@@ -29,6 +30,8 @@ namespace Engine
     {
     public:
         virtual ~ITexture() = default;
+
+        virtual void upload(const Image& image) = 0;
     };
 
     using TexturePtr = std::shared_ptr<ITexture>;

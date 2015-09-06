@@ -21,6 +21,7 @@
  */
 #include "ResourceManager.h"
 #include "engine/core/Log.h"
+#include "engine/image/Image.h"
 #include "engine/interfaces/render/IRenderer.h"
 #include "engine/interfaces/core/IThreadManager.h"
 #include "engine/material/ShaderLoader.h"
@@ -147,5 +148,31 @@ namespace Engine
         };
 
         return getResource<ShaderResourceLoader>(mShaders, fileName, async, mNumPendingResources);
+    }
+
+    TexturePtr ResourceManager::getTexture(const std::string& fileName, bool async)
+    {
+        struct TextureResourceLoader : public ResourceLoader<TexturePtr>
+        {
+            ImagePtr mImage;
+
+            TexturePtr create() override
+            {
+                return IRenderer::instance()->createTexture();
+            }
+
+            bool load() override
+            {
+                mImage = Image::fromFile(fileName);
+                return mImage && mImage->pixelFormat() != PixelFormat::Invalid;
+            }
+
+            void setup(const TexturePtr& texture) override
+            {
+                texture->upload(*mImage);
+            }
+        };
+
+        return getResource<TextureResourceLoader>(mTextures, fileName, async, mNumPendingResources);
     }
 }

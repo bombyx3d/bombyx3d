@@ -22,6 +22,7 @@
 
 #pragma once
 #include "engine/core/macros.h"
+#include "engine/interfaces/render/ITexture.h"
 #include "engine/utility/PoolAllocator.h"
 #include <glm/glm.hpp>
 
@@ -45,8 +46,9 @@ namespace Engine
         void setVec3(const glm::vec3& value);
         void setVec4(const glm::vec4& value);
         void setMat4(const glm::mat4& value);
+        void setTexture(const TexturePtr& texture);
 
-        bool upload(int location);
+        bool upload(int location, int* textureCount);
 
     private:
         IUniformValue* mValue;

@@ -23,6 +23,7 @@
 #pragma once
 #include "engine/core/macros.h"
 #include "engine/interfaces/render/IShader.h"
+#include "engine/interfaces/render/ITexture.h"
 #include <string>
 #include <unordered_map>
 #include <memory>
@@ -38,10 +39,12 @@ namespace Engine
         int numPendingResources() const;
 
         ShaderPtr getShader(const std::string& fileName, bool async = true);
+        TexturePtr getTexture(const std::string& fileName, bool async = true);
 
     private:
         static ResourceManager mInstance;
         std::unordered_map<std::string, std::weak_ptr<IShader>> mShaders;
+        std::unordered_map<std::string, std::weak_ptr<ITexture>> mTextures;
         std::shared_ptr<std::atomic<int>> mNumPendingResources;
 
         ResourceManager();

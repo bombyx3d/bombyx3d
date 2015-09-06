@@ -22,6 +22,7 @@
 #include "Texture.h"
 #include "engine/interfaces/core/IThreadManager.h"
 #include "opengl.h"
+#include <cassert>
 
 namespace Engine
 {
@@ -38,5 +39,55 @@ namespace Engine
         IThreadManager::instance()->performInRenderThread([handle]() {
             glDeleteTextures(1, &handle);
         });
+    }
+
+    void Texture::upload(const Image& image)
+    {
+        if (!image.data())
+            return;
+
+        GLenum format = 0, internalFormat = 0, type = 0;
+        switch (image.pixelFormat())
+        {
+        case PixelFormat::Invalid:
+            return;
+
+        case PixelFormat::Luminance8:
+            type = GL_UNSIGNED_BYTE;
+            format = internalFormat = GL_LUMINANCE;
+            break;
+
+        case PixelFormat::LuminanceAlpha16:
+            type = GL_UNSIGNED_BYTE;
+            format = internalFormat = GL_LUMINANCE_ALPHA;
+            break;
+
+        case PixelFormat::RGB24:
+            type = GL_UNSIGNED_BYTE;
+            format = internalFormat = GL_RGB;
+            break;
+
+        case PixelFormat::RGBA32:
+            type = GL_UNSIGNED_BYTE;
+            format = internalFormat = GL_RGBA;
+            break;
+        }
+
+        assert(format != 0 && internalFormat != 0 && type != 0);
+
+        GLint previousTexture = 0;
+        glGetIntegerv(GL_TEXTURE_BINDING_2D, &previousTexture);
+        glBindTexture(GL_TEXTURE_2D, GLuint(mHandle));
+
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, image.width(), image.height(),
+            0, format, type, image.data());
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        glBindTexture(GL_TEXTURE_2D, GLuint(previousTexture));
     }
 }

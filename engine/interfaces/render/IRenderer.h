@@ -74,6 +74,7 @@ namespace Engine
         virtual void setUniform(const Atom& name, const glm::vec3& value) = 0;
         virtual void setUniform(const Atom& name, const glm::vec4& value) = 0;
         virtual void setUniform(const Atom& name, const glm::mat4& value) = 0;
+        virtual void setUniform(const Atom& name, const TexturePtr& texture) = 0;
 
         virtual void useShader(const ShaderPtr& shader) = 0;
         virtual void bindVertexSource(const VertexSourcePtr& source) = 0;
