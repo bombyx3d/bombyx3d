@@ -23,8 +23,8 @@ namespace Engine
             size_t bytesLeft;
         };
 
-        Arena* m_Arenas;
-        size_t m_ArenaSize;
+        Arena* mArenas;
+        size_t mArenaSize;
 
         Arena* newArena(size_t size);
 

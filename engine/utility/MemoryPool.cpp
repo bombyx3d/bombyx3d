@@ -6,14 +6,14 @@
 namespace Engine
 {
     MemoryPool::MemoryPool(size_t arenaSize)
-        : m_Arenas(nullptr)
-        , m_ArenaSize(arenaSize)
+        : mArenas(nullptr)
+        , mArenaSize(arenaSize)
     {
     }
 
     MemoryPool::~MemoryPool()
     {
-        Arena* arenas = m_Arenas;
+        Arena* arenas = mArenas;
         while (arenas) {
             Arena* arena = arenas;
             arenas = arena->next;
@@ -25,13 +25,13 @@ namespace Engine
     {
         Arena* arena = nullptr;
 
-        if (size < m_ArenaSize) {
-            arena = m_Arenas;
+        if (size < mArenaSize) {
+            arena = mArenas;
             while (arena && arena->bytesLeft < size)
                 arena = arena->next;
         }
 
-        size_t arenaSize = m_ArenaSize;
+        size_t arenaSize = mArenaSize;
         if (!arena) {
             arenaSize = std::max(size, arenaSize);
             arena = newArena(arenaSize);
@@ -50,9 +50,9 @@ namespace Engine
         Arena* arena = reinterpret_cast<Arena*>(malloc(sizeof(Arena) + size));
         if (!arena)
             return nullptr;
-        arena->next = m_Arenas;
+        arena->next = mArenas;
         arena->bytesLeft = size;
-        m_Arenas = arena;
+        mArenas = arena;
         return arena;
     }
 }

@@ -10,34 +10,34 @@ namespace Engine
     {
     public:
         explicit PoolAllocator(size_t arenaSize = MemoryPool::DEFAULT_ARENA_SIZE)
-            : m_MemoryPool(arenaSize)
+            : mMemoryPool(arenaSize)
         {
         }
 
         ~PoolAllocator()
         {
-            for (TYPE* item : m_FreeList)
+            for (TYPE* item : mFreeList)
                 item->~TYPE();
         }
 
         TYPE* alloc()
         {
-            if (!m_FreeList.empty()) {
-                TYPE* value = m_FreeList.back();
-                m_FreeList.pop_back();
+            if (!mFreeList.empty()) {
+                TYPE* value = mFreeList.back();
+                mFreeList.pop_back();
                 return value;
             }
-            return reinterpret_cast<TYPE*>(m_MemoryPool.alloc(sizeof(TYPE)));
+            return reinterpret_cast<TYPE*>(mMemoryPool.alloc(sizeof(TYPE)));
         }
 
         void free(TYPE* value)
         {
-            m_FreeList.push_back(value);
+            mFreeList.push_back(value);
         }
 
     private:
-        MemoryPool m_MemoryPool;
-        std::vector<TYPE*> m_FreeList;
+        MemoryPool mMemoryPool;
+        std::vector<TYPE*> mFreeList;
 
         Z_DISABLE_COPY(PoolAllocator);
     };
