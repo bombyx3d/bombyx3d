@@ -1,4 +1,4 @@
-﻿
+
 varying vec2 vTexCoord;
 
 %vertex

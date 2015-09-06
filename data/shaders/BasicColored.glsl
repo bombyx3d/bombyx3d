@@ -1,4 +1,4 @@
-﻿
+
 %vertex
 
 attribute vec4 position;

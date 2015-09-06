@@ -1,4 +1,4 @@
-﻿
+
 varying vec4 vColor;
 
 %vertex
