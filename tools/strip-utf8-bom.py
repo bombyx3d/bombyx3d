@@ -48,7 +48,7 @@ def strip_utf8_bom(file):
 dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 os.chdir(dir)
 
-for root, dirnames, filenames in os.walk('.'):
+for root, dirnames, filenames in os.walk('..'):
     for pattern in [
         '*.c',
         '*.cpp',
