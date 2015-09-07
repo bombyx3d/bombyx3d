@@ -46,7 +46,8 @@ namespace Engine
         if (!image.data())
             return;
 
-        GLenum format = 0, internalFormat = 0, type = 0;
+        GLenum format = 0, type = 0;
+        GLint internalFormat = 0;
         switch (image.pixelFormat())
         {
         case PixelFormat::Invalid:
@@ -80,7 +81,7 @@ namespace Engine
         glBindTexture(GL_TEXTURE_2D, GLuint(mHandle));
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, image.width(), image.height(),
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, GLsizei(image.width()), GLsizei(image.height()),
             0, format, type, image.data());
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

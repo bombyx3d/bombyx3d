@@ -226,9 +226,11 @@ namespace Engine
 
         GLenum mode = primitiveTypeToGL(primitiveType);
         if (!mCurrentVertexSource->indexBuffer())
-            glDrawArrays(mode, first, count);
-        else
-            glDrawElements(mode, count, GL_UNSIGNED_SHORT, reinterpret_cast<void*>(first * sizeof(uint16_t)));
+            glDrawArrays(mode, GLint(first), GLsizei(count));
+        else {
+            void* offset = reinterpret_cast<void*>(first * sizeof(uint16_t));
+            glDrawElements(mode, GLsizei(count), GL_UNSIGNED_SHORT, offset);
+        }
     }
 
     bool Renderer::setupDrawCall()
@@ -282,7 +284,7 @@ namespace Engine
         glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &textureUnitCount);
 
         for (GLint i = 0; i < textureUnitCount; i++) {
-            glActiveTexture(GL_TEXTURE0 + i);
+            glActiveTexture(GLenum(GL_TEXTURE0 + i));
             glBindTexture(GL_TEXTURE_2D, 0);
         }
 

@@ -43,7 +43,6 @@ namespace Engine
     Buffer::Buffer(size_t target)
         : mSize(0)
         , mTarget(target)
-        , mUsage(BufferUsage::Static)
     {
         GLuint handle = 0;
         glGenBuffers(1, &handle);

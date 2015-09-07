@@ -53,8 +53,8 @@ namespace Engine
         Z_UNIFORM_VALUE(Mat4Value, glm::mat4, glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]));
 
         Z_UNIFORM_VALUE(TextureValue, TexturePtr, {
-            glActiveTexture(GL_TEXTURE0 + *textureCount);
-            glBindTexture(GL_TEXTURE_2D, static_cast<Texture&>(*value).handle());
+            glActiveTexture(GLenum(GL_TEXTURE0 + *textureCount));
+            glBindTexture(GL_TEXTURE_2D, GLuint(static_cast<Texture&>(*value).handle()));
             glUniform1i(location, *textureCount);
             ++*textureCount;
         });

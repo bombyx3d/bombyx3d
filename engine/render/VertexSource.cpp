@@ -98,21 +98,21 @@ namespace Engine
 
                 assert(count != 0 && type != 0);
 
-                glBindBuffer(GL_ARRAY_BUFFER, attr.buffer->handle());
-                glVertexAttribPointer(location, count, type, normalize, GLsizei(attr.stride), offset);
-                glEnableVertexAttribArray(location);
+                glBindBuffer(GL_ARRAY_BUFFER, GLuint(attr.buffer->handle()));
+                glVertexAttribPointer(GLuint(location), GLint(count), type, normalize, GLsizei(attr.stride), offset);
+                glEnableVertexAttribArray(GLuint(location));
 
                 mEnabledArrays.push_back(location);
             }
         }
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer ? mIndexBuffer->handle() : 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GLuint(mIndexBuffer ? mIndexBuffer->handle() : 0));
     }
 
     void VertexSource::unbind()
     {
         for (int location : mEnabledArrays)
-            glDisableVertexAttribArray(location);
+            glDisableVertexAttribArray(GLuint(location));
         mEnabledArrays.clear();
     }
 }

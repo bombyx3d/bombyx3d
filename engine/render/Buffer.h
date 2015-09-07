@@ -44,7 +44,6 @@ namespace Engine
         size_t mHandle;
         size_t mSize;
         size_t mTarget;
-        BufferUsage mUsage;
 
         Z_DISABLE_COPY(Buffer);
     };

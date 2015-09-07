@@ -213,7 +213,7 @@ namespace Engine
         mUniforms.clear();
         for (size_t i = 0; i < size_t(numUniforms); i++) {
             GLsizei nameLength = 0;
-            glGetActiveUniform(program, i, GLsizei(maxNameLength), &nameLength, &size, &type, nameBuffer);
+            glGetActiveUniform(program, GLuint(i), GLsizei(maxNameLength), &nameLength, &size, &type, nameBuffer);
             nameBuffer[nameLength] = 0;
 
             if (nameLength == 0)
@@ -224,14 +224,14 @@ namespace Engine
             int location = glGetUniformLocation(program, nameBuffer);
             assert(location >= 0);
 
-            Atom atom = AtomTable::instance()->getAtom(std::string(nameBuffer, nameLength));
+            Atom atom = AtomTable::instance()->getAtom(std::string(nameBuffer, size_t(nameLength)));
             mUniforms.emplace_back(atom, location);
         }
 
         mAttributes.clear();
         for (size_t i = 0; i < size_t(numAttributes); i++) {
             GLsizei nameLength = 0;
-            glGetActiveAttrib(program, i, GLsizei(maxNameLength), &nameLength, &size, &type, nameBuffer);
+            glGetActiveAttrib(program, GLuint(i), GLsizei(maxNameLength), &nameLength, &size, &type, nameBuffer);
             nameBuffer[nameLength] = 0;
 
             if (nameLength == 0)
@@ -242,7 +242,7 @@ namespace Engine
             int location = glGetAttribLocation(program, nameBuffer);
             assert(location >= 0);
 
-            Atom atom = AtomTable::instance()->getAtom(std::string(nameBuffer, nameLength));
+            Atom atom = AtomTable::instance()->getAtom(std::string(nameBuffer, size_t(nameLength)));
             mAttributes.emplace_back(atom, location);
         }
     }
