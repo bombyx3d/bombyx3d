@@ -27,11 +27,11 @@
 
 namespace Engine
 {
-    class SphericalCamera : public AbstractPerspectiveCamera
+    class OrbitCamera : public AbstractPerspectiveCamera
     {
     public:
-        SphericalCamera();
-        ~SphericalCamera();
+        OrbitCamera();
+        ~OrbitCamera();
 
         float distance() const { return mDistance; }
         void setDistance(float dist) { mDistance = dist; setViewMatrixDirty(); }
@@ -55,5 +55,5 @@ namespace Engine
         glm::vec3 mTarget;
     };
 
-    using SphericalCameraPtr = std::shared_ptr<SphericalCamera>;
+    using OrbitCameraPtr = std::shared_ptr<OrbitCamera>;
 }
