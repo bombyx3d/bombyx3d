@@ -40,17 +40,13 @@ namespace Engine
     void OrbitCamera::calcViewMatrix(glm::mat4& matrix) const
     {
         float t = cosf(mVerticalAngle);
-        float eyeX = t * cosf(mHorizontalAngle);
-        float eyeZ = t * sinf(mHorizontalAngle);
-        float eyeY = sinf(mVerticalAngle);
+        float dirX = t * cosf(mHorizontalAngle);
+        float dirZ = t * sinf(mHorizontalAngle);
+        float dirY = sinf(mVerticalAngle);
 
-        glm::vec3 forward(eyeX, eyeY, eyeZ);
-        //glm::vec3 right(glm::cross(forward, glm::vec3(0.0f, 1.0f, 0.0f)));
-        //glm::vec3 up = glm::cross(normalizedEye, forward);
-        glm::vec3 up(0.0f, 1.0f, 0.0f);
+        glm::vec3 direction(dirX, dirY, dirZ);
+        glm::vec3 eyePosition = mTarget + mDistance * direction;
 
-        glm::vec3 eyePosition = mTarget - mDistance * forward;
-
-        matrix = glm::lookAt(eyePosition, mTarget, up);
+        matrix = glm::lookAt(eyePosition, mTarget, glm::vec3(0.0f, 1.0f, 0.0f));
     }
 }
