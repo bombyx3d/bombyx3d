@@ -125,7 +125,7 @@ namespace Engine
                 mApplication->resize(screenSize);
             }
 
-            mApplication->runFrame(time);
+            mApplication->runFrame(mFrameTime);
 
             glfwSwapBuffers(mWindow);
             glfwPollEvents();
