@@ -133,6 +133,7 @@ namespace Engine
     void Renderer::popProjectionMatrix()
     {
         assert(!mProjectionMatrixStack.empty());
+        setProjectionMatrix(mProjectionMatrixStack.back());
         mProjectionMatrixStack.pop_back();
     }
 
@@ -155,6 +156,7 @@ namespace Engine
     void Renderer::popModelViewMatrix()
     {
         assert(!mModelViewMatrixStack.empty());
+        setModelViewMatrix(mModelViewMatrixStack.back());
         mModelViewMatrixStack.pop_back();
     }
 
