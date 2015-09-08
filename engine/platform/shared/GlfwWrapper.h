@@ -44,6 +44,7 @@ namespace Engine
 
     private:
         bool mInitialized = false;
+        bool mLeftMouseButtonDown = false;
         GLFWwindow* mWindow = nullptr;
         double mPrevTime = 0.0;
         double mFrameTime = 0.0;

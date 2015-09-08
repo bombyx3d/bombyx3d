@@ -76,6 +76,7 @@ namespace Engine
 
         Z_TRACE("Created GLFW window with size (" << windowSize.x << ", " << windowSize.y << ").");
 
+        glfwSetWindowUserPointer(mWindow, this);
         glfwSetKeyCallback(mWindow, keyCallback);
         glfwSetMouseButtonCallback(mWindow, mouseButtonCallback);
         glfwSetScrollCallback(mWindow, mouseScrollCallback);
@@ -145,16 +146,31 @@ namespace Engine
     {
     }
 
-    void GlfwWrapper::mouseButtonCallback(GLFWwindow*, int, int, int)
+    void GlfwWrapper::mouseButtonCallback(GLFWwindow* window, int button, int action, int)
     {
+        GlfwWrapper* self = reinterpret_cast<GlfwWrapper*>(glfwGetWindowUserPointer(window));
+        if (button == GLFW_MOUSE_BUTTON_LEFT && self->mApplication) {
+            if (action == GLFW_PRESS) {
+                double mouseX = 0.0, mouseY = 0.0;
+                glfwGetCursorPos(window, &mouseX, &mouseY);
+                self->mApplication->onTouchBegan(0, glm::ivec2(int(mouseX), int(mouseY)));
+                self->mLeftMouseButtonDown = true;
+            } else if (action == GLFW_RELEASE) {
+                self->mLeftMouseButtonDown = false;
+                self->mApplication->onTouchEnded(0);
+            }
+        }
     }
 
     void GlfwWrapper::mouseScrollCallback(GLFWwindow*, double, double)
     {
     }
 
-    void GlfwWrapper::mouseMoveCallback(GLFWwindow*, double, double)
+    void GlfwWrapper::mouseMoveCallback(GLFWwindow* window, double mouseX, double mouseY)
     {
+        GlfwWrapper* self = reinterpret_cast<GlfwWrapper*>(glfwGetWindowUserPointer(window));
+        if (self->mLeftMouseButtonDown && self->mApplication)
+            self->mApplication->onTouchMoved(0, glm::ivec2(int(mouseX), int(mouseY)));
     }
 
     void GlfwWrapper::errorCallback(int, const char* description)

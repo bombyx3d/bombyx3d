@@ -42,4 +42,21 @@ namespace Engine
     void AbstractScene::draw(IRenderer*) const
     {
     }
+
+    bool AbstractScene::onTouchBegan(int, const glm::ivec2&)
+    {
+        return false;
+    }
+
+    void AbstractScene::onTouchMoved(int, const glm::ivec2&)
+    {
+    }
+
+    void AbstractScene::onTouchEnded(int)
+    {
+    }
+
+    void AbstractScene::onTouchCancelled(int)
+    {
+    }
 }

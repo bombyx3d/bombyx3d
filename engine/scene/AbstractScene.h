@@ -34,6 +34,11 @@ namespace Engine
         void update(double time) override;
         void draw(IRenderer* renderer) const override;
 
+        bool onTouchBegan(int fingerIndex, const glm::ivec2& position) override;
+        void onTouchMoved(int fingerIndex, const glm::ivec2& position) override;
+        void onTouchEnded(int fingerIndex) override;
+        void onTouchCancelled(int fingerIndex) override;
+
     protected:
         AbstractScene();
         ~AbstractScene();

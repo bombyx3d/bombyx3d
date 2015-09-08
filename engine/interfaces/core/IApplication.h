@@ -41,5 +41,10 @@ namespace Engine
         virtual void resize(const glm::ivec2& screenSize) = 0;
 
         virtual void runFrame(double time) = 0;
+
+        virtual void onTouchBegan(int fingerIndex, const glm::ivec2& position) = 0;
+        virtual void onTouchMoved(int fingerIndex, const glm::ivec2& position) = 0;
+        virtual void onTouchEnded(int fingerIndex) = 0;
+        virtual void onTouchCancelled(int fingerIndex) = 0;
     };
 }

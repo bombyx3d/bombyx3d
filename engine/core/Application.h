@@ -43,6 +43,13 @@ namespace Engine
 
         void runFrame(double time) final override;
 
+        void onTouchBegan(int fingerIndex, const glm::ivec2& position) final override;
+        void onTouchMoved(int fingerIndex, const glm::ivec2& position) final override;
+        void onTouchEnded(int fingerIndex) final override;
+        void onTouchCancelled(int fingerIndex) final override;
+
+        void cancelAllTouches();
+
         Z_DISABLE_COPY(Application);
     };
 

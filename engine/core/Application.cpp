@@ -36,6 +36,7 @@ namespace Engine
 
     void Application::setCurrentScene(const ScenePtr& scene)
     {
+        cancelAllTouches();
         mPreviousScene = std::move(mCurrentScene);
         mCurrentScene = scene;
         if (mCurrentScene)
@@ -44,6 +45,7 @@ namespace Engine
 
     void Application::setCurrentScene(ScenePtr&& scene)
     {
+        cancelAllTouches();
         mPreviousScene = std::move(mCurrentScene);
         mCurrentScene = std::move(scene);
         if (mCurrentScene)
@@ -94,5 +96,36 @@ namespace Engine
             mPreviousScene.reset();
 
         renderer->endFrame();
+    }
+
+    void Application::onTouchBegan(int fingerIndex, const glm::ivec2& position)
+    {
+        if (mCurrentScene) {
+            // FIXME: return value is not handled
+            mCurrentScene->onTouchBegan(fingerIndex, position);
+        }
+    }
+
+    void Application::onTouchMoved(int fingerIndex, const glm::ivec2& position)
+    {
+        if (mCurrentScene)
+            mCurrentScene->onTouchMoved(fingerIndex, position);
+    }
+
+    void Application::onTouchEnded(int fingerIndex)
+    {
+        if (mCurrentScene)
+            mCurrentScene->onTouchEnded(fingerIndex);
+    }
+
+    void Application::onTouchCancelled(int fingerIndex)
+    {
+        if (mCurrentScene)
+            mCurrentScene->onTouchCancelled(fingerIndex);
+    }
+
+    void Application::cancelAllTouches()
+    {
+        // FIXME
     }
 }
