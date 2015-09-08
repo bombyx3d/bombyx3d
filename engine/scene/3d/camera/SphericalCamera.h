@@ -21,38 +21,39 @@
  */
 
 #pragma once
-#include "engine/scene/3d/camera/AbstractCamera.h"
+#include "engine/scene/3d/camera/AbstractPerspectiveCamera.h"
+#include <memory>
+#include <glm/glm.hpp>
 
 namespace Engine
 {
-    class AbstractPerspectiveCamera : public AbstractCamera
+    class SphericalCamera : public AbstractPerspectiveCamera
     {
     public:
-        AbstractPerspectiveCamera();
-        ~AbstractPerspectiveCamera();
+        SphericalCamera();
+        ~SphericalCamera();
 
-        float fovY() const { return mFovY; }
-        float aspectRadio() const { return mAspect; }
-        float nearZ() const { return mNearZ; }
-        float farZ() const { return mFarZ; }
+        float distance() const { return mDistance; }
+        void setDistance(float dist) { mDistance = dist; setViewMatrixDirty(); }
 
-        void setFovY(float fovY) { mFovY = fovY; setProjectionMatrixDirty(); }
+        float horizontalAngle() const { return mHorizontalAngle; }
+        void setHorizontalAngle(float angle) { mHorizontalAngle = angle; setViewMatrixDirty(); }
 
-        void setAspectRatio(float ratio) { mAspect = ratio; setProjectionMatrixDirty(); }
-        void setAspectRatioFromSize(const glm::ivec2& size);
+        float verticalAngle() const { return mVerticalAngle; }
+        void setVerticalAngle(float angle) { mVerticalAngle = angle; setViewMatrixDirty(); }
 
-        void setNearZ(float value) { mNearZ = value; setProjectionMatrixDirty(); }
-        void setFarZ(float value) { mFarZ = value; setProjectionMatrixDirty(); }
-        void setDepthRange(float nz, float fz) { mNearZ = nz; mFarZ = fz; setProjectionMatrixDirty(); }
+        const glm::vec3& target() const { return mTarget; }
+        void setTarget(const glm::vec3& target) { mTarget = target; setViewMatrixDirty(); }
 
     protected:
-        void calcProjectionMatrix(glm::mat4& matrix) const override;
-        void calcViewMatrix(glm::mat4& matrix) const override = 0;
+        void calcViewMatrix(glm::mat4& matrix) const override;
 
     private:
-        float mFovY;        // in radians
-        float mAspect;
-        float mNearZ;
-        float mFarZ;
+        float mDistance;
+        float mHorizontalAngle;     // in radians
+        float mVerticalAngle;       // in radians
+        glm::vec3 mTarget;
     };
+
+    using SphericalCameraPtr = std::shared_ptr<SphericalCamera>;
 }

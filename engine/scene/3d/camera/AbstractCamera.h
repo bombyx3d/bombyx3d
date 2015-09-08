@@ -23,6 +23,7 @@
 #pragma once
 #include "engine/core/macros.h"
 #include "engine/interfaces/scene/3d/camera/ICamera.h"
+#include <glm/glm.hpp>
 
 namespace Engine
 {
@@ -35,7 +36,7 @@ namespace Engine
         const glm::mat4& projectionMatrix() const override;
         const glm::mat4& inverseProjectionMatrix() const override;
 
-        const glm::mat4& viewMatrix() const override = 0;
+        const glm::mat4& viewMatrix() const override;
         const glm::mat4& inverseViewMatrix() const override;
 
     protected:

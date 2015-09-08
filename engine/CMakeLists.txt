@@ -71,6 +71,8 @@ set(source_files
     scene/3d/camera/AbstractCamera.h
     scene/3d/camera/AbstractPerspectiveCamera.cpp
     scene/3d/camera/AbstractPerspectiveCamera.h
+    scene/3d/camera/SphericalCamera.cpp
+    scene/3d/camera/SphericalCamera.h
     scene/AbstractScene.cpp
     scene/AbstractScene.h
     utility/FileUtils.cpp
