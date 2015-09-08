@@ -49,6 +49,7 @@ set(source_files
     interfaces/render/ITexture.h
     interfaces/render/IVertexBuffer.h
     interfaces/render/IVertexSource.h
+    interfaces/scene/3d/camera/ICamera.h
     interfaces/scene/IScene.h
     material/ShaderLoader.cpp
     material/ShaderLoader.h
@@ -66,6 +67,10 @@ set(source_files
     render/Uniform.h
     render/VertexSource.cpp
     render/VertexSource.h
+    scene/3d/camera/AbstractCamera.cpp
+    scene/3d/camera/AbstractCamera.h
+    scene/3d/camera/AbstractPerspectiveCamera.cpp
+    scene/3d/camera/AbstractPerspectiveCamera.h
     scene/AbstractScene.cpp
     scene/AbstractScene.h
     utility/FileUtils.cpp
