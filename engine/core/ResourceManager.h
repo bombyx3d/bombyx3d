@@ -22,8 +22,7 @@
 
 #pragma once
 #include "engine/core/macros.h"
-#include "engine/interfaces/render/IShader.h"
-#include "engine/interfaces/render/ITexture.h"
+#include "engine/interfaces/core/IResourceManager.h"
 #include <string>
 #include <unordered_map>
 #include <memory>
@@ -31,10 +30,11 @@
 
 namespace Engine
 {
-    class ResourceManager
+    class ResourceManager : public IResourceManager
     {
     public:
-        static ResourceManager* instance() { return &mInstance; }
+        ResourceManager();
+        ~ResourceManager();
 
         int numPendingResources() const;
 
@@ -42,13 +42,9 @@ namespace Engine
         TexturePtr getTexture(const std::string& fileName, bool async = true);
 
     private:
-        static ResourceManager mInstance;
         std::unordered_map<std::string, std::weak_ptr<IShader>> mShaders;
         std::unordered_map<std::string, std::weak_ptr<ITexture>> mTextures;
         std::shared_ptr<std::atomic<int>> mNumPendingResources;
-
-        ResourceManager();
-        ~ResourceManager();
 
         Z_DISABLE_COPY(ResourceManager);
     };

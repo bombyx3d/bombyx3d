@@ -24,6 +24,7 @@
 #include "engine/core/macros.h"
 #include "engine/interfaces/render/IRenderer.h"
 #include "engine/interfaces/io/IFileSystem.h"
+#include "engine/interfaces/core/IResourceManager.h"
 #include "engine/interfaces/core/IThreadManager.h"
 
 namespace Engine
@@ -34,10 +35,12 @@ namespace Engine
         static const FileSystemPtr& fileSystem() { return mInstance.mFileSystem; }
         static const ThreadManagerPtr& threadManager() { return mInstance.mThreadManager; }
         static const RendererPtr& renderer() { return mInstance.mRenderer; }
+        static const ResourceManagerPtr& resourceManager() { return mInstance.mResourceManager; }
 
         static void setFileSystem(const FileSystemPtr& instance);
         static void setThreadManager(const ThreadManagerPtr& instance);
         static void setRenderer(const RendererPtr& instance);
+        static void setResourceManager(const ResourceManagerPtr& instance);
 
     private:
         static Services mInstance;
@@ -45,6 +48,7 @@ namespace Engine
         FileSystemPtr mFileSystem;
         ThreadManagerPtr mThreadManager;
         RendererPtr mRenderer;
+        ResourceManagerPtr mResourceManager;
 
         Services();
         ~Services();

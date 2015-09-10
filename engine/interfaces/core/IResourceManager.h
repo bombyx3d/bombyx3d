@@ -19,39 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Services.h"
-#include "engine/core/ResourceManager.h"
+
+#pragma once
+#include "engine/interfaces/render/IShader.h"
+#include "engine/interfaces/render/ITexture.h"
+#include <memory>
 
 namespace Engine
 {
-    Services Services::mInstance;
-
-    Services::Services()
+    class IResourceManager
     {
-        mResourceManager = std::make_shared<ResourceManager>();
-    }
+    public:
+        virtual ~IResourceManager() = default;
 
-    Services::~Services()
-    {
-    }
+        virtual int numPendingResources() const = 0;
 
-    void Services::setFileSystem(const FileSystemPtr& instance)
-    {
-        mInstance.mFileSystem = instance;
-    }
+        virtual ShaderPtr getShader(const std::string& fileName, bool async = true) = 0;
+        virtual TexturePtr getTexture(const std::string& fileName, bool async = true) = 0;
+    };
 
-    void Services::setThreadManager(const ThreadManagerPtr& instance)
-    {
-        mInstance.mThreadManager = instance;
-    }
-
-    void Services::setRenderer(const RendererPtr& instance)
-    {
-        mInstance.mRenderer = instance;
-    }
-
-    void Services::setResourceManager(const ResourceManagerPtr& instance)
-    {
-        mInstance.mResourceManager = instance;
-    }
+    using ResourceManagerPtr = std::shared_ptr<IResourceManager>;
 }

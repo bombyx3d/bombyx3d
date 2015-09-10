@@ -109,8 +109,6 @@ namespace Engine
     }
 
 
-    ResourceManager ResourceManager::mInstance;
-
     ResourceManager::ResourceManager()
         : mNumPendingResources(std::make_shared<std::atomic<int>>())
     {
