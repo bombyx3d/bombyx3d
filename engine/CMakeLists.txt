@@ -35,6 +35,8 @@ set(source_files
     core/macros.h
     core/ResourceManager.cpp
     core/ResourceManager.h
+    core/Services.cpp
+    core/Services.h
     image/Image.cpp
     image/Image.h
     interfaces/core/IApplication.h
@@ -84,7 +86,6 @@ set(source_files
     utility/ProducerConsumerQueue.cpp
     utility/ProducerConsumerQueue.h
     utility/RenderUtils.h
-    utility/Singleton.h
     utility/WorkerThread.cpp
     utility/WorkerThread.h
 )

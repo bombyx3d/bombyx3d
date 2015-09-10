@@ -21,6 +21,7 @@
  */
 #include "ResourceManager.h"
 #include "engine/core/Log.h"
+#include "engine/core/Services.h"
 #include "engine/image/Image.h"
 #include "engine/interfaces/render/IRenderer.h"
 #include "engine/interfaces/core/IThreadManager.h"
@@ -74,13 +75,13 @@ namespace Engine
             context->resource = resource;
 
             ++*pendingResourceCounter;
-            IThreadManager::instance()->performInBackgroundThread([context]() {
+            Services::threadManager()->performInBackgroundThread([context]() {
                 if (!context->loader.load()) {
                     --*context->pendingResourceCounter;
                     return;
                 }
 
-                IThreadManager::instance()->performInRenderThread([context]() {
+                Services::threadManager()->performInRenderThread([context]() {
                     context->loader.setup(context->resource);
                     --*context->pendingResourceCounter;
                 });
@@ -130,7 +131,7 @@ namespace Engine
         {
             ShaderPtr create() override
             {
-                return IRenderer::instance()->createShader();
+                return Services::renderer()->createShader();
             }
 
             bool load() override
@@ -158,7 +159,7 @@ namespace Engine
 
             TexturePtr create() override
             {
-                return IRenderer::instance()->createTexture();
+                return Services::renderer()->createTexture();
             }
 
             bool load() override

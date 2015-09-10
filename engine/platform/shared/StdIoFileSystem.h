@@ -22,6 +22,7 @@
 
 #pragma once
 #include "engine/interfaces/io/IFileSystem.h"
+#include "engine/core/macros.h"
 
 namespace Engine
 {

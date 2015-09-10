@@ -21,6 +21,7 @@
  */
 #include "FileUtils.h"
 #include "engine/interfaces/io/IFileSystem.h"
+#include "engine/core/Services.h"
 #include <sstream>
 
 namespace Engine
@@ -52,7 +53,7 @@ namespace Engine
 
     std::vector<char> FileUtils::loadFile(const std::string& fileName)
     {
-        FilePtr file = IFileSystem::instance()->openFile(fileName);
+        FilePtr file = Services::fileSystem()->openFile(fileName);
         return loadFile(file.get());
     }
 
@@ -87,7 +88,7 @@ namespace Engine
 
     std::vector<std::string> FileUtils::loadFileLines(const std::string& fileName, bool includeEolMarker)
     {
-        FilePtr file = IFileSystem::instance()->openFile(fileName);
+        FilePtr file = Services::fileSystem()->openFile(fileName);
         return loadFileLines(file.get(), includeEolMarker);
     }
 

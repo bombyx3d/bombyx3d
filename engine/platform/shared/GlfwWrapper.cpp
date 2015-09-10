@@ -20,8 +20,9 @@
  * THE SOFTWARE.
  */
 #include "GlfwWrapper.h"
-#include "engine/render/Renderer.h"
+#include "engine/core/Services.h"
 #include "engine/core/Log.h"
+#include "engine/render/Renderer.h"
 #include <cstdlib>
 #include <cassert>
 #include <GLFW/glfw3.h>
@@ -110,7 +111,7 @@ namespace Engine
         glfwGetFramebufferSize(mWindow, &screenSize.x, &screenSize.y);
 
         Z_LOGI("Initializing application with window size (" << screenSize.x << ", " << screenSize.y << ").");
-        IRenderer::createInstance<Renderer>();
+        Services::setRenderer(std::make_shared<Renderer>());
         mApplication->initialize(screenSize);
 
         while (!glfwWindowShouldClose(mWindow)) {
@@ -137,7 +138,7 @@ namespace Engine
 
         Z_LOGI("Application is shutting down.");
         mApplication->shutdown();
-        IRenderer::destroyInstance();
+        Services::setRenderer(nullptr);
 
         destroyWindow();
     }

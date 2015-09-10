@@ -21,13 +21,13 @@
  */
 
 #pragma once
-#include "engine/utility/Singleton.h"
 #include "engine/core/Atom.h"
 #include "engine/interfaces/render/IShader.h"
 #include "engine/interfaces/render/ITexture.h"
 #include "engine/interfaces/render/IVertexBuffer.h"
 #include "engine/interfaces/render/IIndexBuffer.h"
 #include "engine/interfaces/render/IVertexSource.h"
+#include <memory>
 #include <glm/glm.hpp>
 
 namespace Engine
@@ -41,7 +41,7 @@ namespace Engine
         TriangleStrip,
     };
 
-    class IRenderer : public Singleton<IRenderer>
+    class IRenderer
     {
     public:
         virtual ~IRenderer() = default;
@@ -81,4 +81,6 @@ namespace Engine
 
         virtual void drawPrimitive(PrimitiveType primitiveType, size_t first, size_t count) = 0;
     };
+
+    using RendererPtr = std::shared_ptr<IRenderer>;
 }

@@ -22,13 +22,12 @@
 
 #pragma once
 #include "IFile.h"
-#include "engine/utility/Singleton.h"
 #include <memory>
 #include <string>
 
 namespace Engine
 {
-    class IFileSystem : public Singleton<IFileSystem>
+    class IFileSystem
     {
     public:
         virtual ~IFileSystem() = default;

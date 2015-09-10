@@ -23,6 +23,7 @@
 #include "engine/interfaces/io/IFileSystem.h"
 #include "engine/interfaces/image/IImageLoader.h"
 #include "engine/core/Log.h"
+#include "engine/core/Services.h"
 #include <cstring>
 
 namespace Engine
@@ -72,7 +73,7 @@ namespace Engine
 
     ImagePtr Image::fromFile(const std::string& name)
     {
-        return fromFile(IFileSystem::instance()->openFile(name).get());
+        return fromFile(Services::fileSystem()->openFile(name).get());
     }
 
     ImagePtr Image::fromFile(const FilePtr& file)

@@ -21,12 +21,12 @@
  */
 
 #pragma once
-#include "engine/utility/Singleton.h"
 #include <functional>
+#include <memory>
 
 namespace Engine
 {
-    class IThreadManager : public Singleton<IThreadManager>
+    class IThreadManager
     {
     public:
         virtual ~IThreadManager() = default;
@@ -37,4 +37,6 @@ namespace Engine
         virtual void performInBackgroundThread(const std::function<void()>& action) = 0;
         virtual void performInBackgroundThread(std::function<void()>&& action) = 0;
     };
+
+    using ThreadManagerPtr = std::shared_ptr<IThreadManager>;
 }

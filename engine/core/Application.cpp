@@ -22,6 +22,7 @@
 #include "Application.h"
 #include "engine/interfaces/render/IRenderer.h"
 #include "engine/core/Log.h"
+#include "engine/core/Services.h"
 #include <cassert>
 
 namespace Engine
@@ -100,7 +101,7 @@ namespace Engine
 
     void Application::runFrame(double time)
     {
-        IRenderer* renderer =IRenderer::instance().get();
+        const auto& renderer = Services::renderer();
 
         renderer->beginFrame();
 
@@ -110,7 +111,7 @@ namespace Engine
         if (mCurrentScene) {
             ScenePtr currentScene = mCurrentScene;
             currentScene->update(time);
-            currentScene->draw(renderer);
+            currentScene->draw(renderer.get());
         }
 
         if (mPreviousScene)

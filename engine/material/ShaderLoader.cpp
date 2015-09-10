@@ -21,8 +21,8 @@
  */
 #include "ShaderLoader.h"
 #include "engine/utility/FileUtils.h"
-#include "engine/interfaces/io/IFileSystem.h"
 #include "engine/core/Log.h"
+#include "engine/core/Services.h"
 #include <cassert>
 
 namespace Engine
@@ -46,7 +46,7 @@ namespace Engine
 
     bool ShaderLoader::loadFile(const std::string& fileName, std::vector<std::string>* what)
     {
-        FilePtr file = IFileSystem::instance()->openFile(fileName);
+        FilePtr file = Services::fileSystem()->openFile(fileName);
         return loadFile(file.get(), what);
     }
 
@@ -121,9 +121,9 @@ namespace Engine
             fileName.resize(--length);
 
         std::string name = FileUtils::makeFullPath(fileName, parentFileName);
-        if (IFileSystem::instance()->fileExists(name))
-            return IFileSystem::instance()->openFile(name);
+        if (Services::fileSystem()->fileExists(name))
+            return Services::fileSystem()->openFile(name);
 
-        return IFileSystem::instance()->openFile(fileName);
+        return Services::fileSystem()->openFile(fileName);
     }
 }

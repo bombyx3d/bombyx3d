@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "engine/core/Services.h"
 #include "engine/core/Log.h"
 #include "engine/interfaces/core/IApplication.h"
 #include "engine/interfaces/io/IFileSystem.h"
@@ -51,21 +52,20 @@ int main()
             printf("%s%s\033[0m\n", ansi, message.c_str());
     });
 
-    IThreadManager::createInstance<CxxThreadManager>();
-    IFileSystem::createInstance<StdIoFileSystem>(".");
+    auto threadManager = std::make_shared<CxxThreadManager>();
+    Services::setThreadManager(threadManager);
+    Services::setFileSystem(std::make_shared<StdIoFileSystem>("."));
 
     int exitCode = EXIT_SUCCESS;
     GlfwWrapper glfwWrapper;
     if (!glfwWrapper.createWindow())
         exitCode = EXIT_FAILURE;
-    else {
-        glfwWrapper.run([](){
-            static_cast<CxxThreadManager&>(*IThreadManager::instance()).flushRenderThreadQueue();
-        });
-    }
+    else
+        glfwWrapper.run([threadManager](){ threadManager->flushRenderThreadQueue(); });
 
-    IFileSystem::destroyInstance();
-    IThreadManager::destroyInstance();
+    Services::setFileSystem(nullptr);
+    Services::setThreadManager(nullptr);
+    threadManager.reset();
 
     Log::setLogger(nullptr);
 

@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "engine/core/Services.h"
 #include "engine/core/Log.h"
 #include "engine/interfaces/core/IApplication.h"
 #include "engine/interfaces/io/IFileSystem.h"
@@ -90,17 +91,16 @@ static int win32Main()
         }
     });
 
-    IThreadManager::createInstance<CxxThreadManager>();
-    IFileSystem::createInstance<StdIoFileSystem>(".");
+    auto threadManager = std::make_shared<CxxThreadManager>();
+    Services::setThreadManager(threadManager);
+    Services::setFileSystem(std::make_shared<StdIoFileSystem>("."));
 
     int exitCode = EXIT_SUCCESS;
     GlfwWrapper glfwWrapper;
     if (glfwWrapper.createWindow()) {
         glewExperimental = GL_TRUE;
         if (glewInit() == GLEW_OK) {
-            glfwWrapper.run([](){
-                static_cast<CxxThreadManager&>(*IThreadManager::instance()).flushRenderThreadQueue();
-            });
+            glfwWrapper.run([threadManager](){ threadManager->flushRenderThreadQueue(); });
         } else {
             Z_LOGE("Unable to initialize GLEW.");
             glfwWrapper.destroyWindow();
@@ -112,8 +112,9 @@ static int win32Main()
         exitCode = EXIT_FAILURE;
     }
 
-    IFileSystem::destroyInstance();
-    IThreadManager::destroyInstance();
+    Services::setFileSystem(nullptr);
+    Services::setThreadManager(nullptr);
+    threadManager.reset();
 
     Log::setLogger(nullptr);
     if (gIsConsoleApplication) {

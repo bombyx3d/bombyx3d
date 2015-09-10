@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 #include "Buffer.h"
-#include "engine/interfaces/core/IThreadManager.h"
+#include "engine/core/Services.h"
 #include "opengl.h"
 #include <cassert>
 
@@ -52,7 +52,7 @@ namespace Engine
     Buffer::~Buffer()
     {
         GLuint handle = GLuint(mHandle);
-        IThreadManager::instance()->performInRenderThread([handle]() {
+        Services::threadManager()->performInRenderThread([handle]() {
             glDeleteBuffers(1, &handle);
         });
     }

@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 #include "Texture.h"
-#include "engine/interfaces/core/IThreadManager.h"
+#include "engine/core/Services.h"
 #include "opengl.h"
 #include <cassert>
 
@@ -36,7 +36,7 @@ namespace Engine
     Texture::~Texture()
     {
         GLuint handle = GLuint(mHandle);
-        IThreadManager::instance()->performInRenderThread([handle]() {
+        Services::threadManager()->performInRenderThread([handle]() {
             glDeleteTextures(1, &handle);
         });
     }

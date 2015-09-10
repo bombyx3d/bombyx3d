@@ -21,8 +21,8 @@
  */
 #include "Shader.h"
 #include "opengl.h"
+#include "engine/core/Services.h"
 #include "engine/core/Log.h"
-#include "engine/interfaces/core/IThreadManager.h"
 #include <utility>
 #include <algorithm>
 #include <iomanip>
@@ -47,7 +47,7 @@ namespace Engine
         GLuint fragmentShader = GLuint(mFragmentShader);
         GLuint vertexShader = GLuint(mVertexShader);
 
-        IThreadManager::instance()->performInRenderThread([program, fragmentShader, vertexShader]() {
+        Services::threadManager()->performInRenderThread([program, fragmentShader, vertexShader]() {
             glDeleteProgram(program);
             glDeleteShader(fragmentShader);
             glDeleteShader(vertexShader);

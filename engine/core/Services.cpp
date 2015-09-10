@@ -19,33 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "engine/core/macros.h"
-#include "engine/interfaces/render/IVertexSource.h"
-#include "engine/core/Services.h"
-#include "engine/mesh/VertexFormat.h"
-#include <vector>
-#include <string>
+#include "Services.h"
 
 namespace Engine
 {
-    namespace RenderUtils
-    {
-        template <typename TYPE> VertexSourcePtr createVertexSource(const VertexBufferPtr& vertexBuffer)
-        {
-            VertexSourcePtr vertexSource = Services::renderer()->createVertexSource();
-            vertexSource->setAttributes(TYPE::attributes(), vertexBuffer);
-            return vertexSource;
-        }
+    Services Services::mInstance;
 
-        template <typename TYPE>
-        VertexSourcePtr createVertexSource(const VertexBufferPtr& vertexBuffer, const IndexBufferPtr& indexBuffer)
-        {
-            VertexSourcePtr vertexSource = Services::renderer()->createVertexSource();
-            vertexSource->setAttributes(TYPE::attributes(), vertexBuffer);
-            vertexSource->setIndexBuffer(indexBuffer);
-            return vertexSource;
-        }
+    Services::Services()
+    {
+    }
+
+    Services::~Services()
+    {
+    }
+
+    void Services::setFileSystem(const FileSystemPtr& instance)
+    {
+        mInstance.mFileSystem = instance;
+    }
+
+    void Services::setThreadManager(const ThreadManagerPtr& instance)
+    {
+        mInstance.mThreadManager = instance;
+    }
+
+    void Services::setRenderer(const RendererPtr& instance)
+    {
+        mInstance.mRenderer = instance;
     }
 }

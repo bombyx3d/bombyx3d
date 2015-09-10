@@ -22,50 +22,33 @@
 
 #pragma once
 #include "engine/core/macros.h"
-#include <utility>
-#include <memory>
+#include "engine/interfaces/render/IRenderer.h"
+#include "engine/interfaces/io/IFileSystem.h"
+#include "engine/interfaces/core/IThreadManager.h"
 
 namespace Engine
 {
-    template <class INTERFACE> class Singleton
+    class Services
     {
     public:
-        static const std::shared_ptr<INTERFACE>& instance()
-        {
-            return instanceVariable();
-        }
+        static const FileSystemPtr& fileSystem() { return mInstance.mFileSystem; }
+        static const ThreadManagerPtr& threadManager() { return mInstance.mThreadManager; }
+        static const RendererPtr& renderer() { return mInstance.mRenderer; }
 
-        static void setInstance(const std::shared_ptr<INTERFACE>& newInstance)
-        {
-            instanceVariable() = newInstance;
-        }
-
-        static void setInstance(std::shared_ptr<INTERFACE>&& newInstance)
-        {
-            instanceVariable() = std::move(newInstance);
-        }
-
-        template <class IMPLEMENTATION, typename... ARGS> static void createInstance(ARGS&&... args)
-        {
-            instanceVariable() = std::make_shared<IMPLEMENTATION>(std::forward<ARGS>(args)...);
-        }
-
-        static void destroyInstance()
-        {
-            instanceVariable().reset();
-        }
-
-    protected:
-        Singleton() = default;
-        virtual ~Singleton() = default;
+        static void setFileSystem(const FileSystemPtr& instance);
+        static void setThreadManager(const ThreadManagerPtr& instance);
+        static void setRenderer(const RendererPtr& instance);
 
     private:
-        static std::shared_ptr<INTERFACE>& instanceVariable()
-        {
-            static std::shared_ptr<INTERFACE> instance;
-            return instance;
-        }
+        static Services mInstance;
 
-        Z_DISABLE_COPY(Singleton);
+        FileSystemPtr mFileSystem;
+        ThreadManagerPtr mThreadManager;
+        RendererPtr mRenderer;
+
+        Services();
+        ~Services();
+
+        Z_DISABLE_COPY(Services);
     };
 }
