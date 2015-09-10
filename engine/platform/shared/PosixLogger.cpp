@@ -19,14 +19,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Log.h"
+#include "PosixLogger.h"
+#include <unistd.h>
+#include <cstdio>
+#include <cstdlib>
 
 namespace Engine
 {
-    void Log::write(LogLevel level, const std::ostream& stream)
+    PosixLogger::PosixLogger()
     {
-        const auto& logger = Services::logger();
-        if (logger)
-            logger->write(level, static_cast<const std::ostringstream&>(stream).str());
+    }
+
+    PosixLogger::~PosixLogger()
+    {
+    }
+
+    void PosixLogger::write(LogLevel level, const std::string& message)
+    {
+        const char* ansi = "\033[0m";
+        switch (level)
+        {
+        case LogLevel::Trace: ansi = "\033[30;1m"; break;
+        case LogLevel::Debug: ansi = "\033[37m"; break;
+        case LogLevel::Info: ansi = "\033[37;1m"; break;
+        case LogLevel::Warning: ansi = "\033[33;1m"; break;
+        case LogLevel::Error: ansi = "\033[31;1m"; break;
+        }
+
+        if (!isatty(STDOUT_FILENO))
+            printf("%s\n", message.c_str());
+        else
+            printf("%s%s\033[0m\n", ansi, message.c_str());
     }
 }

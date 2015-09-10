@@ -23,40 +23,23 @@
 #pragma once
 #include "engine/core/macros.h"
 #include "engine/interfaces/core/ILogger.h"
-#include "engine/interfaces/core/IResourceManager.h"
-#include "engine/interfaces/core/IThreadManager.h"
-#include "engine/interfaces/io/IFileSystem.h"
-#include "engine/interfaces/render/IRenderer.h"
+#include "WinAPI.h"
 
 namespace Engine
 {
-    class Services
+    class Win32ConsoleLogger : public ILogger
     {
     public:
-        static const LoggerPtr& logger() { return mInstance.mLogger; }
-        static const FileSystemPtr& fileSystem() { return mInstance.mFileSystem; }
-        static const ThreadManagerPtr& threadManager() { return mInstance.mThreadManager; }
-        static const RendererPtr& renderer() { return mInstance.mRenderer; }
-        static const ResourceManagerPtr& resourceManager() { return mInstance.mResourceManager; }
+        Win32ConsoleLogger();
+        ~Win32ConsoleLogger();
 
-        static void setLogger(const LoggerPtr& instance);
-        static void setFileSystem(const FileSystemPtr& instance);
-        static void setThreadManager(const ThreadManagerPtr& instance);
-        static void setRenderer(const RendererPtr& instance);
-        static void setResourceManager(const ResourceManagerPtr& instance);
+        void write(LogLevel level, const std::string& message) override;
 
     private:
-        static Services mInstance;
+        CRITICAL_SECTION mConsoleCriticalSection;
+        CONSOLE_SCREEN_BUFFER_INFO mConsoleInitialSettings;
+        HANDLE mConsoleHandle;
 
-        LoggerPtr mLogger;
-        FileSystemPtr mFileSystem;
-        ThreadManagerPtr mThreadManager;
-        RendererPtr mRenderer;
-        ResourceManagerPtr mResourceManager;
-
-        Services();
-        ~Services();
-
-        Z_DISABLE_COPY(Services);
+        Z_DISABLE_COPY(Win32ConsoleLogger);
     };
 }

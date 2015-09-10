@@ -31,3 +31,14 @@
 #define _UNICODE
 
 #include <windows.h>
+#include <string>
+#include <vector>
+
+namespace Engine
+{
+    namespace Win32
+    {
+        std::vector<WCHAR> latin1ToWideChar(const std::string& string, size_t extraLength = 0);
+        std::vector<WCHAR> multiByteToWideChar(const std::string& string, size_t extraLength = 0);
+    }
+}

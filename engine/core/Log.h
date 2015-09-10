@@ -21,27 +21,14 @@
  */
 
 #pragma once
-#include <string>
-#include <functional>
-#include <memory>
+#include "engine/core/Services.h"
+#include "engine/interfaces/core/ILogger.h"
 #include <sstream>
 
 namespace Engine
 {
-    enum class LogLevel
-    {
-        Trace,
-        Debug,
-        Info,
-        Warning,
-        Error,
-    };
-
-    using Logger = std::function<void(LogLevel, const std::string&)>;
-
     namespace Log
     {
-        void setLogger(Logger&& logger);
         void write(LogLevel level, const std::ostream& stream);
     }
 }

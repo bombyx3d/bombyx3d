@@ -35,6 +35,11 @@ namespace Engine
     {
     }
 
+    void Services::setLogger(const LoggerPtr& instance)
+    {
+        mInstance.mLogger = instance;
+    }
+
     void Services::setFileSystem(const FileSystemPtr& instance)
     {
         mInstance.mFileSystem = instance;

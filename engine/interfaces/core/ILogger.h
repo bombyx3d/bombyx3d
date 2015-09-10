@@ -19,14 +19,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Log.h"
+
+#pragma once
+#include <string>
+#include <memory>
 
 namespace Engine
 {
-    void Log::write(LogLevel level, const std::ostream& stream)
+    enum class LogLevel
     {
-        const auto& logger = Services::logger();
-        if (logger)
-            logger->write(level, static_cast<const std::ostringstream&>(stream).str());
-    }
+        Trace,
+        Debug,
+        Info,
+        Warning,
+        Error,
+    };
+
+    class ILogger
+    {
+    public:
+        virtual ~ILogger() = default;
+        virtual void write(LogLevel level, const std::string& message) = 0;
+    };
+
+    using LoggerPtr = std::shared_ptr<ILogger>;
 }

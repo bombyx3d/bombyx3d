@@ -19,14 +19,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Log.h"
+
+#pragma once
+#include "engine/core/macros.h"
+#include "engine/interfaces/core/ILogger.h"
+#include "WinAPI.h"
 
 namespace Engine
 {
-    void Log::write(LogLevel level, const std::ostream& stream)
+    class PosixLogger : public ILogger
     {
-        const auto& logger = Services::logger();
-        if (logger)
-            logger->write(level, static_cast<const std::ostringstream&>(stream).str());
+    public:
+        PosixLogger();
+        ~PosixLogger();
+
+        void write(LogLevel level, const std::string& message) override;
+
+        Z_DISABLE_COPY(PosixLogger);
     }
 }

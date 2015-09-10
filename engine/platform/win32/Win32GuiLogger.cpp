@@ -19,14 +19,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Log.h"
+#include "Win32GuiLogger.h"
 
 namespace Engine
 {
-    void Log::write(LogLevel level, const std::ostream& stream)
+    Win32GuiLogger::Win32GuiLogger()
     {
-        const auto& logger = Services::logger();
-        if (logger)
-            logger->write(level, static_cast<const std::ostringstream&>(stream).str());
+    }
+
+    Win32GuiLogger::~Win32GuiLogger()
+    {
+    }
+
+    void Win32GuiLogger::write(LogLevel, const std::string& message)
+    {
+        std::vector<WCHAR> unicode = Win32::multiByteToWideChar(message, 2);
+        unicode[unicode.size() - 2] = WCHAR('\n');
+        OutputDebugStringW(unicode.data());
     }
 }

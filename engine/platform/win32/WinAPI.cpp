@@ -19,14 +19,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Log.h"
+#include "WinAPI.h"
 
 namespace Engine
 {
-    void Log::write(LogLevel level, const std::ostream& stream)
+    std::vector<WCHAR> Win32::latin1ToWideChar(const std::string& string, size_t extraLength)
     {
-        const auto& logger = Services::logger();
-        if (logger)
-            logger->write(level, static_cast<const std::ostringstream&>(stream).str());
+        std::vector<WCHAR> result(string.length() + extraLength);
+        for (unsigned char ch : string) {
+            if (ch < 32 || ch == 127)
+                result.push_back(WCHAR('?'));
+            else
+                result.push_back(WCHAR(ch));
+        }
+        return result;
+    }
+
+    std::vector<WCHAR> Win32::multiByteToWideChar(const std::string& string, size_t extraLength)
+    {
+        const char* stringData = string.data();
+        int stringLength = int(string.length());
+
+        int unicodeLength = MultiByteToWideChar(CP_UTF8, 0, stringData, stringLength, nullptr, 0);
+        if (unicodeLength < 0)
+            return latin1ToWideChar(string, extraLength);
+
+        std::vector<WCHAR> unicode(size_t(unicodeLength) + extraLength);
+        unicodeLength = MultiByteToWideChar(CP_UTF8, 0, stringData, stringLength, unicode.data(), unicodeLength);
+        if (unicodeLength < 0)
+            return latin1ToWideChar(string, extraLength);
+
+        unicode.resize(size_t(unicodeLength) + extraLength);
+        return unicode;
     }
 }

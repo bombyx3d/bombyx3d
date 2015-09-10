@@ -37,6 +37,11 @@ if(WIN32)
         shared/StdIoFileSystem.cpp
         shared/StdIoFileSystem.h
         win32/main.cpp
+        win32/Win32GuiLogger.cpp
+        win32/Win32GuiLogger.h
+        win32/Win32ConsoleLogger.cpp
+        win32/Win32ConsoleLogger.h
+        win32/WinAPI.cpp
         win32/WinAPI.h
     )
 endif()
@@ -49,6 +54,8 @@ if(APPLE)
         shared/CxxThreadManager.h
         shared/GlfwWrapper.cpp
         shared/GlfwWrapper.h
+        shared/PosixLogger.cpp
+        shared/PosixLogger.h
         shared/StdIoFile.cpp
         shared/StdIoFile.h
         shared/StdIoFileSystem.cpp
@@ -65,6 +72,8 @@ if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
         shared/CxxThreadManager.h
         shared/GlfwWrapper.cpp
         shared/GlfwWrapper.h
+        shared/PosixLogger.cpp
+        shared/PosixLogger.h
         shared/StdIoFile.cpp
         shared/StdIoFile.h
         shared/StdIoFileSystem.cpp
