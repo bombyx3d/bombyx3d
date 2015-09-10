@@ -33,11 +33,13 @@ namespace Engine
     {
         assert(mInstance == nullptr);
         mInstance = this;
+        Services::inputManager()->addObserver(this);
     }
 
     Application::~Application()
     {
         assert(mInstance == this);
+        Services::inputManager()->removeObserver(this);
         mInstance = nullptr;
     }
 
@@ -58,7 +60,7 @@ namespace Engine
 
     void Application::setCurrentScene(const ScenePtr& scene)
     {
-        cancelAllTouches();
+        Services::inputManager()->resetAll();
         mPreviousScene = std::move(mCurrentScene);
         mCurrentScene = scene;
         if (mCurrentScene)
@@ -67,7 +69,7 @@ namespace Engine
 
     void Application::setCurrentScene(ScenePtr&& scene)
     {
-        cancelAllTouches();
+        Services::inputManager()->resetAll();
         mPreviousScene = std::move(mCurrentScene);
         mCurrentScene = std::move(scene);
         if (mCurrentScene)
@@ -95,6 +97,7 @@ namespace Engine
         else
             mScreenAspect = float(mScreenSize.x) / float(mScreenSize.y);
 
+        Services::inputManager()->resetAll();
         if (mCurrentScene)
             mCurrentScene->resize(screenSize);
     }
@@ -120,18 +123,18 @@ namespace Engine
         renderer->endFrame();
     }
 
-    void Application::onTouchBegan(int fingerIndex, const glm::ivec2& position)
+    void Application::onTouchBegan(int fingerIndex, const glm::vec2& position)
     {
         if (mCurrentScene) {
             // FIXME: return value is not handled
-            mCurrentScene->onTouchBegan(fingerIndex, position);
+            mCurrentScene->onTouchBegan(fingerIndex, glm::ivec2(position)); // FIXME: ivec2
         }
     }
 
-    void Application::onTouchMoved(int fingerIndex, const glm::ivec2& position)
+    void Application::onTouchMoved(int fingerIndex, const glm::vec2& position)
     {
         if (mCurrentScene)
-            mCurrentScene->onTouchMoved(fingerIndex, position);
+            mCurrentScene->onTouchMoved(fingerIndex, glm::ivec2(position)); // FIXME: ivec2
     }
 
     void Application::onTouchEnded(int fingerIndex)
@@ -144,10 +147,5 @@ namespace Engine
     {
         if (mCurrentScene)
             mCurrentScene->onTouchCancelled(fingerIndex);
-    }
-
-    void Application::cancelAllTouches()
-    {
-        // FIXME
     }
 }

@@ -21,6 +21,7 @@
  */
 #include "engine/core/Services.h"
 #include "engine/core/Log.h"
+#include "engine/input/InputManager.h"
 #include "engine/interfaces/core/IApplication.h"
 #include "engine/interfaces/io/IFileSystem.h"
 #include "engine/platform/shared/StdIoFileSystem.h"
@@ -52,24 +53,33 @@ static int win32Main()
     Services::setThreadManager(threadManager);
     Services::setFileSystem(std::make_shared<StdIoFileSystem>("."));
 
+    auto inputManager = std::make_shared<InputManager>();
+    inputManager->setHasKeyboard(true);
+    inputManager->setHasMouse(true);
+    Services::setInputManager(inputManager);
+
     int exitCode = EXIT_SUCCESS;
-    GlfwWrapper glfwWrapper;
-    if (glfwWrapper.createWindow()) {
-        glewExperimental = GL_TRUE;
-        if (glewInit() == GLEW_OK) {
-            glfwWrapper.run([threadManager](){ threadManager->flushRenderThreadQueue(); });
+    {
+        GlfwWrapper glfwWrapper;
+        if (glfwWrapper.createWindow()) {
+            glewExperimental = GL_TRUE;
+            if (glewInit() == GLEW_OK) {
+                glfwWrapper.run([threadManager](){ threadManager->flushRenderThreadQueue(); });
+            } else {
+                Z_LOGE("Unable to initialize GLEW.");
+                glfwWrapper.destroyWindow();
+                MessageBoxW(nullptr, L"Unable to initialize OpenGL.", L"Error", MB_ICONERROR | MB_OK);
+                exitCode = EXIT_FAILURE;
+            }
         } else {
-            Z_LOGE("Unable to initialize GLEW.");
-            glfwWrapper.destroyWindow();
             MessageBoxW(nullptr, L"Unable to initialize OpenGL.", L"Error", MB_ICONERROR | MB_OK);
             exitCode = EXIT_FAILURE;
         }
-    } else {
-        MessageBoxW(nullptr, L"Unable to initialize OpenGL.", L"Error", MB_ICONERROR | MB_OK);
-        exitCode = EXIT_FAILURE;
     }
 
     threadManager.reset();
+    inputManager.reset();
+    Services::setInputManager(nullptr);
     Services::setFileSystem(nullptr);
     Services::setThreadManager(nullptr);
     Services::setLogger(nullptr);

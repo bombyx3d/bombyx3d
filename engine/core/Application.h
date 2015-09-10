@@ -23,12 +23,13 @@
 #pragma once
 #include "engine/core/macros.h"
 #include "engine/interfaces/core/IApplication.h"
+#include "engine/interfaces/input/IInputObserver.h"
 #include "engine/interfaces/scene/IScene.h"
 #include <functional>
 
 namespace Engine
 {
-    class Application : public IApplication
+    class Application : public IApplication, public IInputObserver
     {
     public:
         static Application* instance() { return mInstance; }
@@ -64,12 +65,10 @@ namespace Engine
 
         void runFrame(double time) final override;
 
-        void onTouchBegan(int fingerIndex, const glm::ivec2& position) final override;
-        void onTouchMoved(int fingerIndex, const glm::ivec2& position) final override;
+        void onTouchBegan(int fingerIndex, const glm::vec2& position) final override;
+        void onTouchMoved(int fingerIndex, const glm::vec2& position) final override;
         void onTouchEnded(int fingerIndex) final override;
         void onTouchCancelled(int fingerIndex) final override;
-
-        void cancelAllTouches();
 
         Z_DISABLE_COPY(Application);
     };

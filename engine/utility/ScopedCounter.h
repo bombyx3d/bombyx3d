@@ -19,49 +19,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Services.h"
-#include "engine/core/ResourceManager.h"
+
+#pragma once
+#include "engine/core/macros.h"
 
 namespace Engine
 {
-    Services Services::mInstance;
-
-    Services::Services()
+    class ScopedCounter
     {
-        mResourceManager = std::make_shared<ResourceManager>();
-    }
+    public:
+        ScopedCounter(int* counter) : mCounter(counter) { ++*mCounter; }
+        ~ScopedCounter() { --*mCounter; }
 
-    Services::~Services()
-    {
-    }
+    private:
+        int* mCounter;
 
-    void Services::setLogger(const LoggerPtr& instance)
-    {
-        mInstance.mLogger = instance;
-    }
-
-    void Services::setFileSystem(const FileSystemPtr& instance)
-    {
-        mInstance.mFileSystem = instance;
-    }
-
-    void Services::setThreadManager(const ThreadManagerPtr& instance)
-    {
-        mInstance.mThreadManager = instance;
-    }
-
-    void Services::setRenderer(const RendererPtr& instance)
-    {
-        mInstance.mRenderer = instance;
-    }
-
-    void Services::setResourceManager(const ResourceManagerPtr& instance)
-    {
-        mInstance.mResourceManager = instance;
-    }
-
-    void Services::setInputManager(const InputManagerPtr& instance)
-    {
-        mInstance.mInputManager = instance;
-    }
+        Z_DISABLE_COPY(ScopedCounter);
+    };
 }

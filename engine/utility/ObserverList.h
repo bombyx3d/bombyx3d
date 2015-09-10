@@ -21,25 +21,52 @@
  */
 
 #pragma once
-#include <glm/glm.hpp>
+#include "engine/core/macros.h"
+#include "engine/utility/ScopedCounter.h"
+#include <vector>
+#include <cassert>
 
 namespace Engine
 {
-    class IApplication
+    template <class TYPE> class ObserverList
     {
     public:
-        static IApplication* create();
-        virtual ~IApplication() = default;
+        ObserverList() = default;
+        ~ObserverList() = default;
 
-        virtual glm::ivec2 preferredScreenSize() const = 0;
-        virtual int preferredDepthBits() const = 0;
-        virtual int preferredStencilBits() const = 0;
+        void add(TYPE* observer)
+        {
+            assert(observer != nullptr);
+            mObservers.push_back(observer);
+        }
 
-        virtual void initialize(const glm::ivec2& screenSize) = 0;
-        virtual void shutdown() = 0;
+        void remove(TYPE* observer)
+        {
+            for (auto& it : mObservers) {
+                if (it == observer) {
+                    it = nullptr;
+                    return;
+                }
+            }
+        }
 
-        virtual void resize(const glm::ivec2& screenSize) = 0;
+        template <class CALLBACK> void forEach(CALLBACK&& callback)
+        {
+            ScopedCounter counter(&mIterating);
+            for (auto it = mObservers.begin(); it != mObservers.end(); ) {
+                if (*it)
+                    callback(*it++);
+                else if (mIterating > 1)
+                    ++it;
+                else
+                    it = mObservers.erase(it);
+            }
+        }
 
-        virtual void runFrame(double time) = 0;
+    private:
+        std::vector<TYPE*> mObservers;
+        int mIterating = 0;
+
+        Z_DISABLE_COPY(ObserverList);
     };
 }

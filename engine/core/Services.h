@@ -25,6 +25,7 @@
 #include "engine/interfaces/core/ILogger.h"
 #include "engine/interfaces/core/IResourceManager.h"
 #include "engine/interfaces/core/IThreadManager.h"
+#include "engine/interfaces/input/IInputManager.h"
 #include "engine/interfaces/io/IFileSystem.h"
 #include "engine/interfaces/render/IRenderer.h"
 
@@ -38,12 +39,14 @@ namespace Engine
         static const ThreadManagerPtr& threadManager() { return mInstance.mThreadManager; }
         static const RendererPtr& renderer() { return mInstance.mRenderer; }
         static const ResourceManagerPtr& resourceManager() { return mInstance.mResourceManager; }
+        static const InputManagerPtr& inputManager() { return mInstance.mInputManager; }
 
         static void setLogger(const LoggerPtr& instance);
         static void setFileSystem(const FileSystemPtr& instance);
         static void setThreadManager(const ThreadManagerPtr& instance);
         static void setRenderer(const RendererPtr& instance);
         static void setResourceManager(const ResourceManagerPtr& instance);
+        static void setInputManager(const InputManagerPtr& instance);
 
     private:
         static Services mInstance;
@@ -53,6 +56,7 @@ namespace Engine
         ThreadManagerPtr mThreadManager;
         RendererPtr mRenderer;
         ResourceManagerPtr mResourceManager;
+        InputManagerPtr mInputManager;
 
         Services();
         ~Services();

@@ -39,12 +39,17 @@ set(source_files
     core/Services.h
     image/Image.cpp
     image/Image.h
+    input/InputManager.cpp
+    input/InputManager.h
+    input/MouseButton.h
     interfaces/core/IApplication.h
     interfaces/core/ILogger.h
     interfaces/core/IResourceManager.h
     interfaces/core/IThreadManager.h
     interfaces/image/IImage.h
     interfaces/image/IImageLoader.h
+    interfaces/input/IInputManager.h
+    interfaces/input/IInputObserver.h
     interfaces/io/IFile.h
     interfaces/io/IFileSystem.h
     interfaces/render/IBuffer.h
@@ -84,10 +89,12 @@ set(source_files
     utility/FileUtils.h
     utility/MemoryPool.cpp
     utility/MemoryPool.h
+    utility/ObserverList.h
     utility/PoolAllocator.h
     utility/ProducerConsumerQueue.cpp
     utility/ProducerConsumerQueue.h
     utility/RenderUtils.h
+    utility/ScopedCounter.h
     utility/WorkerThread.cpp
     utility/WorkerThread.h
 )

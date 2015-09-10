@@ -19,49 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Services.h"
-#include "engine/core/ResourceManager.h"
+
+#pragma once
+#include <functional>
 
 namespace Engine
 {
-    Services Services::mInstance;
-
-    Services::Services()
+    enum class MouseButton
     {
-        mResourceManager = std::make_shared<ResourceManager>();
-    }
+        Left,
+        Right,
+        Middle,
+    };
+}
 
-    Services::~Services()
-    {
-    }
-
-    void Services::setLogger(const LoggerPtr& instance)
-    {
-        mInstance.mLogger = instance;
-    }
-
-    void Services::setFileSystem(const FileSystemPtr& instance)
-    {
-        mInstance.mFileSystem = instance;
-    }
-
-    void Services::setThreadManager(const ThreadManagerPtr& instance)
-    {
-        mInstance.mThreadManager = instance;
-    }
-
-    void Services::setRenderer(const RendererPtr& instance)
-    {
-        mInstance.mRenderer = instance;
-    }
-
-    void Services::setResourceManager(const ResourceManagerPtr& instance)
-    {
-        mInstance.mResourceManager = instance;
-    }
-
-    void Services::setInputManager(const InputManagerPtr& instance)
-    {
-        mInstance.mInputManager = instance;
-    }
+namespace std {
+    template <> struct hash<Engine::MouseButton> {
+        size_t operator()(Engine::MouseButton button) const {
+            return std::hash<int>()(int(button));
+        }
+    };
 }

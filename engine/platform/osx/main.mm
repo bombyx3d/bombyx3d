@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  */
 #include "engine/core/Services.h"
+#include "engine/input/InputManager.h"
 #include "engine/platform/shared/StdIoFileSystem.h"
 #include "engine/platform/shared/CxxThreadManager.h"
 #include "engine/platform/shared/GlfwWrapper.h"
@@ -39,14 +40,23 @@ int main()
     Services::setThreadManager(threadManager);
     Services::setFileSystem(std::make_shared<StdIoFileSystem>("."));
 
+    auto inputManager = std::make_shared<InputManager>();
+    inputManager->setHasKeyboard(true);
+    inputManager->setHasMouse(true);
+    Services::setInputManager(inputManager);
+
     int exitCode = EXIT_SUCCESS;
-    GlfwWrapper glfwWrapper;
-    if (!glfwWrapper.createWindow())
-        exitCode = EXIT_FAILURE;
-    else
-        glfwWrapper.run([threadManager](){ threadManager->flushRenderThreadQueue(); });
+    {
+        GlfwWrapper glfwWrapper;
+        if (!glfwWrapper.createWindow())
+            exitCode = EXIT_FAILURE;
+        else
+            glfwWrapper.run([threadManager](){ threadManager->flushRenderThreadQueue(); });
+    }
 
     threadManager.reset();
+    inputManager.reset();
+    Services::setInputManager(nullptr);
     Services::setFileSystem(nullptr);
     Services::setThreadManager(nullptr);
     Services::setLogger(nullptr);

@@ -19,49 +19,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Services.h"
-#include "engine/core/ResourceManager.h"
+
+#pragma once
+#include "engine/input/MouseButton.h"
+#include <memory>
+#include <glm/glm.hpp>
 
 namespace Engine
 {
-    Services Services::mInstance;
-
-    Services::Services()
+    class IInputObserver
     {
-        mResourceManager = std::make_shared<ResourceManager>();
-    }
+    public:
+        virtual ~IInputObserver() = default;
 
-    Services::~Services()
-    {
-    }
+        virtual void onMouseButtonPressed(MouseButton) {}
+        virtual void onMouseButtonReleased(MouseButton) {}
+        virtual void onMouseButtonCancelled(MouseButton) {}
+        virtual void onMouseMoved(const glm::vec2&) {}
 
-    void Services::setLogger(const LoggerPtr& instance)
-    {
-        mInstance.mLogger = instance;
-    }
-
-    void Services::setFileSystem(const FileSystemPtr& instance)
-    {
-        mInstance.mFileSystem = instance;
-    }
-
-    void Services::setThreadManager(const ThreadManagerPtr& instance)
-    {
-        mInstance.mThreadManager = instance;
-    }
-
-    void Services::setRenderer(const RendererPtr& instance)
-    {
-        mInstance.mRenderer = instance;
-    }
-
-    void Services::setResourceManager(const ResourceManagerPtr& instance)
-    {
-        mInstance.mResourceManager = instance;
-    }
-
-    void Services::setInputManager(const InputManagerPtr& instance)
-    {
-        mInstance.mInputManager = instance;
-    }
+        virtual void onTouchBegan(int, const glm::vec2&) {}
+        virtual void onTouchMoved(int, const glm::vec2&) {}
+        virtual void onTouchEnded(int) {}
+        virtual void onTouchCancelled(int) {}
+    };
 }

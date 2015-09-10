@@ -147,18 +147,25 @@ namespace Engine
     {
     }
 
-    void GlfwWrapper::mouseButtonCallback(GLFWwindow* window, int button, int action, int)
+    void GlfwWrapper::mouseButtonCallback(GLFWwindow*, int button, int action, int)
     {
-        GlfwWrapper* self = reinterpret_cast<GlfwWrapper*>(glfwGetWindowUserPointer(window));
-        if (button == GLFW_MOUSE_BUTTON_LEFT && self->mApplication) {
-            if (action == GLFW_PRESS) {
-                double mouseX = 0.0, mouseY = 0.0;
-                glfwGetCursorPos(window, &mouseX, &mouseY);
-                self->mApplication->onTouchBegan(0, glm::ivec2(int(mouseX), int(mouseY)));
-                self->mLeftMouseButtonDown = true;
-            } else if (action == GLFW_RELEASE) {
-                self->mLeftMouseButtonDown = false;
-                self->mApplication->onTouchEnded(0);
+        if (action == GLFW_PRESS) {
+            const auto& inputManager = Services::inputManager();
+            switch (button)
+            {
+            case GLFW_MOUSE_BUTTON_LEFT: inputManager->injectMouseButtonPress(MouseButton::Left); break;
+            case GLFW_MOUSE_BUTTON_RIGHT: inputManager->injectMouseButtonPress(MouseButton::Right); break;
+            case GLFW_MOUSE_BUTTON_MIDDLE: inputManager->injectMouseButtonPress(MouseButton::Middle); break;
+            }
+        }
+
+        if (action == GLFW_RELEASE) {
+            const auto& inputManager = Services::inputManager();
+            switch (button)
+            {
+            case GLFW_MOUSE_BUTTON_LEFT: inputManager->injectMouseButtonRelease(MouseButton::Left); break;
+            case GLFW_MOUSE_BUTTON_RIGHT: inputManager->injectMouseButtonRelease(MouseButton::Right); break;
+            case GLFW_MOUSE_BUTTON_MIDDLE: inputManager->injectMouseButtonRelease(MouseButton::Middle); break;
             }
         }
     }
@@ -167,11 +174,9 @@ namespace Engine
     {
     }
 
-    void GlfwWrapper::mouseMoveCallback(GLFWwindow* window, double mouseX, double mouseY)
+    void GlfwWrapper::mouseMoveCallback(GLFWwindow*, double mouseX, double mouseY)
     {
-        GlfwWrapper* self = reinterpret_cast<GlfwWrapper*>(glfwGetWindowUserPointer(window));
-        if (self->mLeftMouseButtonDown && self->mApplication)
-            self->mApplication->onTouchMoved(0, glm::ivec2(int(mouseX), int(mouseY)));
+        Services::inputManager()->injectMouseMove(glm::ivec2(int(mouseX), int(mouseY)));
     }
 
     void GlfwWrapper::errorCallback(int, const char* description)
