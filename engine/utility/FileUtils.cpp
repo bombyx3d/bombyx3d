@@ -56,6 +56,11 @@ namespace Engine
         return loadFile(file.get());
     }
 
+    std::vector<char> FileUtils::loadFile(const FilePtr& file)
+    {
+        return loadFile(file.get());
+    }
+
     std::vector<char> FileUtils::loadFile(IFile* file)
     {
         std::vector<char> result;
@@ -80,14 +85,14 @@ namespace Engine
         return result;
     }
 
-    std::vector<char> FileUtils::loadFile(const FilePtr& file)
-    {
-        return loadFile(file.get());
-    }
-
     std::vector<std::string> FileUtils::loadFileLines(const std::string& fileName, bool includeEolMarker)
     {
         FilePtr file = IFileSystem::instance()->openFile(fileName);
+        return loadFileLines(file.get(), includeEolMarker);
+    }
+
+    std::vector<std::string> FileUtils::loadFileLines(const FilePtr& file, bool includeEolMarker)
+    {
         return loadFileLines(file.get(), includeEolMarker);
     }
 
@@ -124,10 +129,5 @@ namespace Engine
         }
 
         return result;
-    }
-
-    std::vector<std::string> FileUtils::loadFileLines(const FilePtr& file, bool includeEolMarker)
-    {
-        return loadFileLines(file.get(), includeEolMarker);
     }
 }
