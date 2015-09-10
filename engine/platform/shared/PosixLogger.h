@@ -23,7 +23,6 @@
 #pragma once
 #include "engine/core/macros.h"
 #include "engine/interfaces/core/ILogger.h"
-#include "WinAPI.h"
 
 namespace Engine
 {
@@ -36,5 +35,5 @@ namespace Engine
         void write(LogLevel level, const std::string& message) override;
 
         Z_DISABLE_COPY(PosixLogger);
-    }
+    };
 }

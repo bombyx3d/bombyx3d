@@ -66,7 +66,7 @@ endif()
 
 if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
     list(APPEND defines "Z_PLATFORM_LINUX")
-    list(APPEND libraries glfw)
+    list(APPEND libraries glfw glew)
     list(APPEND source_files
         shared/CxxThreadManager.cpp
         shared/CxxThreadManager.h

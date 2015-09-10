@@ -20,11 +20,13 @@
  * THE SOFTWARE.
  */
 #include "engine/core/Services.h"
+#include "engine/core/Log.h"
 #include "engine/input/InputManager.h"
 #include "engine/platform/shared/StdIoFileSystem.h"
 #include "engine/platform/shared/CxxThreadManager.h"
 #include "engine/platform/shared/GlfwWrapper.h"
 #include "engine/platform/shared/PosixLogger.h"
+#include "engine/render/opengl.h"
 #include <clocale>
 
 using namespace Engine;
@@ -50,8 +52,16 @@ int main()
         GlfwWrapper glfwWrapper;
         if (!glfwWrapper.createWindow())
             exitCode = EXIT_FAILURE;
-        else
-            glfwWrapper.run([threadManager](){ threadManager->flushRenderThreadQueue(); });
+        else {
+            glewExperimental = GL_TRUE;
+            if (glewInit() == GLEW_OK) {
+                glfwWrapper.run([threadManager](){ threadManager->flushRenderThreadQueue(); });
+            } else {
+                Z_LOGE("Unable to initialize GLEW.");
+                glfwWrapper.destroyWindow();
+                exitCode = EXIT_FAILURE;
+            }
+        }
     }
 
     threadManager.reset();

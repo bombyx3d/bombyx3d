@@ -12,7 +12,7 @@ set_source_groups(${source_files})
 
 add_library(glew STATIC EXCLUDE_FROM_ALL ${source_files})
 target_include_directories(glew BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
-target_compile_definitions(glew PUBLIC "GLEW_STATIC")
+target_compile_definitions(glew PUBLIC "GLEW_STATIC" "GLEW_NO_GLU")
 
 if(OPENGL_gl_LIBRARY)
     target_link_libraries(glew ${OPENGL_gl_LIBRARY})
