@@ -21,18 +21,35 @@
  */
 
 #pragma once
-#include "engine/interfaces/image/IImage.h"
+#include <cstdint>
 #include <memory>
 
 namespace Engine
 {
-    class ITexture
+    enum class PixelFormat
     {
-    public:
-        virtual ~ITexture() = default;
+        Luminance8 = 0,
+        LuminanceAlpha16,
+        RGB24,
+        RGBA32,
 
-        virtual void upload(const IImage& image) = 0;
+        Invalid,
+        Count = Invalid
     };
 
-    using TexturePtr = std::shared_ptr<ITexture>;
+    class IImage
+    {
+    public:
+        virtual ~IImage() = default;
+
+        virtual PixelFormat pixelFormat() const = 0;
+
+        virtual size_t width() const = 0;
+        virtual size_t height() const = 0;
+
+        virtual const uint8_t* data() const = 0;
+        virtual size_t dataSize() const = 0;
+    };
+
+    using ImagePtr = std::shared_ptr<IImage>;
 }

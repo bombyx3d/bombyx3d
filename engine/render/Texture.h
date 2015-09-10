@@ -34,7 +34,7 @@ namespace Engine
 
         size_t handle() const { return mHandle; }
 
-        void upload(const Image& image) override;
+        void upload(const IImage& image) override;
 
     private:
         size_t mHandle;

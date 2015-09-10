@@ -22,6 +22,7 @@
 
 #pragma once
 #include "engine/interfaces/io/IFile.h"
+#include "engine/interfaces/image/IImage.h"
 #include <vector>
 #include <mutex>
 #include <cstdint>
@@ -29,42 +30,27 @@
 
 namespace Engine
 {
-    enum class PixelFormat
-    {
-        Luminance8 = 0,
-        LuminanceAlpha16,
-        RGB24,
-        RGBA32,
-
-        Invalid,
-        Count = Invalid
-    };
-
-
-    class Image;
-    using ImagePtr = std::shared_ptr<Image>;
-
     class IImageLoader;
 
-    class Image
+    class Image : public IImage
     {
     public:
         Image();
         Image(PixelFormat fmt, size_t w, size_t h);
         ~Image();
 
-        PixelFormat pixelFormat() const { return mPixelFormat; }
+        PixelFormat pixelFormat() const override { return mPixelFormat; }
         void setPixelFormat(PixelFormat format) { mPixelFormat = format; }
 
-        size_t width() const { return mWidth; }
-        size_t height() const { return mHeight; }
+        size_t width() const override { return mWidth; }
+        size_t height() const override { return mHeight; }
         void setDimensions(size_t w, size_t h = 1);
 
-        size_t dataSize() const { return mData.size(); }
+        size_t dataSize() const override { return mData.size(); }
         void setDataSize(size_t size);
 
         uint8_t* data() { return mData.data(); }
-        const uint8_t* data() const { return mData.data(); }
+        const uint8_t* data() const override { return mData.data(); }
 
         void setData(const void* pointer, size_t size);
         void setData(const std::vector<uint8_t>& newData);

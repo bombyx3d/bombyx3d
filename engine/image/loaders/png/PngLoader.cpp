@@ -167,7 +167,7 @@ namespace Engine
             return std::make_shared<Image>();
         }
 
-        ImagePtr image = std::make_shared<Image>(format, width, height);
+        auto image = std::make_shared<Image>(format, width, height);
         image->setDataSize((width * height + (rowbytes - width)) * channels);
         uint8_t* imageData = image->data();
 

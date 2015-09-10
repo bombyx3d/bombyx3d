@@ -41,7 +41,7 @@ namespace Engine
         });
     }
 
-    void Texture::upload(const Image& image)
+    void Texture::upload(const IImage& image)
     {
         if (!image.data())
             return;

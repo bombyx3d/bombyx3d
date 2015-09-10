@@ -39,6 +39,7 @@ set(source_files
     image/Image.h
     interfaces/core/IApplication.h
     interfaces/core/IThreadManager.h
+    interfaces/image/IImage.h
     interfaces/image/IImageLoader.h
     interfaces/io/IFile.h
     interfaces/io/IFileSystem.h
