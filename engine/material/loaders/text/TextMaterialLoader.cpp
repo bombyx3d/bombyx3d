@@ -24,12 +24,10 @@
 #include "engine/material/Material.h"
 #include "engine/core/Log.h"
 #include <pegtl.hh>
+#include <pegtl/analyze.hh>
+#include <pegtl/trace.hh>
 #include <vector>
 #include <cassert>
-
-#ifndef NDEBUG
-#include <pegtl/analyze.hh>
-#endif
 
 namespace Engine
 {
@@ -39,46 +37,61 @@ namespace Engine
         using namespace pegtl::ascii;
 
         // Comments are introduced by a '//' and proceed to the end-of-line/file.
-        struct Comment
-            : if_must<string<'/','/'>, until<eolf>> {};
+        struct Comment : if_must<string<'/','/'>, until<eolf>> {};
 
         // The parser ignores all spaces and comments; space is a pegtl rule
         // that matches the usual ascii characters ' ', '\t', '\n' etc. In other
         // words, everything that is space or a comment is ignored.
-        struct Whitespace
-            : sor<space, Comment> {};
+        struct WhitespaceElement : sor<space, Comment> {};
+        struct Whitespace : plus<WhitespaceElement> {};
+        struct OptionalWhitespace : star<WhitespaceElement> {};
+
+        // FloatValue <= '-'? [0-9]+ ('.' [0-9]+)? ([eE] [+-]? [0-9]+)? Whitespace*
+        struct FloatValue : seq<
+            opt<one<'-'>>,                      // '-'?
+            plus<digit>,                        // [0-9]+
+            opt<                                // (
+                one<'.'>,                       // '.'
+                plus<digit>                     // [0-9]+
+            >,                                  // )?
+            opt<                                // (
+                one<'e', 'E'>,                  // [eE]
+                opt<one<'+', '-'>>,             // [+-]?
+                plus<digit>                     // [0-9]+
+            >,                                  // )?
+            OptionalWhitespace                  // Whitespace*
+        > {};
+
+        ///////////////////////////////
+        // Options
+
+        struct LINE_WIDTH : seq<string<'l','i','n','e','-','w','i','d','t','h'>, OptionalWhitespace> {};
+        struct LineWidthOption : seq<LINE_WIDTH, one<':'>, OptionalWhitespace, FloatValue> {};
+
+        struct Option : seq<sor<
+            LineWidthOption
+        >, OptionalWhitespace> {};
+
+
+        ///////////////////////////////
+        // Techniques
+
+        struct TECHNIQUE : seq<string<'t','e','c','h','n','i','q','u','e'>> {};
+        struct TechniqueBegin : seq<TECHNIQUE, opt<Whitespace, identifier>, OptionalWhitespace, one<'{'>, OptionalWhitespace> {};
+        struct TechniqueEnd : seq<one<'}'>, OptionalWhitespace> {};
+
+        struct Technique : seq<TechniqueBegin, star<Option>, TechniqueEnd> {};
+
+        ///////////////////////////////
 
         // Primary production of the grammar
-        struct File
-            : must<star<Whitespace>, eof> {};
-    }
-
-    namespace Errors
-    {
-        using namespace pegtl;
-        using namespace pegtl::ascii;
-
-        template <class RULE> struct Message : public normal<RULE>
-        {
-            static const std::string errorMessage;
-            template <class INPUT, class... STATES> static void raise(const INPUT& in, STATES&&...) {
-                throw parse_error(errorMessage, in);
-            }
-        };
-
-        template<> const std::string Message<eof>::errorMessage = "syntax error.";
-        template<> const std::string Message<star<Grammar::Whitespace>>::errorMessage = "syntax error.";
-        template<> const std::string Message<until<eolf>>::errorMessage = "syntax error.";
+        struct File : must<OptionalWhitespace, star<sor<Option, Technique>>, eof> {};
     }
 
     namespace Actions
     {
         template <class RULE> struct Action : pegtl::nothing<RULE> {};
     }
-
-  #ifndef NDEBUG
-    static const size_t GrammarIssuesFound = pegtl::analyze<Grammar::File>();
-  #endif
 
     MaterialPtr TextMaterialLoader::loadMaterial(IFile* file)
     {
@@ -96,8 +109,8 @@ namespace Engine
         }
 
         try {
-            assert(GrammarIssuesFound == 0);
-            pegtl::parse<Grammar::File, Actions::Action, Errors::Message>(p, size, "");
+            assert(pegtl::analyze<Grammar::File>() == 0);
+            pegtl::parse<Grammar::File, Actions::Action>(p, size, "");
         } catch (const pegtl::parse_error& error) {
             Z_LOGE("Unable to parse material \"" << file->name() << "\": " << error.what());
             abort();

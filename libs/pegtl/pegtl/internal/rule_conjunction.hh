@@ -20,7 +20,7 @@ namespace pegtl
             return ( Control< Rules >::template match< A, Action, Control >( in, st ... ) && ... );
 #else
             bool result = true;
-            using swallow = bool[];
+            using swallow = bool[8];
             (void)swallow{ result = result && Control< Rules >::template match< A, Action, Control >( in, st ... ) ..., true };
             return result;
 #endif
