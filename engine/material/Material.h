@@ -21,17 +21,29 @@
  */
 
 #pragma once
+#include "engine/interfaces/material/IMaterial.h"
+#include "engine/interfaces/material/IMaterialLoader.h"
 #include "engine/interfaces/io/IFile.h"
-#include "engine/interfaces/image/IImage.h"
+#include <string>
+#include <memory>
+#include <mutex>
+#include <vector>
 
 namespace Engine
 {
-    class IImageLoader
+    class Material : public IMaterial
     {
     public:
-        virtual ~IImageLoader() = default;
+        static MaterialPtr fromFile(const std::string& fileName);
+        static MaterialPtr fromFile(const FilePtr& file);
+        static MaterialPtr fromFile(IFile* file);
 
-        virtual bool canLoadImage(IFile* file) = 0;
-        virtual ImagePtr loadImage(IFile* file) = 0;
+        static void registerLoader(std::unique_ptr<IMaterialLoader>&& loader);
+        template <typename TYPE, typename... ARGS> static void registerLoader(ARGS&&... args)
+            { registerLoader(std::unique_ptr<TYPE>(new TYPE(std::forward<ARGS>(args)...))); }
+
+    private:
+        static std::vector<std::unique_ptr<IMaterialLoader>> mMaterialLoaders;
+        static std::mutex mMaterialLoadersMutex;
     };
 }

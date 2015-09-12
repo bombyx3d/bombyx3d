@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  */
 #include "PngLoader.h"
+#include "engine/image/Image.h"
 #include "engine/core/Log.h"
 #include <png.h>
 #include <setjmp.h>

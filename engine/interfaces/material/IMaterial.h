@@ -21,17 +21,15 @@
  */
 
 #pragma once
-#include "engine/interfaces/io/IFile.h"
-#include "engine/interfaces/image/IImage.h"
+#include <memory>
 
 namespace Engine
 {
-    class IImageLoader
+    class IMaterial
     {
     public:
-        virtual ~IImageLoader() = default;
-
-        virtual bool canLoadImage(IFile* file) = 0;
-        virtual ImagePtr loadImage(IFile* file) = 0;
+        virtual ~IMaterial() = default;
     };
+
+    using MaterialPtr = std::shared_ptr<IMaterial>;
 }

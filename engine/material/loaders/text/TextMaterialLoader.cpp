@@ -19,19 +19,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "engine/interfaces/io/IFile.h"
-#include "engine/interfaces/image/IImage.h"
+#include "TextMaterialLoader.h"
+#include "engine/material/Material.h"
 
 namespace Engine
 {
-    class IImageLoader
+    bool TextMaterialLoader::canLoadMaterial(IFile* file)
     {
-    public:
-        virtual ~IImageLoader() = default;
+        // FIXME
+        return true;
+    }
 
-        virtual bool canLoadImage(IFile* file) = 0;
-        virtual ImagePtr loadImage(IFile* file) = 0;
-    };
+    MaterialPtr TextMaterialLoader::loadMaterial(IFile* file)
+    {
+        // FIXME
+        return std::make_shared<Material>();
+    }
 }

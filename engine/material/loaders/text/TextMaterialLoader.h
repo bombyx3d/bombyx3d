@@ -21,17 +21,16 @@
  */
 
 #pragma once
-#include "engine/interfaces/io/IFile.h"
-#include "engine/interfaces/image/IImage.h"
+#include "engine/interfaces/material/IMaterialLoader.h"
 
 namespace Engine
 {
-    class IImageLoader
+    class TextMaterialLoader : public IMaterialLoader
     {
     public:
-        virtual ~IImageLoader() = default;
+        TextMaterialLoader() = default;
 
-        virtual bool canLoadImage(IFile* file) = 0;
-        virtual ImagePtr loadImage(IFile* file) = 0;
+        bool canLoadMaterial(IFile* file) override;
+        MaterialPtr loadMaterial(IFile* file) override;
     };
 }

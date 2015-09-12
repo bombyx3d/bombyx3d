@@ -52,6 +52,8 @@ set(source_files
     interfaces/input/IInputObserver.h
     interfaces/io/IFile.h
     interfaces/io/IFileSystem.h
+    interfaces/material/IMaterial.h
+    interfaces/material/IMaterialLoader.h
     interfaces/render/IBuffer.h
     interfaces/render/IIndexBuffer.h
     interfaces/render/IRenderer.h
@@ -61,6 +63,8 @@ set(source_files
     interfaces/render/IVertexSource.h
     interfaces/scene/3d/camera/ICamera.h
     interfaces/scene/IScene.h
+    material/Material.cpp
+    material/Material.h
     material/ShaderLoader.cpp
     material/ShaderLoader.h
     mesh/VertexFormat.h
@@ -106,3 +110,4 @@ set_target_properties(engine PROPERTIES CXX_STANDARD 11)
 target_link_libraries(engine platform glm boost)
 
 add_subdirectory(image/loaders/png)
+add_subdirectory(material/loaders/text)
