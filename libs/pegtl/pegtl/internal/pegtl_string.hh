@@ -3,6 +3,7 @@
 
 #ifndef PEGTL_INTERNAL_PEGTL_STRING_HH
 #define PEGTL_INTERNAL_PEGTL_STRING_HH
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 
 #include <type_traits>
 #include <cstddef>
@@ -74,4 +75,5 @@ namespace pegtl
 #define pegtl_istring_t(x) \
    pegtl::internal::string_builder< pegtl::ascii::istring<>, PEGTL_INTERNAL_STRING_100(x) >::type
 
+#endif
 #endif

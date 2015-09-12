@@ -38,7 +38,7 @@ namespace pegtl
 
    inline std::ostream & operator<< ( std::ostream & o, const position_info & p )
    {
-      return o << p.source << ':' << p.line << ':' << p.column;
+      return o << /*p.source <<*/ "at line " << p.line << ", column " << p.column;
    }
 
 } // pegtl

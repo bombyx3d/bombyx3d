@@ -29,4 +29,4 @@ add_library(engine-material-text STATIC EXCLUDE_FROM_ALL ${source_files})
 set_source_groups(${source_files})
 
 set_target_properties(engine-material-text PROPERTIES CXX_STANDARD 11)
-target_link_libraries(engine-material-text engine)
+target_link_libraries(engine-material-text engine pegtl)

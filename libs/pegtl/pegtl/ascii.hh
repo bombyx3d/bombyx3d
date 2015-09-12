@@ -9,7 +9,7 @@
 
 namespace pegtl
 {
-   inline namespace ascii
+   namespace ascii
    {
       struct alnum : internal::ranges< internal::peek_char, 'a', 'z', 'A', 'Z', '0', '9' > {};
       struct alpha : internal::ranges< internal::peek_char, 'a', 'z', 'A', 'Z' > {};
