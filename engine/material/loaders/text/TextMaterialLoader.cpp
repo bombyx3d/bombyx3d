@@ -27,9 +27,12 @@
 #include "engine/core/Log.h"
 #include <pegtl.hh>
 #include <pegtl/analyze.hh>
-#include <pegtl/trace.hh>
 #include <vector>
 #include <cassert>
+
+#ifdef _MSC_VER
+ #pragma warning(disable:4316)      // object allocated on the heap may not be aligned 16
+#endif
 
 namespace Engine
 {

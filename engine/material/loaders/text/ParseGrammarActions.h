@@ -100,6 +100,13 @@ ACTION(DepthWriteOption, {
     context.emitOption<Tree::DepthWriteOption>(pop(context.boolValues));
 });
 
+ACTION(ShaderOption, {
+    std::string shaderName = pop(context.stringValues);
+    std::string fileName = FileUtils::makeFullPath(shaderName, context.materialFileName);
+    ShaderPtr shader = Services::resourceManager()->getShader(fileName);
+    context.emitOption<Tree::ShaderOption>(shader);
+});
+
 //////////////////////////////////////////////////////////////////////////////
 // Uniforms
 

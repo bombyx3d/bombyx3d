@@ -76,6 +76,12 @@ template<> void DepthWriteOption::applyToPass(MaterialPass& pass) const
     pass.setDepthWritingEnabled(value);
 }
 
+using ShaderOption = OptionValue<Option::DepthWrite, ShaderPtr>;
+template<> void ShaderOption::applyToPass(MaterialPass& pass) const
+{
+    pass.setShader(value);
+}
+
 
 //////////////////////////////////////////////////////////////////////////////
 // Uniforms

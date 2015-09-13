@@ -48,6 +48,8 @@ struct ONE_MINUS_DST_COLOR : string<'O','n','e','M','i','n','u','s','D','s','t',
 struct ONE_MINUS_SRC_ALPHA : string<'O','n','e','M','i','n','u','s','S','r','c','A','l','p','h','a'> {};
 struct ONE_MINUS_SRC_COLOR : string<'O','n','e','M','i','n','u','s','S','r','c','C','o','l','o','r'> {};
 struct PASS : string<'p','a','s','s'> {};
+struct SET_UNIFORM : string<'S','e','t','U','n','i','f','o','r','m'> {};
+struct SHADER : string<'S','h','a','d','e','r'> {};
 struct SRC_ALPHA : string<'S','r','c','A','l','p','h','a'> {};
 struct SRC_ALPHA_SATURATE : string<'S','r','c','A','l','p','h','a','S','a','t','u','r','a','t','e'> {};
 struct SRC_COLOR : string<'S','r','c','C','o','l','o','r'> {};
@@ -91,7 +93,7 @@ struct StringValue : seq<StringLiteral, OptionalWhitespace> {};
 //////////////////////////////////////////////////////////////////////////////
 // Options
 
-struct NameValueSeparator : seq<one<':'>, OptionalWhitespace> {};
+struct NameValueSeparator : Whitespace {};
 struct ValueSeparator : seq<one<','>, OptionalWhitespace> {};
 
 struct CullFaceNone : NONE {};
@@ -133,11 +135,14 @@ struct DepthTestOption : seq<DEPTH_TEST, NameValueSeparator, BoolValue> {};
 
 struct DepthWriteOption : seq<DEPTH_WRITE, NameValueSeparator, BoolValue> {};
 
+struct ShaderOption : seq<SHADER, NameValueSeparator, StringValue> {};
+
 struct Option : seq<sor<
     CullFaceOption,
     BlendOption,
     DepthTestOption,
-    DepthWriteOption
+    DepthWriteOption,
+    ShaderOption
 >, OptionalWhitespace> {};
 
 
@@ -147,7 +152,6 @@ struct Option : seq<sor<
 struct Comma : seq<one<','>, OptionalWhitespace> {};
 struct LParen : seq<one<'('>, OptionalWhitespace> {};
 struct RParen : seq<one<')'>, OptionalWhitespace> {};
-struct Assign : seq<one<'='>, OptionalWhitespace> {};
 
 struct UniformFloatValue : FloatValue {};
 struct UniformVec2Value : seq<LParen, FloatValue, Comma, FloatValue, RParen> {};
@@ -163,7 +167,7 @@ struct UniformValue : sor<
     UniformTextureValue
 > {};
 
-struct Uniform : seq<IdentifierValue, Assign, UniformValue, OptionalWhitespace> {};
+struct Uniform : seq<SET_UNIFORM, OptionalWhitespace, IdentifierValue, UniformValue, OptionalWhitespace> {};
 
 
 //////////////////////////////////////////////////////////////////////////////
