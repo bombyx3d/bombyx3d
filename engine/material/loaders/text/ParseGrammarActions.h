@@ -33,11 +33,34 @@ template <class RULE> struct Action : pegtl::nothing<RULE> {};
         } \
     }
 
+//////////////////////////////////////////////////////////////////////////////
+// Literals
 
 ACTION(BoolFalse, context.boolValues.push_back(false));
 ACTION(BoolTrue, context.boolValues.push_back(true));
 
-ACTION(FloatValue, context.floatValues.emplace_back(std::stof(input.string())));
+ACTION(IdentifierText, context.stringValues.emplace_back(input.string()));
+
+ACTION(FloatingPointNumber, context.floatValues.emplace_back(std::stof(input.string())));
+
+ACTION(StringLiteral, {
+    std::stringstream result;
+    const auto& literal = input.string();
+    size_t literalLength = literal.size();
+    assert(literalLength >= 2);
+    assert(literal[0] == '"');
+    assert(literal[literalLength - 1] == '"');
+    for (size_t i = 1; i < literalLength - 1; i++) {
+        if (literal[i] != '\\')
+            result << literal[i];
+        else
+            result << literal[++i];
+    }
+    context.stringValues.emplace_back(result.str());
+});
+
+//////////////////////////////////////////////////////////////////////////////
+// Options
 
 ACTION(CullFaceNone, context.cullFaceValue = CullFace::None);
 ACTION(CullFaceFront, context.cullFaceValue = CullFace::Front);
@@ -77,8 +100,55 @@ ACTION(DepthWriteOption, {
     context.emitOption<Tree::DepthWriteOption>(pop(context.boolValues));
 });
 
+//////////////////////////////////////////////////////////////////////////////
+// Uniforms
+
+ACTION(UniformFloatValue, {
+    float x = pop(context.floatValues);
+    context.uniformValue.reset(new Tree::UniformFloat(std::move(x)));
+});
+
+ACTION(UniformVec2Value, {
+    float y = pop(context.floatValues);
+    float x = pop(context.floatValues);
+    context.uniformValue.reset(new Tree::UniformVec2(glm::vec2(x, y)));
+});
+
+ACTION(UniformVec3Value, {
+    float z = pop(context.floatValues);
+    float y = pop(context.floatValues);
+    float x = pop(context.floatValues);
+    context.uniformValue.reset(new Tree::UniformVec3(glm::vec3(x, y, z)));
+});
+
+ACTION(UniformVec4Value, {
+    float w = pop(context.floatValues);
+    float z = pop(context.floatValues);
+    float y = pop(context.floatValues);
+    float x = pop(context.floatValues);
+    context.uniformValue.reset(new Tree::UniformVec4(glm::vec4(x, y, z, w)));
+});
+
+ACTION(UniformTextureValue, {
+    std::string textureName = pop(context.stringValues);
+    std::string fileName = FileUtils::makeFullPath(textureName, context.materialFileName);
+    TexturePtr texture = Services::resourceManager()->getTexture(fileName);
+    context.uniformValue.reset(new Tree::UniformTexture(std::move(texture)));
+});
+
+ACTION(Uniform, {
+    std::string name = pop(context.stringValues);
+    assert(context.uniformValue != nullptr);
+    context.currentOptionList().uniforms.emplace_back(name, std::move(context.uniformValue));
+    context.uniformValue.reset();
+});
+
+//////////////////////////////////////////////////////////////////////////////
+// Passes
+
 ACTION(PassName, context.passName.reset(new std::string(input.string())));
 ACTION(NoPassName, context.passName.reset());
+
 ACTION(PassBegin, {
     assert(context.currentPass == nullptr);
     assert(context.currentTechnique != nullptr);
@@ -88,14 +158,19 @@ ACTION(PassBegin, {
     context.pushOptionList(context.currentPass);
     context.passName.reset();
 });
+
 ACTION(PassEnd, {
     assert(context.currentPass != nullptr);
     context.popOptionList(*context.currentPass);
     context.currentPass.reset();
 });
 
+//////////////////////////////////////////////////////////////////////////////
+// Techniques
+
 ACTION(TechniqueName, context.techniqueName.reset(new std::string(input.string())));
 ACTION(NoTechniqueName, context.techniqueName.reset());
+
 ACTION(TechniqueBegin, {
     assert(context.currentTechnique == nullptr);
     context.currentTechnique = std::make_shared<Tree::Technique>();
@@ -104,6 +179,7 @@ ACTION(TechniqueBegin, {
     context.pushOptionList(context.currentTechnique);
     context.techniqueName.reset();
 });
+
 ACTION(TechniqueEnd, {
     assert(context.currentTechnique != nullptr);
     context.popOptionList(*context.currentTechnique);

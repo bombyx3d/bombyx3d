@@ -20,6 +20,9 @@
  * THE SOFTWARE.
  */
 
+//////////////////////////////////////////////////////////////////////////////
+// Options
+
 struct Option
 {
     enum Name
@@ -73,9 +76,70 @@ template<> void DepthWriteOption::applyToPass(MaterialPass& pass) const
     pass.setDepthWritingEnabled(value);
 }
 
+
+//////////////////////////////////////////////////////////////////////////////
+// Uniforms
+
+struct Uniform
+{
+    enum Type
+    {
+        Float,
+        Vec2,
+        Vec3,
+        Vec4,
+        Texture,
+    };
+
+    virtual ~Uniform() = default;
+    virtual void applyToPass(MaterialPass& pass, const std::string& name) const = 0;
+};
+
+template <Uniform::Type TYPEID, class TYPE> struct UniformValue : Uniform
+{
+    const TYPE value;
+    UniformValue(TYPE&& v) : value(v) {}
+    void applyToPass(MaterialPass& pass, const std::string& name) const override;
+};
+
+using UniformFloat = UniformValue<Uniform::Float, float>;
+template<> void UniformFloat::applyToPass(MaterialPass& pass, const std::string& name) const
+{
+    pass.setUniform(name, value);
+}
+
+using UniformVec2 = UniformValue<Uniform::Vec2, glm::vec2>;
+template<> void UniformVec2::applyToPass(MaterialPass& pass, const std::string& name) const
+{
+    pass.setUniform(name, value);
+}
+
+using UniformVec3 = UniformValue<Uniform::Vec3, glm::vec3>;
+template<> void UniformVec3::applyToPass(MaterialPass& pass, const std::string& name) const
+{
+    pass.setUniform(name, value);
+}
+
+using UniformVec4 = UniformValue<Uniform::Vec4, glm::vec4>;
+template<> void UniformVec4::applyToPass(MaterialPass& pass, const std::string& name) const
+{
+    pass.setUniform(name, value);
+}
+
+using UniformTexture = UniformValue<Uniform::Texture, TexturePtr>;
+template<> void UniformTexture::applyToPass(MaterialPass& pass, const std::string& name) const
+{
+    pass.setUniform(name, value);
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+// Other
+
 struct OptionList
 {
     std::vector<std::shared_ptr<Option>> options;
+    std::vector<std::pair<std::string, std::unique_ptr<Uniform>>> uniforms;
 };
 
 struct Pass : public OptionList

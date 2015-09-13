@@ -20,10 +20,8 @@
  * THE SOFTWARE.
  */
 
-
 // Comments are introduced by a '//' and proceed to the end-of-line/file.
 struct Comment : if_must<string<'/','/'>, until<eolf>> {};
-
 
 // The parser ignores all spaces and comments; space is a pegtl rule
 // that matches the usual ascii characters ' ', '\t', '\n' etc. In other
@@ -31,7 +29,6 @@ struct Comment : if_must<string<'/','/'>, until<eolf>> {};
 struct WhitespaceElement : sor<space, Comment> {};
 struct Whitespace : plus<WhitespaceElement> {};
 struct OptionalWhitespace : star<WhitespaceElement> {};
-
 
 struct BACK : string<'B','a','c','k'> {};
 struct BLEND_FUNC : string<'B','l','e','n','d','F','u','n','c'> {};
@@ -58,12 +55,17 @@ struct TECHNIQUE : string<'t','e','c','h','n','i','q','u','e'> {};
 struct ZERO : string<'Z','e','r','o'> {};
 
 
+//////////////////////////////////////////////////////////////////////////////
+// Literals
+
 struct BoolFalse : OFF {};
 struct BoolTrue : ON {};
 struct BoolValue : seq<sor<BoolFalse, BoolTrue>, OptionalWhitespace> {};
 
+struct IdentifierText : identifier {};
+struct IdentifierValue : seq<IdentifierText, OptionalWhitespace> {};
 
-struct FloatValue : seq<
+struct FloatingPointNumber : seq<
     opt<one<'-'>>,                      // '-'?
     plus<digit>,                        // [0-9]+
     opt<                                // (
@@ -76,9 +78,17 @@ struct FloatValue : seq<
         plus<digit>                     //   [0-9]+
     >                                   // )?
 > {};
+struct FloatValue : seq<FloatingPointNumber, OptionalWhitespace> {};
+
+struct StringEscapeSequence : one<'\\', '"'> {};
+struct StringEscapedCharacter : if_must<one<'\\'>, StringEscapeSequence> {};
+struct StringRegularCharacter : not_one<'\r', '\n'> {};
+struct StringCharacter : sor<StringEscapedCharacter, StringRegularCharacter> {};
+struct StringLiteral : if_must<one<'"'>, until<one<'"'>, StringCharacter>> {};
+struct StringValue : seq<StringLiteral, OptionalWhitespace> {};
 
 
-///////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // Options
 
 struct NameValueSeparator : seq<one<':'>, OptionalWhitespace> {};
@@ -131,7 +141,32 @@ struct Option : seq<sor<
 >, OptionalWhitespace> {};
 
 
-///////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+// Uniforms
+
+struct Comma : seq<one<','>, OptionalWhitespace> {};
+struct LParen : seq<one<'('>, OptionalWhitespace> {};
+struct RParen : seq<one<')'>, OptionalWhitespace> {};
+struct Assign : seq<one<'='>, OptionalWhitespace> {};
+
+struct UniformFloatValue : FloatValue {};
+struct UniformVec2Value : seq<LParen, FloatValue, Comma, FloatValue, RParen> {};
+struct UniformVec3Value : seq<LParen, FloatValue, Comma, FloatValue, Comma, FloatValue, RParen> {};
+struct UniformVec4Value : seq<LParen, FloatValue, Comma, FloatValue, Comma, FloatValue, Comma, FloatValue, RParen> {};
+struct UniformTextureValue : StringValue {};
+
+struct UniformValue : sor<
+    UniformVec4Value,
+    UniformVec3Value,
+    UniformVec2Value,
+    UniformFloatValue,
+    UniformTextureValue
+> {};
+
+struct Uniform : seq<IdentifierValue, Assign, UniformValue, OptionalWhitespace> {};
+
+
+//////////////////////////////////////////////////////////////////////////////
 // Passes
 
 struct PassName : identifier {};
@@ -141,10 +176,10 @@ struct OptionalPassName : seq<sor<seq<Whitespace, PassName>, NoPassName>, Option
 struct PassBegin : seq<PASS, OptionalPassName, one<'{'>, OptionalWhitespace> {};
 struct PassEnd : seq<one<'}'>, OptionalWhitespace> {};
 
-struct Pass : seq<PassBegin, star<Option>, PassEnd> {};
+struct Pass : seq<PassBegin, star<sor<Option, Uniform>>, PassEnd> {};
 
 
-///////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // Techniques
 
 struct TechniqueName : identifier {};
@@ -154,10 +189,10 @@ struct OptionalTechniqueName : seq<sor<seq<Whitespace, TechniqueName>, NoTechniq
 struct TechniqueBegin : seq<TECHNIQUE, OptionalTechniqueName, one<'{'>, OptionalWhitespace> {};
 struct TechniqueEnd : seq<one<'}'>, OptionalWhitespace> {};
 
-struct Technique : seq<TechniqueBegin, star<sor<Option, Pass>>, TechniqueEnd> {};
+struct Technique : seq<TechniqueBegin, star<sor<Pass, Option, Uniform>>, TechniqueEnd> {};
 
 
-///////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 // Primary production of the grammar
-struct File : must<OptionalWhitespace, star<sor<Option, Technique>>, eof> {};
+struct File : must<OptionalWhitespace, star<sor<Technique, Option, Uniform>>, eof> {};

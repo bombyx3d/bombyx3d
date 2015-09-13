@@ -25,14 +25,17 @@ struct Context
     CullFace cullFaceValue;
     bool blendingEnabled;
     std::vector<bool> boolValues;
+    std::vector<std::string> stringValues;
     std::vector<float> floatValues;
     std::vector<BlendFunc> blendFuncValues;
+    std::unique_ptr<Tree::Uniform> uniformValue;
     std::unique_ptr<std::string> techniqueName;
     std::unique_ptr<std::string> passName;
     std::vector<std::shared_ptr<Tree::OptionList>> optionLists;
     std::shared_ptr<Tree::Pass> currentPass;
     std::shared_ptr<Tree::Technique> currentTechnique;
     std::shared_ptr<Tree::File> currentFile;
+    std::string materialFileName;
 
     Context()
     {

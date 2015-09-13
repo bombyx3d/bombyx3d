@@ -72,11 +72,14 @@ namespace Engine
         }
 
         GrammarActions::Context context;
+        context.materialFileName = file->name();
+
         try {
             assert(pegtl::analyze<Grammar::File>() == 0);
             pegtl::parse<Grammar::File, GrammarActions::Action>(p, size, "", context);
         } catch (const pegtl::parse_error& error) {
             Z_LOGE("Unable to parse material \"" << file->name() << "\": " << error.what());
+            return std::make_shared<Material>();
         }
 
         assert(context.currentTechnique == nullptr);
@@ -84,8 +87,10 @@ namespace Engine
         assert(context.optionLists.size() == 1);
         assert(&context.currentOptionList() == context.currentFile.get());
         assert(context.boolValues.empty());
+        assert(context.stringValues.empty());
         assert(context.floatValues.empty());
         assert(context.blendFuncValues.empty());
+        assert(context.uniformValue == nullptr);
         assert(context.techniqueName == nullptr);
         assert(context.passName == nullptr);
 
@@ -111,6 +116,13 @@ namespace Engine
                     option->applyToPass(*pass);
                 for (const auto& option : passTree->options)
                     option->applyToPass(*pass);
+
+                for (const auto& uniform : rootTree->uniforms)
+                    uniform.second->applyToPass(*pass, uniform.first);
+                for (const auto& uniform : techniqueTree->uniforms)
+                    uniform.second->applyToPass(*pass, uniform.first);
+                for (const auto& uniform : passTree->uniforms)
+                    uniform.second->applyToPass(*pass, uniform.first);
 
                 technique->addPass(pass);
             }

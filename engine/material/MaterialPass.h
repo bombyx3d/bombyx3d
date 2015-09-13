@@ -22,7 +22,11 @@
 
 #pragma once
 #include "engine/core/macros.h"
+#include "engine/core/Atom.h"
 #include "engine/interfaces/material/IMaterialPass.h"
+#include <vector>
+#include <memory>
+#include <unordered_map>
 
 namespace Engine
 {
@@ -53,6 +57,18 @@ namespace Engine
         void setShader(const ShaderPtr& shader) { mShader = shader; }
         void setShader(ShaderPtr&& shader) { mShader = std::move(shader); }
 
+        void setUniform(const std::string& name, float value);
+        void setUniform(const std::string& name, const glm::vec2& value);
+        void setUniform(const std::string& name, const glm::vec3& value);
+        void setUniform(const std::string& name, const glm::vec4& value);
+        void setUniform(const std::string& name, const TexturePtr& value);
+
+        void setUniform(Atom name, float value);
+        void setUniform(Atom name, const glm::vec2& value);
+        void setUniform(Atom name, const glm::vec3& value);
+        void setUniform(Atom name, const glm::vec4& value);
+        void setUniform(Atom name, const TexturePtr& value);
+
         void apply(const RendererPtr& renderer) const override;
 
     private:
@@ -62,14 +78,20 @@ namespace Engine
             DepthWrite = 0x00000004,
         };
 
+        struct UniformValue;
+        template <class TYPE> struct UniformValueT;
+
         std::string mName;
         ShaderPtr mShader;
         unsigned mFlags = 0;
         BlendFunc mBlendingSourceFactor = BlendFunc::SrcAlpha;
         BlendFunc mBlendingDestinationFactor = BlendFunc::OneMinusSrcAlpha;
         CullFace mCullFace = CullFace::Back;
+        std::vector<std::pair<Atom, std::unique_ptr<UniformValue>>> mUniforms;
+        std::unordered_map<Atom, size_t> mUniformNames;
 
         void setFlag(Flag flag, bool value) { mFlags = value ? (mFlags | flag) : (mFlags & ~flag); }
+        size_t uniformIndex(Atom name);
 
         Z_DISABLE_COPY(MaterialPass);
     };

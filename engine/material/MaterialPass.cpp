@@ -20,9 +20,28 @@
  * THE SOFTWARE.
  */
 #include "MaterialPass.h"
+#include "engine/core/AtomTable.h"
+
+#ifdef _MSC_VER
+ #pragma warning(disable:4316)      // object allocated on the heap may not be aligned 16
+#endif
 
 namespace Engine
 {
+    struct MaterialPass::UniformValue
+    {
+        virtual ~UniformValue() = default;
+        virtual void upload(const RendererPtr& renderer, Atom name) const = 0;
+    };
+
+    template <class TYPE> struct MaterialPass::UniformValueT : public UniformValue
+    {
+        TYPE value;
+        UniformValueT(const TYPE& v) : value(v) {}
+        void upload(const RendererPtr& renderer, Atom name) const override { renderer->setUniform(name, value); }
+    };
+
+
     MaterialPass::MaterialPass(const std::string& passName)
         : mName(passName)
     {
@@ -37,6 +56,61 @@ namespace Engine
         return mName;
     }
 
+    void MaterialPass::setUniform(const std::string& name, float value)
+    {
+        setUniform(AtomTable::instance()->getAtom(name), value);
+    }
+
+    void MaterialPass::setUniform(const std::string& name, const glm::vec2& value)
+    {
+        setUniform(AtomTable::instance()->getAtom(name), value);
+    }
+
+    void MaterialPass::setUniform(const std::string& name, const glm::vec3& value)
+    {
+        setUniform(AtomTable::instance()->getAtom(name), value);
+    }
+
+    void MaterialPass::setUniform(const std::string& name, const glm::vec4& value)
+    {
+        setUniform(AtomTable::instance()->getAtom(name), value);
+    }
+
+    void MaterialPass::setUniform(const std::string& name, const TexturePtr& value)
+    {
+        setUniform(AtomTable::instance()->getAtom(name), value);
+    }
+
+    void MaterialPass::setUniform(Atom name, float value)
+    {
+        size_t index = uniformIndex(name);
+        mUniforms[index].second.reset(new UniformValueT<float>(value));
+    }
+
+    void MaterialPass::setUniform(Atom name, const glm::vec2& value)
+    {
+        size_t index = uniformIndex(name);
+        mUniforms[index].second.reset(new UniformValueT<glm::vec2>(value));
+    }
+
+    void MaterialPass::setUniform(Atom name, const glm::vec3& value)
+    {
+        size_t index = uniformIndex(name);
+        mUniforms[index].second.reset(new UniformValueT<glm::vec3>(value));
+    }
+
+    void MaterialPass::setUniform(Atom name, const glm::vec4& value)
+    {
+        size_t index = uniformIndex(name);
+        mUniforms[index].second.reset(new UniformValueT<glm::vec4>(value));
+    }
+
+    void MaterialPass::setUniform(Atom name, const TexturePtr& value)
+    {
+        size_t index = uniformIndex(name);
+        mUniforms[index].second.reset(new UniformValueT<TexturePtr>(value));
+    }
+
     void MaterialPass::apply(const RendererPtr& renderer) const
     {
         renderer->useShader(mShader);
@@ -49,5 +123,22 @@ namespace Engine
         renderer->setBlendingEnabled(blend);
         if (blend)
             renderer->setBlendFunc(mBlendingSourceFactor, mBlendingDestinationFactor);
+
+        for (const auto& it : mUniforms)
+            it.second->upload(renderer, it.first);
+    }
+
+    size_t MaterialPass::uniformIndex(Atom name)
+    {
+        auto it = mUniformNames.find(name);
+        if (it != mUniformNames.end())
+            return it->second;
+
+        size_t index = mUniforms.size();
+        mUniforms.resize(index + 1);
+        mUniforms[index].first = name;
+        mUniformNames.emplace(name, index);
+
+        return index;
     }
 }
