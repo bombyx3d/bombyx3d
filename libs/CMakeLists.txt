@@ -29,6 +29,7 @@ endif()
 
 add_subdirectory(boost)
 add_subdirectory(bzip2)
+add_subdirectory(cvtutf)
 add_subdirectory(glew)
 add_subdirectory(glfw)
 add_subdirectory(glm)
