@@ -35,8 +35,10 @@ namespace Engine
     void CxxThreadManager::flushRenderThreadQueue()
     {
         std::function<void()> action;
-        while (mRenderThreadQueue.tryDequeue(action))
+        while (mRenderThreadQueue.tryDequeue(action)) {
             action();
+            action = nullptr;
+        }
     }
 
     void CxxThreadManager::performInRenderThread(const std::function<void()>& action)
