@@ -113,6 +113,10 @@ void Sweep::EdgeEvent(SweepContext& tcx, Point& ep, Point& eq, Triangle* triangl
   Point* p1 = triangle->PointCCW(point);
   Orientation o1 = Orient2d(eq, *p1, ep);
   if (o1 == COLLINEAR) {
+    /*
+    // ASSIMP_CHANGE (aramis_acg)
+    throw std::runtime_error("EdgeEvent - collinear points not supported");
+    */
     if( triangle->Contains(&eq, p1)) {
       triangle->MarkConstrainedEdge(&eq, p1 );
       // We are modifying the constraint maybe it would be better to 
@@ -121,8 +125,8 @@ void Sweep::EdgeEvent(SweepContext& tcx, Point& ep, Point& eq, Triangle* triangl
       triangle = &triangle->NeighborAcross(point);
       EdgeEvent( tcx, ep, *p1, triangle, *p1 );
     } else {
-      std::runtime_error("EdgeEvent - collinear points not supported");
-      assert(0);
+      // ASSIMP_CHANGE (aramis_acg)
+      throw std::runtime_error("EdgeEvent - collinear points not supported");
     }
     return;
   }
@@ -130,6 +134,10 @@ void Sweep::EdgeEvent(SweepContext& tcx, Point& ep, Point& eq, Triangle* triangl
   Point* p2 = triangle->PointCW(point);
   Orientation o2 = Orient2d(eq, *p2, ep);
   if (o2 == COLLINEAR) {
+    /*
+    // ASSIMP_CHANGE (aramis_acg)
+    throw std::runtime_error("EdgeEvent - collinear points not supported");
+    */
     if( triangle->Contains(&eq, p2)) {
       triangle->MarkConstrainedEdge(&eq, p2 );
       // We are modifying the constraint maybe it would be better to 
@@ -138,8 +146,8 @@ void Sweep::EdgeEvent(SweepContext& tcx, Point& ep, Point& eq, Triangle* triangl
       triangle = &triangle->NeighborAcross(point);
       EdgeEvent( tcx, ep, *p2, triangle, *p2 );
     } else {
-      std::runtime_error("EdgeEvent - collinear points not supported");
-      assert(0);
+      // ASSIMP_CHANGE (aramis_acg)
+      throw std::runtime_error("EdgeEvent - collinear points not supported");
     }
     return;
   }
@@ -767,7 +775,8 @@ Point& Sweep::NextFlipPoint(Point& ep, Point& eq, Triangle& ot, Point& op)
     return *ot.PointCW(op);
   } else{
     //throw new RuntimeException("[Unsupported] Opposing point on constrained edge");
-    assert(0);
+    // ASSIMP_CHANGE (aramis_acg)
+    throw std::runtime_error("[Unsupported] Opposing point on constrained edge");
   }
 }
 
@@ -803,7 +812,7 @@ void Sweep::FlipScanEdgeEvent(SweepContext& tcx, Point& ep, Point& eq, Triangle&
 Sweep::~Sweep() {
 
     // Clean up memory
-    for(int i = 0; i < nodes_.size(); i++) {
+    for(size_t i = 0; i < nodes_.size(); i++) {
         delete nodes_[i];
     }
 
