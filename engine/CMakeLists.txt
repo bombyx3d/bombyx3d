@@ -106,6 +106,8 @@ set(source_files
     utility/ProducerConsumerQueue.h
     utility/RenderUtils.h
     utility/ScopedCounter.h
+    utility/StringUtils.cpp
+    utility/StringUtils.h
     utility/WorkerThread.cpp
     utility/WorkerThread.h
 )

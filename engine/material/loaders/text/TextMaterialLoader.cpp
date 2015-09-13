@@ -25,6 +25,7 @@
 #include "engine/material/MaterialTechnique.h"
 #include "engine/material/MaterialPass.h"
 #include "engine/core/Log.h"
+#include "engine/utility/StringUtils.h"
 #include <pegtl.hh>
 #include <pegtl/analyze.hh>
 #include <vector>
@@ -138,8 +139,6 @@ namespace Engine
 
     bool TextMaterialLoader::canLoadMaterial(IFile* file)
     {
-        // FIXME
-        (void)file;
-        return true;
+        return file && StringUtils::endsWith(file->name(), ".material");
     }
 }
