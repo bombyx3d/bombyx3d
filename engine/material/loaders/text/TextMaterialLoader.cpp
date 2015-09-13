@@ -132,8 +132,6 @@ namespace Engine
                 void applyToPass(MaterialPass& pass) const override;
             };
 
-            using LineWidthOption = FloatOption<Option::LineWidth>;
-
             struct OptionList {
                 std::vector<std::shared_ptr<Option>> options;
             };
@@ -150,6 +148,13 @@ namespace Engine
             struct File : public OptionList {
                 std::vector<std::shared_ptr<Technique>> techniques;
             };
+
+            // Options
+
+            using LineWidthOption = FloatOption<Option::LineWidth>;
+            template <> void LineWidthOption::applyToPass(MaterialPass& pass) const {
+                pass.setLineWidth(value);
+            }
         }
 
         ///////////////////////////////
@@ -204,13 +209,13 @@ namespace Engine
             // Options
 
             template <> struct Action<Grammar::FloatValue> {
-                static void apply(pegtl::input& input, Context& context) {
+                static void apply(const pegtl::input& input, Context& context) {
                     context.floatValues.emplace_back(std::stof(input.string()));
                 }
             };
 
             template <> struct Action<Grammar::LineWidthOption> {
-                static void apply(pegtl::input& input, Context& context) {
+                static void apply(const pegtl::input&, Context& context) {
                     context.emitOption<AST::LineWidthOption>(pop(context.floatValues));
                 }
             };
@@ -218,7 +223,7 @@ namespace Engine
             // Passes
 
             template <> struct Action<Grammar::PassBegin> {
-                static void apply(pegtl::input& input, Context& context) {
+                static void apply(const pegtl::input&, Context& context) {
                     assert(context.currentPass == nullptr);
                     assert(context.currentTechnique != nullptr);
                     context.currentPass = std::make_shared<AST::Pass>();
@@ -230,7 +235,7 @@ namespace Engine
             };
 
             template <> struct Action<Grammar::PassEnd> {
-                static void apply(pegtl::input& input, Context& context) {
+                static void apply(const pegtl::input&, Context& context) {
                     assert(context.currentPass != nullptr);
                     context.popOptionList(*context.currentPass);
                     context.currentPass.reset();
@@ -238,13 +243,13 @@ namespace Engine
             };
 
             template <> struct Action<Grammar::PassName> {
-                static void apply(pegtl::input& input, Context& context) {
+                static void apply(const pegtl::input& input, Context& context) {
                     context.passName.reset(new std::string(input.string()));
                 }
             };
 
             template <> struct Action<Grammar::NoPassName> {
-                static void apply(pegtl::input& input, Context& context) {
+                static void apply(const pegtl::input&, Context& context) {
                     context.passName.reset();
                 }
             };
@@ -252,7 +257,7 @@ namespace Engine
             // Techniques
 
             template <> struct Action<Grammar::TechniqueBegin> {
-                static void apply(pegtl::input& input, Context& context) {
+                static void apply(const pegtl::input&, Context& context) {
                     assert(context.currentTechnique == nullptr);
                     context.currentTechnique = std::make_shared<AST::Technique>();
                     context.currentTechnique->name = std::move(context.techniqueName);
@@ -263,7 +268,7 @@ namespace Engine
             };
 
             template <> struct Action<Grammar::TechniqueEnd> {
-                static void apply(pegtl::input& input, Context& context) {
+                static void apply(const pegtl::input&, Context& context) {
                     assert(context.currentTechnique != nullptr);
                     context.popOptionList(*context.currentTechnique);
                     context.currentTechnique.reset();
@@ -271,24 +276,17 @@ namespace Engine
             };
 
             template <> struct Action<Grammar::TechniqueName> {
-                static void apply(pegtl::input& input, Context& context) {
+                static void apply(const pegtl::input& input, Context& context) {
                     context.techniqueName.reset(new std::string(input.string()));
                 }
             };
 
             template <> struct Action<Grammar::NoTechniqueName> {
-                static void apply(pegtl::input& input, Context& context) {
+                static void apply(const pegtl::input&, Context& context) {
                     context.techniqueName.reset();
                 }
             };
         }
-    }
-
-    ///////////////////////////////
-
-    void AST::LineWidthOption::applyToPass(MaterialPass& pass) const
-    {
-        pass.setLineWidth(value);
     }
 
     ///////////////////////////////
@@ -354,6 +352,7 @@ namespace Engine
     bool TextMaterialLoader::canLoadMaterial(IFile* file)
     {
         // FIXME
+        (void)file;
         return true;
     }
 }

@@ -8,3 +8,4 @@ set_source_groups(${source_files})
 add_library(pegtl STATIC EXCLUDE_FROM_ALL ${source_files})
 
 target_include_directories(pegtl SYSTEM BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+set_target_properties(pegtl PROPERTIES CXX_STANDARD 11)
