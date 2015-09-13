@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,6 +26,8 @@ struct Option
     {
         CullFace,
         Blend,
+        DepthTest,
+        DepthWrite,
     };
 
     virtual ~Option() = default;
@@ -57,6 +59,18 @@ template<> void BlendOption::applyToPass(MaterialPass& pass) const
     pass.setBlendingEnabled(value.enabled);
     pass.setBlendingSourceFactor(value.src);
     pass.setBlendingDestinationFactor(value.dst);
+}
+
+using DepthTestOption = OptionValue<Option::DepthTest, bool>;
+template<> void DepthTestOption::applyToPass(MaterialPass& pass) const
+{
+    pass.setDepthTestingEnabled(value);
+}
+
+using DepthWriteOption = OptionValue<Option::DepthWrite, bool>;
+template<> void DepthWriteOption::applyToPass(MaterialPass& pass) const
+{
+    pass.setDepthWritingEnabled(value);
 }
 
 struct OptionList

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -36,6 +36,8 @@ struct OptionalWhitespace : star<WhitespaceElement> {};
 struct BACK : string<'B','a','c','k'> {};
 struct BLEND_FUNC : string<'B','l','e','n','d','F','u','n','c'> {};
 struct CULL_FACE : string<'C','u','l','l','F','a','c','e'> {};
+struct DEPTH_TEST : string<'D','e','p','t','h','T','e','s','t'> {};
+struct DEPTH_WRITE : string<'D','e','p','t','h','W','r','i','t','e'> {};
 struct DISABLED : string<'D','i','s','a','b','l','e','d'> {};
 struct DST_ALPHA : string<'D','s','t','A','l','p','h','a'> {};
 struct DST_COLOR : string<'D','s','t','C','o','l','o','r'> {};
@@ -117,9 +119,15 @@ struct BlendFuncValuePair : seq<BlendFuncValue, ValueSeparator, BlendFuncValue> 
 struct BlendFuncOptionValue : sor<BlendDisabled, BlendFuncValuePair> {};
 struct BlendOption : seq<BLEND_FUNC, NameValueSeparator, BlendFuncOptionValue> {};
 
+struct DepthTestOption : seq<DEPTH_TEST, NameValueSeparator, BoolValue> {};
+
+struct DepthWriteOption : seq<DEPTH_WRITE, NameValueSeparator, BoolValue> {};
+
 struct Option : seq<sor<
     CullFaceOption,
-    BlendOption
+    BlendOption,
+    DepthTestOption,
+    DepthWriteOption
 >, OptionalWhitespace> {};
 
 

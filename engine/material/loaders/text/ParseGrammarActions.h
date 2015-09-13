@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -67,6 +67,14 @@ ACTION(BlendOption, {
         context.blendFuncValues.clear();
     }
     context.emitOption<Tree::BlendOption>(value);
+});
+
+ACTION(DepthTestOption, {
+    context.emitOption<Tree::DepthTestOption>(pop(context.boolValues));
+});
+
+ACTION(DepthWriteOption, {
+    context.emitOption<Tree::DepthWriteOption>(pop(context.boolValues));
 });
 
 ACTION(PassName, context.passName.reset(new std::string(input.string())));
