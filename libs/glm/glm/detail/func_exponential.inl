@@ -39,7 +39,7 @@
 namespace glm{
 namespace detail
 {
-#	if GLM_HAS_CXX11_STL
+#	if GLM_HAS_CXX11_STL && !defined(__APPLE__) // FIXME
 		using std::log2;
 #	else
 		template <typename genType>

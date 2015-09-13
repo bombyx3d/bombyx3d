@@ -225,7 +225,7 @@ namespace detail
 	}
 
 	// trunc
-#	if GLM_HAS_CXX11_STL
+#	if GLM_HAS_CXX11_STL && !defined(__APPLE__) // FIXME
 		using ::std::trunc;
 #	else
 		template <typename genType>
@@ -244,7 +244,7 @@ namespace detail
 	}
 
 	// round
-#	if GLM_HAS_CXX11_STL
+#	if GLM_HAS_CXX11_STL && !defined(__APPLE__) // FIXME
 		using ::std::round;
 #	else
 		template <typename genType>

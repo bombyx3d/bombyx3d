@@ -162,7 +162,7 @@ namespace glm
 	}
 
 	// asinh
-#	if GLM_HAS_CXX11_STL
+#	if GLM_HAS_CXX11_STL && !defined(__APPLE__) // FIXME
 		using std::asinh;
 #	else
 		template <typename genType> 
@@ -181,7 +181,7 @@ namespace glm
 	}
 
 	// acosh
-#	if GLM_HAS_CXX11_STL
+#	if GLM_HAS_CXX11_STL && !defined(__APPLE__) // FIXME
 		using std::acosh;
 #	else
 		template <typename genType> 
@@ -202,7 +202,7 @@ namespace glm
 	}
 
 	// atanh
-#	if GLM_HAS_CXX11_STL
+#	if GLM_HAS_CXX11_STL && !defined(__APPLE__) // FIXME
 		using std::atanh;
 #	else
 		template <typename genType>

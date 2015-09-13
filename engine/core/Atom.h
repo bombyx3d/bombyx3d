@@ -37,12 +37,12 @@ namespace Engine
         Atom& operator=(const Atom& src) { mAtomTableEntry = src.mAtomTableEntry; return *this; }
         Atom& operator=(Atom&& src) { mAtomTableEntry = std::move(src.mAtomTableEntry); return *this; }
 
-        size_t uniqueID() const { return mAtomTableEntry->id; }
+        size_t uniqueID() const { return mAtomTableEntry->uniqueID; }
         const std::string& text() const { return mAtomTableEntry->text; }
 
         bool operator==(const Atom& other) const { return mAtomTableEntry == other.mAtomTableEntry; }
         bool operator!=(const Atom& other) const { return mAtomTableEntry != other.mAtomTableEntry; }
-        bool operator<(const Atom& other) const { return mAtomTableEntry->id < other.mAtomTableEntry->id; }
+        bool operator<(const Atom& other) const { return mAtomTableEntry->uniqueID < other.mAtomTableEntry->uniqueID; }
 
     private:
         const AtomTable::Entry* mAtomTableEntry;

@@ -36,18 +36,18 @@ namespace Engine
 
 
     AtomTable::Entry::Entry()
-        : id(0)
+        : uniqueID(0)
     {
     }
 
     AtomTable::Entry::Entry(size_t i, const std::string& s)
-        : id(i)
+        : uniqueID(i)
         , text(s)
     {
     }
 
     AtomTable::Entry::Entry(size_t i, std::string&& s)
-        : id(i)
+        : uniqueID(i)
         , text(std::move(s))
     {
     }
