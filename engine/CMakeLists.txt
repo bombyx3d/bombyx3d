@@ -56,6 +56,8 @@ set(source_files
     interfaces/material/IMaterialLoader.h
     interfaces/material/IMaterialPass.h
     interfaces/material/IMaterialTechnique.h
+    interfaces/mesh/IMesh.h
+    interfaces/mesh/IMeshLoader.h
     interfaces/render/IBuffer.h
     interfaces/render/IIndexBuffer.h
     interfaces/render/IRenderer.h
@@ -73,6 +75,8 @@ set(source_files
     material/MaterialTechnique.h
     material/ShaderLoader.cpp
     material/ShaderLoader.h
+    mesh/Mesh.h
+    mesh/MeshElement.h
     mesh/VertexFormat.h
     render/Buffer.cpp
     render/Buffer.h
@@ -120,3 +124,4 @@ target_link_libraries(engine platform glm boost)
 
 add_subdirectory(image/loaders/png)
 add_subdirectory(material/loaders/text)
+add_subdirectory(mesh/loaders/assimp)
