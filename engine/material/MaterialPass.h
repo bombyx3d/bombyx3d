@@ -34,13 +34,42 @@ namespace Engine
 
         const std::string& name() const override;
 
-        float lineWidth() const override;
+        CullFace cullFace() const { return mCullFace; }
+        void setCullFace(CullFace face) { mCullFace = face; }
 
-        void setLineWidth(float value) { mLineWidth = value; }
+        bool blendingEnabled() const { return (mFlags & Blend) != 0; }
+        bool depthTestingEnabled() const { return (mFlags & DepthTest) != 0; }
+        bool depthWriteEnabled() const { return (mFlags & DepthWrite) != 0; }
+        void setBlendingEnabled(bool value) { setFlag(Blend, value); }
+        void setDepthTestingEnabled(bool value) { setFlag(DepthTest, value); }
+        void setDepthWritingEnabled(bool value) { setFlag(DepthWrite, value); }
+
+        BlendFunc blendingSourceFactor() const { return mBlendingSourceFactor; }
+        BlendFunc blendingDestinationFactor() const { return mBlendingDestinationFactor; }
+        void setBlendingSourceFactor(BlendFunc factor) { mBlendingSourceFactor = factor; }
+        void setBlendingDestinationFactor(BlendFunc factor) { mBlendingDestinationFactor = factor; }
+
+        const ShaderPtr& shader() const { return mShader; }
+        void setShader(const ShaderPtr& shader) { mShader = shader; }
+        void setShader(ShaderPtr&& shader) { mShader = std::move(shader); }
+
+        void apply(const RendererPtr& renderer) const override;
 
     private:
+        enum Flag {
+            Blend = 0x00000001,
+            DepthTest = 0x00000002,
+            DepthWrite = 0x00000004,
+        };
+
         std::string mName;
-        float mLineWidth;
+        ShaderPtr mShader;
+        unsigned mFlags = 0;
+        BlendFunc mBlendingSourceFactor = BlendFunc::SrcAlpha;
+        BlendFunc mBlendingDestinationFactor = BlendFunc::OneMinusSrcAlpha;
+        CullFace mCullFace = CullFace::Back;
+
+        void setFlag(Flag flag, bool value) { mFlags = value ? (mFlags | flag) : (mFlags & ~flag); }
 
         Z_DISABLE_COPY(MaterialPass);
     };

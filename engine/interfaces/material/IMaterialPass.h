@@ -21,8 +21,10 @@
  */
 
 #pragma once
+#include "engine/interfaces/render/IRenderer.h"
 #include <memory>
 #include <string>
+#include <cstdint>
 
 namespace Engine
 {
@@ -33,7 +35,7 @@ namespace Engine
 
         virtual const std::string& name() const = 0;
 
-        virtual float lineWidth() const = 0;
+        virtual void apply(const RendererPtr& renderer) const = 0;
     };
 
     using MaterialPassPtr = std::shared_ptr<IMaterialPass>;

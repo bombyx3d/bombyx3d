@@ -34,3 +34,15 @@
 #else
  #include <GL/gl.h>
 #endif
+
+#include "engine/interfaces/render/IRenderer.h"
+#include "engine/interfaces/render/IBuffer.h"
+
+namespace Engine
+{
+    GLenum primitiveTypeToGL(PrimitiveType primitiveType);
+    GLenum cullFaceToGL(CullFace face);
+    GLenum frontFaceToGL(FrontFace face);
+    GLenum blendFuncToGL(BlendFunc func);
+    GLenum bufferUsageToGL(BufferUsage usage);
+}

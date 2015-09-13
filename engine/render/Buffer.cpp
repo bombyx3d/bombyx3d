@@ -26,20 +26,6 @@
 
 namespace Engine
 {
-    static GLenum usageToGL(BufferUsage usage)
-    {
-        switch (usage)
-        {
-        case BufferUsage::Static: return GL_STATIC_DRAW;
-        case BufferUsage::Dynamic: return GL_DYNAMIC_DRAW;
-        case BufferUsage::Stream: return GL_STREAM_DRAW;
-        }
-
-        assert(false);
-        return GL_STATIC_DRAW;
-    }
-
-
     Buffer::Buffer(size_t target)
         : mSize(0)
         , mTarget(target)
@@ -65,14 +51,14 @@ namespace Engine
     void Buffer::initEmpty(size_t size, BufferUsage usage)
     {
         glBindBuffer(GLenum(mTarget), GLuint(mHandle));
-        glBufferData(GLenum(mTarget), GLsizeiptr(size), nullptr, usageToGL(usage));
+        glBufferData(GLenum(mTarget), GLsizeiptr(size), nullptr, bufferUsageToGL(usage));
         mSize = size;
     }
 
     void Buffer::setData(const void* data, size_t size, BufferUsage usage)
     {
         glBindBuffer(GLenum(mTarget), GLuint(mHandle));
-        glBufferData(GLenum(mTarget), GLsizeiptr(size), data, usageToGL(usage));
+        glBufferData(GLenum(mTarget), GLsizeiptr(size), data, bufferUsageToGL(usage));
         mSize = size;
     }
 }

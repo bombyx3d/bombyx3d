@@ -21,6 +21,10 @@
 #
 
 set(source_files
+    ParseGrammar.h
+    ParseGrammarActions.h
+    ParseGrammarContext.h
+    ParseTree.h
     TextMaterialLoader.cpp
     TextMaterialLoader.h
 )

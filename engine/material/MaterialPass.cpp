@@ -37,8 +37,17 @@ namespace Engine
         return mName;
     }
 
-    float MaterialPass::lineWidth() const
+    void MaterialPass::apply(const RendererPtr& renderer) const
     {
-        return mLineWidth;
+        renderer->useShader(mShader);
+
+        renderer->setCullFace(mCullFace);
+        renderer->setDepthTestingEnabled((mFlags & DepthTest) != 0);
+        renderer->setDepthWritingEnabled((mFlags & DepthWrite) != 0);
+
+        bool blend = (mFlags & Blend) != 0;
+        renderer->setBlendingEnabled(blend);
+        if (blend)
+            renderer->setBlendFunc(mBlendingSourceFactor, mBlendingDestinationFactor);
     }
 }

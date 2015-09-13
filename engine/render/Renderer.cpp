@@ -31,21 +31,6 @@
 
 namespace Engine
 {
-    static GLenum primitiveTypeToGL(PrimitiveType primitiveType)
-    {
-        switch (primitiveType)
-        {
-        case PrimitiveType::Points: return GL_POINTS;
-        case PrimitiveType::Lines: return GL_LINES;
-        case PrimitiveType::LineStrip: return GL_LINE_STRIP;
-        case PrimitiveType::Triangles: return GL_TRIANGLES;
-        case PrimitiveType::TriangleStrip: return GL_TRIANGLE_STRIP;
-        }
-
-        assert(false);
-        return GL_POINTS;
-    }
-
     Renderer::Renderer()
         : mProjectionMatrixUniform(AtomTable::instance()->getAtom("uProjection"))
         , mModelViewMatrixUniform(AtomTable::instance()->getAtom("uModelView"))
@@ -158,6 +143,45 @@ namespace Engine
         assert(!mModelViewMatrixStack.empty());
         setModelViewMatrix(mModelViewMatrixStack.back());
         mModelViewMatrixStack.pop_back();
+    }
+
+    void Renderer::setCullFace(CullFace face)
+    {
+        glCullFace(cullFaceToGL(face));
+    }
+
+    void Renderer::setFrontFace(FrontFace face)
+    {
+        glFrontFace(frontFaceToGL(face));
+    }
+
+    void Renderer::setBlendingEnabled(bool value)
+    {
+        if (value)
+            glEnable(GL_BLEND);
+        else
+            glDisable(GL_BLEND);
+    }
+
+    void Renderer::setBlendFunc(BlendFunc srcFactor, BlendFunc dstFactor)
+    {
+        glBlendFunc(blendFuncToGL(srcFactor), blendFuncToGL(dstFactor));
+    }
+
+    void Renderer::setDepthTestingEnabled(bool value)
+    {
+        if (value)
+            glEnable(GL_DEPTH_TEST);
+        else
+            glDisable(GL_DEPTH_TEST);
+    }
+
+    void Renderer::setDepthWritingEnabled(bool value)
+    {
+        if (value)
+            glDepthMask(GL_TRUE);
+        else
+            glDepthMask(GL_FALSE);
     }
 
     void Renderer::setUniform(const Atom& name, float value)

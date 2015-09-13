@@ -32,13 +32,41 @@
 
 namespace Engine
 {
-    enum class PrimitiveType
+    enum class PrimitiveType : uint8_t
     {
         Points,
         Lines,
         LineStrip,
         Triangles,
         TriangleStrip,
+    };
+
+    enum class CullFace : uint8_t
+    {
+        None,
+        Front,
+        Back,
+    };
+
+    enum class FrontFace : uint8_t
+    {
+        Clockwise,
+        CounterClockwise,
+    };
+
+    enum class BlendFunc : uint8_t
+    {
+        Zero,
+        One,
+        SrcColor,
+        OneMinusSrcColor,
+        DstColor,
+        OneMinusDstColor,
+        SrcAlpha,
+        OneMinusSrcAlpha,
+        DstAlpha,
+        OneMinusDstAlpha,
+        SrcAlphaSaturate,
     };
 
     class IRenderer
@@ -68,6 +96,15 @@ namespace Engine
         virtual void setModelViewMatrix(const glm::mat4& matrix) = 0;
         virtual void pushModelViewMatrix() = 0;
         virtual void popModelViewMatrix() = 0;
+
+        virtual void setCullFace(CullFace face) = 0;
+        virtual void setFrontFace(FrontFace face) = 0;
+
+        virtual void setBlendingEnabled(bool value) = 0;
+        virtual void setBlendFunc(BlendFunc srcFactor, BlendFunc dstFactor) = 0;
+
+        virtual void setDepthTestingEnabled(bool value) = 0;
+        virtual void setDepthWritingEnabled(bool value) = 0;
 
         virtual void setUniform(const Atom& name, float value) = 0;
         virtual void setUniform(const Atom& name, const glm::vec2& value) = 0;

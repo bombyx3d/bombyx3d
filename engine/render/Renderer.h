@@ -62,6 +62,15 @@ namespace Engine
         void pushModelViewMatrix() override;
         void popModelViewMatrix() override;
 
+        void setCullFace(CullFace face) override;
+        void setFrontFace(FrontFace face) override;
+
+        void setBlendingEnabled(bool value) override;
+        void setBlendFunc(BlendFunc srcFactor, BlendFunc dstFactor) override;
+
+        void setDepthTestingEnabled(bool value) override;
+        void setDepthWritingEnabled(bool value) override;
+
         void setUniform(const Atom& name, float value) override;
         void setUniform(const Atom& name, const glm::vec2& value) override;
         void setUniform(const Atom& name, const glm::vec3& value) override;

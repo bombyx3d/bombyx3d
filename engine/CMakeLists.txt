@@ -76,6 +76,7 @@ set(source_files
     mesh/VertexFormat.h
     render/Buffer.cpp
     render/Buffer.h
+    render/opengl.cpp
     render/opengl.h
     render/Renderer.cpp
     render/Renderer.h
