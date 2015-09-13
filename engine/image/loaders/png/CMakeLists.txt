@@ -21,8 +21,8 @@
 #
 
 set(source_files
-    PngLoader.cpp
-    PngLoader.h
+    PngImageLoader.cpp
+    PngImageLoader.h
 )
 
 add_library(engine-image-png STATIC EXCLUDE_FROM_ALL ${source_files})

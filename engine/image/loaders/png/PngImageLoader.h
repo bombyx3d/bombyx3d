@@ -25,10 +25,10 @@
 
 namespace Engine
 {
-    class PngLoader : public IImageLoader
+    class PngImageLoader : public IImageLoader
     {
     public:
-        PngLoader() = default;
+        PngImageLoader() = default;
 
         bool canLoadImage(IFile* file) override;
         ImagePtr loadImage(IFile* file) override;

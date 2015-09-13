@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "PngLoader.h"
+#include "PngImageLoader.h"
 #include "engine/image/Image.h"
 #include "engine/core/Log.h"
 #include <png.h>
@@ -63,7 +63,7 @@ namespace Engine
         }
     }
 
-    bool PngLoader::canLoadImage(IFile* file)
+    bool PngImageLoader::canLoadImage(IFile* file)
     {
         uint64_t pos = file->position();
         png_byte buf[PNG_SIGNATURE_SIZE];
@@ -74,7 +74,7 @@ namespace Engine
         return true;
     }
 
-    ImagePtr PngLoader::loadImage(IFile* file)
+    ImagePtr PngImageLoader::loadImage(IFile* file)
     {
         struct Context
         {
