@@ -27,6 +27,7 @@ else()
     add_definitions(-w)
 endif()
 
+add_subdirectory(assimp)
 add_subdirectory(boost)
 add_subdirectory(bzip2)
 add_subdirectory(cvtutf)

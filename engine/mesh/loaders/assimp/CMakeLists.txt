@@ -29,4 +29,4 @@ add_library(engine-mesh-assimp STATIC EXCLUDE_FROM_ALL ${source_files})
 set_source_groups(${source_files})
 
 set_target_properties(engine-mesh-assimp PROPERTIES CXX_STANDARD 11)
-target_link_libraries(engine-mesh-assimp engine)
+target_link_libraries(engine-mesh-assimp engine assimp)
