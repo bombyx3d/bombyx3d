@@ -19,23 +19,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "engine/interfaces/material/IMaterialTechnique.h"
-#include <memory>
-#include <string>
+#include "MaterialPass.h"
 
 namespace Engine
 {
-    class IMaterial
+    MaterialPass::MaterialPass(const std::string& passName)
+        : mName(passName)
     {
-    public:
-        virtual ~IMaterial() = default;
+    }
 
-        virtual size_t numTechniques() const = 0;
-        virtual const MaterialTechniquePtr& technique(const std::string& name) const = 0;
-        virtual const MaterialTechniquePtr& technique(size_t index) const = 0;
-    };
+    MaterialPass::~MaterialPass()
+    {
+    }
 
-    using MaterialPtr = std::shared_ptr<IMaterial>;
+    const std::string& MaterialPass::name() const
+    {
+        return mName;
+    }
+
+    float MaterialPass::lineWidth() const
+    {
+        return mLineWidth;
+    }
 }

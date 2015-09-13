@@ -19,23 +19,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "engine/interfaces/material/IMaterialTechnique.h"
-#include <memory>
-#include <string>
+#include "MaterialTechnique.h"
+#include <cassert>
 
 namespace Engine
 {
-    class IMaterial
+    static const MaterialPassPtr gNullPass;
+
+    MaterialTechnique::MaterialTechnique(const std::string& techniqueName)
+        : mName(techniqueName)
     {
-    public:
-        virtual ~IMaterial() = default;
+    }
 
-        virtual size_t numTechniques() const = 0;
-        virtual const MaterialTechniquePtr& technique(const std::string& name) const = 0;
-        virtual const MaterialTechniquePtr& technique(size_t index) const = 0;
-    };
+    MaterialTechnique::~MaterialTechnique()
+    {
+    }
 
-    using MaterialPtr = std::shared_ptr<IMaterial>;
+    const std::string& MaterialTechnique::name() const
+    {
+        return mName;
+    }
+
+    size_t MaterialTechnique::numPasses() const
+    {
+        return mPasses.size();
+    }
+
+    const MaterialPassPtr& MaterialTechnique::pass(const std::string& name) const
+    {
+        for (const auto& pass : mPasses) {
+            if (pass->name() == name)
+                return pass;
+        }
+        return gNullPass;
+    }
+
+    const MaterialPassPtr& MaterialTechnique::pass(size_t index) const
+    {
+        assert(index < mPasses.size());
+        return (index < mPasses.size() ? mPasses[index] : gNullPass);
+    }
+
+    void MaterialTechnique::addPass(const MaterialPassPtr& pass)
+    {
+        mPasses.emplace_back(pass);
+    }
+
+    void MaterialTechnique::addPass(MaterialPassPtr&& pass)
+    {
+        mPasses.emplace_back(std::move(pass));
+    }
 }

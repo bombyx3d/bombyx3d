@@ -23,11 +23,52 @@
 #include "engine/core/Services.h"
 #include "engine/core/Log.h"
 #include <mutex>
+#include <cassert>
 
 namespace Engine
 {
     std::vector<std::unique_ptr<IMaterialLoader>> Material::mMaterialLoaders;
     std::mutex Material::mMaterialLoadersMutex;
+
+    static const MaterialTechniquePtr gNullTechnique;
+
+    Material::Material()
+    {
+    }
+
+    Material::~Material()
+    {
+    }
+
+    size_t Material::numTechniques() const
+    {
+        return mTechniques.size();
+    }
+
+    const MaterialTechniquePtr& Material::technique(const std::string& name) const
+    {
+        for (const auto& technique : mTechniques) {
+            if (technique->name() == name)
+                return technique;
+        }
+        return gNullTechnique;
+    }
+
+    const MaterialTechniquePtr& Material::technique(size_t index) const
+    {
+        assert(index < mTechniques.size());
+        return (index < mTechniques.size() ? mTechniques[index] : gNullTechnique);
+    }
+
+    void Material::addTechnique(const MaterialTechniquePtr& technique)
+    {
+        mTechniques.emplace_back(technique);
+    }
+
+    void Material::addTechnique(MaterialTechniquePtr&& technique)
+    {
+        mTechniques.emplace_back(std::move(technique));
+    }
 
     MaterialPtr Material::fromFile(const std::string& name)
     {

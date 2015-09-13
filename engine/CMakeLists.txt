@@ -54,6 +54,8 @@ set(source_files
     interfaces/io/IFileSystem.h
     interfaces/material/IMaterial.h
     interfaces/material/IMaterialLoader.h
+    interfaces/material/IMaterialPass.h
+    interfaces/material/IMaterialTechnique.h
     interfaces/render/IBuffer.h
     interfaces/render/IIndexBuffer.h
     interfaces/render/IRenderer.h
@@ -65,6 +67,10 @@ set(source_files
     interfaces/scene/IScene.h
     material/Material.cpp
     material/Material.h
+    material/MaterialPass.cpp
+    material/MaterialPass.h
+    material/MaterialTechnique.cpp
+    material/MaterialTechnique.h
     material/ShaderLoader.cpp
     material/ShaderLoader.h
     mesh/VertexFormat.h

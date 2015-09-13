@@ -21,6 +21,7 @@
  */
 
 #pragma once
+#include "engine/core/macros.h"
 #include "engine/interfaces/material/IMaterial.h"
 #include "engine/interfaces/material/IMaterialLoader.h"
 #include "engine/interfaces/io/IFile.h"
@@ -34,6 +35,16 @@ namespace Engine
     class Material : public IMaterial
     {
     public:
+        Material();
+        ~Material();
+
+        size_t numTechniques() const override;
+        const MaterialTechniquePtr& technique(const std::string& name) const override;
+        const MaterialTechniquePtr& technique(size_t index) const override;
+
+        void addTechnique(const MaterialTechniquePtr& technique);
+        void addTechnique(MaterialTechniquePtr&& technique);
+
         static MaterialPtr fromFile(const std::string& fileName);
         static MaterialPtr fromFile(const FilePtr& file);
         static MaterialPtr fromFile(IFile* file);
@@ -45,5 +56,9 @@ namespace Engine
     private:
         static std::vector<std::unique_ptr<IMaterialLoader>> mMaterialLoaders;
         static std::mutex mMaterialLoadersMutex;
+
+        std::vector<MaterialTechniquePtr> mTechniques;
+
+        Z_DISABLE_COPY(Material);
     };
 }

@@ -21,21 +21,20 @@
  */
 
 #pragma once
-#include "engine/interfaces/material/IMaterialTechnique.h"
 #include <memory>
 #include <string>
 
 namespace Engine
 {
-    class IMaterial
+    class IMaterialPass
     {
     public:
-        virtual ~IMaterial() = default;
+        virtual ~IMaterialPass() = default;
 
-        virtual size_t numTechniques() const = 0;
-        virtual const MaterialTechniquePtr& technique(const std::string& name) const = 0;
-        virtual const MaterialTechniquePtr& technique(size_t index) const = 0;
+        virtual const std::string& name() const = 0;
+
+        virtual float lineWidth() const = 0;
     };
 
-    using MaterialPtr = std::shared_ptr<IMaterial>;
+    using MaterialPassPtr = std::shared_ptr<IMaterialPass>;
 }
