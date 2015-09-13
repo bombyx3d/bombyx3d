@@ -70,20 +70,20 @@ namespace Engine
         mTechniques.emplace_back(std::move(technique));
     }
 
-    MaterialPtr Material::fromFile(const std::string& name)
+    bool Material::load(const std::string& fileName)
     {
-        return fromFile(Services::fileSystem()->openFile(name).get());
+        return load(Services::fileSystem()->openFile(fileName).get());
     }
 
-    MaterialPtr Material::fromFile(const FilePtr& file)
+    bool Material::load(const FilePtr& file)
     {
-        return fromFile(file.get());
+        return load(file.get());
     }
 
-    MaterialPtr Material::fromFile(IFile* file)
+    bool Material::load(IFile* file)
     {
         if (!file)
-            return std::make_shared<Material>();
+            return false;
 
         Z_LOGI("Loading material \"" << file->name() << "\"");
 
@@ -100,10 +100,37 @@ namespace Engine
 
         if (!materialLoader) {
             Z_LOGE("There is no loader able to read material \"" << file->name() << "\".");
-            return std::make_shared<Material>();
+            return false;
         }
 
-        return materialLoader->loadMaterial(file);
+        return materialLoader->loadMaterial(file, this);
+    }
+
+    void Material::loadPendingResources()
+    {
+        for (const auto& technique : mTechniques)
+            technique->loadPendingResources();
+    }
+
+    MaterialPtr Material::fromFile(const std::string& name)
+    {
+        return fromFile(Services::fileSystem()->openFile(name).get());
+    }
+
+    MaterialPtr Material::fromFile(const FilePtr& file)
+    {
+        return fromFile(file.get());
+    }
+
+    MaterialPtr Material::fromFile(IFile* file)
+    {
+        if (!file)
+            return std::make_shared<Material>();
+
+        auto material = std::make_shared<Material>();
+        material->load(file);
+
+        return material;
     }
 
     void Material::registerLoader(std::unique_ptr<IMaterialLoader>&& loader)

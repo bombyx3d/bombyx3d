@@ -76,7 +76,7 @@ template<> void DepthWriteOption::applyToPass(MaterialPass& pass) const
     pass.setDepthWritingEnabled(value);
 }
 
-using ShaderOption = OptionValue<Option::DepthWrite, ShaderPtr>;
+using ShaderOption = OptionValue<Option::DepthWrite, std::string>;
 template<> void ShaderOption::applyToPass(MaterialPass& pass) const
 {
     pass.setShader(value);
@@ -132,7 +132,7 @@ template<> void UniformVec4::applyToPass(MaterialPass& pass, const std::string& 
     pass.setUniform(name, value);
 }
 
-using UniformTexture = UniformValue<Uniform::Texture, TexturePtr>;
+using UniformTexture = UniformValue<Uniform::Texture, std::string>;
 template<> void UniformTexture::applyToPass(MaterialPass& pass, const std::string& name) const
 {
     pass.setUniform(name, value);

@@ -53,23 +53,23 @@ namespace Engine
         void setBlendingSourceFactor(BlendFunc factor) { mBlendingSourceFactor = factor; }
         void setBlendingDestinationFactor(BlendFunc factor) { mBlendingDestinationFactor = factor; }
 
-        const ShaderPtr& shader() const { return mShader; }
-        void setShader(const ShaderPtr& shader) { mShader = shader; }
-        void setShader(ShaderPtr&& shader) { mShader = std::move(shader); }
+        const ShaderPtr& shader() const;
+        void setShader(const std::string& fileName);
 
         void setUniform(const std::string& name, float value);
         void setUniform(const std::string& name, const glm::vec2& value);
         void setUniform(const std::string& name, const glm::vec3& value);
         void setUniform(const std::string& name, const glm::vec4& value);
-        void setUniform(const std::string& name, const TexturePtr& value);
+        void setUniform(const std::string& name, const std::string& textureName);
 
         void setUniform(Atom name, float value);
         void setUniform(Atom name, const glm::vec2& value);
         void setUniform(Atom name, const glm::vec3& value);
         void setUniform(Atom name, const glm::vec4& value);
-        void setUniform(Atom name, const TexturePtr& value);
+        void setUniform(Atom name, const std::string& textureName);
 
         void apply(const RendererPtr& renderer) const override;
+        void loadPendingResources() override;
 
     private:
         enum Flag {
@@ -80,9 +80,11 @@ namespace Engine
 
         struct UniformValue;
         template <class TYPE> struct UniformValueT;
+        class UniformTexture;
 
         std::string mName;
-        ShaderPtr mShader;
+        mutable ShaderPtr mShader;
+        mutable std::unique_ptr<std::string> mShaderPath;
         unsigned mFlags = 0;
         BlendFunc mBlendingSourceFactor = BlendFunc::SrcAlpha;
         BlendFunc mBlendingDestinationFactor = BlendFunc::OneMinusSrcAlpha;
@@ -91,6 +93,7 @@ namespace Engine
         std::unordered_map<Atom, size_t> mUniformNames;
 
         void setFlag(Flag flag, bool value) { mFlags = value ? (mFlags | flag) : (mFlags & ~flag); }
+        void ensureShaderLoaded() const;
         size_t uniformIndex(Atom name);
 
         Z_DISABLE_COPY(MaterialPass);

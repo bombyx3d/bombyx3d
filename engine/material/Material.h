@@ -45,6 +45,12 @@ namespace Engine
         void addTechnique(const MaterialTechniquePtr& technique);
         void addTechnique(MaterialTechniquePtr&& technique);
 
+        bool load(const std::string& fileName);
+        bool load(const FilePtr& file);
+        bool load(IFile* file);
+
+        void loadPendingResources() override;
+
         static MaterialPtr fromFile(const std::string& fileName);
         static MaterialPtr fromFile(const FilePtr& file);
         static MaterialPtr fromFile(IFile* file);

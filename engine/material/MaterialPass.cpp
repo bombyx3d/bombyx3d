@@ -21,6 +21,7 @@
  */
 #include "MaterialPass.h"
 #include "engine/core/AtomTable.h"
+#include "engine/core/Services.h"
 
 #ifdef _MSC_VER
  #pragma warning(disable:4316)      // object allocated on the heap may not be aligned 16
@@ -31,14 +32,42 @@ namespace Engine
     struct MaterialPass::UniformValue
     {
         virtual ~UniformValue() = default;
+        virtual void loadPendingResources() const {}
         virtual void upload(const RendererPtr& renderer, Atom name) const = 0;
     };
 
-    template <class TYPE> struct MaterialPass::UniformValueT : public UniformValue
+    template <class TYPE> struct MaterialPass::UniformValueT : UniformValue
     {
         TYPE value;
         UniformValueT(const TYPE& v) : value(v) {}
-        void upload(const RendererPtr& renderer, Atom name) const override { renderer->setUniform(name, value); }
+        void upload(const RendererPtr& renderer, Atom name) const final override { renderer->setUniform(name, value); }
+    };
+
+    class MaterialPass::UniformTexture : public UniformValue
+    {
+    public:
+        UniformTexture(const std::string& path)
+            : mTexturePath(new std::string(path))
+        {
+        }
+
+        void loadPendingResources() const final override
+        {
+            if (!mTexture && mTexturePath) {
+                mTexture = Services::resourceManager()->getTexture(*mTexturePath);
+                mTexturePath.reset();
+            }
+        }
+
+        void upload(const RendererPtr& renderer, Atom name) const final override
+        {
+            loadPendingResources();
+            renderer->setUniform(name, mTexture);
+        }
+
+    private:
+        mutable std::unique_ptr<std::string> mTexturePath;
+        mutable TexturePtr mTexture;
     };
 
 
@@ -54,6 +83,18 @@ namespace Engine
     const std::string& MaterialPass::name() const
     {
         return mName;
+    }
+
+    const ShaderPtr& MaterialPass::shader() const
+    {
+        ensureShaderLoaded();
+        return mShader;
+    }
+
+    void MaterialPass::setShader(const std::string& fileName)
+    {
+        mShader.reset();
+        mShaderPath.reset(new std::string(fileName));
     }
 
     void MaterialPass::setUniform(const std::string& name, float value)
@@ -76,9 +117,9 @@ namespace Engine
         setUniform(AtomTable::instance()->getAtom(name), value);
     }
 
-    void MaterialPass::setUniform(const std::string& name, const TexturePtr& value)
+    void MaterialPass::setUniform(const std::string& name, const std::string& textureName)
     {
-        setUniform(AtomTable::instance()->getAtom(name), value);
+        setUniform(AtomTable::instance()->getAtom(name), textureName);
     }
 
     void MaterialPass::setUniform(Atom name, float value)
@@ -105,15 +146,15 @@ namespace Engine
         mUniforms[index].second.reset(new UniformValueT<glm::vec4>(value));
     }
 
-    void MaterialPass::setUniform(Atom name, const TexturePtr& value)
+    void MaterialPass::setUniform(Atom name, const std::string& textureName)
     {
         size_t index = uniformIndex(name);
-        mUniforms[index].second.reset(new UniformValueT<TexturePtr>(value));
+        mUniforms[index].second.reset(new UniformTexture(textureName));
     }
 
     void MaterialPass::apply(const RendererPtr& renderer) const
     {
-        renderer->useShader(mShader);
+        renderer->useShader(shader());
 
         renderer->setCullFace(mCullFace);
         renderer->setDepthTestingEnabled((mFlags & DepthTest) != 0);
@@ -126,6 +167,21 @@ namespace Engine
 
         for (const auto& it : mUniforms)
             it.second->upload(renderer, it.first);
+    }
+
+    void MaterialPass::loadPendingResources()
+    {
+        ensureShaderLoaded();
+        for (const auto& it : mUniforms)
+            it.second->loadPendingResources();
+    }
+
+    void MaterialPass::ensureShaderLoaded() const
+    {
+        if (!mShader && mShaderPath) {
+            mShader = Services::resourceManager()->getShader(*mShaderPath);
+            mShaderPath.reset();
+        }
     }
 
     size_t MaterialPass::uniformIndex(Atom name)

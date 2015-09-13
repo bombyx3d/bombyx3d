@@ -103,8 +103,7 @@ ACTION(DepthWriteOption, {
 ACTION(ShaderOption, {
     std::string shaderName = pop(context.stringValues);
     std::string fileName = FileUtils::makeFullPath(shaderName, context.materialFileName);
-    ShaderPtr shader = Services::resourceManager()->getShader(fileName);
-    context.emitOption<Tree::ShaderOption>(shader);
+    context.emitOption<Tree::ShaderOption>(fileName);
 });
 
 //////////////////////////////////////////////////////////////////////////////
@@ -139,8 +138,7 @@ ACTION(UniformVec4Value, {
 ACTION(UniformTextureValue, {
     std::string textureName = pop(context.stringValues);
     std::string fileName = FileUtils::makeFullPath(textureName, context.materialFileName);
-    TexturePtr texture = Services::resourceManager()->getTexture(fileName);
-    context.uniformValue.reset(new Tree::UniformTexture(std::move(texture)));
+    context.uniformValue.reset(new Tree::UniformTexture(std::move(fileName)));
 });
 
 ACTION(Uniform, {

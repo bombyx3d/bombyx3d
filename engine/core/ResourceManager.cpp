@@ -22,6 +22,7 @@
 #include "ResourceManager.h"
 #include "engine/core/Log.h"
 #include "engine/core/Services.h"
+#include "engine/material/Material.h"
 #include "engine/image/Image.h"
 #include "engine/interfaces/render/IRenderer.h"
 #include "engine/interfaces/core/IThreadManager.h"
@@ -121,6 +122,32 @@ namespace Engine
     int ResourceManager::numPendingResources() const
     {
         return mNumPendingResources->load();
+    }
+
+    MaterialPtr ResourceManager::getMaterial(const std::string& fileName, bool async)
+    {
+        struct MaterialResourceLoader : public ResourceLoader<MaterialPtr>
+        {
+            std::shared_ptr<Material> mMaterial;
+
+            MaterialPtr create() override
+            {
+                mMaterial = std::make_shared<Material>();
+                return mMaterial;
+            }
+
+            bool load() override
+            {
+                return mMaterial->load(fileName);
+            }
+
+            void setup(const MaterialPtr&) override
+            {
+                mMaterial->loadPendingResources();
+            }
+        };
+
+        return getResource<MaterialResourceLoader>(mMaterials, fileName, async, mNumPendingResources);
     }
 
     ShaderPtr ResourceManager::getShader(const std::string& fileName, bool async)

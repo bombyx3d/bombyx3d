@@ -26,12 +26,14 @@
 
 namespace Engine
 {
+    class Material;
+
     class IMaterialLoader
     {
     public:
         virtual ~IMaterialLoader() = default;
 
         virtual bool canLoadMaterial(IFile* file) = 0;
-        virtual MaterialPtr loadMaterial(IFile* file) = 0;
+        virtual bool loadMaterial(IFile* file, Material* material) = 0;
     };
 }

@@ -69,4 +69,10 @@ namespace Engine
     {
         mPasses.emplace_back(std::move(pass));
     }
+
+    void MaterialTechnique::loadPendingResources()
+    {
+        for (const auto& pass : mPasses)
+            pass->loadPendingResources();
+    }
 }

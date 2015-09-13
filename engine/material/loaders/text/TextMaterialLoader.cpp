@@ -20,12 +20,12 @@
  * THE SOFTWARE.
  */
 #include "TextMaterialLoader.h"
+#include "engine/utility/StringUtils.h"
 #include "engine/utility/FileUtils.h"
 #include "engine/material/Material.h"
 #include "engine/material/MaterialTechnique.h"
 #include "engine/material/MaterialPass.h"
 #include "engine/core/Log.h"
-#include "engine/utility/StringUtils.h"
 #include <pegtl.hh>
 #include <pegtl/analyze.hh>
 #include <vector>
@@ -60,10 +60,10 @@ namespace Engine
         }
     }
 
-    MaterialPtr TextMaterialLoader::loadMaterial(IFile* file)
+    bool TextMaterialLoader::loadMaterial(IFile* file, Material* material)
     {
         if (!file)
-            return std::make_shared<Material>();
+            return false;
 
         std::vector<char> data = FileUtils::loadFile(file);
 
@@ -83,7 +83,7 @@ namespace Engine
             pegtl::parse<Grammar::File, GrammarActions::Action>(p, size, "", context);
         } catch (const pegtl::parse_error& error) {
             Z_LOGE("Unable to parse material \"" << file->name() << "\": " << error.what());
-            return std::make_shared<Material>();
+            return false;
         }
 
         assert(context.currentTechnique == nullptr);
@@ -99,8 +99,6 @@ namespace Engine
         assert(context.passName == nullptr);
 
         auto rootTree = context.currentFile;
-        auto material = std::make_shared<Material>();
-
         for (const auto& techniqueTree : rootTree->techniques) {
             const std::string& techniqueName = (techniqueTree->name ? *techniqueTree->name : gEmptyString);
             auto technique = std::make_shared<MaterialTechnique>(techniqueName);
@@ -134,7 +132,7 @@ namespace Engine
             material->addTechnique(std::move(technique));
         }
 
-        return material;
+        return true;
     }
 
     bool TextMaterialLoader::canLoadMaterial(IFile* file)

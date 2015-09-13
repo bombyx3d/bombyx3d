@@ -36,12 +36,14 @@ namespace Engine
         ResourceManager();
         ~ResourceManager();
 
-        int numPendingResources() const;
+        int numPendingResources() const override;
 
-        ShaderPtr getShader(const std::string& fileName, bool async = true);
-        TexturePtr getTexture(const std::string& fileName, bool async = true);
+        MaterialPtr getMaterial(const std::string& fileName, bool async = true) override;
+        ShaderPtr getShader(const std::string& fileName, bool async = true) override;
+        TexturePtr getTexture(const std::string& fileName, bool async = true) override;
 
     private:
+        std::unordered_map<std::string, std::weak_ptr<IMaterial>> mMaterials;
         std::unordered_map<std::string, std::weak_ptr<IShader>> mShaders;
         std::unordered_map<std::string, std::weak_ptr<ITexture>> mTextures;
         std::shared_ptr<std::atomic<int>> mNumPendingResources;

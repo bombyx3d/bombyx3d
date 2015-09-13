@@ -32,6 +32,8 @@ namespace Engine
     public:
         virtual ~IMaterial() = default;
 
+        virtual void loadPendingResources() = 0;
+
         virtual size_t numTechniques() const = 0;
         virtual const MaterialTechniquePtr& technique(const std::string& name) const = 0;
         virtual const MaterialTechniquePtr& technique(size_t index) const = 0;

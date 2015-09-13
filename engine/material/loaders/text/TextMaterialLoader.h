@@ -30,7 +30,7 @@ namespace Engine
     public:
         TextMaterialLoader() = default;
 
-        MaterialPtr loadMaterial(IFile* file) override;
+        bool loadMaterial(IFile* file, Material* material) override;
         bool canLoadMaterial(IFile* file) override;
     };
 }
