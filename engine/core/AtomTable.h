@@ -34,10 +34,8 @@ namespace Engine
     class AtomTable
     {
     public:
-        static AtomTable* instance() { return &mInstance; }
-
-        Atom getAtom(std::string&& text);
-        Atom getAtom(const std::string& text);
+        static Atom getAtom(std::string&& text);
+        static Atom getAtom(const std::string& text);
 
     private:
         struct HashFunction

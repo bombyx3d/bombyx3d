@@ -99,27 +99,27 @@ namespace Engine
 
     void MaterialPass::setUniform(const std::string& name, float value)
     {
-        setUniform(AtomTable::instance()->getAtom(name), value);
+        setUniform(AtomTable::getAtom(name), value);
     }
 
     void MaterialPass::setUniform(const std::string& name, const glm::vec2& value)
     {
-        setUniform(AtomTable::instance()->getAtom(name), value);
+        setUniform(AtomTable::getAtom(name), value);
     }
 
     void MaterialPass::setUniform(const std::string& name, const glm::vec3& value)
     {
-        setUniform(AtomTable::instance()->getAtom(name), value);
+        setUniform(AtomTable::getAtom(name), value);
     }
 
     void MaterialPass::setUniform(const std::string& name, const glm::vec4& value)
     {
-        setUniform(AtomTable::instance()->getAtom(name), value);
+        setUniform(AtomTable::getAtom(name), value);
     }
 
     void MaterialPass::setUniform(const std::string& name, const std::string& textureName)
     {
-        setUniform(AtomTable::instance()->getAtom(name), textureName);
+        setUniform(AtomTable::getAtom(name), textureName);
     }
 
     void MaterialPass::setUniform(Atom name, float value)

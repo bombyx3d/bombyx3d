@@ -224,7 +224,7 @@ namespace Engine
             int location = glGetUniformLocation(program, nameBuffer);
             assert(location >= 0);
 
-            Atom atom = AtomTable::instance()->getAtom(std::string(nameBuffer, size_t(nameLength)));
+            Atom atom = AtomTable::getAtom(std::string(nameBuffer, size_t(nameLength)));
             mUniforms.emplace_back(atom, location);
         }
 
@@ -242,7 +242,7 @@ namespace Engine
             int location = glGetAttribLocation(program, nameBuffer);
             assert(location >= 0);
 
-            Atom atom = AtomTable::instance()->getAtom(std::string(nameBuffer, size_t(nameLength)));
+            Atom atom = AtomTable::getAtom(std::string(nameBuffer, size_t(nameLength)));
             mAttributes.emplace_back(atom, location);
         }
     }

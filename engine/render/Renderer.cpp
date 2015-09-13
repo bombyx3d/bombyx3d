@@ -32,8 +32,8 @@
 namespace Engine
 {
     Renderer::Renderer()
-        : mProjectionMatrixUniform(AtomTable::instance()->getAtom("uProjection"))
-        , mModelViewMatrixUniform(AtomTable::instance()->getAtom("uModelView"))
+        : mProjectionMatrixUniform(AtomTable::getAtom("uProjection"))
+        , mModelViewMatrixUniform(AtomTable::getAtom("uModelView"))
         , mProjectionMatrix(1.0f)
         , mModelViewMatrix(1.0f)
         , mShouldRebindUniforms(true)

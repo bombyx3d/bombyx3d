@@ -59,7 +59,7 @@ namespace Engine
         for (size_t i = 0; i < attributeCount; i++) {
             const auto& attribute = attributes.attribute(i);
 
-            Atom name = AtomTable::instance()->getAtom(attribute.name);
+            Atom name = AtomTable::getAtom(attribute.name);
             setAttribute(name, attribute.type, buffer, attribute.offset, stride, attribute.normalize);
         }
     }

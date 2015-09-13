@@ -66,28 +66,28 @@ namespace Engine
 
     Atom AtomTable::getAtom(std::string&& text)
     {
-        std::lock_guard<decltype(mMutex)> lock(mMutex);
+        std::lock_guard<decltype(mInstance.mMutex)> lock(mInstance.mMutex);
 
-        auto it = mMap.find(&text);
-        if (it != mMap.end())
+        auto it = mInstance.mMap.find(&text);
+        if (it != mInstance.mMap.end())
             return Atom(it->second.get());
 
-        Entry* entry = new Entry(mMap.size() + 1, std::move(text));
-        mMap.emplace(&entry->text, std::unique_ptr<Entry>(entry));
+        Entry* entry = new Entry(mInstance.mMap.size() + 1, std::move(text));
+        mInstance.mMap.emplace(&entry->text, std::unique_ptr<Entry>(entry));
 
         return Atom(entry);
     }
 
     Atom AtomTable::getAtom(const std::string& text)
     {
-        std::lock_guard<decltype(mMutex)> lock(mMutex);
+        std::lock_guard<decltype(mInstance.mMutex)> lock(mInstance.mMutex);
 
-        auto it = mMap.find(&text);
-        if (it != mMap.end())
+        auto it = mInstance.mMap.find(&text);
+        if (it != mInstance.mMap.end())
             return Atom(it->second.get());
 
-        Entry* entry = new Entry(mMap.size() + 1, text);
-        mMap.emplace(&entry->text, std::unique_ptr<Entry>(entry));
+        Entry* entry = new Entry(mInstance.mMap.size() + 1, text);
+        mInstance.mMap.emplace(&entry->text, std::unique_ptr<Entry>(entry));
 
         return Atom(entry);
     }
