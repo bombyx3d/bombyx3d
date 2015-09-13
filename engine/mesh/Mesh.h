@@ -46,17 +46,17 @@ namespace Engine
 
         size_t appendVertices(size_t count, VERTEX** vertices)
         {
-            size_t index = mVertices.size();
-            mVertices.resize(mVertices.size() + count);
-            *vertices = &mVertices[index];
+            size_t index = mVertexData.size();
+            mVertexData.resize(mVertexData.size() + count);
+            *vertices = &mVertexData[index];
             return index;
         }
 
         size_t appendIndices(size_t count, uint16_t** indices)
         {
-            size_t offset = mIndices.size();
-            mIndices.resize(offset + count);
-            *indices = &mIndices[offset];
+            size_t offset = mIndexData.size();
+            mIndexData.resize(offset + count);
+            *indices = &mIndexData[offset];
             return offset;
         }
 
