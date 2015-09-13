@@ -314,7 +314,6 @@ namespace Engine
             pegtl::parse<Grammar::File, Actions::Action>(p, size, "", context);
         } catch (const pegtl::parse_error& error) {
             Z_LOGE("Unable to parse material \"" << file->name() << "\": " << error.what());
-            abort();
         }
 
         assert(context.currentTechnique == nullptr);
