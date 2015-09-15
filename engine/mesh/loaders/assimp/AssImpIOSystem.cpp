@@ -19,18 +19,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "engine/interfaces/mesh/IMeshLoader.h"
+#include "AssImpIOSystem.h"
+#include "AssImpIOStream.h"
+#include "engine/core/Services.h"
+#include <cassert>
+#include <cstring>
 
 namespace Engine
 {
-    class AssImpMeshLoader : public IMeshLoader
+    AssImpIOSystem::AssImpIOSystem(IFile* primaryFile)
+        : mPrimaryFile(primaryFile)
     {
-    public:
-        AssImpMeshLoader();
+    }
 
-        bool canLoadMesh(IFile* file) override;
-        MeshPtr loadMesh(IFile* file, bool loadSkeleton) override;
-    };
+    char AssImpIOSystem::getOsSeparator() const
+    {
+        return '/';
+    }
+
+    bool AssImpIOSystem::Exists(const char* fileName) const
+    {
+        return Services::fileSystem()->fileExists(fileName);
+    }
+
+    Assimp::IOStream* AssImpIOSystem::Open(const char* fileName, const char* mode)
+    {
+        if (!fileName || !mode || (strcmp(mode, "r") != 0 && strcmp(mode, "rb") != 0)) {
+            assert(false);
+            return nullptr;
+        }
+
+        if (mPrimaryFile->name() == fileName)
+            return new AssImpIOStream(mPrimaryFile);
+
+        if (!Services::fileSystem()->fileExists(fileName))
+            return nullptr;
+
+        FilePtr file = Services::fileSystem()->openFile(fileName);
+        if (!file)
+            return nullptr;
+
+        return new AssImpIOStream(file);
+    }
+
+    void AssImpIOSystem::Close(Assimp::IOStream* file)
+    {
+        delete file;
+    }
 }

@@ -21,16 +21,15 @@
  */
 
 #pragma once
-#include "engine/interfaces/mesh/IMeshLoader.h"
+#include <assimp/DefaultLogger.hpp>
 
 namespace Engine
 {
-    class AssImpMeshLoader : public IMeshLoader
+    class AssImpLogStream : public Assimp::LogStream
     {
     public:
-        AssImpMeshLoader();
+        void write(const char* message) override;
 
-        bool canLoadMesh(IFile* file) override;
-        MeshPtr loadMesh(IFile* file, bool loadSkeleton) override;
+        static void init();
     };
 }

@@ -21,6 +21,7 @@
  */
 
 #pragma once
+#include <memory>
 #include <string>
 
 namespace Engine
@@ -55,4 +56,6 @@ namespace Engine
         size_t mIndexBufferOffset = 0;
         size_t mIndexCount = 0;
     };
+
+    using MeshElementPtr = std::shared_ptr<MeshElement>;
 }

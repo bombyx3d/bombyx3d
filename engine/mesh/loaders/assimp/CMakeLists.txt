@@ -21,6 +21,12 @@
 #
 
 set(source_files
+    AssImpIOStream.cpp
+    AssImpIOStream.h
+    AssImpIOSystem.cpp
+    AssImpIOSystem.h
+    AssImpLogStream.cpp
+    AssImpLogStream.h
     AssImpMeshLoader.cpp
     AssImpMeshLoader.h
 )

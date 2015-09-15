@@ -21,16 +21,27 @@
  */
 
 #pragma once
-#include "engine/interfaces/mesh/IMeshLoader.h"
+#include "engine/core/macros.h"
+#include "engine/interfaces/io/IFile.h"
+#include <assimp/IOSystem.hpp>
 
 namespace Engine
 {
-    class AssImpMeshLoader : public IMeshLoader
+    class AssImpIOSystem : public Assimp::IOSystem
     {
     public:
-        AssImpMeshLoader();
+        explicit AssImpIOSystem(IFile* primaryFile);
 
-        bool canLoadMesh(IFile* file) override;
-        MeshPtr loadMesh(IFile* file, bool loadSkeleton) override;
+        char getOsSeparator() const override;
+
+        bool Exists(const char* fileName) const override;
+
+        Assimp::IOStream* Open(const char* fileName, const char* mode = "rb") override;
+        void Close(Assimp::IOStream* file) override;
+
+    private:
+        IFile* mPrimaryFile;
+
+        Z_DISABLE_COPY(AssImpIOSystem);
     };
 }

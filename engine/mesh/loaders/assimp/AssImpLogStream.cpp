@@ -19,18 +19,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "engine/interfaces/mesh/IMeshLoader.h"
+#include "AssImpLogStream.h"
+#include "engine/core/Log.h"
+#include <mutex>
+#include <cstring>
 
 namespace Engine
 {
-    class AssImpMeshLoader : public IMeshLoader
+    void AssImpLogStream::write(const char* message)
     {
-    public:
-        AssImpMeshLoader();
+        size_t length = strlen(message);
+        if (length > 0 && message[length - 1] == '\n')
+            --length;
+        Z_LOGI(" - AssImp: " << std::string(message, length));
+    }
 
-        bool canLoadMesh(IFile* file) override;
-        MeshPtr loadMesh(IFile* file, bool loadSkeleton) override;
-    };
+    static std::once_flag gInitOnce;
+    void AssImpLogStream::init()
+    {
+        std::call_once(gInitOnce, []() {
+            auto severity = Assimp::Logger::NORMAL;
+            //auto severity = Assimp::Logger::VERBOSE;
+            Assimp::DefaultLogger::create(nullptr, severity, 0, nullptr);
+
+            const unsigned int levels =
+                //Assimp::Logger::Debugging |
+                //Assimp::Logger::Info |
+                Assimp::Logger::Err |
+                Assimp::Logger::Warn;
+            Assimp::DefaultLogger::get()->attachStream(new AssImpLogStream, levels);
+        });
+    }
 }
