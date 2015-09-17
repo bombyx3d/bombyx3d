@@ -21,4 +21,16 @@
 #
 
 cmake_minimum_required(VERSION 3.2)
-add_subdirectory(samples)
+include(../../cmake/Engine.cmake)
+
+set(source_files
+    InitialLoadingScene.cpp
+    InitialLoadingScene.h
+    main.cpp
+)
+
+z_set_source_groups(${source_files})
+add_executable(sample ${source_files})
+
+set_target_properties(sample PROPERTIES CXX_STANDARD 11)
+target_link_libraries(sample engine engine-image-png engine-material-text engine-mesh-assimp)
