@@ -8,7 +8,7 @@ if(OPENGL_INCLUDE_DIR)
 endif()
 
 file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" src/*.c include/GL/*.h)
-set_source_groups(${source_files})
+z_set_source_groups(${source_files})
 
 add_library(glew STATIC EXCLUDE_FROM_ALL ${source_files})
 target_include_directories(glew BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")

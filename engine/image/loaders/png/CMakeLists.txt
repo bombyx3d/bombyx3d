@@ -26,7 +26,7 @@ set(source_files
 )
 
 add_library(engine-image-png STATIC EXCLUDE_FROM_ALL ${source_files})
-set_source_groups(${source_files})
+z_set_source_groups(${source_files})
 
 set_target_properties(engine-image-png PROPERTIES CXX_STANDARD 11)
 target_link_libraries(engine-image-png engine libpng)

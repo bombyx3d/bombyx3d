@@ -2,7 +2,7 @@
 project(cvtutf)
 
 set(source_files ConvertUTF.c ConvertUTF.h)
-set_source_groups(${source_files})
+z_set_source_groups(${source_files})
 
 add_library(cvtutf STATIC EXCLUDE_FROM_ALL ${source_files})
 

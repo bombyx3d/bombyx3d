@@ -122,7 +122,7 @@ set(source_files
 )
 
 add_library(engine STATIC EXCLUDE_FROM_ALL ${source_files})
-set_source_groups(${source_files})
+z_set_source_groups(${source_files})
 
 set_target_properties(engine PROPERTIES CXX_STANDARD 11)
 target_link_libraries(engine platform glm boost)
