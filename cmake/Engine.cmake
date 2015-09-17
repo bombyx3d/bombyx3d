@@ -27,6 +27,7 @@ get_filename_component(CMakeScriptsPath "${CMakeScriptsPath}" PATH)
 get_filename_component(EnginePath "${CMakeScriptsPath}" PATH)
 
 include("${CMakeScriptsPath}/SetSourceGroups.cmake")
+include("${CMakeScriptsPath}/MakeExecutable.cmake")
 
 find_package(Threads REQUIRED)
 
