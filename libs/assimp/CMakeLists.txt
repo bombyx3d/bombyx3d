@@ -21,7 +21,7 @@ file(GLOB source_files
     contrib/clipper/*.hpp
 )
 
-file(GLOB code_inl_files code/*.inl)
+file(GLOB code_inl_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" code/*.inl)
 set_source_files_properties(${code_inl_files} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 set_source_groups(${source_files} ${code_inl_files})
