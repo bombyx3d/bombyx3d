@@ -22,7 +22,7 @@
 
 #pragma once
 #include "engine/interfaces/io/IFile.h"
-#include "engine/interfaces/mesh/IMesh.h"
+#include "engine/interfaces/mesh/IMeshData.h"
 
 namespace Engine
 {
@@ -32,6 +32,6 @@ namespace Engine
         virtual ~IMeshLoader() = default;
 
         virtual bool canLoadMesh(IFile* file) = 0;
-        virtual MeshPtr loadMesh(IFile* file, bool loadSkeleton) = 0;
+        virtual MeshDataPtr loadMesh(IFile* file, bool loadSkeleton) = 0;
     };
 }

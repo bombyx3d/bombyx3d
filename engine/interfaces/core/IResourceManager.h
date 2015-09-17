@@ -22,6 +22,7 @@
 
 #pragma once
 #include "engine/interfaces/material/IMaterial.h"
+#include "engine/interfaces/mesh/IMesh.h"
 #include "engine/interfaces/render/IShader.h"
 #include "engine/interfaces/render/ITexture.h"
 #include <memory>
@@ -38,6 +39,7 @@ namespace Engine
         virtual MaterialPtr getMaterial(const std::string& fileName, bool async = true) = 0;
         virtual ShaderPtr getShader(const std::string& fileName, bool async = true) = 0;
         virtual TexturePtr getTexture(const std::string& fileName, bool async = true) = 0;
+        virtual MeshPtr getStaticMesh(const std::string& fileName, bool async = true) = 0;
     };
 
     using ResourceManagerPtr = std::shared_ptr<IResourceManager>;

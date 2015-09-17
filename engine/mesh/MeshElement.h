@@ -21,24 +21,30 @@
  */
 
 #pragma once
+#include "engine/core/Services.h"
+#include "engine/utility/RenderUtils.h"
+#include "engine/interfaces/mesh/IMeshElement.h"
 #include <memory>
 #include <string>
 
 namespace Engine
 {
-    class MeshElement
+    template <class VERTEX> class MeshElement : public IMeshElement
     {
     public:
         MeshElement() = default;
         ~MeshElement() = default;
 
-        const std::string& name() const { return mName; }
+        const std::string& name() const override { return mName; }
         void setName(const std::string& elementName) { mName = elementName; }
         void setName(std::string&& elementName) { mName = std::move(elementName); }
 
-        const std::string& materialName() const { return mMaterialName; }
-        void setMaterialName(const std::string& matName) { mMaterialName = matName; }
-        void setMaterialName(std::string&& matName) { mMaterialName = std::move(matName); }
+        const std::string& materialName() const override { return mMaterialName; }
+        void setMaterialName(const std::string& matName) { mMaterialName = matName; mMaterial.reset(); }
+        void setMaterialName(std::string&& matName) { mMaterialName = std::move(matName); mMaterial.reset(); }
+
+        PrimitiveType primitiveType() const override { return mPrimitiveType; }
+        void setPrimitiveType(PrimitiveType type) { mPrimitiveType = type; }
 
         size_t vertexBufferOffset() const { return mVertexBufferOffset; }
         size_t vertexCount() const { return mVertexCount; }
@@ -48,14 +54,29 @@ namespace Engine
         size_t indexCount() const { return mIndexCount; }
         void setIndexRange(size_t offset, size_t count) { mIndexBufferOffset = offset; mIndexCount = count; }
 
+        const MaterialPtr& material() const override
+        {
+            if (!mMaterial)
+                mMaterial = Services::resourceManager()->getMaterial(mMaterialName);
+            return mMaterial;
+        }
+
+        const VertexSourcePtr& vertexSource() const
+        {
+            //if (!mVertexSource)
+                //mVertexSource = RenderUtils::createVertexSource(vertexBuffer, indexBuffer);
+            return mVertexSource;
+        }
+
     private:
         std::string mName;
         std::string mMaterialName;
+        mutable MaterialPtr mMaterial;
+        VertexSourcePtr mVertexSource;
         size_t mVertexBufferOffset = 0;
         size_t mVertexCount = 0;
         size_t mIndexBufferOffset = 0;
         size_t mIndexCount = 0;
+        PrimitiveType mPrimitiveType = PrimitiveType::Points;
     };
-
-    using MeshElementPtr = std::shared_ptr<MeshElement>;
 }

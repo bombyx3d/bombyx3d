@@ -21,6 +21,8 @@
  */
 
 #pragma once
+#include "engine/interfaces/render/IIndexBuffer.h"
+#include "engine/interfaces/render/IVertexBuffer.h"
 #include <memory>
 
 namespace Engine
@@ -29,6 +31,9 @@ namespace Engine
     {
     public:
         virtual ~IMesh() = default;
+
+        virtual const VertexBufferPtr& vertexBuffer() const = 0;
+        virtual const IndexBufferPtr& indexBuffer() const = 0;
     };
 
     using MeshPtr = std::shared_ptr<IMesh>;

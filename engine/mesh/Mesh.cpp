@@ -19,37 +19,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "engine/core/macros.h"
-#include "engine/interfaces/core/IResourceManager.h"
-#include <string>
-#include <unordered_map>
-#include <memory>
-#include <atomic>
+#include "Mesh.h"
+#include "engine/core/Services.h"
 
 namespace Engine
 {
-    class ResourceManager : public IResourceManager
+    Mesh::Mesh()
     {
-    public:
-        ResourceManager();
-        ~ResourceManager();
+        mVertexBuffer = Services::renderer()->createVertexBuffer();
+        mIndexBuffer = Services::renderer()->createIndexBuffer();
+    }
 
-        int numPendingResources() const override;
+    Mesh::~Mesh()
+    {
+    }
 
-        MaterialPtr getMaterial(const std::string& fileName, bool async = true) override;
-        ShaderPtr getShader(const std::string& fileName, bool async = true) override;
-        TexturePtr getTexture(const std::string& fileName, bool async = true) override;
-        MeshPtr getStaticMesh(const std::string& fileName, bool async = true) override;
+    void Mesh::setData(const MeshDataPtr& data, BufferUsage usage)
+    {
+        mElements = data->elements();
 
-    private:
-        std::unordered_map<std::string, std::weak_ptr<IMaterial>> mMaterials;
-        std::unordered_map<std::string, std::weak_ptr<IShader>> mShaders;
-        std::unordered_map<std::string, std::weak_ptr<ITexture>> mTextures;
-        std::unordered_map<std::string, std::weak_ptr<IMesh>> mStaticMeshes;
-        std::shared_ptr<std::atomic<int>> mNumPendingResources;
+        const auto& vertices = data->vertexData();
+        mVertexBuffer->setData(vertices.data(), vertices.size(), usage);
 
-        Z_DISABLE_COPY(ResourceManager);
-    };
+        const auto& indices = data->indexData();
+        mIndexBuffer->setData(indices.data(), indices.size(), usage);
+    }
+
+    void Mesh::setData(MeshDataPtr&& data, BufferUsage usage)
+    {
+        mElements = std::move(data->moveElements());
+
+        const auto& vertices = data->vertexData();
+        mVertexBuffer->setData(vertices.data(), vertices.size(), usage);
+
+        const auto& indices = data->indexData();
+        mIndexBuffer->setData(indices.data(), indices.size(), usage);
+    }
 }

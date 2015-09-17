@@ -22,48 +22,30 @@
 
 #pragma once
 #include "engine/interfaces/mesh/IMesh.h"
+#include "engine/interfaces/mesh/IMeshData.h"
+#include "engine/interfaces/mesh/IMeshElement.h"
 #include "engine/core/macros.h"
-#include "engine/mesh/MeshElement.h"
 #include <vector>
 #include <cstdint>
 
 namespace Engine
 {
-    template <class VERTEX> class Mesh : public IMesh
+    class Mesh : public IMesh
     {
     public:
         Mesh();
         ~Mesh();
 
-        const std::vector<MeshElement>& elements() const { return mElements; }
-        void addElement(const MeshElement& element) { mElements.emplace_back(element); }
-        void addElement(MeshElement&& element) { mElements.emplace_back(std::move(element)); }
-        void setElements(const std::vector<MeshElement>& e) { mElements = e; }
-        void setElements(std::vector<MeshElement>&& e) { mElements = std::move(e); }
+        const VertexBufferPtr& vertexBuffer() const override { return mVertexBuffer; }
+        const IndexBufferPtr& indexBuffer() const override { return mIndexBuffer; }
 
-        const std::vector<VERTEX>& vertexData() const { return mVertexData; }
-        const std::vector<uint16_t>& indexData() const { return mIndexData; }
-
-        size_t appendVertices(size_t count, VERTEX** vertices)
-        {
-            size_t index = mVertexData.size();
-            mVertexData.resize(mVertexData.size() + count);
-            *vertices = &mVertexData[index];
-            return index;
-        }
-
-        size_t appendIndices(size_t count, uint16_t** indices)
-        {
-            size_t offset = mIndexData.size();
-            mIndexData.resize(offset + count);
-            *indices = &mIndexData[offset];
-            return offset;
-        }
+        void setData(const MeshDataPtr& data, BufferUsage usage);
+        void setData(MeshDataPtr&& data, BufferUsage usage);
 
     private:
-        std::vector<MeshElement> mElements;
-        std::vector<VERTEX> mVertexData;
-        std::vector<uint16_t> mIndexData;
+        VertexBufferPtr mVertexBuffer;
+        IndexBufferPtr mIndexBuffer;
+        std::vector<MeshElementPtr> mElements;
 
         Z_DISABLE_COPY(Mesh);
     };

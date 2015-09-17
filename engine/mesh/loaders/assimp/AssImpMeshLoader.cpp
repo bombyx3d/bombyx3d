@@ -23,7 +23,7 @@
 #include "AssImpLogStream.h"
 #include "AssImpIOSystem.h"
 #include "AssImpIOStream.h"
-#include "engine/mesh/Mesh.h"
+#include "engine/mesh/MeshData.h"
 #include "engine/mesh/MeshElement.h"
 #include "engine/mesh/VertexFormat.h"
 #include "engine/core/Log.h"
@@ -55,9 +55,9 @@ namespace Engine
         return true;
     }
 
-    MeshPtr AssImpMeshLoader::loadMesh(IFile* file, bool loadSkeleton)
+    MeshDataPtr AssImpMeshLoader::loadMesh(IFile* file, bool loadSkeleton)
     {
-        auto mesh = std::make_shared<Mesh<Vertex>>();
+        auto mesh = std::make_shared<MeshData>();
 
         if (!file)
             return mesh;
@@ -139,12 +139,12 @@ namespace Engine
                 continue;
             }
 
-            MeshElement element;
-            element.setName(std::string(sceneMesh->mName.data, sceneMesh->mName.length));
+            auto element = std::make_shared<MeshElement<Vertex>>();
+            element->setName(std::string(sceneMesh->mName.data, sceneMesh->mName.length));
 
             const aiMaterial* sceneMeshMaterial = scene->mMaterials[sceneMesh->mMaterialIndex];
             if (sceneMeshMaterial->Get(AI_MATKEY_NAME, materialName) == AI_SUCCESS)
-                element.setMaterialName(std::string(materialName.data, materialName.length));
+                element->setMaterialName(std::string(materialName.data, materialName.length));
 
             Vertex* vertices = nullptr;
 
@@ -246,8 +246,8 @@ namespace Engine
                 *indices++ = uint16_t(sceneMesh->mFaces[i].mIndices[2]);
             }
 
-            element.setVertexRange(vertexBufferOffset, vertexCount);
-            element.setIndexRange(indexBufferOffset, indexCount);
+            element->setVertexRange(vertexBufferOffset, vertexCount);
+            element->setIndexRange(indexBufferOffset, indexCount);
 
             mesh->addElement(std::move(element));
         }

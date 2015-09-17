@@ -21,35 +21,24 @@
  */
 
 #pragma once
-#include "engine/core/macros.h"
-#include "engine/interfaces/core/IResourceManager.h"
-#include <string>
-#include <unordered_map>
+#include "engine/interfaces/material/IMaterial.h"
 #include <memory>
-#include <atomic>
 
 namespace Engine
 {
-    class ResourceManager : public IResourceManager
+    class IMeshElement
     {
     public:
-        ResourceManager();
-        ~ResourceManager();
+        virtual ~IMeshElement() = default;
 
-        int numPendingResources() const override;
+        virtual const std::string& name() const = 0;
 
-        MaterialPtr getMaterial(const std::string& fileName, bool async = true) override;
-        ShaderPtr getShader(const std::string& fileName, bool async = true) override;
-        TexturePtr getTexture(const std::string& fileName, bool async = true) override;
-        MeshPtr getStaticMesh(const std::string& fileName, bool async = true) override;
+        virtual const std::string& materialName() const = 0;
+        virtual const MaterialPtr& material() const = 0;
 
-    private:
-        std::unordered_map<std::string, std::weak_ptr<IMaterial>> mMaterials;
-        std::unordered_map<std::string, std::weak_ptr<IShader>> mShaders;
-        std::unordered_map<std::string, std::weak_ptr<ITexture>> mTextures;
-        std::unordered_map<std::string, std::weak_ptr<IMesh>> mStaticMeshes;
-        std::shared_ptr<std::atomic<int>> mNumPendingResources;
-
-        Z_DISABLE_COPY(ResourceManager);
+        virtual PrimitiveType primitiveType() const = 0;
+        virtual const VertexSourcePtr& vertexSource() const = 0;
     };
+
+    using MeshElementPtr = std::shared_ptr<IMeshElement>;
 }
