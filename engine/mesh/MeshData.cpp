@@ -25,6 +25,9 @@
 
 namespace Engine
 {
+    std::vector<std::unique_ptr<IMeshLoader>> MeshData::mMeshLoaders;
+    std::mutex MeshData::mMeshLoadersMutex;
+
     MeshData::MeshData()
     {
     }
