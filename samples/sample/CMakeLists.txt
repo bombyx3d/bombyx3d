@@ -28,6 +28,8 @@ z_make_executable(sample
         InitialLoadingScene.cpp
         InitialLoadingScene.h
         main.cpp
+        MainScene.cpp
+        MainScene.h
     LIBRARIES
         engine-image-png
         engine-material-text

@@ -22,18 +22,30 @@
 
 #pragma once
 #include "engine/scene/AbstractScene.h"
+#include "engine/scene/3d/camera/OrbitCamera.h"
+#include "engine/interfaces/mesh/IMesh.h"
 
 namespace Game
 {
-    class InitialLoadingScene : public Engine::AbstractScene
+    class MainScene : public Engine::AbstractScene
     {
     public:
-        InitialLoadingScene();
-        ~InitialLoadingScene();
+        MainScene();
+        ~MainScene();
+
+        void resize(const glm::ivec2& newSize) override;
 
         void update(double time) override;
+        void draw(Engine::IRenderer* renderer) const override;
+
+        bool onTouchBegan(int fingerIndex, const glm::ivec2& position) override;
+        void onTouchMoved(int fingerIndex, const glm::ivec2& position) override;
+        void onTouchEnded(int fingerIndex) override;
+        void onTouchCancelled(int fingerIndex) override;
 
     private:
-        Engine::ScenePtr mMainScene;
+        Engine::OrbitCameraPtr mCamera;
+        Engine::MeshPtr mMesh;
+        glm::ivec2 mPrevTouchPosition;
     };
 }

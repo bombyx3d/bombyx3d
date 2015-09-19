@@ -20,6 +20,9 @@
  * THE SOFTWARE.
  */
 #include "InitialLoadingScene.h"
+#include "MainScene.h"
+#include "engine/core/Application.h"
+#include "engine/core/Services.h"
 
 using namespace Engine;
 
@@ -27,6 +30,7 @@ namespace Game
 {
     InitialLoadingScene::InitialLoadingScene()
     {
+        mMainScene = std::make_shared<MainScene>();
     }
 
     InitialLoadingScene::~InitialLoadingScene()
@@ -35,5 +39,7 @@ namespace Game
 
     void InitialLoadingScene::update(double)
     {
+        if (Services::resourceManager()->numPendingResources() == 0)
+            Application::instance()->setCurrentScene(mMainScene);
     }
 }
