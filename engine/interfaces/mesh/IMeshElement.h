@@ -36,8 +36,11 @@ namespace Engine
         virtual const std::string& materialName() const = 0;
         virtual const MaterialPtr& material() const = 0;
 
-        virtual PrimitiveType primitiveType() const = 0;
         virtual const VertexSourcePtr& vertexSource() const = 0;
+
+        virtual PrimitiveType primitiveType() const = 0;
+        virtual size_t indexBufferOffset() const = 0;
+        virtual size_t indexCount() const = 0;
     };
 
     using MeshElementPtr = std::shared_ptr<IMeshElement>;

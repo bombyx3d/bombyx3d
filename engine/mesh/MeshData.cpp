@@ -47,7 +47,7 @@ namespace Engine
     void* MeshData::appendVertices(size_t count, size_t* offset, size_t vertexSize)
     {
         *offset = mVertexData.size();
-        mVertexData.resize(mVertexData.size() + count * vertexSize);
+        mVertexData.resize(*offset + count * vertexSize);
         return &mVertexData[*offset];
     }
 

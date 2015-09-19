@@ -22,7 +22,6 @@
 
 #pragma once
 #include "engine/interfaces/mesh/IMeshData.h"
-#include "engine/interfaces/mesh/IMeshElement.h"
 #include "engine/interfaces/mesh/IMeshLoader.h"
 #include "engine/core/macros.h"
 #include <vector>
@@ -38,13 +37,13 @@ namespace Engine
         MeshData();
         ~MeshData();
 
-        const std::vector<MeshElementPtr>& elements() const override { return mElements; }
-        std::vector<MeshElementPtr>&& moveElements() override { return std::move(mElements); }
+        const std::vector<Element>& elements() const override { return mElements; }
+        std::vector<Element>&& moveElements() override { return std::move(mElements); }
 
-        void addElement(const MeshElementPtr& element) { mElements.emplace_back(element); }
-        void addElement(MeshElementPtr&& element) { mElements.emplace_back(std::move(element)); }
-        void setElements(const std::vector<MeshElementPtr>& e) { mElements = e; }
-        void setElements(std::vector<MeshElementPtr>&& e) { mElements = std::move(e); }
+        void addElement(const Element& element) { mElements.emplace_back(element); }
+        void addElement(Element&& element) { mElements.emplace_back(std::move(element)); }
+        void setElements(const std::vector<Element>& e) { mElements = e; }
+        void setElements(std::vector<Element>&& e) { mElements = std::move(e); }
 
         std::vector<uint8_t>& vertexData() { return mVertexData; }
         const std::vector<uint8_t>& vertexData() const override { return mVertexData; }
@@ -72,7 +71,7 @@ namespace Engine
         static std::vector<std::unique_ptr<IMeshLoader>> mMeshLoaders;
         static std::mutex mMeshLoadersMutex;
 
-        std::vector<MeshElementPtr> mElements;
+        std::vector<Element> mElements;
         std::vector<uint8_t> mVertexData;
         std::vector<uint16_t> mIndexData;
 

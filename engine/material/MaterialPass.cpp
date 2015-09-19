@@ -33,14 +33,14 @@ namespace Engine
     {
         virtual ~UniformValue() = default;
         virtual void loadPendingResources() const {}
-        virtual void upload(const RendererPtr& renderer, Atom name) const = 0;
+        virtual void upload(IRenderer* renderer, Atom name) const = 0;
     };
 
     template <class TYPE> struct MaterialPass::UniformValueT : UniformValue
     {
         TYPE value;
         UniformValueT(const TYPE& v) : value(v) {}
-        void upload(const RendererPtr& renderer, Atom name) const final override { renderer->setUniform(name, value); }
+        void upload(IRenderer* renderer, Atom name) const final override { renderer->setUniform(name, value); }
     };
 
     class MaterialPass::UniformTexture : public UniformValue
@@ -59,7 +59,7 @@ namespace Engine
             }
         }
 
-        void upload(const RendererPtr& renderer, Atom name) const final override
+        void upload(IRenderer* renderer, Atom name) const final override
         {
             loadPendingResources();
             renderer->setUniform(name, mTexture);
@@ -153,6 +153,11 @@ namespace Engine
     }
 
     void MaterialPass::apply(const RendererPtr& renderer) const
+    {
+        apply(renderer.get());
+    }
+
+    void MaterialPass::apply(IRenderer* renderer) const
     {
         renderer->useShader(shader());
 

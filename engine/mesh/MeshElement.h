@@ -22,17 +22,18 @@
 
 #pragma once
 #include "engine/core/Services.h"
-#include "engine/utility/RenderUtils.h"
+#include "engine/mesh/VertexFormat.h"
+#include "engine/interfaces/mesh/IMesh.h"
 #include "engine/interfaces/mesh/IMeshElement.h"
 #include <memory>
 #include <string>
 
 namespace Engine
 {
-    template <class VERTEX> class MeshElement : public IMeshElement
+    class MeshElement : public IMeshElement
     {
     public:
-        MeshElement() = default;
+        explicit MeshElement(const MeshPtr& mesh);
         ~MeshElement() = default;
 
         const std::string& name() const override { return mName; }
@@ -43,6 +44,9 @@ namespace Engine
         void setMaterialName(const std::string& matName) { mMaterialName = matName; mMaterial.reset(); }
         void setMaterialName(std::string&& matName) { mMaterialName = std::move(matName); mMaterial.reset(); }
 
+        const IVertexFormatAttributeList* vertexFormat() const { return mVertexFormat; }
+        void setVertexFormat(const IVertexFormatAttributeList* attributes) { mVertexFormat = attributes; }
+
         PrimitiveType primitiveType() const override { return mPrimitiveType; }
         void setPrimitiveType(PrimitiveType type) { mPrimitiveType = type; }
 
@@ -50,33 +54,24 @@ namespace Engine
         size_t vertexCount() const { return mVertexCount; }
         void setVertexRange(size_t offset, size_t count) { mVertexBufferOffset = offset; mVertexCount = count; }
 
-        size_t indexBufferOffset() const { return mIndexBufferOffset; }
-        size_t indexCount() const { return mIndexCount; }
+        size_t indexBufferOffset() const override { return mIndexBufferOffset; }
+        size_t indexCount() const override { return mIndexCount; }
         void setIndexRange(size_t offset, size_t count) { mIndexBufferOffset = offset; mIndexCount = count; }
 
-        const MaterialPtr& material() const override
-        {
-            if (!mMaterial)
-                mMaterial = Services::resourceManager()->getMaterial(mMaterialName);
-            return mMaterial;
-        }
-
-        const VertexSourcePtr& vertexSource() const
-        {
-            //if (!mVertexSource)
-                //mVertexSource = RenderUtils::createVertexSource(vertexBuffer, indexBuffer);
-            return mVertexSource;
-        }
+        const MaterialPtr& material() const override;
+        const VertexSourcePtr& vertexSource() const override;
 
     private:
+        std::weak_ptr<IMesh> mMesh;
         std::string mName;
         std::string mMaterialName;
         mutable MaterialPtr mMaterial;
-        VertexSourcePtr mVertexSource;
+        mutable VertexSourcePtr mVertexSource;
         size_t mVertexBufferOffset = 0;
         size_t mVertexCount = 0;
         size_t mIndexBufferOffset = 0;
         size_t mIndexCount = 0;
+        const IVertexFormatAttributeList* mVertexFormat = nullptr;
         PrimitiveType mPrimitiveType = PrimitiveType::Points;
     };
 }

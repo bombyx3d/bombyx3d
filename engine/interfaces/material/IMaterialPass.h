@@ -38,6 +38,7 @@ namespace Engine
         virtual void loadPendingResources() = 0;
 
         virtual void apply(const RendererPtr& renderer) const = 0;
+        virtual void apply(IRenderer* renderer) const = 0;
     };
 
     using MaterialPassPtr = std::shared_ptr<IMaterialPass>;

@@ -59,7 +59,7 @@ namespace Engine
         if (!file)
             return nullptr;
 
-        return new AssImpIOStream(file);
+        return new AssImpIOStream(std::move(file));
     }
 
     void AssImpIOSystem::Close(Assimp::IOStream* file)

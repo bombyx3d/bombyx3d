@@ -31,7 +31,7 @@ namespace Engine
     {
     public:
         explicit AssImpIOStream(IFile* file);
-        explicit AssImpIOStream(const FilePtr& file);
+        explicit AssImpIOStream(FilePtr&& file);
         ~AssImpIOStream();
 
         size_t FileSize() const override;

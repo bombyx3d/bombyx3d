@@ -19,26 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "engine/interfaces/render/IIndexBuffer.h"
-#include "engine/interfaces/render/IVertexBuffer.h"
-#include "engine/interfaces/mesh/IMeshElement.h"
-#include <memory>
-#include <vector>
+#include "MeshElement.h"
+#include <cassert>
 
 namespace Engine
 {
-    class IMesh
+    MeshElement::MeshElement(const MeshPtr& mesh)
+        : mMesh(mesh)
     {
-    public:
-        virtual ~IMesh() = default;
+    }
 
-        virtual const VertexBufferPtr& vertexBuffer() const = 0;
-        virtual const IndexBufferPtr& indexBuffer() const = 0;
+    const MaterialPtr& MeshElement::material() const
+    {
+        if (!mMaterial)
+            mMaterial = Services::resourceManager()->getMaterial(mMaterialName);
+        return mMaterial;
+    }
 
-        virtual const std::vector<MeshElementPtr>& elements() const = 0;
-    };
-
-    using MeshPtr = std::shared_ptr<IMesh>;
+    const VertexSourcePtr& MeshElement::vertexSource() const
+    {
+        if (!mVertexSource) {
+            auto mesh = mMesh.lock();
+            assert(mesh != nullptr);
+            mVertexSource = Services::renderer()->createVertexSource();
+            mVertexSource->setAttributes(*mVertexFormat, mesh->vertexBuffer());
+            mVertexSource->setIndexBuffer(mesh->indexBuffer());
+        }
+        return mVertexSource;
+    }
 }

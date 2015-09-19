@@ -69,6 +69,8 @@ namespace Engine
         void setUniform(Atom name, const std::string& textureName);
 
         void apply(const RendererPtr& renderer) const override;
+        void apply(IRenderer* renderer) const override;
+
         void loadPendingResources() override;
 
     private:

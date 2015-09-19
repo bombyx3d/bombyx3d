@@ -24,7 +24,6 @@
 #include "AssImpIOSystem.h"
 #include "AssImpIOStream.h"
 #include "engine/mesh/MeshData.h"
-#include "engine/mesh/MeshElement.h"
 #include "engine/mesh/VertexFormat.h"
 #include "engine/core/Log.h"
 #include <assimp/Importer.hpp>
@@ -139,12 +138,14 @@ namespace Engine
                 continue;
             }
 
-            auto element = std::make_shared<MeshElement<Vertex>>();
-            element->setName(std::string(sceneMesh->mName.data, sceneMesh->mName.length));
+            MeshData::Element element;
+            element.name.assign(sceneMesh->mName.data, sceneMesh->mName.length);
+            element.primitiveType = PrimitiveType::Triangles;
+            element.vertexFormat = &Vertex::attributes();
 
             const aiMaterial* sceneMeshMaterial = scene->mMaterials[sceneMesh->mMaterialIndex];
             if (sceneMeshMaterial->Get(AI_MATKEY_NAME, materialName) == AI_SUCCESS)
-                element->setMaterialName(std::string(materialName.data, materialName.length));
+                element.materialName.assign(materialName.data, materialName.length);
 
             Vertex* vertices = nullptr;
 
@@ -246,8 +247,11 @@ namespace Engine
                 *indices++ = uint16_t(sceneMesh->mFaces[i].mIndices[2]);
             }
 
-            element->setVertexRange(vertexBufferOffset, vertexCount);
-            element->setIndexRange(indexBufferOffset, indexCount);
+            element.vertexBufferOffset = vertexBufferOffset;
+            element.vertexCount = vertexCount;
+
+            element.indexBufferOffset = indexBufferOffset;
+            element.indexCount = indexCount;
 
             mesh->addElement(std::move(element));
         }

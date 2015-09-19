@@ -26,11 +26,12 @@
 #include "engine/interfaces/mesh/IMeshElement.h"
 #include "engine/core/macros.h"
 #include <vector>
+#include <memory>
 #include <cstdint>
 
 namespace Engine
 {
-    class Mesh : public IMesh
+    class Mesh : public IMesh, public std::enable_shared_from_this<Mesh>
     {
     public:
         Mesh();
@@ -39,8 +40,9 @@ namespace Engine
         const VertexBufferPtr& vertexBuffer() const override { return mVertexBuffer; }
         const IndexBufferPtr& indexBuffer() const override { return mIndexBuffer; }
 
+        const std::vector<MeshElementPtr>& elements() const override { return mElements; }
+
         void setData(const MeshDataPtr& data, BufferUsage usage);
-        void setData(MeshDataPtr&& data, BufferUsage usage);
 
     private:
         VertexBufferPtr mVertexBuffer;

@@ -21,9 +21,11 @@
  */
 
 #pragma once
-#include "engine/interfaces/mesh/IMeshElement.h"
+#include "engine/mesh/VertexFormat.h"
+#include "engine/interfaces/render/IRenderer.h"
 #include <memory>
 #include <vector>
+#include <string>
 #include <cstdint>
 
 namespace Engine
@@ -31,10 +33,22 @@ namespace Engine
     class IMeshData
     {
     public:
+        struct Element
+        {
+            std::string name;
+            std::string materialName;
+            size_t vertexBufferOffset;
+            size_t vertexCount;
+            size_t indexBufferOffset;
+            size_t indexCount;
+            PrimitiveType primitiveType;
+            const IVertexFormatAttributeList* vertexFormat;
+        };
+
         virtual ~IMeshData() = default;
 
-        virtual const std::vector<MeshElementPtr>& elements() const = 0;
-        virtual std::vector<MeshElementPtr>&& moveElements() = 0;
+        virtual const std::vector<Element>& elements() const = 0;
+        virtual std::vector<Element>&& moveElements() = 0;
 
         virtual const std::vector<uint8_t>& vertexData() const = 0;
         virtual const std::vector<uint16_t>& indexData() const = 0;

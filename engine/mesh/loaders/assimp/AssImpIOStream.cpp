@@ -29,16 +29,14 @@ namespace Engine
     {
     }
 
-    AssImpIOStream::AssImpIOStream(const FilePtr& file)
+    AssImpIOStream::AssImpIOStream(FilePtr&& file)
         : mFile(file.get())
-        , mFilePointer(file)
+        , mFilePointer(std::move(file))
     {
     }
 
     AssImpIOStream::~AssImpIOStream()
     {
-        if (!mFilePointer)
-            delete mFile;
     }
 
     size_t AssImpIOStream::FileSize() const

@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  */
 #include "Mesh.h"
+#include "engine/mesh/MeshElement.h"
 #include "engine/core/Services.h"
 
 namespace Engine
@@ -36,23 +37,29 @@ namespace Engine
 
     void Mesh::setData(const MeshDataPtr& data, BufferUsage usage)
     {
-        mElements = data->elements();
-
         const auto& vertices = data->vertexData();
         mVertexBuffer->setData(vertices.data(), vertices.size(), usage);
 
         const auto& indices = data->indexData();
-        mIndexBuffer->setData(indices.data(), indices.size(), usage);
-    }
+        mIndexBuffer->setData(indices.data(), indices.size() * sizeof(uint16_t), usage);
 
-    void Mesh::setData(MeshDataPtr&& data, BufferUsage usage)
-    {
-        mElements = std::move(data->moveElements());
+        auto self = shared_from_this();
+        mElements.reserve(data->elements().size());
+        for (const auto& dataElement : data->elements()) {
+            auto meshElement = std::make_shared<MeshElement>(self);
+            meshElement->setName(dataElement.name);
+            meshElement->setMaterialName(dataElement.materialName);
+            meshElement->setVertexFormat(dataElement.vertexFormat);
+            meshElement->setVertexRange(dataElement.vertexBufferOffset, dataElement.vertexCount);
+            meshElement->setIndexRange(dataElement.indexBufferOffset, dataElement.indexCount);
+            meshElement->setPrimitiveType(dataElement.primitiveType);
+            meshElement->setVertexFormat(dataElement.vertexFormat);
 
-        const auto& vertices = data->vertexData();
-        mVertexBuffer->setData(vertices.data(), vertices.size(), usage);
+            // Ensure lazy resources are created
+            meshElement->material();
+            meshElement->vertexSource();
 
-        const auto& indices = data->indexData();
-        mIndexBuffer->setData(indices.data(), indices.size(), usage);
+            mElements.emplace_back(std::move(meshElement));
+        }
     }
 }

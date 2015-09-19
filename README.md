@@ -4,6 +4,12 @@ Game Engine
 License
 -------
 
+All my code is licensed under the MIT license.
+
+Third party libraries and assets are licensed under their own licenses.
+Please consult files *LICENSE.txt*, *README.txt* and others in the corresponding
+directories.
+
 ```
 Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
 

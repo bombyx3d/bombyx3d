@@ -81,6 +81,7 @@ set(source_files
     mesh/Mesh.h
     mesh/MeshData.cpp
     mesh/MeshData.h
+    mesh/MeshElement.cpp
     mesh/MeshElement.h
     mesh/VertexFormat.h
     render/Buffer.cpp
