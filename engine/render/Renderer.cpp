@@ -147,7 +147,12 @@ namespace Engine
 
     void Renderer::setCullFace(CullFace face)
     {
-        glCullFace(cullFaceToGL(face));
+        if (face == CullFace::None)
+            glDisable(GL_CULL_FACE);
+        else {
+            glEnable(GL_CULL_FACE);
+            glCullFace(cullFaceToGL(face));
+        }
     }
 
     void Renderer::setFrontFace(FrontFace face)
@@ -299,6 +304,9 @@ namespace Engine
 
     void Renderer::resetOpenGLBindings()
     {
+        if (mCurrentVertexSource)
+            mCurrentVertexSource->unbind();
+
         mCurrentShader.reset();
         mCurrentVertexSource.reset();
 
