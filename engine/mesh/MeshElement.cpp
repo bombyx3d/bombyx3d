@@ -26,8 +26,6 @@ namespace Engine
 {
     MeshElement::MeshElement(const MeshPtr& mesh)
         : mMesh(mesh)
-        , mBoundingBoxMin(0.0f)
-        , mBoundingBoxMax(0.0f)
     {
     }
 

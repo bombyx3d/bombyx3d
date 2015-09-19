@@ -19,32 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "engine/math/BoundingBox.h"
-#include "engine/interfaces/material/IMaterial.h"
-#include <memory>
+#include "BoundingBox.h"
 
 namespace Engine
 {
-    class IMeshElement
+    void BoundingBox::initFromPoints(const std::vector<glm::vec3>& points)
     {
-    public:
-        virtual ~IMeshElement() = default;
+        if (points.empty())
+            min = max = glm::vec3(0.0f);
+        else {
+            min = max = points[0];
+            for (size_t i = 1; i < points.size(); i++) {
+                min = glm::min(min, points[i]);
+                max = glm::max(max, points[i]);
+            }
+        }
+    }
 
-        virtual const std::string& name() const = 0;
+    void BoundingBox::addPoint(const glm::vec3& point)
+    {
+        min = glm::min(min, point);
+        max = glm::max(max, point);
+    }
 
-        virtual const std::string& materialName() const = 0;
-        virtual const MaterialPtr& material() const = 0;
-
-        virtual const BoundingBox& boundingBox() const = 0;
-
-        virtual const VertexSourcePtr& vertexSource() const = 0;
-
-        virtual PrimitiveType primitiveType() const = 0;
-        virtual size_t indexBufferOffset() const = 0;
-        virtual size_t indexCount() const = 0;
-    };
-
-    using MeshElementPtr = std::shared_ptr<IMeshElement>;
+    void BoundingBox::addBoundingBox(const BoundingBox& box)
+    {
+        min = glm::min(min, box.min);
+        max = glm::max(max, box.max);
+    }
 }

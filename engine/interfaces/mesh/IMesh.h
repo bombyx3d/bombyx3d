@@ -21,6 +21,7 @@
  */
 
 #pragma once
+#include "engine/math/BoundingBox.h"
 #include "engine/interfaces/render/IIndexBuffer.h"
 #include "engine/interfaces/render/IVertexBuffer.h"
 #include "engine/interfaces/mesh/IMeshElement.h"
@@ -34,11 +35,10 @@ namespace Engine
     public:
         virtual ~IMesh() = default;
 
+        virtual const BoundingBox& boundingBox() const = 0;
+
         virtual const VertexBufferPtr& vertexBuffer() const = 0;
         virtual const IndexBufferPtr& indexBuffer() const = 0;
-
-        virtual const glm::vec3& boundingBoxMin() const = 0;
-        virtual const glm::vec3& boundingBoxMax() const = 0;
 
         virtual const std::vector<MeshElementPtr>& elements() const = 0;
     };

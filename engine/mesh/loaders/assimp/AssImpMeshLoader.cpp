@@ -40,7 +40,7 @@ namespace Engine
             (glm::vec3) tangent,
             (glm::vec3) bitangent,
             (glm::vec2) texCoord
-        );
+        )
     }
 
     AssImpMeshLoader::AssImpMeshLoader()
@@ -269,8 +269,7 @@ namespace Engine
             element.indexBufferOffset = indexBufferOffset;
             element.indexCount = indexCount;
 
-            element.boundingBoxMin = min;
-            element.boundingBoxMax = max;
+            element.boundingBox.set(min, max);
 
             mesh->addElement(std::move(element));
         }

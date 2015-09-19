@@ -21,30 +21,28 @@
  */
 
 #pragma once
-#include "engine/math/BoundingBox.h"
-#include "engine/interfaces/material/IMaterial.h"
-#include <memory>
+#include <glm/glm.hpp>
+#include <vector>
 
 namespace Engine
 {
-    class IMeshElement
+    struct BoundingBox
     {
-    public:
-        virtual ~IMeshElement() = default;
+        glm::vec3 min;
+        glm::vec3 max;
 
-        virtual const std::string& name() const = 0;
+        BoundingBox() : min(0.0f), max(0.0f) {}
+        BoundingBox(const glm::vec3& mn, const glm::vec3& mx) : min(mn), max(mx) {}
 
-        virtual const std::string& materialName() const = 0;
-        virtual const MaterialPtr& material() const = 0;
+        glm::vec3 center() const { return (max + min) * 0.5f; }
+        glm::vec3 size() const { return max - min; }
 
-        virtual const BoundingBox& boundingBox() const = 0;
+        void set(const glm::vec3& mn, const glm::vec3& mx) { min = mn; max = mx; }
 
-        virtual const VertexSourcePtr& vertexSource() const = 0;
+        void initFromPoint(const glm::vec3& point) { min = max = point; }
+        void initFromPoints(const std::vector<glm::vec3>& points);
 
-        virtual PrimitiveType primitiveType() const = 0;
-        virtual size_t indexBufferOffset() const = 0;
-        virtual size_t indexCount() const = 0;
+        void addPoint(const glm::vec3& point);
+        void addBoundingBox(const BoundingBox& box);
     };
-
-    using MeshElementPtr = std::shared_ptr<IMeshElement>;
 }

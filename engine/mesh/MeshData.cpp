@@ -29,8 +29,6 @@ namespace Engine
     std::mutex MeshData::mMeshLoadersMutex;
 
     MeshData::MeshData()
-        : mMin(0.0f)
-        , mMax(0.0f)
     {
     }
 
@@ -40,13 +38,13 @@ namespace Engine
 
     void MeshData::addElement(const Element& element)
     {
-        adjustBoundingBox(element.boundingBoxMin, element.boundingBoxMax, mElements.empty());
+        adjustBoundingBox(element.boundingBox, mElements.empty());
         mElements.emplace_back(element);
     }
 
     void MeshData::addElement(Element&& element)
     {
-        adjustBoundingBox(element.boundingBoxMin, element.boundingBoxMax, mElements.empty());
+        adjustBoundingBox(element.boundingBox, mElements.empty());
         mElements.emplace_back(std::move(element));
     }
 
@@ -119,26 +117,22 @@ namespace Engine
         return &mVertexData[*offset];
     }
 
-    void MeshData::adjustBoundingBox(const glm::vec3& min, const glm::vec3& max, bool first)
+    void MeshData::adjustBoundingBox(const BoundingBox& box, bool first)
     {
-        if (first) {
-            mMin = min;
-            mMax = max;
-        } else {
-            mMin = glm::min(mMin, min);
-            mMax = glm::max(mMax, max);
-        }
+        if (first)
+            mBoundingBox = box;
+        else
+            mBoundingBox.addBoundingBox(box);
     }
 
     void MeshData::calculateBoundingBox()
     {
-        if (mElements.empty()) {
-            mMin = glm::vec3(0.0f);
-            mMax = glm::vec3(0.0f);
-        } else {
-            adjustBoundingBox(mElements[0].boundingBoxMin, mElements[0].boundingBoxMax, true);
+        if (mElements.empty())
+            mBoundingBox = BoundingBox();
+        else {
+            adjustBoundingBox(mElements[0].boundingBox, true);
             for (size_t i = 1; i < mElements.size(); i++)
-                adjustBoundingBox(mElements[i].boundingBoxMin, mElements[i].boundingBoxMax, false);
+                adjustBoundingBox(mElements[i].boundingBox, false);
         }
     }
 }

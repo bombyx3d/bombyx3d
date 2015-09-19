@@ -22,6 +22,7 @@
 
 #pragma once
 #include "engine/mesh/VertexFormat.h"
+#include "engine/math/BoundingBox.h"
 #include "engine/interfaces/render/IRenderer.h"
 #include <memory>
 #include <vector>
@@ -43,19 +44,17 @@ namespace Engine
             size_t indexCount;
             PrimitiveType primitiveType;
             const IVertexFormatAttributeList* vertexFormat;
-            glm::vec3 boundingBoxMin;
-            glm::vec3 boundingBoxMax;
+            BoundingBox boundingBox;
         };
 
         virtual ~IMeshData() = default;
+
+        virtual const BoundingBox& boundingBox() const = 0;
 
         virtual const std::vector<Element>& elements() const = 0;
 
         virtual const std::vector<uint8_t>& vertexData() const = 0;
         virtual const std::vector<uint16_t>& indexData() const = 0;
-
-        virtual const glm::vec3 boundingBoxMin() const = 0;
-        virtual const glm::vec3 boundingBoxMax() const = 0;
     };
 
     using MeshDataPtr = std::shared_ptr<IMeshData>;

@@ -27,8 +27,6 @@
 namespace Engine
 {
     Mesh::Mesh()
-        : mBoundingBoxMin(0.0f)
-        , mBoundingBoxMax(0.0f)
     {
         mVertexBuffer = Services::renderer()->createVertexBuffer();
         mIndexBuffer = Services::renderer()->createIndexBuffer();
@@ -44,8 +42,7 @@ namespace Engine
         if (!data)
             return;
 
-        mBoundingBoxMin = data->boundingBoxMin();
-        mBoundingBoxMax = data->boundingBoxMax();
+        mBoundingBox = data->boundingBox();
 
         const auto& vertices = data->vertexData();
         mVertexBuffer->setData(vertices.data(), vertices.size(), usage);
@@ -64,7 +61,7 @@ namespace Engine
             meshElement->setIndexRange(dataElement.indexBufferOffset, dataElement.indexCount);
             meshElement->setPrimitiveType(dataElement.primitiveType);
             meshElement->setVertexFormat(dataElement.vertexFormat);
-            meshElement->setBoundingBox(dataElement.boundingBoxMin, dataElement.boundingBoxMax);
+            meshElement->setBoundingBox(dataElement.boundingBox);
 
             // Ensure that lazy-initialized resources are created now
             meshElement->material();
