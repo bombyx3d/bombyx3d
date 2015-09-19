@@ -162,11 +162,27 @@ namespace Engine
 //            else
 //                vertexBufferOffset = mesh->appendVertices(vertexCount, &vertices, &skinningVertices);
 
+            glm::vec3 min;
+            glm::vec3 max;
+
+            if (vertexCount == 0 || !hasPositions)
+                min = max = glm::vec3(0.0f);
+            else {
+                min = max = glm::vec3(
+                    sceneMesh->mVertices[0].x,
+                    sceneMesh->mVertices[0].y,
+                    sceneMesh->mVertices[0].z
+                );
+            }
+
             for (size_t i = 0; i < vertexCount; i++) {
                 if (hasPositions) {
                     vertices->position.x = sceneMesh->mVertices[i].x;
                     vertices->position.y = sceneMesh->mVertices[i].y;
                     vertices->position.z = sceneMesh->mVertices[i].z;
+
+                    min = glm::min(min, vertices->position);
+                    max = glm::max(max, vertices->position);
                 }
 
                 if (hasNormals) {
@@ -252,6 +268,9 @@ namespace Engine
 
             element.indexBufferOffset = indexBufferOffset;
             element.indexCount = indexCount;
+
+            element.boundingBoxMin = min;
+            element.boundingBoxMax = max;
 
             mesh->addElement(std::move(element));
         }

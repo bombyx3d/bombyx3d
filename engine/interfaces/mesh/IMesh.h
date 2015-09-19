@@ -37,6 +37,9 @@ namespace Engine
         virtual const VertexBufferPtr& vertexBuffer() const = 0;
         virtual const IndexBufferPtr& indexBuffer() const = 0;
 
+        virtual const glm::vec3& boundingBoxMin() const = 0;
+        virtual const glm::vec3& boundingBoxMax() const = 0;
+
         virtual const std::vector<MeshElementPtr>& elements() const = 0;
     };
 

@@ -22,10 +22,13 @@
 #include "Mesh.h"
 #include "engine/mesh/MeshElement.h"
 #include "engine/core/Services.h"
+#include <cassert>
 
 namespace Engine
 {
     Mesh::Mesh()
+        : mBoundingBoxMin(0.0f)
+        , mBoundingBoxMax(0.0f)
     {
         mVertexBuffer = Services::renderer()->createVertexBuffer();
         mIndexBuffer = Services::renderer()->createIndexBuffer();
@@ -37,6 +40,13 @@ namespace Engine
 
     void Mesh::setData(const MeshDataPtr& data, BufferUsage usage)
     {
+        assert(data != nullptr);
+        if (!data)
+            return;
+
+        mBoundingBoxMin = data->boundingBoxMin();
+        mBoundingBoxMax = data->boundingBoxMax();
+
         const auto& vertices = data->vertexData();
         mVertexBuffer->setData(vertices.data(), vertices.size(), usage);
 
@@ -54,8 +64,9 @@ namespace Engine
             meshElement->setIndexRange(dataElement.indexBufferOffset, dataElement.indexCount);
             meshElement->setPrimitiveType(dataElement.primitiveType);
             meshElement->setVertexFormat(dataElement.vertexFormat);
+            meshElement->setBoundingBox(dataElement.boundingBoxMin, dataElement.boundingBoxMax);
 
-            // Ensure lazy resources are created
+            // Ensure that lazy-initialized resources are created now
             meshElement->material();
             meshElement->vertexSource();
 

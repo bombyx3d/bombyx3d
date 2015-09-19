@@ -41,6 +41,9 @@ namespace Engine
         virtual PrimitiveType primitiveType() const = 0;
         virtual size_t indexBufferOffset() const = 0;
         virtual size_t indexCount() const = 0;
+
+        virtual const glm::vec3& boundingBoxMin() const = 0;
+        virtual const glm::vec3& boundingBoxMax() const = 0;
     };
 
     using MeshElementPtr = std::shared_ptr<IMeshElement>;

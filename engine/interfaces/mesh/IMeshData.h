@@ -43,15 +43,19 @@ namespace Engine
             size_t indexCount;
             PrimitiveType primitiveType;
             const IVertexFormatAttributeList* vertexFormat;
+            glm::vec3 boundingBoxMin;
+            glm::vec3 boundingBoxMax;
         };
 
         virtual ~IMeshData() = default;
 
         virtual const std::vector<Element>& elements() const = 0;
-        virtual std::vector<Element>&& moveElements() = 0;
 
         virtual const std::vector<uint8_t>& vertexData() const = 0;
         virtual const std::vector<uint16_t>& indexData() const = 0;
+
+        virtual const glm::vec3 boundingBoxMin() const = 0;
+        virtual const glm::vec3 boundingBoxMax() const = 0;
     };
 
     using MeshDataPtr = std::shared_ptr<IMeshData>;

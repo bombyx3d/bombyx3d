@@ -42,11 +42,16 @@ namespace Engine
 
         const std::vector<MeshElementPtr>& elements() const override { return mElements; }
 
+        const glm::vec3& boundingBoxMin() const override { return mBoundingBoxMin; }
+        const glm::vec3& boundingBoxMax() const override { return mBoundingBoxMax; }
+
         void setData(const MeshDataPtr& data, BufferUsage usage);
 
     private:
         VertexBufferPtr mVertexBuffer;
         IndexBufferPtr mIndexBuffer;
+        glm::vec3 mBoundingBoxMin;
+        glm::vec3 mBoundingBoxMax;
         std::vector<MeshElementPtr> mElements;
 
         Z_DISABLE_COPY(Mesh);

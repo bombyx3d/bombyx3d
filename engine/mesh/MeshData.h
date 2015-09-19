@@ -38,18 +38,21 @@ namespace Engine
         ~MeshData();
 
         const std::vector<Element>& elements() const override { return mElements; }
-        std::vector<Element>&& moveElements() override { return std::move(mElements); }
 
-        void addElement(const Element& element) { mElements.emplace_back(element); }
-        void addElement(Element&& element) { mElements.emplace_back(std::move(element)); }
-        void setElements(const std::vector<Element>& e) { mElements = e; }
-        void setElements(std::vector<Element>&& e) { mElements = std::move(e); }
+        void addElement(const Element& element);
+        void addElement(Element&& element);
+        void setElements(const std::vector<Element>& e);
+        void setElements(std::vector<Element>&& e);
 
         std::vector<uint8_t>& vertexData() { return mVertexData; }
         const std::vector<uint8_t>& vertexData() const override { return mVertexData; }
 
         std::vector<uint16_t>& indexData() { return mIndexData; }
         const std::vector<uint16_t>& indexData() const override { return mIndexData; }
+
+        const glm::vec3 boundingBoxMin() const override { return mMin; }
+        const glm::vec3 boundingBoxMax() const override { return mMax; }
+        void setBoundingBox(const glm::vec3& min, const glm::vec3& max) { mMin = min; mMax = max; }
 
         size_t appendIndices(size_t count, uint16_t** indices);
         template <class VERTEX> size_t appendVertices(size_t count, VERTEX** vertices)
@@ -74,8 +77,13 @@ namespace Engine
         std::vector<Element> mElements;
         std::vector<uint8_t> mVertexData;
         std::vector<uint16_t> mIndexData;
+        glm::vec3 mMin;
+        glm::vec3 mMax;
 
         void* appendVertices(size_t count, size_t* offset, size_t vertexSize);
+
+        void adjustBoundingBox(const glm::vec3& min, const glm::vec3& max, bool first);
+        void calculateBoundingBox();
 
         Z_DISABLE_COPY(MeshData);
     };

@@ -58,6 +58,10 @@ namespace Engine
         size_t indexCount() const override { return mIndexCount; }
         void setIndexRange(size_t offset, size_t count) { mIndexBufferOffset = offset; mIndexCount = count; }
 
+        const glm::vec3& boundingBoxMin() const override { return mBoundingBoxMin; }
+        const glm::vec3& boundingBoxMax() const override { return mBoundingBoxMax; }
+        void setBoundingBox(const glm::vec3& mn, const glm::vec3& mx) { mBoundingBoxMin = mn; mBoundingBoxMax = mx; }
+
         const MaterialPtr& material() const override;
         const VertexSourcePtr& vertexSource() const override;
 
@@ -73,5 +77,7 @@ namespace Engine
         size_t mIndexCount = 0;
         const IVertexFormatAttributeList* mVertexFormat = nullptr;
         PrimitiveType mPrimitiveType = PrimitiveType::Points;
+        glm::vec3 mBoundingBoxMin;
+        glm::vec3 mBoundingBoxMax;
     };
 }
