@@ -101,10 +101,14 @@ set(source_files
     render/gles2/GLES2VertexSource.h
     render/gles2/opengl.cpp
     render/gles2/opengl.h
+    render/Canvas.cpp
+    render/Canvas.h
     render/ImmediateModeRenderer.cpp
     render/ImmediateModeRenderer.h
     scene/3d/camera/AbstractCamera.cpp
     scene/3d/camera/AbstractCamera.h
+    scene/3d/camera/AbstractOrthogonalCamera.cpp
+    scene/3d/camera/AbstractOrthogonalCamera.h
     scene/3d/camera/AbstractPerspectiveCamera.cpp
     scene/3d/camera/AbstractPerspectiveCamera.h
     scene/3d/camera/OrbitCamera.cpp

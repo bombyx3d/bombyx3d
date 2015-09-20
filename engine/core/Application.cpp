@@ -130,26 +130,32 @@ namespace Engine
     void Application::onTouchBegan(int fingerIndex, const glm::vec2& position)
     {
         if (mCurrentScene) {
-            // FIXME: return value is not handled
-            mCurrentScene->onTouchBegan(fingerIndex, glm::ivec2(position)); // FIXME: ivec2
+            if (mCurrentScene->onTouchBegan(fingerIndex, glm::ivec2(position)))
+                mActiveTouches.insert(fingerIndex);
         }
     }
 
     void Application::onTouchMoved(int fingerIndex, const glm::vec2& position)
     {
-        if (mCurrentScene)
-            mCurrentScene->onTouchMoved(fingerIndex, glm::ivec2(position)); // FIXME: ivec2
+        if (mCurrentScene && mActiveTouches.find(fingerIndex) != mActiveTouches.end())
+            mCurrentScene->onTouchMoved(fingerIndex, glm::ivec2(position));
     }
 
     void Application::onTouchEnded(int fingerIndex)
     {
-        if (mCurrentScene)
+        auto it = mActiveTouches.find(fingerIndex);
+        if (mCurrentScene && it != mActiveTouches.end()) {
+            mActiveTouches.erase(it);
             mCurrentScene->onTouchEnded(fingerIndex);
+        }
     }
 
     void Application::onTouchCancelled(int fingerIndex)
     {
-        if (mCurrentScene)
+        auto it = mActiveTouches.find(fingerIndex);
+        if (mCurrentScene && it != mActiveTouches.end()) {
+            mActiveTouches.erase(it);
             mCurrentScene->onTouchCancelled(fingerIndex);
+        }
     }
 }

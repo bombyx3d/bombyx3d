@@ -26,6 +26,7 @@
 #include "engine/interfaces/input/IInputObserver.h"
 #include "engine/interfaces/scene/IScene.h"
 #include <functional>
+#include <unordered_set>
 
 namespace Engine
 {
@@ -53,6 +54,7 @@ namespace Engine
 
     private:
         static Application* mInstance;
+        std::unordered_set<int> mActiveTouches;
         glm::ivec2 mScreenSize;
         float mScreenAspect;
         ScenePtr mPreviousScene;
