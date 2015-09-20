@@ -122,6 +122,8 @@ namespace Engine
         }
 
         BoundingBox meshBoundingBox;
+        bool firstElement = true;
+
         aiString materialName;
         for (size_t meshIndex = 0; meshIndex < scene->mNumMeshes; meshIndex++) {
             const aiMesh* sceneMesh = scene->mMeshes[meshIndex];
@@ -219,10 +221,14 @@ namespace Engine
             }
 
             element->setBoundingBox(elementBoundingBox);
-            if (meshIndex == 0)
-                meshBoundingBox = elementBoundingBox;
-            else
-                meshBoundingBox.addBoundingBox(elementBoundingBox);
+            if (vertexCount > 0 && hasPositions) {
+                if (!firstElement)
+                    meshBoundingBox.addBoundingBox(elementBoundingBox);
+                else {
+                    meshBoundingBox = elementBoundingBox;
+                    firstElement = false;
+                }
+            }
 
             /*
             if (hasBones) {
