@@ -24,9 +24,9 @@
 #include "engine/core/macros.h"
 #include "engine/core/Atom.h"
 #include "engine/interfaces/render/IRenderer.h"
-#include "engine/render/Shader.h"
-#include "engine/render/VertexSource.h"
-#include "engine/render/Uniform.h"
+#include "engine/render/gles2/GLES2Shader.h"
+#include "engine/render/gles2/GLES2VertexSource.h"
+#include "engine/render/gles2/GLES2Uniform.h"
 #include <vector>
 #include <unordered_map>
 #include <glm/glm.hpp>
@@ -91,9 +91,9 @@ namespace Engine
         glm::mat4 mModelViewMatrix;
         std::vector<glm::mat4> mProjectionMatrixStack;
         std::vector<glm::mat4> mModelViewMatrixStack;
-        std::unordered_map<Atom, Uniform> mUniforms;
-        std::shared_ptr<Shader> mCurrentShader;
-        std::shared_ptr<VertexSource> mCurrentVertexSource;
+        std::unordered_map<Atom, GLES2Uniform> mUniforms;
+        std::shared_ptr<GLES2Shader> mCurrentShader;
+        std::shared_ptr<GLES2VertexSource> mCurrentVertexSource;
         bool mShouldRebindUniforms;
         bool mShouldRebindAttributes;
 

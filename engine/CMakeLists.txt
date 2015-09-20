@@ -85,20 +85,20 @@ set(source_files
     mesh/RawMeshData.h
     mesh/RawMeshElementData.h
     mesh/VertexFormat.h
-    render/Buffer.cpp
-    render/Buffer.h
-    render/opengl.cpp
-    render/opengl.h
-    render/Renderer.cpp
-    render/Renderer.h
-    render/Shader.cpp
-    render/Shader.h
-    render/Texture.cpp
-    render/Texture.h
-    render/Uniform.cpp
-    render/Uniform.h
-    render/VertexSource.cpp
-    render/VertexSource.h
+    render/gles2/GLES2Buffer.cpp
+    render/gles2/GLES2Buffer.h
+    render/gles2/GLES2Renderer.cpp
+    render/gles2/GLES2Renderer.h
+    render/gles2/GLES2Shader.cpp
+    render/gles2/GLES2Shader.h
+    render/gles2/GLES2Texture.cpp
+    render/gles2/GLES2Texture.h
+    render/gles2/GLES2Uniform.cpp
+    render/gles2/GLES2Uniform.h
+    render/gles2/GLES2VertexSource.cpp
+    render/gles2/GLES2VertexSource.h
+    render/gles2/opengl.cpp
+    render/gles2/opengl.h
     scene/3d/camera/AbstractCamera.cpp
     scene/3d/camera/AbstractCamera.h
     scene/3d/camera/AbstractPerspectiveCamera.cpp

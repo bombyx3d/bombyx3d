@@ -19,8 +19,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Shader.h"
-#include "opengl.h"
+#include "GLES2Shader.h"
+#include "engine/render/gles2/opengl.h"
 #include "engine/core/Services.h"
 #include "engine/core/Log.h"
 #include <utility>
@@ -30,7 +30,7 @@
 
 namespace Engine
 {
-    Shader::Shader()
+    GLES2Shader::GLES2Shader()
         : mProgramCompiled(false)
     {
         mVertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -41,7 +41,7 @@ namespace Engine
         glAttachShader(GLuint(mProgram), GLuint(mFragmentShader));
     }
 
-    Shader::~Shader()
+    GLES2Shader::~GLES2Shader()
     {
         GLuint program = GLuint(mProgram);
         GLuint fragmentShader = GLuint(mFragmentShader);
@@ -54,19 +54,19 @@ namespace Engine
         });
     }
 
-    void Shader::setVertexSource(const std::vector<std::string>& source)
+    void GLES2Shader::setVertexSource(const std::vector<std::string>& source)
     {
         resetToUncompiledState();
         setSource(mVertexShader, source);
     }
 
-    void Shader::setFragmentSource(const std::vector<std::string>& source)
+    void GLES2Shader::setFragmentSource(const std::vector<std::string>& source)
     {
         resetToUncompiledState();
         setSource(mFragmentShader, source);
     }
 
-    void Shader::use()
+    void GLES2Shader::use()
     {
         if (!mProgramCompiled)
             compile();
@@ -93,7 +93,7 @@ namespace Engine
                 (STREAM) << "Info log is not available."; \
         }
 
-    bool Shader::compile()
+    bool GLES2Shader::compile()
     {
         mProgramCompiled = true;
 
@@ -125,7 +125,7 @@ namespace Engine
         return status == GL_TRUE;
     }
 
-    bool Shader::compileShader(size_t shaderHandle, const char* shaderType)
+    bool GLES2Shader::compileShader(size_t shaderHandle, const char* shaderType)
     {
         glCompileShader(GLuint(shaderHandle));
 
@@ -146,7 +146,7 @@ namespace Engine
         return status == GL_TRUE;
     }
 
-    void Shader::setSource(size_t shaderHandle, const std::vector<std::string>& source)
+    void GLES2Shader::setSource(size_t shaderHandle, const std::vector<std::string>& source)
     {
         std::vector<const GLchar*> lines;
         std::vector<GLint> lengths;
@@ -163,7 +163,7 @@ namespace Engine
         glShaderSource(GLuint(shaderHandle), GLsizei(numLines), lines.data(), lengths.data());
     }
 
-    void Shader::formatSource(size_t shaderHandle, std::stringstream& stream)
+    void GLES2Shader::formatSource(size_t shaderHandle, std::stringstream& stream)
     {
         GLint bufferLength = 0;
         glGetShaderiv(GLuint(shaderHandle), GL_SHADER_SOURCE_LENGTH, &bufferLength);
@@ -193,7 +193,7 @@ namespace Engine
             stream << '\n';
     }
 
-    void Shader::collectUniformsAndAttributes()
+    void GLES2Shader::collectUniformsAndAttributes()
     {
         GLuint program = GLuint(mProgram);
         GLint size;
@@ -247,7 +247,7 @@ namespace Engine
         }
     }
 
-    void Shader::resetToUncompiledState()
+    void GLES2Shader::resetToUncompiledState()
     {
         mProgramCompiled = false;
         mUniforms.clear();

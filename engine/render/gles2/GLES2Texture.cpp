@@ -19,21 +19,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Texture.h"
+#include "GLES2Texture.h"
 #include "engine/core/Services.h"
 #include "opengl.h"
 #include <cassert>
 
 namespace Engine
 {
-    Texture::Texture()
+    GLES2Texture::GLES2Texture()
     {
         GLuint handle = 0;
         glGenTextures(1, &handle);
         mHandle = handle;
     }
 
-    Texture::~Texture()
+    GLES2Texture::~GLES2Texture()
     {
         GLuint handle = GLuint(mHandle);
         Services::threadManager()->performInRenderThread([handle]() {
@@ -41,7 +41,7 @@ namespace Engine
         });
     }
 
-    void Texture::upload(const IImage& image)
+    void GLES2Texture::upload(const IImage& image)
     {
         if (!image.data())
             return;

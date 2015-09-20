@@ -19,26 +19,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "engine/interfaces/render/ITexture.h"
-#include "engine/core/macros.h"
+#include "GLES2Buffer.h"
+#include "engine/core/Services.h"
+#include "opengl.h"
+#include <cassert>
 
 namespace Engine
 {
-    class Texture : public ITexture
+    GLES2Buffer::GLES2Buffer(size_t target)
+        : mSize(0)
+        , mTarget(target)
     {
-    public:
-        Texture();
-        ~Texture();
+        GLuint handle = 0;
+        glGenBuffers(1, &handle);
+        mHandle = handle;
+    }
 
-        size_t handle() const { return mHandle; }
+    GLES2Buffer::~GLES2Buffer()
+    {
+        GLuint handle = GLuint(mHandle);
+        Services::threadManager()->performInRenderThread([handle]() {
+            glDeleteBuffers(1, &handle);
+        });
+    }
 
-        void upload(const IImage& image) override;
+    size_t GLES2Buffer::currentSize() const
+    {
+        return mSize;
+    }
 
-    private:
-        size_t mHandle;
+    void GLES2Buffer::initEmpty(size_t size, BufferUsage usage)
+    {
+        glBindBuffer(GLenum(mTarget), GLuint(mHandle));
+        glBufferData(GLenum(mTarget), GLsizeiptr(size), nullptr, bufferUsageToGL(usage));
+        mSize = size;
+    }
 
-        Z_DISABLE_COPY(Texture);
-    };
+    void GLES2Buffer::setData(const void* data, size_t size, BufferUsage usage)
+    {
+        glBindBuffer(GLenum(mTarget), GLuint(mHandle));
+        glBufferData(GLenum(mTarget), GLsizeiptr(size), data, bufferUsageToGL(usage));
+        mSize = size;
+    }
 }

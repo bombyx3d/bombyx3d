@@ -23,19 +23,19 @@
 #pragma once
 #include "engine/interfaces/render/IVertexSource.h"
 #include "engine/core/macros.h"
-#include "engine/render/Buffer.h"
-#include "engine/render/Shader.h"
+#include "engine/render/gles2/GLES2Buffer.h"
+#include "engine/render/gles2/GLES2Shader.h"
 #include <memory>
 #include <vector>
 #include <unordered_map>
 
 namespace Engine
 {
-    class VertexSource : public IVertexSource
+    class GLES2VertexSource : public IVertexSource
     {
     public:
-        VertexSource();
-        ~VertexSource();
+        GLES2VertexSource();
+        ~GLES2VertexSource();
 
         void setAttribute(const Atom& name, VertexAttributeType type,
             const VertexBufferPtr& buffer, size_t offset = 0, size_t stride = 0, bool normalize = false) override;
@@ -43,16 +43,16 @@ namespace Engine
         void setAttributes(const IVertexFormatAttributeList& attributes,
             const VertexBufferPtr& buffer, size_t offset = 0) override;
 
-        const std::shared_ptr<Buffer>& indexBuffer() const { return mIndexBuffer; }
+        const std::shared_ptr<GLES2Buffer>& indexBuffer() const { return mIndexBuffer; }
         void setIndexBuffer(const IndexBufferPtr& indexBuffer) override;
 
-        void bind(const Shader& shader);
+        void bind(const GLES2Shader& shader);
         void unbind();
 
     private:
         struct Attribute
         {
-            std::shared_ptr<Buffer> buffer;
+            std::shared_ptr<GLES2Buffer> buffer;
             VertexAttributeType type;
             size_t offset;
             size_t stride;
@@ -61,8 +61,8 @@ namespace Engine
 
         std::unordered_map<Atom, Attribute> mAttributes;
         std::vector<int> mEnabledArrays;
-        std::shared_ptr<Buffer> mIndexBuffer;
+        std::shared_ptr<GLES2Buffer> mIndexBuffer;
 
-        Z_DISABLE_COPY(VertexSource);
+        Z_DISABLE_COPY(GLES2VertexSource);
     };
 }

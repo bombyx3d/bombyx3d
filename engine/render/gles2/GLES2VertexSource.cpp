@@ -19,24 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "VertexSource.h"
-#include "opengl.h"
-#include "engine/render/Buffer.h"
+#include "GLES2VertexSource.h"
+#include "engine/render/gles2/opengl.h"
+#include "engine/render/gles2/GLES2Buffer.h"
 #include "engine/core/Log.h"
 #include "engine/mesh/VertexFormat.h"
 #include <cassert>
 
 namespace Engine
 {
-    VertexSource::VertexSource()
+    GLES2VertexSource::GLES2VertexSource()
     {
     }
 
-    VertexSource::~VertexSource()
+    GLES2VertexSource::~GLES2VertexSource()
     {
     }
 
-    void VertexSource::setAttribute(const Atom& name, VertexAttributeType type,
+    void GLES2VertexSource::setAttribute(const Atom& name, VertexAttributeType type,
         const VertexBufferPtr& buffer, size_t offset, size_t stride, bool normalize)
     {
         assert(buffer != nullptr);
@@ -44,14 +44,14 @@ namespace Engine
             return;
 
         auto& attribute = mAttributes[name];
-        attribute.buffer = std::static_pointer_cast<Buffer>(buffer);
+        attribute.buffer = std::static_pointer_cast<GLES2Buffer>(buffer);
         attribute.type = type;
         attribute.offset = offset;
         attribute.stride = stride;
         attribute.normalize = normalize;
     }
 
-    void VertexSource::setAttributes(const IVertexFormatAttributeList& attributes,
+    void GLES2VertexSource::setAttributes(const IVertexFormatAttributeList& attributes,
         const VertexBufferPtr& buffer, size_t offset)
     {
         size_t stride = attributes.stride();
@@ -65,12 +65,12 @@ namespace Engine
         }
     }
 
-    void VertexSource::setIndexBuffer(const IndexBufferPtr& indexBuffer)
+    void GLES2VertexSource::setIndexBuffer(const IndexBufferPtr& indexBuffer)
     {
-        mIndexBuffer = std::static_pointer_cast<Buffer>(indexBuffer);
+        mIndexBuffer = std::static_pointer_cast<GLES2Buffer>(indexBuffer);
     }
 
-    void VertexSource::bind(const Shader& shader)
+    void GLES2VertexSource::bind(const GLES2Shader& shader)
     {
         if (!mEnabledArrays.empty())
             unbind();
@@ -110,7 +110,7 @@ namespace Engine
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GLuint(mIndexBuffer ? mIndexBuffer->handle() : 0));
     }
 
-    void VertexSource::unbind()
+    void GLES2VertexSource::unbind()
     {
         for (int location : mEnabledArrays)
             glDisableVertexAttribArray(GLuint(location));

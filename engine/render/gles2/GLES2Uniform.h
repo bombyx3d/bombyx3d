@@ -19,46 +19,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Buffer.h"
-#include "engine/core/Services.h"
-#include "opengl.h"
-#include <cassert>
+
+#pragma once
+#include "engine/core/macros.h"
+#include "engine/interfaces/render/ITexture.h"
+#include "engine/utility/PoolAllocator.h"
+#include <glm/glm.hpp>
 
 namespace Engine
 {
-    Buffer::Buffer(size_t target)
-        : mSize(0)
-        , mTarget(target)
+    class GLES2Uniform
     {
-        GLuint handle = 0;
-        glGenBuffers(1, &handle);
-        mHandle = handle;
-    }
+    public:
+        struct IUniformValue;
 
-    Buffer::~Buffer()
-    {
-        GLuint handle = GLuint(mHandle);
-        Services::threadManager()->performInRenderThread([handle]() {
-            glDeleteBuffers(1, &handle);
-        });
-    }
+        GLES2Uniform();
+        GLES2Uniform(GLES2Uniform&& other);
+        ~GLES2Uniform();
 
-    size_t Buffer::currentSize() const
-    {
-        return mSize;
-    }
+        GLES2Uniform& operator=(GLES2Uniform&& other);
 
-    void Buffer::initEmpty(size_t size, BufferUsage usage)
-    {
-        glBindBuffer(GLenum(mTarget), GLuint(mHandle));
-        glBufferData(GLenum(mTarget), GLsizeiptr(size), nullptr, bufferUsageToGL(usage));
-        mSize = size;
-    }
+        void reset();
 
-    void Buffer::setData(const void* data, size_t size, BufferUsage usage)
-    {
-        glBindBuffer(GLenum(mTarget), GLuint(mHandle));
-        glBufferData(GLenum(mTarget), GLsizeiptr(size), data, bufferUsageToGL(usage));
-        mSize = size;
-    }
+        void setFloat(float value);
+        void setVec2(const glm::vec2& value);
+        void setVec3(const glm::vec3& value);
+        void setVec4(const glm::vec4& value);
+        void setMat4(const glm::mat4& value);
+        void setTexture(const TexturePtr& texture);
+
+        bool upload(int location, int* textureCount);
+
+    private:
+        IUniformValue* mValue;
+        int mBoundToLocation;
+
+        Z_DISABLE_COPY(GLES2Uniform);
+    };
 }

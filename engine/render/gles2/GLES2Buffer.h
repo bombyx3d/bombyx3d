@@ -27,11 +27,11 @@
 
 namespace Engine
 {
-    class Buffer : public IVertexBuffer, public IIndexBuffer
+    class GLES2Buffer : public IVertexBuffer, public IIndexBuffer
     {
     public:
-        explicit Buffer(size_t target);
-        ~Buffer();
+        explicit GLES2Buffer(size_t target);
+        ~GLES2Buffer();
 
         size_t handle() const { return mHandle; }
 
@@ -45,6 +45,6 @@ namespace Engine
         size_t mSize;
         size_t mTarget;
 
-        Z_DISABLE_COPY(Buffer);
+        Z_DISABLE_COPY(GLES2Buffer);
     };
 }

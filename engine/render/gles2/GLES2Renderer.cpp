@@ -19,11 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Renderer.h"
-#include "Shader.h"
-#include "Texture.h"
-#include "Buffer.h"
-#include "VertexSource.h"
+#include "GLES2Renderer.h"
+#include "engine/render/gles2/GLES2Shader.h"
+#include "engine/render/gles2/GLES2Texture.h"
+#include "engine/render/gles2/GLES2Buffer.h"
+#include "engine/render/gles2/GLES2VertexSource.h"
 #include "engine/core/Log.h"
 #include "engine/core/AtomTable.h"
 #include "opengl.h"
@@ -80,27 +80,27 @@ namespace Engine
 
     ShaderPtr Renderer::createShader()
     {
-        return std::make_shared<Shader>();
+        return std::make_shared<GLES2Shader>();
     }
 
     TexturePtr Renderer::createTexture()
     {
-        return std::make_shared<Texture>();
+        return std::make_shared<GLES2Texture>();
     }
 
     VertexBufferPtr Renderer::createVertexBuffer()
     {
-        return std::make_shared<Buffer>(GL_ARRAY_BUFFER);
+        return std::make_shared<GLES2Buffer>(GL_ARRAY_BUFFER);
     }
 
     IndexBufferPtr Renderer::createIndexBuffer()
     {
-        return std::make_shared<Buffer>(GL_ELEMENT_ARRAY_BUFFER);
+        return std::make_shared<GLES2Buffer>(GL_ELEMENT_ARRAY_BUFFER);
     }
 
     VertexSourcePtr Renderer::createVertexSource()
     {
-        return std::make_shared<VertexSource>();
+        return std::make_shared<GLES2VertexSource>();
     }
 
     const glm::mat4& Renderer::projectionMatrix() const
@@ -232,7 +232,7 @@ namespace Engine
     void Renderer::useShader(const ShaderPtr& shader)
     {
         if (mCurrentShader != shader) {
-            mCurrentShader = std::static_pointer_cast<Shader>(shader);
+            mCurrentShader = std::static_pointer_cast<GLES2Shader>(shader);
 
             if (!mCurrentShader)
                 glUseProgram(0);
@@ -249,7 +249,7 @@ namespace Engine
         if (mCurrentVertexSource != source) {
             if (mCurrentVertexSource)
                 mCurrentVertexSource->unbind();
-            mCurrentVertexSource = std::static_pointer_cast<VertexSource>(source);
+            mCurrentVertexSource = std::static_pointer_cast<GLES2VertexSource>(source);
             mShouldRebindAttributes = true;
         }
     }

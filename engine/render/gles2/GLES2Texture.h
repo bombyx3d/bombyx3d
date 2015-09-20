@@ -21,39 +21,24 @@
  */
 
 #pragma once
-#include "engine/core/macros.h"
 #include "engine/interfaces/render/ITexture.h"
-#include "engine/utility/PoolAllocator.h"
-#include <glm/glm.hpp>
+#include "engine/core/macros.h"
 
 namespace Engine
 {
-    class Uniform
+    class GLES2Texture : public ITexture
     {
     public:
-        struct IUniformValue;
+        GLES2Texture();
+        ~GLES2Texture();
 
-        Uniform();
-        Uniform(Uniform&& other);
-        ~Uniform();
+        size_t handle() const { return mHandle; }
 
-        Uniform& operator=(Uniform&& other);
-
-        void reset();
-
-        void setFloat(float value);
-        void setVec2(const glm::vec2& value);
-        void setVec3(const glm::vec3& value);
-        void setVec4(const glm::vec4& value);
-        void setMat4(const glm::mat4& value);
-        void setTexture(const TexturePtr& texture);
-
-        bool upload(int location, int* textureCount);
+        void upload(const IImage& image) override;
 
     private:
-        IUniformValue* mValue;
-        int mBoundToLocation;
+        size_t mHandle;
 
-        Z_DISABLE_COPY(Uniform);
+        Z_DISABLE_COPY(GLES2Texture);
     };
 }

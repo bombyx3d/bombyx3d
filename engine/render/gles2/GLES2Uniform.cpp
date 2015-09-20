@@ -19,15 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Uniform.h"
-#include "Texture.h"
+#include "GLES2Uniform.h"
+#include "engine/render/gles2/GLES2Texture.h"
 #include "engine/utility/PoolAllocator.h"
 #include "opengl.h"
 #include <cassert>
 
 namespace Engine
 {
-    struct Uniform::IUniformValue
+    struct GLES2Uniform::IUniformValue
     {
         virtual ~IUniformValue() = default;
         virtual void upload(int location, int* textureCount) = 0;
@@ -37,7 +37,7 @@ namespace Engine
     };
 
     #define Z_UNIFORM_VALUE(NAME, TYPE, UPLOAD) \
-        struct NAME : public Uniform::IUniformValue \
+        struct NAME : public GLES2Uniform::IUniformValue \
         { \
             const TYPE value; \
             NAME(const TYPE& v) : value(v) {} \
@@ -54,7 +54,7 @@ namespace Engine
 
         Z_UNIFORM_VALUE(TextureValue, TexturePtr, {
             glActiveTexture(GLenum(GL_TEXTURE0 + *textureCount));
-            glBindTexture(GL_TEXTURE_2D, GLuint(static_cast<Texture&>(*value).handle()));
+            glBindTexture(GL_TEXTURE_2D, GLuint(static_cast<GLES2Texture&>(*value).handle()));
             glUniform1i(location, *textureCount);
             ++*textureCount;
         });
@@ -73,25 +73,25 @@ namespace Engine
         static PoolAllocator<ValueUnion> gValueAllocator;
     }
 
-    void* Uniform::IUniformValue::operator new(size_t size)
+    void* GLES2Uniform::IUniformValue::operator new(size_t size)
     {
         assert(size <= sizeof(ValueUnion));
         return gValueAllocator.alloc();
     }
 
-    void Uniform::IUniformValue::operator delete(void* ptr)
+    void GLES2Uniform::IUniformValue::operator delete(void* ptr)
     {
         gValueAllocator.free(reinterpret_cast<ValueUnion*>(ptr));
     }
 
 
-    Uniform::Uniform()
+    GLES2Uniform::GLES2Uniform()
         : mValue(nullptr)
         , mBoundToLocation(-1)
     {
     }
 
-    Uniform::Uniform(Uniform&& other)
+    GLES2Uniform::GLES2Uniform(GLES2Uniform&& other)
         : mValue(other.mValue)
         , mBoundToLocation(other.mBoundToLocation)
     {
@@ -99,12 +99,12 @@ namespace Engine
         other.mBoundToLocation = -1;
     }
 
-    Uniform::~Uniform()
+    GLES2Uniform::~GLES2Uniform()
     {
         reset();
     }
 
-    Uniform& Uniform::operator=(Uniform&& other)
+    GLES2Uniform& GLES2Uniform::operator=(GLES2Uniform&& other)
     {
         mValue = other.mValue;
         mBoundToLocation = other.mBoundToLocation;
@@ -113,50 +113,50 @@ namespace Engine
         return *this;
     }
 
-    void Uniform::reset()
+    void GLES2Uniform::reset()
     {
         delete mValue;
         mValue = nullptr;
         mBoundToLocation = -1;
     }
 
-    void Uniform::setFloat(float value)
+    void GLES2Uniform::setFloat(float value)
     {
         reset();
         mValue = new FloatValue(value);
     }
 
-    void Uniform::setVec2(const glm::vec2& value)
+    void GLES2Uniform::setVec2(const glm::vec2& value)
     {
         reset();
         mValue = new Vec2Value(value);
     }
 
-    void Uniform::setVec3(const glm::vec3& value)
+    void GLES2Uniform::setVec3(const glm::vec3& value)
     {
         reset();
         mValue = new Vec3Value(value);
     }
 
-    void Uniform::setVec4(const glm::vec4& value)
+    void GLES2Uniform::setVec4(const glm::vec4& value)
     {
         reset();
         mValue = new Vec4Value(value);
     }
 
-    void Uniform::setMat4(const glm::mat4& value)
+    void GLES2Uniform::setMat4(const glm::mat4& value)
     {
         reset();
         mValue = new Mat4Value(value);
     }
 
-    void Uniform::setTexture(const TexturePtr& texture)
+    void GLES2Uniform::setTexture(const TexturePtr& texture)
     {
         reset();
         mValue = new TextureValue(texture);
     }
 
-    bool Uniform::upload(int location, int* textureCount)
+    bool GLES2Uniform::upload(int location, int* textureCount)
     {
         if (!mValue || location < 0)
             return false;

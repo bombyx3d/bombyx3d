@@ -28,14 +28,14 @@
 
 namespace Engine
 {
-    class Shader : public IShader
+    class GLES2Shader : public IShader
     {
     public:
         using UniformList = std::vector<std::pair<Atom, int>>;
         using AttributeList = std::vector<std::pair<Atom, int>>;
 
-        Shader();
-        ~Shader();
+        GLES2Shader();
+        ~GLES2Shader();
 
         size_t handle() const { return mProgram; }
 
@@ -66,6 +66,6 @@ namespace Engine
 
         void resetToUncompiledState();
 
-        Z_DISABLE_COPY(Shader);
+        Z_DISABLE_COPY(GLES2Shader);
     };
 }

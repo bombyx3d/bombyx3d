@@ -22,7 +22,7 @@
 #include "GlfwWrapper.h"
 #include "engine/core/Services.h"
 #include "engine/core/Log.h"
-#include "engine/render/Renderer.h"
+#include "engine/render/gles2/GLES2Renderer.h"
 #include <cstdlib>
 #include <cassert>
 #include <GLFW/glfw3.h>
