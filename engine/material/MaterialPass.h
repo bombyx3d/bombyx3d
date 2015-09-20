@@ -43,7 +43,7 @@ namespace Engine
 
         bool blendingEnabled() const { return (mFlags & Blend) != 0; }
         bool depthTestingEnabled() const { return (mFlags & DepthTest) != 0; }
-        bool depthWriteEnabled() const { return (mFlags & DepthWrite) != 0; }
+        bool depthWritingEnabled() const { return (mFlags & DepthWrite) != 0; }
         void setBlendingEnabled(bool value) { setFlag(Blend, value); }
         void setDepthTestingEnabled(bool value) { setFlag(DepthTest, value); }
         void setDepthWritingEnabled(bool value) { setFlag(DepthWrite, value); }

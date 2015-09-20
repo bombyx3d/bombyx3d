@@ -22,6 +22,7 @@
 #include "MainScene.h"
 #include "engine/core/Services.h"
 #include "engine/core/Log.h"
+#include "engine/render/ImmediateModeRenderer.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace Engine;
@@ -65,7 +66,11 @@ namespace Game
 
         renderer->setProjectionMatrix(mCamera->projectionMatrix());
         renderer->setModelViewMatrix(matrix);
+
         mMesh->render();
+
+        ImmediateModeRenderer r;
+        r.drawWireframeBoundingBox(mMesh->boundingBox());
     }
 
     bool MainScene::onTouchBegan(int fingerIndex, const glm::ivec2& position)

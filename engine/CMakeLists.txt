@@ -77,8 +77,10 @@ set(source_files
     material/MaterialTechnique.h
     material/ShaderLoader.cpp
     material/ShaderLoader.h
+    math/Axis.h
     math/BoundingBox.cpp
     math/BoundingBox.h
+    math/Quad.h
     mesh/Mesh.cpp
     mesh/Mesh.h
     mesh/RawMeshData.cpp

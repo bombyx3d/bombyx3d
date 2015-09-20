@@ -29,6 +29,7 @@
 #include "engine/interfaces/render/IShader.h"
 #include "engine/mesh/VertexFormat.h"
 #include "engine/material/MaterialPass.h"
+#include "engine/math/Quad.h"
 #include "engine/math/BoundingBox.h"
 #include <glm/glm.hpp>
 #include <vector>
@@ -53,6 +54,21 @@ namespace Engine
 
         void setBlend(bool flag);
         void setBlendFunc(BlendFunc srcFactor, BlendFunc dstFactor);
+
+        void setDepthTest(bool flag);
+        void setDepthWrite(bool flag);
+
+        void drawWireframeQuad(const Quad& quad, float z = 0.0f, const glm::vec4& colorVal = glm::vec4(1.0f));
+        void drawWireframeQuad(const glm::vec3& topLeft, const glm::vec3& topRight,
+            const glm::vec3& bottomRight, const glm::vec3& bottomLeft, const glm::vec4& colorVal = glm::vec4(1.0f));
+        void drawWireframeBoundingBox(const BoundingBox& box, const glm::vec4& colorVal = glm::vec4(1.0f));
+
+        void drawSolidQuad(const Quad& quad, float z = 0.0f, const glm::vec4& colorVal = glm::vec4(1.0f));
+        void drawSolidQuad(const glm::vec3& topLeft, const glm::vec3& topRight,
+            const glm::vec3& bottomRight, const glm::vec3& bottomLeft,
+            const glm::vec2& texCoord0 = glm::vec2(0.0f), const glm::vec2& texCoord1 = glm::vec2(1.0f),
+            const glm::vec4& colorVal = glm::vec4(1.0f));
+        void drawSolidBoundingBox(const BoundingBox& box, const glm::vec4& colorVal = glm::vec4(1.0f));
 
         void begin(PrimitiveType primitive);
         void texCoord(float x, float y);
