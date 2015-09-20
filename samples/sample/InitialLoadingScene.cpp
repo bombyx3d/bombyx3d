@@ -26,6 +26,8 @@
 #include "engine/core/Services.h"
 #include "engine/mesh/VertexFormat.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <utility>
+#include <algorithm>
 
 using namespace Engine;
 
@@ -49,6 +51,7 @@ namespace Game
         : mProjectionMatrix(1.0f)
         , mPoint1(0.0f)
         , mPoint2(0.0f)
+        , mCurrentProgress(0.0f)
     {
         mTextureUniform = AtomTable::getAtom("uTexture");
 
@@ -62,6 +65,7 @@ namespace Game
         mVertexBuffer = Services::renderer()->createVertexBuffer();
         mVertexSource = RenderUtils::createVertexSource<Vertex>(mVertexBuffer, mIndexBuffer);
 
+        setAutoSwitchScene(false);
         beginLoading<MainScene>();
     }
 
@@ -73,6 +77,23 @@ namespace Game
 
         mPoint1 = glm::vec2(w - BAR_WIDTH, h - BAR_HEIGHT) * 0.5f;
         mPoint2 = mPoint1 + glm::vec2(BAR_WIDTH, BAR_HEIGHT);
+    }
+
+    void InitialLoadingScene::update(double time)
+    {
+        LoadingScene::update(time);
+        mTargetProgress = std::max(currentProgress(), mTargetProgress);
+
+        if (loadingComplete() && fabsf(mTargetProgress - mCurrentProgress) < 0.01f) {
+            switchToNextScene();
+            return;
+        }
+
+        if (mCurrentProgress < mTargetProgress) {
+            mCurrentProgress += std::min(2.0f * float(time), mTargetProgress - mCurrentProgress);
+            if (mCurrentProgress > mTargetProgress)
+                mCurrentProgress = mTargetProgress;
+        }
     }
 
     void InitialLoadingScene::draw(IRenderer* renderer) const
@@ -88,11 +109,11 @@ namespace Game
         const float color = 4.0f;
         const float bTX1 = 0.0f / TEXTURE_WIDTH;
         const float bTY1 = (BAR_HEIGHT * color) / TEXTURE_HEIGHT;
-        const float bTX2 = (BAR_WIDTH * currentProgress()) / TEXTURE_WIDTH;
+        const float bTX2 = (BAR_WIDTH * mCurrentProgress) / TEXTURE_WIDTH;
         const float bTY2 = (BAR_HEIGHT * (color + 1.0f)) / TEXTURE_HEIGHT;
 
         glm::vec2 point1 = mPoint1 + glm::vec2(1.0f, 0.0f);
-        glm::vec2 point2 = glm::vec2(mPoint1.x + (mPoint2.x - mPoint1.x) * currentProgress(), mPoint2.y);
+        glm::vec2 point2 = glm::vec2(mPoint1.x + (mPoint2.x - mPoint1.x) * mCurrentProgress, mPoint2.y);
 
         const Vertex vertices[] = {
             { {  point1.x,  point1.y, 0.0f }, { bTX1, bTY1 } },

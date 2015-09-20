@@ -29,7 +29,14 @@ namespace Engine
 {
     LoadingScene::LoadingScene()
         : mCurrentProgress(0.0f)
+        , mAutoSwitchScene(true)
+        , mLoadingComplete(false)
     {
+    }
+
+    void LoadingScene::switchToNextScene()
+    {
+        Application::instance()->setCurrentScene(mNextScene);
     }
 
     void LoadingScene::update(double)
@@ -40,7 +47,10 @@ namespace Engine
         float progress = Services::resourceManager()->resourceLoadProgress();
         mCurrentProgress = std::max(mCurrentProgress, progress);
 
-        if (!Services::resourceManager()->resourcesAreLoading())
-            Application::instance()->setCurrentScene(mNextScene);
+        if (!Services::resourceManager()->resourcesAreLoading()) {
+            mLoadingComplete = true;
+            if (mAutoSwitchScene)
+                switchToNextScene();
+        }
     }
 }

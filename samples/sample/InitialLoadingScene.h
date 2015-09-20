@@ -37,6 +37,7 @@ namespace Game
 
         void resize(const glm::ivec2& newSize) override;
 
+        void update(double time) override;
         void draw(Engine::IRenderer* renderer) const override;
 
     private:
@@ -49,5 +50,7 @@ namespace Game
         Engine::VertexBufferPtr mVertexBuffer;
         Engine::IndexBufferPtr mIndexBuffer;
         Engine::VertexSourcePtr mVertexSource;
+        float mCurrentProgress;
+        float mTargetProgress;
     };
 }

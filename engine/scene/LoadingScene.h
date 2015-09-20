@@ -31,8 +31,19 @@ namespace Engine
         LoadingScene();
 
         template <class SCENE, class... ARGS> void beginLoading(ARGS&&... args)
-            { mNextScene = std::make_shared<SCENE>(std::forward<ARGS>(args)...); }
+        {
+            mNextScene = std::make_shared<SCENE>(std::forward<ARGS>(args)...);
+            mCurrentProgress = 0.0f;
+            mLoadingComplete = false;
+        }
 
+        const ScenePtr& nextScene() const { return mNextScene; }
+        void switchToNextScene();
+
+        bool autoSwitchScene() const { return mAutoSwitchScene; }
+        void setAutoSwitchScene(bool flag) { mAutoSwitchScene = flag; }
+
+        bool loadingComplete() const { return mLoadingComplete; }
         float currentProgress() const { return mCurrentProgress; }
 
         void update(double time) override;
@@ -40,5 +51,7 @@ namespace Engine
     private:
         ScenePtr mNextScene;
         float mCurrentProgress;
+        bool mAutoSwitchScene;
+        bool mLoadingComplete;
     };
 }
