@@ -24,6 +24,7 @@
 #include "engine/interfaces/core/IThreadManager.h"
 #include "engine/utility/WorkerThread.h"
 #include "engine/utility/ProducerConsumerQueue.h"
+#include <memory>
 
 namespace Engine
 {
@@ -32,6 +33,8 @@ namespace Engine
     public:
         CxxThreadManager();
         ~CxxThreadManager();
+
+        void stopWorkerThreads();
 
         void flushRenderThreadQueue();
 

@@ -20,7 +20,6 @@
  * THE SOFTWARE.
  */
 #include "Services.h"
-#include "engine/core/ResourceManager.h"
 
 namespace Engine
 {
@@ -28,7 +27,6 @@ namespace Engine
 
     Services::Services()
     {
-        mResourceManager = std::make_shared<ResourceManager>();
     }
 
     Services::~Services()

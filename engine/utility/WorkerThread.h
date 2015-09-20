@@ -24,6 +24,7 @@
 #include "engine/core/macros.h"
 #include "engine/utility/ProducerConsumerQueue.h"
 #include <thread>
+#include <atomic>
 
 namespace Engine
 {
@@ -34,6 +35,7 @@ namespace Engine
         ~WorkerThread();
 
         void stop();
+        bool exited() const { return mExited.load(); }
 
         void perform(const std::function<void()>& action);
         void perform(std::function<void()>&& action);
@@ -42,6 +44,7 @@ namespace Engine
         std::thread mThread;
         ProducerConsumerQueue<std::function<void()>> mQueue;
         bool mShouldExit;
+        std::atomic<bool> mExited;
 
         void thread();
 

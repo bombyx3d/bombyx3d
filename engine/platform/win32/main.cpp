@@ -77,6 +77,8 @@ static int win32Main()
         }
     }
 
+    threadManager->stopWorkerThreads();
+
     threadManager.reset();
     inputManager.reset();
     Services::setInputManager(nullptr);

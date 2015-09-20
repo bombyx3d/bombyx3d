@@ -64,6 +64,8 @@ int main()
         }
     }
 
+    threadManager->stopWorkerThreads();
+
     threadManager.reset();
     inputManager.reset();
     Services::setInputManager(nullptr);

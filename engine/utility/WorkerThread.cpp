@@ -26,6 +26,7 @@ namespace Engine
 {
     WorkerThread::WorkerThread()
         : mShouldExit(false)
+        , mExited(false)
     {
         mThread = std::thread(std::bind(&WorkerThread::thread, this));
     }
@@ -57,5 +58,6 @@ namespace Engine
     {
         while (!mShouldExit)
             mQueue.dequeue()();
+        mExited.store(true);
     }
 }

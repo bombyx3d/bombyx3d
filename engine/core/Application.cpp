@@ -21,6 +21,7 @@
  */
 #include "Application.h"
 #include "engine/interfaces/render/IRenderer.h"
+#include "engine/core/ResourceManager.h"
 #include "engine/core/Log.h"
 #include "engine/core/Services.h"
 #include <cassert>
@@ -78,6 +79,7 @@ namespace Engine
 
     void Application::initialize(const glm::ivec2& screenSize)
     {
+        Services::setResourceManager(std::make_shared<ResourceManager>());
         resize(screenSize);
         setCurrentScene(createInitialScene());
     }
@@ -86,6 +88,7 @@ namespace Engine
     {
         setCurrentScene(ScenePtr());
         mPreviousScene.reset();
+        Services::setResourceManager(nullptr);
     }
 
     void Application::resize(const glm::ivec2& screenSize)

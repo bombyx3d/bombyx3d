@@ -32,6 +32,14 @@ namespace Engine
     {
     }
 
+    void CxxThreadManager::stopWorkerThreads()
+    {
+        mWorkerThread.stop();
+        while (!mWorkerThread.exited())
+            std::this_thread::yield();
+        mRenderThreadQueue.clear();
+    }
+
     void CxxThreadManager::flushRenderThreadQueue()
     {
         std::function<void()> action;

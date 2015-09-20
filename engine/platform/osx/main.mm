@@ -54,6 +54,8 @@ int main()
             glfwWrapper.run([threadManager](){ threadManager->flushRenderThreadQueue(); });
     }
 
+    threadManager->stopWorkerThreads();
+
     threadManager.reset();
     inputManager.reset();
     Services::setInputManager(nullptr);

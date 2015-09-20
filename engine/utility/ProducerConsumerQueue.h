@@ -55,6 +55,15 @@ namespace Engine
         ProducerConsumerQueue() {}
         ~ProducerConsumerQueue() {}
 
+        void clear()
+        {
+            UniqueLock lock(mMutex);
+            std::deque<ITEM> queue = std::move(mQueue);
+            mQueue = std::deque<ITEM>();
+            lock.unlock();
+            queue.clear();
+        }
+
         void enqueue(const ITEM& item)
         {
             LockGuard lock(mMutex);
@@ -76,6 +85,7 @@ namespace Engine
 
             ITEM item(std::move(mQueue.front()));
             mQueue.pop_front();
+            lock.unlock();
 
             return item;
         }
