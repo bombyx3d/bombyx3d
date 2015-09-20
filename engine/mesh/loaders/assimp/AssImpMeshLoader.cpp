@@ -55,7 +55,7 @@ namespace Engine
         AssImpLogStream::init();
     }
 
-    bool AssImpMeshLoader::canLoadMesh(IFile* file)
+    bool AssImpMeshLoader::canLoadMesh(IFile*)
     {
         // FIXME
         return true;
@@ -171,7 +171,7 @@ namespace Engine
             const bool hasNormals = sceneMesh->HasNormals();
             const bool hasTangents = sceneMesh->HasTangentsAndBitangents();
             const bool hasTexCoords = sceneMesh->HasTextureCoords(0);
-            const bool hasBones = loadSkeleton && sceneMesh->HasBones();
+            //const bool hasBones = loadSkeleton && sceneMesh->HasBones();
 
             size_t vertexCount = sceneMesh->mNumVertices;
 //            if (!hasBones)
