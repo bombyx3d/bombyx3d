@@ -26,7 +26,11 @@
 #include "engine/mesh/RawMeshData.h"
 #include "engine/mesh/RawMeshElementData.h"
 #include "engine/mesh/VertexFormat.h"
+#include "engine/material/Material.h"
 #include "engine/core/Log.h"
+#include "engine/core/Services.h"
+#include "engine/utility/StringUtils.h"
+#include "engine/utility/FileUtils.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -146,8 +150,20 @@ namespace Engine
             element->setName(std::string(sceneMesh->mName.data, sceneMesh->mName.length));
 
             const aiMaterial* sceneMeshMaterial = scene->mMaterials[sceneMesh->mMaterialIndex];
-            if (sceneMeshMaterial->Get(AI_MATKEY_NAME, materialName) == AI_SUCCESS)
-                element->setMaterialName(std::string(materialName.data, materialName.length));
+            if (sceneMeshMaterial->Get(AI_MATKEY_NAME, materialName) == AI_SUCCESS) {
+                std::string name(materialName.data, materialName.length);
+
+                if (StringUtils::endsWith(name, "-material"))
+                    name = name.substr(0, name.size() - 9);
+                if (!StringUtils::endsWith(name, Material::DEFAULT_FILE_EXTENSION))
+                    name += Material::DEFAULT_FILE_EXTENSION;
+
+                std::string path = FileUtils::makeFullPath(name, file->name());
+                if (!Services::fileSystem()->fileExists(path))
+                    path = std::move(name);
+
+                element->setMaterialName(std::move(path));
+            }
 
             const bool hasPositions = sceneMesh->HasPositions();
             const bool hasNormals = sceneMesh->HasNormals();

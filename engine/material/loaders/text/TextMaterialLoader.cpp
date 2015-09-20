@@ -137,6 +137,6 @@ namespace Engine
 
     bool TextMaterialLoader::canLoadMaterial(IFile* file)
     {
-        return file && StringUtils::endsWith(file->name(), ".material");
+        return file && StringUtils::endsWith(file->name(), Material::DEFAULT_FILE_EXTENSION);
     }
 }

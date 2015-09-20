@@ -35,6 +35,8 @@ namespace Engine
     class Material : public IMaterial
     {
     public:
+        static const std::string DEFAULT_FILE_EXTENSION;
+
         Material();
         ~Material();
 

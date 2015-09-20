@@ -27,6 +27,7 @@
 
 namespace Engine
 {
+    const std::string Material::DEFAULT_FILE_EXTENSION = ".material";
     std::vector<std::unique_ptr<IMaterialLoader>> Material::mMaterialLoaders;
     std::mutex Material::mMaterialLoadersMutex;
 
