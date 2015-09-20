@@ -105,10 +105,10 @@ set(source_files
     scene/3d/camera/AbstractPerspectiveCamera.h
     scene/3d/camera/OrbitCamera.cpp
     scene/3d/camera/OrbitCamera.h
+    scene/AbstractLoadingScene.cpp
+    scene/AbstractLoadingScene.h
     scene/AbstractScene.cpp
     scene/AbstractScene.h
-    scene/LoadingScene.cpp
-    scene/LoadingScene.h
     utility/FileUtils.cpp
     utility/FileUtils.h
     utility/MemoryPool.cpp

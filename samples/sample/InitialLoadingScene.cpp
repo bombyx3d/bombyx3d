@@ -81,7 +81,7 @@ namespace Game
 
     void InitialLoadingScene::update(double time)
     {
-        LoadingScene::update(time);
+        AbstractLoadingScene::update(time);
         mTargetProgress = std::max(currentProgress(), mTargetProgress);
 
         if (loadingComplete() && fabsf(mTargetProgress - mCurrentProgress) < 0.01f) {

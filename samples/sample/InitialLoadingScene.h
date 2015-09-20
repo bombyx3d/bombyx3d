@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "engine/scene/LoadingScene.h"
+#include "engine/scene/AbstractLoadingScene.h"
 #include "engine/interfaces/render/IIndexBuffer.h"
 #include "engine/interfaces/render/IVertexBuffer.h"
 #include "engine/interfaces/render/ITexture.h"
@@ -30,7 +30,7 @@
 
 namespace Game
 {
-    class InitialLoadingScene : public Engine::LoadingScene
+    class InitialLoadingScene : public Engine::AbstractLoadingScene
     {
     public:
         InitialLoadingScene();

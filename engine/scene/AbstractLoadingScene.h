@@ -25,10 +25,10 @@
 
 namespace Engine
 {
-    class LoadingScene : public AbstractScene
+    class AbstractLoadingScene : public AbstractScene
     {
     public:
-        LoadingScene();
+        AbstractLoadingScene();
 
         template <class SCENE, class... ARGS> void beginLoading(ARGS&&... args)
         {

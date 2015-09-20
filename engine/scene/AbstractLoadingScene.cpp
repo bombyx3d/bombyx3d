@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "LoadingScene.h"
+#include "AbstractLoadingScene.h"
 #include "engine/core/Application.h"
 #include "engine/core/Services.h"
 #include <utility>
@@ -27,19 +27,19 @@
 
 namespace Engine
 {
-    LoadingScene::LoadingScene()
+    AbstractLoadingScene::AbstractLoadingScene()
         : mCurrentProgress(0.0f)
         , mAutoSwitchScene(true)
         , mLoadingComplete(false)
     {
     }
 
-    void LoadingScene::switchToNextScene()
+    void AbstractLoadingScene::switchToNextScene()
     {
         Application::instance()->setCurrentScene(mNextScene);
     }
 
-    void LoadingScene::update(double)
+    void AbstractLoadingScene::update(double)
     {
         if (!mNextScene)
             return;
