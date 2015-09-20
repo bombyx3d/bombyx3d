@@ -29,6 +29,7 @@
 #include "engine/interfaces/render/IRenderer.h"
 #include "engine/interfaces/core/IThreadManager.h"
 #include "engine/material/ShaderLoader.h"
+#include <glm/glm.hpp>
 
 namespace Engine
 {
@@ -47,6 +48,8 @@ namespace Engine
             virtual void setup(const RESOURCEPTR& resource) = 0;
         };
 
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
         template <typename LOADER>
         void loadResourceSync(typename LOADER::ResourcePtr& resource, const std::string& fileName)
         {
@@ -59,41 +62,45 @@ namespace Engine
                 loader.setup(resource);
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
         template <typename LOADER>
         void loadResourceAsync(typename LOADER::ResourcePtr& resource, const std::string& fileName,
-            const std::shared_ptr<std::atomic<int>>& pendingResourceCounter)
+            const std::shared_ptr<ResourceManager::Counters>& counters)
         {
             struct Context
             {
                 LOADER loader;
-                std::shared_ptr<std::atomic<int>> pendingResourceCounter;
+                std::shared_ptr<ResourceManager::Counters> counters;
                 typename LOADER::ResourcePtr resource;
             };
 
             std::shared_ptr<Context> context = std::make_shared<Context>();
             context->loader.fileName = std::move(fileName);
-            context->pendingResourceCounter = pendingResourceCounter;
+            context->counters = counters;
 
             resource = context->loader.create();
             context->resource = resource;
 
-            ++*pendingResourceCounter;
+            context->counters->onBeginLoadResource();
             Services::threadManager()->performInBackgroundThread([context]() {
                 if (!context->loader.load()) {
-                    --*context->pendingResourceCounter;
+                    context->counters->onEndLoadResource();
                     return;
                 }
 
                 Services::threadManager()->performInRenderThread([context]() {
                     context->loader.setup(context->resource);
-                    --*context->pendingResourceCounter;
+                    context->counters->onEndLoadResource();
                 });
             });
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
         template <typename LOADER, typename MAP>
         typename LOADER::ResourcePtr getResource(MAP& map, const std::string& fileName, bool async,
-            const std::shared_ptr<std::atomic<int>>& pendingResourceCounter)
+            const std::shared_ptr<ResourceManager::Counters>& counters)
         {
             auto& weakRef = map[fileName];
 
@@ -104,16 +111,17 @@ namespace Engine
             if (!async)
                 loadResourceSync<LOADER>(resource, fileName);
             else
-                loadResourceAsync<LOADER>(resource, fileName, pendingResourceCounter);
+                loadResourceAsync<LOADER>(resource, fileName, counters);
 
             weakRef = resource;
             return resource;
         }
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     ResourceManager::ResourceManager()
-        : mNumPendingResources(std::make_shared<std::atomic<int>>())
+        : mCounters(std::make_shared<Counters>())
     {
     }
 
@@ -121,10 +129,20 @@ namespace Engine
     {
     }
 
-    int ResourceManager::numPendingResources() const
+    bool ResourceManager::resourcesAreLoading() const
     {
-        return mNumPendingResources->load();
+        return mCounters->pending.load() != 0;
     }
+
+    float ResourceManager::resourceLoadProgress() const
+    {
+        int complete = mCounters->complete.load();
+        int total = mCounters->total.load();
+        return glm::clamp(float(complete) / float(total), 0.0f, 1.0f);
+    }
+
+    ////////////////
+    // Material
 
     MaterialPtr ResourceManager::getMaterial(const std::string& fileName, bool async)
     {
@@ -149,8 +167,11 @@ namespace Engine
             }
         };
 
-        return getResource<MaterialResourceLoader>(mMaterials, fileName, async, mNumPendingResources);
+        return getResource<MaterialResourceLoader>(mMaterials, fileName, async, mCounters);
     }
+
+    ////////////////
+    // Shader
 
     ShaderPtr ResourceManager::getShader(const std::string& fileName, bool async)
     {
@@ -175,8 +196,11 @@ namespace Engine
             }
         };
 
-        return getResource<ShaderResourceLoader>(mShaders, fileName, async, mNumPendingResources);
+        return getResource<ShaderResourceLoader>(mShaders, fileName, async, mCounters);
     }
+
+    ////////////////
+    // Texture
 
     TexturePtr ResourceManager::getTexture(const std::string& fileName, bool async)
     {
@@ -201,8 +225,11 @@ namespace Engine
             }
         };
 
-        return getResource<TextureResourceLoader>(mTextures, fileName, async, mNumPendingResources);
+        return getResource<TextureResourceLoader>(mTextures, fileName, async, mCounters);
     }
+
+    ////////////////
+    // Static mesh
 
     MeshPtr ResourceManager::getStaticMesh(const std::string& fileName, bool async)
     {
@@ -229,6 +256,6 @@ namespace Engine
             }
         };
 
-        return getResource<StaticMeshResourceLoader>(mStaticMeshes, fileName, async, mNumPendingResources);
+        return getResource<StaticMeshResourceLoader>(mStaticMeshes, fileName, async, mCounters);
     }
 }

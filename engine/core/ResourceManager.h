@@ -33,10 +33,22 @@ namespace Engine
     class ResourceManager : public IResourceManager
     {
     public:
+        struct Counters
+        {
+            std::atomic<int> total;
+            std::atomic<int> complete;
+            std::atomic<int> pending;
+
+            Counters() : total(0), complete(0), pending(0) {}
+            void onBeginLoadResource() { ++pending; ++total; }
+            void onEndLoadResource() { ++complete; --pending; }
+        };
+
         ResourceManager();
         ~ResourceManager();
 
-        int numPendingResources() const override;
+        bool resourcesAreLoading() const override;
+        float resourceLoadProgress() const override;
 
         MaterialPtr getMaterial(const std::string& fileName, bool async = true) override;
         ShaderPtr getShader(const std::string& fileName, bool async = true) override;
@@ -48,7 +60,7 @@ namespace Engine
         std::unordered_map<std::string, std::weak_ptr<IShader>> mShaders;
         std::unordered_map<std::string, std::weak_ptr<ITexture>> mTextures;
         std::unordered_map<std::string, std::weak_ptr<IMesh>> mStaticMeshes;
-        std::shared_ptr<std::atomic<int>> mNumPendingResources;
+        std::shared_ptr<Counters> mCounters;
 
         Z_DISABLE_COPY(ResourceManager);
     };

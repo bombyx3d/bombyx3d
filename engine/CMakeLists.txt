@@ -107,6 +107,8 @@ set(source_files
     scene/3d/camera/OrbitCamera.h
     scene/AbstractScene.cpp
     scene/AbstractScene.h
+    scene/LoadingScene.cpp
+    scene/LoadingScene.h
     utility/FileUtils.cpp
     utility/FileUtils.h
     utility/MemoryPool.cpp

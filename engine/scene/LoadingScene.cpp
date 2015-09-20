@@ -19,29 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "engine/interfaces/material/IMaterial.h"
-#include "engine/interfaces/mesh/IMesh.h"
-#include "engine/interfaces/render/IShader.h"
-#include "engine/interfaces/render/ITexture.h"
-#include <memory>
+#include "LoadingScene.h"
+#include "engine/core/Application.h"
+#include "engine/core/Services.h"
+#include <utility>
+#include <algorithm>
 
 namespace Engine
 {
-    class IResourceManager
+    LoadingScene::LoadingScene(const ScenePtr& nextScene)
+        : mNextScene(nextScene)
+        , mCurrentProgress(0.0f)
     {
-    public:
-        virtual ~IResourceManager() = default;
+    }
 
-        virtual bool resourcesAreLoading() const = 0;
-        virtual float resourceLoadProgress() const = 0;
+    LoadingScene::LoadingScene(ScenePtr&& nextScene)
+        : mNextScene(std::move(nextScene))
+        , mCurrentProgress(0.0f)
+    {
+    }
 
-        virtual MaterialPtr getMaterial(const std::string& fileName, bool async = true) = 0;
-        virtual ShaderPtr getShader(const std::string& fileName, bool async = true) = 0;
-        virtual TexturePtr getTexture(const std::string& fileName, bool async = true) = 0;
-        virtual MeshPtr getStaticMesh(const std::string& fileName, bool async = true) = 0;
-    };
+    void LoadingScene::update(double)
+    {
+        float progress = Services::resourceManager()->resourceLoadProgress();
+        mCurrentProgress = std::max(mCurrentProgress, progress);
 
-    using ResourceManagerPtr = std::shared_ptr<IResourceManager>;
+        if (!Services::resourceManager()->resourcesAreLoading())
+            Application::instance()->setCurrentScene(mNextScene);
+    }
 }

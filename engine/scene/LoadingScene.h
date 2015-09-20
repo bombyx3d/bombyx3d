@@ -21,27 +21,22 @@
  */
 
 #pragma once
-#include "engine/interfaces/material/IMaterial.h"
-#include "engine/interfaces/mesh/IMesh.h"
-#include "engine/interfaces/render/IShader.h"
-#include "engine/interfaces/render/ITexture.h"
-#include <memory>
+#include "engine/scene/AbstractScene.h"
 
 namespace Engine
 {
-    class IResourceManager
+    class LoadingScene : public AbstractScene
     {
     public:
-        virtual ~IResourceManager() = default;
+        explicit LoadingScene(const ScenePtr& nextScene);
+        explicit LoadingScene(ScenePtr&& nextScene);
 
-        virtual bool resourcesAreLoading() const = 0;
-        virtual float resourceLoadProgress() const = 0;
+        float currentProgress() const { return mCurrentProgress; }
 
-        virtual MaterialPtr getMaterial(const std::string& fileName, bool async = true) = 0;
-        virtual ShaderPtr getShader(const std::string& fileName, bool async = true) = 0;
-        virtual TexturePtr getTexture(const std::string& fileName, bool async = true) = 0;
-        virtual MeshPtr getStaticMesh(const std::string& fileName, bool async = true) = 0;
+        void update(double time) override;
+
+    private:
+        ScenePtr mNextScene;
+        float mCurrentProgress;
     };
-
-    using ResourceManagerPtr = std::shared_ptr<IResourceManager>;
 }
