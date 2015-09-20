@@ -51,7 +51,8 @@ namespace Engine
         attribute.normalize = normalize;
     }
 
-    void VertexSource::setAttributes(const IVertexFormatAttributeList& attributes, const VertexBufferPtr& buffer)
+    void VertexSource::setAttributes(const IVertexFormatAttributeList& attributes,
+        const VertexBufferPtr& buffer, size_t offset)
     {
         size_t stride = attributes.stride();
         size_t attributeCount = attributes.attributeCount();
@@ -60,7 +61,7 @@ namespace Engine
             const auto& attribute = attributes.attribute(i);
 
             Atom name = AtomTable::getAtom(attribute.name);
-            setAttribute(name, attribute.type, buffer, attribute.offset, stride, attribute.normalize);
+            setAttribute(name, attribute.type, buffer, offset + attribute.offset, stride, attribute.normalize);
         }
     }
 

@@ -57,9 +57,9 @@ set(source_files
     interfaces/material/IMaterialPass.h
     interfaces/material/IMaterialTechnique.h
     interfaces/mesh/IMesh.h
-    interfaces/mesh/IMeshData.h
-    interfaces/mesh/IMeshElement.h
     interfaces/mesh/IMeshLoader.h
+    interfaces/mesh/IRawMeshData.h
+    interfaces/mesh/IRawMeshElementData.h
     interfaces/render/IBuffer.h
     interfaces/render/IIndexBuffer.h
     interfaces/render/IRenderer.h
@@ -81,10 +81,9 @@ set(source_files
     math/BoundingBox.h
     mesh/Mesh.cpp
     mesh/Mesh.h
-    mesh/MeshData.cpp
-    mesh/MeshData.h
-    mesh/MeshElement.cpp
-    mesh/MeshElement.h
+    mesh/RawMeshData.cpp
+    mesh/RawMeshData.h
+    mesh/RawMeshElementData.h
     mesh/VertexFormat.h
     render/Buffer.cpp
     render/Buffer.h

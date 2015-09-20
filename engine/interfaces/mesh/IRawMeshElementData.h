@@ -21,41 +21,31 @@
  */
 
 #pragma once
-#include "engine/mesh/VertexFormat.h"
 #include "engine/math/BoundingBox.h"
+#include "engine/interfaces/material/IMaterial.h"
 #include "engine/interfaces/render/IRenderer.h"
 #include <memory>
-#include <vector>
 #include <string>
-#include <cstdint>
 
 namespace Engine
 {
-    class IMeshData
+    class IRawMeshElementData
     {
     public:
-        struct Element
-        {
-            std::string name;
-            std::string materialName;
-            size_t vertexBufferOffset;
-            size_t vertexCount;
-            size_t indexBufferOffset;
-            size_t indexCount;
-            PrimitiveType primitiveType;
-            const IVertexFormatAttributeList* vertexFormat;
-            BoundingBox boundingBox;
-        };
+        virtual ~IRawMeshElementData() = default;
 
-        virtual ~IMeshData() = default;
+        virtual const std::string& name() const = 0;
+        virtual const std::string& materialName() const = 0;
+        virtual PrimitiveType primitiveType() const = 0;
 
         virtual const BoundingBox& boundingBox() const = 0;
 
-        virtual const std::vector<Element>& elements() const = 0;
-
-        virtual const std::vector<uint8_t>& vertexData() const = 0;
-        virtual const std::vector<uint16_t>& indexData() const = 0;
+        virtual const IVertexFormatAttributeList* vertexFormat() const = 0;
+        virtual size_t vertexBufferOffset() const = 0;
+        virtual size_t vertexBufferSize() = 0;
+        virtual size_t firstIndex() const = 0;
+        virtual size_t indexCount() = 0;
     };
 
-    using MeshDataPtr = std::shared_ptr<IMeshData>;
+    using RawMeshElementDataPtr = std::unique_ptr<IRawMeshElementData>;
 }

@@ -19,48 +19,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "MeshData.h"
+#include "RawMeshData.h"
+#include "engine/mesh/RawMeshElementData.h"
 #include "engine/core/Services.h"
 #include "engine/core/Log.h"
 
 namespace Engine
 {
-    std::vector<std::unique_ptr<IMeshLoader>> MeshData::mMeshLoaders;
-    std::mutex MeshData::mMeshLoadersMutex;
+    std::vector<std::unique_ptr<IMeshLoader>> RawMeshData::mMeshLoaders;
+    std::mutex RawMeshData::mMeshLoadersMutex;
 
-    MeshData::MeshData()
+    RawMeshData::RawMeshData()
     {
     }
 
-    MeshData::~MeshData()
+    RawMeshData::~RawMeshData()
     {
     }
 
-    void MeshData::addElement(const Element& element)
+    size_t RawMeshData::appendVertices(size_t count, void** vertices, size_t vertexSize)
     {
-        adjustBoundingBox(element.boundingBox, mElements.empty());
-        mElements.emplace_back(element);
+        size_t offset = mVertexData.size();
+        mVertexData.resize(offset + count * vertexSize);
+        *vertices = &mVertexData[offset];
+        return offset;
     }
 
-    void MeshData::addElement(Element&& element)
-    {
-        adjustBoundingBox(element.boundingBox, mElements.empty());
-        mElements.emplace_back(std::move(element));
-    }
-
-    void MeshData::setElements(const std::vector<Element>& e)
-    {
-        mElements = e;
-        calculateBoundingBox();
-    }
-
-    void MeshData::setElements(std::vector<Element>&& e)
-    {
-        mElements = std::move(e);
-        calculateBoundingBox();
-    }
-
-    size_t MeshData::appendIndices(size_t count, uint16_t** indices)
+    size_t RawMeshData::appendIndices(size_t count, uint16_t** indices)
     {
         size_t offset = mIndexData.size();
         mIndexData.resize(offset + count);
@@ -68,20 +53,20 @@ namespace Engine
         return offset;
     }
 
-    MeshDataPtr MeshData::fromFile(const std::string& name, bool loadSkeleton)
+    RawMeshDataPtr RawMeshData::fromFile(const std::string& name, bool loadSkeleton)
     {
         return fromFile(Services::fileSystem()->openFile(name).get(), loadSkeleton);
     }
 
-    MeshDataPtr MeshData::fromFile(const FilePtr& file, bool loadSkeleton)
+    RawMeshDataPtr RawMeshData::fromFile(const FilePtr& file, bool loadSkeleton)
     {
         return fromFile(file.get(), loadSkeleton);
     }
 
-    MeshDataPtr MeshData::fromFile(IFile* file, bool loadSkeleton)
+    RawMeshDataPtr RawMeshData::fromFile(IFile* file, bool loadSkeleton)
     {
         if (!file)
-            return std::make_shared<MeshData>();
+            return std::make_shared<RawMeshData>();
 
         Z_LOGI("Loading mesh \"" << file->name() << "\"");
 
@@ -98,41 +83,15 @@ namespace Engine
 
         if (!meshLoader) {
             Z_LOGE("There is no loader able to read mesh \"" << file->name() << "\".");
-            return std::make_shared<MeshData>();
+            return std::make_shared<RawMeshData>();
         }
 
         return meshLoader->loadMesh(file, loadSkeleton);
     }
 
-    void MeshData::registerLoader(std::unique_ptr<IMeshLoader>&& loader)
+    void RawMeshData::registerLoader(std::unique_ptr<IMeshLoader>&& loader)
     {
         std::lock_guard<decltype(mMeshLoadersMutex)> lock(mMeshLoadersMutex);
         mMeshLoaders.emplace_back(std::move(loader));
-    }
-
-    void* MeshData::appendVertices(size_t count, size_t* offset, size_t vertexSize)
-    {
-        *offset = mVertexData.size();
-        mVertexData.resize(*offset + count * vertexSize);
-        return &mVertexData[*offset];
-    }
-
-    void MeshData::adjustBoundingBox(const BoundingBox& box, bool first)
-    {
-        if (first)
-            mBoundingBox = box;
-        else
-            mBoundingBox.addBoundingBox(box);
-    }
-
-    void MeshData::calculateBoundingBox()
-    {
-        if (mElements.empty())
-            mBoundingBox = BoundingBox();
-        else {
-            adjustBoundingBox(mElements[0].boundingBox, true);
-            for (size_t i = 1; i < mElements.size(); i++)
-                adjustBoundingBox(mElements[i].boundingBox, false);
-        }
     }
 }

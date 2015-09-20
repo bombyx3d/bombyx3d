@@ -31,6 +31,6 @@ namespace Engine
         AssImpMeshLoader();
 
         bool canLoadMesh(IFile* file) override;
-        MeshDataPtr loadMesh(IFile* file, bool loadSkeleton) override;
+        RawMeshDataPtr loadMesh(IFile* file, bool loadSkeleton) override;
     };
 }

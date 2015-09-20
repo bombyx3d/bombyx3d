@@ -20,9 +20,7 @@
  * THE SOFTWARE.
  */
 #include "Mesh.h"
-#include "engine/mesh/MeshElement.h"
 #include "engine/core/Services.h"
-#include <cassert>
 
 namespace Engine
 {
@@ -36,7 +34,7 @@ namespace Engine
     {
     }
 
-    void Mesh::setData(const MeshDataPtr& data, BufferUsage usage)
+    void Mesh::setData(const RawMeshDataPtr& data, BufferUsage usage)
     {
         assert(data != nullptr);
         if (!data)
@@ -45,29 +43,50 @@ namespace Engine
         mBoundingBox = data->boundingBox();
 
         const auto& vertices = data->vertexData();
-        mVertexBuffer->setData(vertices.data(), vertices.size(), usage);
+        const size_t vertexElementSize = sizeof(std::remove_reference<decltype(vertices)>::type::value_type);
+        mVertexBuffer->setData(vertices.data(), vertices.size() * vertexElementSize, usage);
 
         const auto& indices = data->indexData();
-        mIndexBuffer->setData(indices.data(), indices.size() * sizeof(uint16_t), usage);
+        const size_t indexElementSize = sizeof(std::remove_reference<decltype(indices)>::type::value_type);
+        mIndexBuffer->setData(indices.data(), indices.size() * indexElementSize, usage);
 
-        auto self = shared_from_this();
         mElements.reserve(data->elements().size());
         for (const auto& dataElement : data->elements()) {
-            auto meshElement = std::make_shared<MeshElement>(self);
-            meshElement->setName(dataElement.name);
-            meshElement->setMaterialName(dataElement.materialName);
-            meshElement->setVertexFormat(dataElement.vertexFormat);
-            meshElement->setVertexRange(dataElement.vertexBufferOffset, dataElement.vertexCount);
-            meshElement->setIndexRange(dataElement.indexBufferOffset, dataElement.indexCount);
-            meshElement->setPrimitiveType(dataElement.primitiveType);
-            meshElement->setVertexFormat(dataElement.vertexFormat);
-            meshElement->setBoundingBox(dataElement.boundingBox);
+            Element meshElement;
 
-            // Ensure that lazy-initialized resources are created now
-            meshElement->material();
-            meshElement->vertexSource();
+            meshElement.primitiveType = dataElement->primitiveType();
+            meshElement.firstIndex = dataElement->firstIndex();
+            meshElement.indexCount = dataElement->indexCount();
+
+            meshElement.material = Services::resourceManager()->getMaterial(dataElement->materialName());
+
+            meshElement.vertexSource = Services::renderer()->createVertexSource();
+            meshElement.vertexSource->setAttributes(
+                *dataElement->vertexFormat(), mVertexBuffer, dataElement->vertexBufferOffset());
+            meshElement.vertexSource->setIndexBuffer(mIndexBuffer);
 
             mElements.emplace_back(std::move(meshElement));
+        }
+    }
+
+    void Mesh::render() const
+    {
+        IRenderer* renderer = Services::renderer().get();
+
+        for (const auto& element : mElements) {
+            if (element.material->numTechniques() == 0)
+                continue;
+
+            IMaterialTechnique* technique = element.material->technique(0).get();
+            size_t numPasses = technique->numPasses();
+            if (numPasses == 0)
+                continue;
+
+            renderer->bindVertexSource(element.vertexSource);
+            for (size_t i = 0; i < numPasses; i++) {
+                technique->pass(i)->apply(renderer);
+                renderer->drawPrimitive(element.primitiveType, element.firstIndex, element.indexCount);
+            }
         }
     }
 }

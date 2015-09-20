@@ -23,7 +23,8 @@
 #include "AssImpLogStream.h"
 #include "AssImpIOSystem.h"
 #include "AssImpIOStream.h"
-#include "engine/mesh/MeshData.h"
+#include "engine/mesh/RawMeshData.h"
+#include "engine/mesh/RawMeshElementData.h"
 #include "engine/mesh/VertexFormat.h"
 #include "engine/core/Log.h"
 #include <assimp/Importer.hpp>
@@ -34,6 +35,8 @@ namespace Engine
 {
     namespace
     {
+        static const int MAX_VERTICES_PER_ELEMENT = 65535;
+
         Z_VERTEX_FORMAT(Vertex,
             (glm::vec3) position,
             (glm::vec3) normal,
@@ -54,9 +57,9 @@ namespace Engine
         return true;
     }
 
-    MeshDataPtr AssImpMeshLoader::loadMesh(IFile* file, bool loadSkeleton)
+    RawMeshDataPtr AssImpMeshLoader::loadMesh(IFile* file, bool loadSkeleton)
     {
-        auto mesh = std::make_shared<MeshData>();
+        auto mesh = std::make_shared<RawMeshData>();
 
         if (!file)
             return mesh;
@@ -81,7 +84,7 @@ namespace Engine
             0;
 
         Assimp::Importer importer;
-        importer.SetPropertyInteger(AI_CONFIG_PP_SLM_VERTEX_LIMIT, 65535);
+        importer.SetPropertyInteger(AI_CONFIG_PP_SLM_VERTEX_LIMIT, MAX_VERTICES_PER_ELEMENT);
         importer.SetPropertyInteger(AI_CONFIG_PP_SLM_TRIANGLE_LIMIT, 1000000000);
         importer.SetPropertyInteger(AI_CONFIG_PP_LBW_MAX_WEIGHTS, 4);
         importer.SetIOHandler(new AssImpIOSystem(file));
@@ -114,6 +117,7 @@ namespace Engine
             */
         }
 
+        BoundingBox meshBoundingBox;
         aiString materialName;
         for (size_t meshIndex = 0; meshIndex < scene->mNumMeshes; meshIndex++) {
             const aiMesh* sceneMesh = scene->mMeshes[meshIndex];
@@ -128,7 +132,7 @@ namespace Engine
                 continue;
             }
 
-            if (sceneMesh->mNumVertices > 65535) {
+            if (sceneMesh->mNumVertices > MAX_VERTICES_PER_ELEMENT) {
                 if (sceneMesh->mName.length == 0)
                     Z_LOGW("In \"" << file->name() << "\": mesh #" << meshIndex << " has too many vertices.");
                 else {
@@ -138,16 +142,12 @@ namespace Engine
                 continue;
             }
 
-            MeshData::Element element;
-            element.name.assign(sceneMesh->mName.data, sceneMesh->mName.length);
-            element.primitiveType = PrimitiveType::Triangles;
-            element.vertexFormat = &Vertex::attributes();
+            auto element = mesh->addElement<Vertex>(PrimitiveType::Triangles);
+            element->setName(std::string(sceneMesh->mName.data, sceneMesh->mName.length));
 
             const aiMaterial* sceneMeshMaterial = scene->mMaterials[sceneMesh->mMaterialIndex];
             if (sceneMeshMaterial->Get(AI_MATKEY_NAME, materialName) == AI_SUCCESS)
-                element.materialName.assign(materialName.data, materialName.length);
-
-            Vertex* vertices = nullptr;
+                element->setMaterialName(std::string(materialName.data, materialName.length));
 
             const bool hasPositions = sceneMesh->HasPositions();
             const bool hasNormals = sceneMesh->HasNormals();
@@ -156,23 +156,18 @@ namespace Engine
             const bool hasBones = loadSkeleton && sceneMesh->HasBones();
 
             size_t vertexCount = sceneMesh->mNumVertices;
-            size_t vertexBufferOffset;
 //            if (!hasBones)
-                vertexBufferOffset = mesh->appendVertices(vertexCount, &vertices);
+                Vertex* vertices = element->allocVertexBuffer(vertexCount);
 //            else
 //                vertexBufferOffset = mesh->appendVertices(vertexCount, &vertices, &skinningVertices);
 
-            glm::vec3 min;
-            glm::vec3 max;
-
-            if (vertexCount == 0 || !hasPositions)
-                min = max = glm::vec3(0.0f);
-            else {
-                min = max = glm::vec3(
+            BoundingBox elementBoundingBox;
+            if (vertexCount > 0 && hasPositions) {
+                elementBoundingBox.initFromPoint(glm::vec3(
                     sceneMesh->mVertices[0].x,
                     sceneMesh->mVertices[0].y,
                     sceneMesh->mVertices[0].z
-                );
+                ));
             }
 
             for (size_t i = 0; i < vertexCount; i++) {
@@ -180,9 +175,7 @@ namespace Engine
                     vertices->position.x = sceneMesh->mVertices[i].x;
                     vertices->position.y = sceneMesh->mVertices[i].y;
                     vertices->position.z = sceneMesh->mVertices[i].z;
-
-                    min = glm::min(min, vertices->position);
-                    max = glm::max(max, vertices->position);
+                    elementBoundingBox.addPoint(vertices->position);
                 }
 
                 if (hasNormals) {
@@ -208,6 +201,12 @@ namespace Engine
 
                 ++vertices;
             }
+
+            element->setBoundingBox(elementBoundingBox);
+            if (meshIndex == 0)
+                meshBoundingBox = elementBoundingBox;
+            else
+                meshBoundingBox.addBoundingBox(elementBoundingBox);
 
             /*
             if (hasBones) {
@@ -252,9 +251,7 @@ namespace Engine
                 indexCount += 3;
             }
 
-            uint16_t* indices = nullptr;
-            size_t indexBufferOffset = mesh->appendIndices(indexCount, &indices);
-
+            uint16_t* indices = element->allocIndexBuffer(indexCount);
             for (size_t i = 0; i < sceneMesh->mNumFaces; i++) {
                 if (sceneMesh->mFaces[i].mNumIndices != 3)
                     continue;
@@ -262,17 +259,9 @@ namespace Engine
                 *indices++ = uint16_t(sceneMesh->mFaces[i].mIndices[1]);
                 *indices++ = uint16_t(sceneMesh->mFaces[i].mIndices[2]);
             }
-
-            element.vertexBufferOffset = vertexBufferOffset;
-            element.vertexCount = vertexCount;
-
-            element.indexBufferOffset = indexBufferOffset;
-            element.indexCount = indexCount;
-
-            element.boundingBox.set(min, max);
-
-            mesh->addElement(std::move(element));
         }
+
+        mesh->setBoundingBox(meshBoundingBox);
 
         return mesh;
     }

@@ -40,7 +40,8 @@ namespace Engine
         void setAttribute(const Atom& name, VertexAttributeType type,
             const VertexBufferPtr& buffer, size_t offset = 0, size_t stride = 0, bool normalize = false) override;
 
-        void setAttributes(const IVertexFormatAttributeList& attributes, const VertexBufferPtr& buffer) override;
+        void setAttributes(const IVertexFormatAttributeList& attributes,
+            const VertexBufferPtr& buffer, size_t offset = 0) override;
 
         const std::shared_ptr<Buffer>& indexBuffer() const { return mIndexBuffer; }
         void setIndexBuffer(const IndexBufferPtr& indexBuffer) override;

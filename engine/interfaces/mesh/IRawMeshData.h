@@ -22,29 +22,24 @@
 
 #pragma once
 #include "engine/math/BoundingBox.h"
-#include "engine/interfaces/material/IMaterial.h"
+#include "engine/interfaces/mesh/IRawMeshElementData.h"
 #include <memory>
+#include <vector>
 
 namespace Engine
 {
-    class IMeshElement
+    class IRawMeshData
     {
     public:
-        virtual ~IMeshElement() = default;
+        virtual ~IRawMeshData() = default;
 
-        virtual const std::string& name() const = 0;
+        virtual const std::vector<uint8_t>& vertexData() const = 0;
+        virtual const std::vector<uint16_t>& indexData() const = 0;
 
-        virtual const std::string& materialName() const = 0;
-        virtual const MaterialPtr& material() const = 0;
+        virtual const std::vector<RawMeshElementDataPtr>& elements() const = 0;
 
         virtual const BoundingBox& boundingBox() const = 0;
-
-        virtual const VertexSourcePtr& vertexSource() const = 0;
-
-        virtual PrimitiveType primitiveType() const = 0;
-        virtual size_t indexBufferOffset() const = 0;
-        virtual size_t indexCount() const = 0;
     };
 
-    using MeshElementPtr = std::shared_ptr<IMeshElement>;
+    using RawMeshDataPtr = std::shared_ptr<IRawMeshData>;
 }

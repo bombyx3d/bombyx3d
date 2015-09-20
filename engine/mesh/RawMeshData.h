@@ -21,49 +21,44 @@
  */
 
 #pragma once
-#include "engine/interfaces/mesh/IMeshData.h"
-#include "engine/interfaces/mesh/IMeshLoader.h"
 #include "engine/core/macros.h"
-#include <vector>
-#include <memory>
+#include "engine/interfaces/mesh/IRawMeshData.h"
+#include "engine/interfaces/mesh/IMeshLoader.h"
 #include <mutex>
 #include <cstdint>
+#include <vector>
+#include <memory>
 
 namespace Engine
 {
-    class MeshData : public IMeshData
+    template <class VERTEX> class RawMeshElementData;
+
+    class RawMeshData : public IRawMeshData
     {
     public:
-        MeshData();
-        ~MeshData();
+        RawMeshData();
+        ~RawMeshData();
 
-        const std::vector<Element>& elements() const override { return mElements; }
-
-        void addElement(const Element& element);
-        void addElement(Element&& element);
-        void setElements(const std::vector<Element>& e);
-        void setElements(std::vector<Element>&& e);
-
-        std::vector<uint8_t>& vertexData() { return mVertexData; }
-        const std::vector<uint8_t>& vertexData() const override { return mVertexData; }
-
-        std::vector<uint16_t>& indexData() { return mIndexData; }
-        const std::vector<uint16_t>& indexData() const override { return mIndexData; }
-
-        const BoundingBox& boundingBox() const override { return mBoundingBox; }
-        void setBoundingBox(const BoundingBox& boundingBox) { mBoundingBox = boundingBox; }
-
-        size_t appendIndices(size_t count, uint16_t** indices);
-        template <class VERTEX> size_t appendVertices(size_t count, VERTEX** vertices)
+        const std::vector<RawMeshElementDataPtr>& elements() const { return mElements; }
+        template <class TYPE> RawMeshElementData<TYPE>* addElement(PrimitiveType primitiveType)
         {
-            size_t offset = 0;
-            *vertices = reinterpret_cast<VERTEX*>(appendVertices(count, &offset, sizeof(VERTEX)));
-            return offset;
+            auto element = new RawMeshElementData<TYPE>(this, primitiveType);
+            mElements.emplace_back(element);
+            return element;
         }
 
-        static MeshDataPtr fromFile(const std::string& name, bool loadSkeleton);
-        static MeshDataPtr fromFile(const FilePtr& file, bool loadSkeleton);
-        static MeshDataPtr fromFile(IFile* file, bool loadSkeleton);
+        const BoundingBox& boundingBox() const override { return mBoundingBox; }
+        void setBoundingBox(const BoundingBox& box) { mBoundingBox = box; }
+
+        const std::vector<uint8_t>& vertexData() const override { return mVertexData; }
+        const std::vector<uint16_t>& indexData() const override { return mIndexData; }
+
+        size_t appendVertices(size_t count, void** vertices, size_t vertexSize);
+        size_t appendIndices(size_t count, uint16_t** indices);
+
+        static RawMeshDataPtr fromFile(const std::string& name, bool loadSkeleton);
+        static RawMeshDataPtr fromFile(const FilePtr& file, bool loadSkeleton);
+        static RawMeshDataPtr fromFile(IFile* file, bool loadSkeleton);
 
         static void registerLoader(std::unique_ptr<IMeshLoader>&& loader);
         template <typename TYPE, typename... ARGS> static void registerLoader(ARGS&&... args)
@@ -73,16 +68,11 @@ namespace Engine
         static std::vector<std::unique_ptr<IMeshLoader>> mMeshLoaders;
         static std::mutex mMeshLoadersMutex;
 
-        std::vector<Element> mElements;
+        BoundingBox mBoundingBox;
+        std::vector<RawMeshElementDataPtr> mElements;
         std::vector<uint8_t> mVertexData;
         std::vector<uint16_t> mIndexData;
-        BoundingBox mBoundingBox;
 
-        void* appendVertices(size_t count, size_t* offset, size_t vertexSize);
-
-        void adjustBoundingBox(const BoundingBox& box, bool first);
-        void calculateBoundingBox();
-
-        Z_DISABLE_COPY(MeshData);
+        Z_DISABLE_COPY(RawMeshData);
     };
 }

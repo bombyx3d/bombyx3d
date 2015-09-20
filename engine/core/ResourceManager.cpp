@@ -25,7 +25,7 @@
 #include "engine/material/Material.h"
 #include "engine/image/Image.h"
 #include "engine/mesh/Mesh.h"
-#include "engine/mesh/MeshData.h"
+#include "engine/mesh/RawMeshData.h"
 #include "engine/interfaces/render/IRenderer.h"
 #include "engine/interfaces/core/IThreadManager.h"
 #include "engine/material/ShaderLoader.h"
@@ -209,7 +209,7 @@ namespace Engine
         struct StaticMeshResourceLoader : public ResourceLoader<MeshPtr>
         {
             std::shared_ptr<Mesh> mMesh;
-            MeshDataPtr mMeshData;
+            RawMeshDataPtr mMeshData;
 
             MeshPtr create() override
             {
@@ -219,13 +219,13 @@ namespace Engine
 
             bool load() override
             {
-                mMeshData = MeshData::fromFile(fileName, false);
+                mMeshData = RawMeshData::fromFile(fileName, false);
                 return mMeshData != nullptr;
             }
 
             void setup(const MeshPtr&) override
             {
-                mMesh->setData(std::move(mMeshData), BufferUsage::Static);
+                mMesh->setData(mMeshData, BufferUsage::Static);
             }
         };
 

@@ -23,7 +23,7 @@
 #include "engine/image/Image.h"
 #include "engine/image/loaders/png/PngImageLoader.h"
 #include "engine/material/Material.h"
-#include "engine/mesh/MeshData.h"
+#include "engine/mesh/RawMeshData.h"
 #include "engine/material/loaders/text/TextMaterialLoader.h"
 #include "engine/mesh/loaders/assimp/AssImpMeshLoader.h"
 #include "InitialLoadingScene.h"
@@ -34,7 +34,7 @@ IApplication* IApplication::create()
 {
     Image::registerLoader<PngImageLoader>();
     Material::registerLoader<TextMaterialLoader>();
-    MeshData::registerLoader<AssImpMeshLoader>();
+    RawMeshData::registerLoader<AssImpMeshLoader>();
 
     return createApplicationWithInitialScene<Game::InitialLoadingScene>();
 }

@@ -22,9 +22,6 @@
 
 #pragma once
 #include "engine/math/BoundingBox.h"
-#include "engine/interfaces/render/IIndexBuffer.h"
-#include "engine/interfaces/render/IVertexBuffer.h"
-#include "engine/interfaces/mesh/IMeshElement.h"
 #include <memory>
 #include <vector>
 
@@ -36,11 +33,7 @@ namespace Engine
         virtual ~IMesh() = default;
 
         virtual const BoundingBox& boundingBox() const = 0;
-
-        virtual const VertexBufferPtr& vertexBuffer() const = 0;
-        virtual const IndexBufferPtr& indexBuffer() const = 0;
-
-        virtual const std::vector<MeshElementPtr>& elements() const = 0;
+        virtual void render() const = 0;
     };
 
     using MeshPtr = std::shared_ptr<IMesh>;

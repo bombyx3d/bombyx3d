@@ -22,16 +22,14 @@
 
 #pragma once
 #include "engine/interfaces/mesh/IMesh.h"
-#include "engine/interfaces/mesh/IMeshData.h"
-#include "engine/interfaces/mesh/IMeshElement.h"
+#include "engine/interfaces/mesh/IRawMeshData.h"
+#include "engine/interfaces/render/IRenderer.h"
 #include "engine/core/macros.h"
 #include <vector>
-#include <memory>
-#include <cstdint>
 
 namespace Engine
 {
-    class Mesh : public IMesh, public std::enable_shared_from_this<Mesh>
+    class Mesh : public IMesh
     {
     public:
         Mesh();
@@ -39,18 +37,24 @@ namespace Engine
 
         const BoundingBox& boundingBox() const override { return mBoundingBox; }
 
-        const VertexBufferPtr& vertexBuffer() const override { return mVertexBuffer; }
-        const IndexBufferPtr& indexBuffer() const override { return mIndexBuffer; }
+        void setData(const RawMeshDataPtr& data, BufferUsage usage);
 
-        const std::vector<MeshElementPtr>& elements() const override { return mElements; }
-
-        void setData(const MeshDataPtr& data, BufferUsage usage);
+        void render() const override;
 
     private:
+        struct Element
+        {
+            PrimitiveType primitiveType;
+            MaterialPtr material;
+            VertexSourcePtr vertexSource;
+            size_t firstIndex;
+            size_t indexCount;
+        };
+
+        BoundingBox mBoundingBox;
         VertexBufferPtr mVertexBuffer;
         IndexBufferPtr mIndexBuffer;
-        BoundingBox mBoundingBox;
-        std::vector<MeshElementPtr> mElements;
+        std::vector<Element> mElements;
 
         Z_DISABLE_COPY(Mesh);
     };
