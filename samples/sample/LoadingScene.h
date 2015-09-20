@@ -24,14 +24,16 @@
 #include "engine/scene/AbstractLoadingScene.h"
 #include "engine/interfaces/render/ITexture.h"
 #include "engine/math/Quad.h"
+#include <functional>
 #include <glm/glm.hpp>
 
 namespace Game
 {
-    class InitialLoadingScene : public Engine::AbstractLoadingScene
+    class LoadingScene : public Engine::AbstractLoadingScene
     {
     public:
-        InitialLoadingScene();
+        LoadingScene();
+        explicit LoadingScene(const std::function<Engine::ScenePtr()>& sceneFactory);
 
         void resize(const glm::ivec2& newSize) override;
 
@@ -44,5 +46,11 @@ namespace Game
         Engine::TexturePtr mProgressBarTexture;
         float mCurrentProgress;
         float mTargetProgress;
+    };
+
+    template <class SCENE> class LoadingSceneFor : public LoadingScene
+    {
+    public:
+        LoadingSceneFor() : LoadingScene([](){ return std::make_shared<SCENE>(); }) {}
     };
 }

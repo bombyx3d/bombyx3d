@@ -19,8 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "InitialLoadingScene.h"
-#include "MainScene.h"
+#include "LoadingScene.h"
 #include "engine/core/Application.h"
 #include "engine/core/Services.h"
 #include "engine/render/ImmediateModeRenderer.h"
@@ -42,17 +41,21 @@ namespace Game
         const glm::vec2 BAR_SIZE(120.0f, 12.0f);
     }
 
-    InitialLoadingScene::InitialLoadingScene()
+    LoadingScene::LoadingScene()
         : mProjectionMatrix(1.0f)
         , mCurrentProgress(0.0f)
     {
         mProgressBarTexture = Services::resourceManager()->getTexture("loading/ProgressBar.png", false);
-
         setAutoSwitchScene(false);
-        beginLoading<MainScene>();
     }
 
-    void InitialLoadingScene::resize(const glm::ivec2& newSize)
+    LoadingScene::LoadingScene(const std::function<ScenePtr()>& sceneFactory)
+        : LoadingScene()
+    {
+        beginLoading(sceneFactory());
+    }
+
+    void LoadingScene::resize(const glm::ivec2& newSize)
     {
         float w = float(newSize.x);
         float h = float(newSize.y);
@@ -60,7 +63,7 @@ namespace Game
         mProgressBarQuad = Quad::fromCenterAndSize(glm::vec2(w, h) * 0.5f, BAR_SIZE);
     }
 
-    void InitialLoadingScene::update(double time)
+    void LoadingScene::update(double time)
     {
         AbstractLoadingScene::update(time);
         mTargetProgress = std::max(currentProgress(), mTargetProgress);
@@ -77,7 +80,7 @@ namespace Game
         }
     }
 
-    void InitialLoadingScene::draw(IRenderer* renderer) const
+    void LoadingScene::draw(IRenderer* renderer) const
     {
         renderer->setClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
         renderer->clear();

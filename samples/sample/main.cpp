@@ -26,7 +26,8 @@
 #include "engine/mesh/RawMeshData.h"
 #include "engine/material/loaders/text/TextMaterialLoader.h"
 #include "engine/mesh/loaders/assimp/AssImpMeshLoader.h"
-#include "InitialLoadingScene.h"
+#include "MainScene.h"
+#include "LoadingScene.h"
 
 using namespace Engine;
 
@@ -36,5 +37,5 @@ IApplication* IApplication::create()
     Material::registerLoader<TextMaterialLoader>();
     RawMeshData::registerLoader<AssImpMeshLoader>();
 
-    return createApplicationWithInitialScene<Game::InitialLoadingScene>();
+    return createApplicationWithInitialScene<Game::LoadingSceneFor<Game::MainScene>>();
 }

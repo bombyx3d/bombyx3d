@@ -34,6 +34,20 @@ namespace Engine
     {
     }
 
+    void AbstractLoadingScene::beginLoading(const ScenePtr& scene)
+    {
+        mNextScene = scene;
+        mCurrentProgress = 0.0f;
+        mLoadingComplete = false;
+    }
+
+    void AbstractLoadingScene::beginLoading(ScenePtr&& scene)
+    {
+        mNextScene = std::move(scene);
+        mCurrentProgress = 0.0f;
+        mLoadingComplete = false;
+    }
+
     void AbstractLoadingScene::switchToNextScene()
     {
         Application::instance()->setCurrentScene(mNextScene);

@@ -30,12 +30,10 @@ namespace Engine
     public:
         AbstractLoadingScene();
 
+        void beginLoading(const ScenePtr& scene);
+        void beginLoading(ScenePtr&& scene);
         template <class SCENE, class... ARGS> void beginLoading(ARGS&&... args)
-        {
-            mNextScene = std::make_shared<SCENE>(std::forward<ARGS>(args)...);
-            mCurrentProgress = 0.0f;
-            mLoadingComplete = false;
-        }
+            { beginLoading(std::make_shared<SCENE>(std::forward<ARGS>(args)...)); }
 
         const ScenePtr& nextScene() const { return mNextScene; }
         void switchToNextScene();

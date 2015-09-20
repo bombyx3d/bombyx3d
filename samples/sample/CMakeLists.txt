@@ -25,8 +25,8 @@ include(../../cmake/Engine.cmake)
 
 z_make_executable(sample
     SOURCES
-        InitialLoadingScene.cpp
-        InitialLoadingScene.h
+        LoadingScene.cpp
+        LoadingScene.h
         main.cpp
         MainScene.cpp
         MainScene.h
