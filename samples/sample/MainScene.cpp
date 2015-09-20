@@ -22,6 +22,7 @@
 #include "MainScene.h"
 #include "engine/core/Services.h"
 #include "engine/core/Log.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace Engine;
 
@@ -30,7 +31,13 @@ namespace Game
     MainScene::MainScene()
     {
         mCamera = std::make_shared<OrbitCamera>();
-        mCamera->setVerticalAngle(glm::radians(45.0f));
+        mCamera->setHorizontalAngle(glm::radians(0.0f));
+        mCamera->setVerticalAngle(glm::radians(0.0f));
+
+        mCamera->setNearZ(0.1f);
+        mCamera->setFarZ(10.0f);
+
+        mMesh = Services::resourceManager()->getStaticMesh("girl/girl.obj");
     }
 
     MainScene::~MainScene()
@@ -44,34 +51,37 @@ namespace Game
 
     void MainScene::update(double)
     {
-        /*
-        mCamera->setDistance(glm::length(mMesh->boundingBox().size()));
+        mCamera->setDistance(0.7f * glm::length(mMesh->boundingBox().size()));
         mCamera->setTarget(mMesh->boundingBox().center());
-        */
     }
 
     void MainScene::draw(IRenderer* renderer) const
     {
-        renderer->setProjectionMatrix(mCamera->projectionMatrix());
-        renderer->setModelViewMatrix(mCamera->viewMatrix());
+        glm::mat4 matrix = mCamera->viewMatrix();
+        matrix = matrix * glm::translate(glm::mat4(1.0f), mCamera->target());
+        matrix = matrix * glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        matrix = matrix * glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        matrix = matrix * glm::translate(glm::mat4(1.0f), -mCamera->target());
 
-        /*
-        for (const auto& element : mMesh->elements()) {
-            element->material()->technique(0)->pass(0)->apply(renderer);
-            renderer->bindVertexSource(element->vertexSource());
-            renderer->drawPrimitive(element->primitiveType(), element->indexBufferOffset(), element->indexCount());
-        }
-        */
+        renderer->setProjectionMatrix(mCamera->projectionMatrix());
+        renderer->setModelViewMatrix(matrix);
+        mMesh->render();
     }
 
     bool MainScene::onTouchBegan(int fingerIndex, const glm::ivec2& position)
     {
+        if (fingerIndex != 0)
+            return false;
+
         mPrevTouchPosition = position;
         return true;
     }
 
     void MainScene::onTouchMoved(int fingerIndex, const glm::ivec2& position)
     {
+        if (fingerIndex != 0)
+            return;
+
         glm::ivec2 delta = position - mPrevTouchPosition;
         mPrevTouchPosition = position;
         mCamera->setHorizontalAngle(mCamera->horizontalAngle() + float(delta.x) * 0.01f);
@@ -79,11 +89,11 @@ namespace Game
             -glm::radians(89.0f), glm::radians(89.0f)));
     }
 
-    void MainScene::onTouchEnded(int fingerIndex)
+    void MainScene::onTouchEnded(int)
     {
     }
 
-    void MainScene::onTouchCancelled(int fingerIndex)
+    void MainScene::onTouchCancelled(int)
     {
     }
 }
