@@ -99,6 +99,8 @@ set(source_files
     render/gles2/GLES2VertexSource.h
     render/gles2/opengl.cpp
     render/gles2/opengl.h
+    render/ImmediateModeRenderer.cpp
+    render/ImmediateModeRenderer.h
     scene/3d/camera/AbstractCamera.cpp
     scene/3d/camera/AbstractCamera.h
     scene/3d/camera/AbstractPerspectiveCamera.cpp

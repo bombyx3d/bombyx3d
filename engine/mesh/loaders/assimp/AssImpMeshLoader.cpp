@@ -39,7 +39,7 @@ namespace Engine
 {
     namespace
     {
-        static const int MAX_VERTICES_PER_ELEMENT = 65535;
+        static const int MAX_VERTICES_PER_ELEMENT = 65534;
 
         Z_VERTEX_FORMAT(Vertex,
             (glm::vec3) position,

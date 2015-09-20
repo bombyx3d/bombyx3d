@@ -141,6 +141,14 @@ namespace Engine
         return glm::clamp(float(complete) / float(total), 0.0f, 1.0f);
     }
 
+    ShaderPtr ResourceManager::compileShader(const std::vector<std::string>* source, const std::string& fileName)
+    {
+        auto& shader = mBuiltinShaders[source];
+        if (!shader)
+            shader = ShaderLoader::compile(fileName, *source);
+        return shader;
+    }
+
     ////////////////
     // Material
 

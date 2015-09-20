@@ -26,6 +26,8 @@
 #include "engine/interfaces/render/IShader.h"
 #include "engine/interfaces/render/ITexture.h"
 #include <memory>
+#include <vector>
+#include <string>
 
 namespace Engine
 {
@@ -36,6 +38,9 @@ namespace Engine
 
         virtual bool resourcesAreLoading() const = 0;
         virtual float resourceLoadProgress() const = 0;
+
+        virtual ShaderPtr compileShader(const std::vector<std::string>* source,
+            const std::string& fileName = "<builtin>") = 0;
 
         virtual MaterialPtr getMaterial(const std::string& fileName, bool async = true) = 0;
         virtual ShaderPtr getShader(const std::string& fileName, bool async = true) = 0;

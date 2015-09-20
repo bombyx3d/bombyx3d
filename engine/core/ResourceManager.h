@@ -50,6 +50,9 @@ namespace Engine
         bool resourcesAreLoading() const override;
         float resourceLoadProgress() const override;
 
+        ShaderPtr compileShader(const std::vector<std::string>* source,
+            const std::string& fileName = "<builtin>") override;
+
         MaterialPtr getMaterial(const std::string& fileName, bool async = true) override;
         ShaderPtr getShader(const std::string& fileName, bool async = true) override;
         TexturePtr getTexture(const std::string& fileName, bool async = true) override;
@@ -58,6 +61,7 @@ namespace Engine
     private:
         std::unordered_map<std::string, std::weak_ptr<IMaterial>> mMaterials;
         std::unordered_map<std::string, std::weak_ptr<IShader>> mShaders;
+        std::unordered_map<const void*, std::shared_ptr<IShader>> mBuiltinShaders;
         std::unordered_map<std::string, std::weak_ptr<ITexture>> mTextures;
         std::unordered_map<std::string, std::weak_ptr<IMesh>> mStaticMeshes;
         std::shared_ptr<Counters> mCounters;

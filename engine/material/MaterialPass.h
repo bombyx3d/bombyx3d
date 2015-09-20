@@ -55,18 +55,23 @@ namespace Engine
 
         const ShaderPtr& shader() const;
         void setShader(const std::string& fileName);
+        void setShader(const ShaderPtr& shader);
 
         void setUniform(const std::string& name, float value);
         void setUniform(const std::string& name, const glm::vec2& value);
         void setUniform(const std::string& name, const glm::vec3& value);
         void setUniform(const std::string& name, const glm::vec4& value);
         void setUniform(const std::string& name, const std::string& textureName);
+        void setUniform(const std::string& name, const TexturePtr& texture);
+        void unsetUniform(const std::string& name);
 
         void setUniform(Atom name, float value);
         void setUniform(Atom name, const glm::vec2& value);
         void setUniform(Atom name, const glm::vec3& value);
         void setUniform(Atom name, const glm::vec4& value);
         void setUniform(Atom name, const std::string& textureName);
+        void setUniform(Atom name, const TexturePtr& texture);
+        void unsetUniform(Atom name);
 
         void apply(const RendererPtr& renderer) const override;
         void apply(IRenderer* renderer) const override;

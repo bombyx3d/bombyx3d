@@ -50,15 +50,29 @@ namespace Engine
         return loadFile(file.get(), what);
     }
 
+    bool ShaderLoader::loadFile(const FilePtr& file, std::vector<std::string>* what)
+    {
+        return loadFile(file.get(), what);
+    }
+
     bool ShaderLoader::loadFile(IFile* file, std::vector<std::string>* what)
+    {
+        return file && loadMemory(file->name(), FileUtils::loadFileLines(file, true), what);
+    }
+
+    bool ShaderLoader::loadMemory(const std::string& fileName, const std::vector<std::string>& lines,
+        std::vector<std::string>* what)
+    {
+        std::vector<std::string> linesCopy = lines;
+        return loadMemory(fileName, std::move(linesCopy), what);
+    }
+
+    bool ShaderLoader::loadMemory(const std::string& fileName, std::vector<std::string>&& lines,
+        std::vector<std::string>* what)
     {
         bool success = true;
         int lineNumber = 0;
 
-        if (!file)
-            return false;
-
-        std::vector<std::string> lines = FileUtils::loadFileLines(file, true);
         for (auto& line : lines) {
             ++lineNumber;
 
@@ -83,10 +97,10 @@ namespace Engine
                 else if (line == COMMON_LF || line == COMMON)
                     what = nullptr;
                 else if (line.substr(0, INCLUDE.length()) == INCLUDE) {
-                    auto include = openIncludeFile(line.substr(INCLUDE.length()), file->name());
+                    auto include = openIncludeFile(line.substr(INCLUDE.length()), fileName);
                     success = loadFile(include.get(), what) && success;
                 } else {
-                    Z_LOGE(file->name() << "(" << lineNumber << "): invalid directive.");
+                    Z_LOGE(fileName << "(" << lineNumber << "): invalid directive.");
                     what = nullptr;
                     success = false;
                 }
@@ -102,14 +116,37 @@ namespace Engine
         }
 
         if (!success)
-            Z_LOGE("Unable to load shader \"" << file->name() << "\".");
+            Z_LOGE("Unable to load shader \"" << fileName << "\".");
 
         return success;
     }
 
-    bool ShaderLoader::loadFile(const FilePtr& file, std::vector<std::string>* what)
+    ShaderPtr ShaderLoader::compile(const std::string& fileName, const std::vector<std::string>& lines)
     {
-        return loadFile(file.get(), what);
+        ShaderLoader loader;
+        ShaderPtr shader = Services::renderer()->createShader();
+
+        if (loader.loadMemory(fileName, lines)) {
+            shader->setVertexSource(loader.vertexSource());
+            shader->setFragmentSource(loader.fragmentSource());
+            shader->compile();
+        }
+
+        return shader;
+    }
+
+    ShaderPtr ShaderLoader::compile(const std::string& fileName, std::vector<std::string>&& lines)
+    {
+        ShaderLoader loader;
+        ShaderPtr shader = Services::renderer()->createShader();
+
+        if (loader.loadMemory(fileName, std::move(lines))) {
+            shader->setVertexSource(loader.vertexSource());
+            shader->setFragmentSource(loader.fragmentSource());
+            shader->compile();
+        }
+
+        return shader;
     }
 
     FilePtr ShaderLoader::openIncludeFile(std::string fileName, const std::string& parentFileName) const

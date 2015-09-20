@@ -22,6 +22,7 @@
 
 #pragma once
 #include "engine/core/macros.h"
+#include "engine/interfaces/render/IShader.h"
 #include "engine/interfaces/io/IFile.h"
 #include <vector>
 #include <string>
@@ -38,8 +39,16 @@ namespace Engine
         const std::vector<std::string>& fragmentSource() const { return mFragment; }
 
         bool loadFile(const std::string& fileName, std::vector<std::string>* what = nullptr);
-        bool loadFile(IFile* file, std::vector<std::string>* what = nullptr);
         bool loadFile(const FilePtr& file, std::vector<std::string>* what = nullptr);
+        bool loadFile(IFile* file, std::vector<std::string>* what = nullptr);
+
+        bool loadMemory(const std::string& fileName, const std::vector<std::string>& lines,
+            std::vector<std::string>* what = nullptr);
+        bool loadMemory(const std::string& fileName, std::vector<std::string>&& lines,
+            std::vector<std::string>* what = nullptr);
+
+        static ShaderPtr compile(const std::string& fileName, const std::vector<std::string>& lines);
+        static ShaderPtr compile(const std::string& fileName, std::vector<std::string>&& lines);
 
     private:
         std::vector<std::string> mVertex;

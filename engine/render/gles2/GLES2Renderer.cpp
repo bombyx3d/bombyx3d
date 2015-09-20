@@ -75,6 +75,7 @@ namespace Engine
 
     void Renderer::clear()
     {
+        glDepthMask(GL_TRUE);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
 
@@ -232,8 +233,10 @@ namespace Engine
     void Renderer::useShader(const ShaderPtr& shader)
     {
         if (mCurrentShader != shader) {
-            mCurrentShader = std::static_pointer_cast<GLES2Shader>(shader);
+            if (mCurrentVertexSource)
+                mCurrentVertexSource->unbind();
 
+            mCurrentShader = std::static_pointer_cast<GLES2Shader>(shader);
             if (!mCurrentShader)
                 glUseProgram(0);
             else
@@ -317,6 +320,14 @@ namespace Engine
         glUseProgram(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+        glDisable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_DEPTH_TEST);
+        glDepthMask(GL_TRUE);
+        glFrontFace(GL_CCW);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
 
         GLint textureUnitCount = 0;
         glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &textureUnitCount);

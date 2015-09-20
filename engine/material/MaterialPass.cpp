@@ -46,8 +46,13 @@ namespace Engine
     class MaterialPass::UniformTexture : public UniformValue
     {
     public:
-        UniformTexture(const std::string& path)
+        explicit UniformTexture(const std::string& path)
             : mTexturePath(new std::string(path))
+        {
+        }
+
+        explicit UniformTexture(const TexturePtr& texture)
+            : mTexture(texture)
         {
         }
 
@@ -91,6 +96,12 @@ namespace Engine
         return mShader;
     }
 
+    void MaterialPass::setShader(const ShaderPtr& shader)
+    {
+        mShader = shader;
+        mShaderPath.reset();
+    }
+
     void MaterialPass::setShader(const std::string& fileName)
     {
         mShader.reset();
@@ -120,6 +131,16 @@ namespace Engine
     void MaterialPass::setUniform(const std::string& name, const std::string& textureName)
     {
         setUniform(AtomTable::getAtom(name), textureName);
+    }
+
+    void MaterialPass::setUniform(const std::string& name, const TexturePtr& texture)
+    {
+        setUniform(AtomTable::getAtom(name), texture);
+    }
+
+    void MaterialPass::unsetUniform(const std::string& name)
+    {
+        unsetUniform(AtomTable::getAtom(name));
     }
 
     void MaterialPass::setUniform(Atom name, float value)
@@ -152,6 +173,19 @@ namespace Engine
         mUniforms[index].second.reset(new UniformTexture(textureName));
     }
 
+    void MaterialPass::setUniform(Atom name, const TexturePtr& texture)
+    {
+        size_t index = uniformIndex(name);
+        mUniforms[index].second.reset(new UniformTexture(texture));
+    }
+
+    void MaterialPass::unsetUniform(Atom name)
+    {
+        auto it = mUniformNames.find(name);
+        if (it != mUniformNames.end())
+            mUniforms[it->second].second.reset();
+    }
+
     void MaterialPass::apply(const RendererPtr& renderer) const
     {
         apply(renderer.get());
@@ -170,15 +204,19 @@ namespace Engine
         if (blend)
             renderer->setBlendFunc(mBlendingSourceFactor, mBlendingDestinationFactor);
 
-        for (const auto& it : mUniforms)
-            it.second->upload(renderer, it.first);
+        for (const auto& it : mUniforms) {
+            if (it.second)
+                it.second->upload(renderer, it.first);
+        }
     }
 
     void MaterialPass::loadPendingResources()
     {
         ensureShaderLoaded();
-        for (const auto& it : mUniforms)
-            it.second->loadPendingResources();
+        for (const auto& it : mUniforms) {
+            if (it.second)
+                it.second->loadPendingResources();
+        }
     }
 
     void MaterialPass::ensureShaderLoaded() const
