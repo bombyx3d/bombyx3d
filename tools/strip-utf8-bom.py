@@ -68,6 +68,7 @@ for root, dirnames, filenames in os.walk('..'):
         '*.js',
         '*.json',
         '*.txt',
+        '*.material',
         '*.glsl',
         '.gitignore',
         '.gitattributes',

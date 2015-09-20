@@ -1,4 +1,4 @@
-﻿
+
 Downloaded from http://www.webappers.com/progressBar/
 
 From jsProgressBarHandler 0.3.3 - by Bramus! - http://www.bram.us/
