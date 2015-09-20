@@ -44,6 +44,7 @@ namespace Engine
 
         void setViewport(int x, int y, int w, int h) override;
 
+        void setClearColor(const glm::vec4& color) override;
         void clear() override;
 
         ShaderPtr createShader() override;

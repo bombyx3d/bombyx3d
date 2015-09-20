@@ -27,20 +27,16 @@
 
 namespace Engine
 {
-    LoadingScene::LoadingScene(const ScenePtr& nextScene)
-        : mNextScene(nextScene)
-        , mCurrentProgress(0.0f)
-    {
-    }
-
-    LoadingScene::LoadingScene(ScenePtr&& nextScene)
-        : mNextScene(std::move(nextScene))
-        , mCurrentProgress(0.0f)
+    LoadingScene::LoadingScene()
+        : mCurrentProgress(0.0f)
     {
     }
 
     void LoadingScene::update(double)
     {
+        if (!mNextScene)
+            return;
+
         float progress = Services::resourceManager()->resourceLoadProgress();
         mCurrentProgress = std::max(mCurrentProgress, progress);
 

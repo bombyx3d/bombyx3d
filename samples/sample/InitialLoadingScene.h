@@ -21,19 +21,33 @@
  */
 
 #pragma once
-#include "engine/scene/AbstractScene.h"
+#include "engine/scene/LoadingScene.h"
+#include "engine/interfaces/render/IIndexBuffer.h"
+#include "engine/interfaces/render/IVertexBuffer.h"
+#include "engine/interfaces/render/ITexture.h"
+#include "engine/interfaces/render/IVertexSource.h"
+#include <glm/glm.hpp>
 
 namespace Game
 {
-    class InitialLoadingScene : public Engine::AbstractScene
+    class InitialLoadingScene : public Engine::LoadingScene
     {
     public:
         InitialLoadingScene();
-        ~InitialLoadingScene();
 
-        void update(double time) override;
+        void resize(const glm::ivec2& newSize) override;
+
+        void draw(Engine::IRenderer* renderer) const override;
 
     private:
-        Engine::ScenePtr mMainScene;
+        glm::mat4 mProjectionMatrix;
+        glm::vec2 mPoint1;
+        glm::vec2 mPoint2;
+        Engine::Atom mTextureUniform;
+        Engine::TexturePtr mProgressBarTexture;
+        Engine::ShaderPtr mProgressBarShader;
+        Engine::VertexBufferPtr mVertexBuffer;
+        Engine::IndexBufferPtr mIndexBuffer;
+        Engine::VertexSourcePtr mVertexSource;
     };
 }

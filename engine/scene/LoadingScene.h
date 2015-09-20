@@ -28,8 +28,10 @@ namespace Engine
     class LoadingScene : public AbstractScene
     {
     public:
-        explicit LoadingScene(const ScenePtr& nextScene);
-        explicit LoadingScene(ScenePtr&& nextScene);
+        LoadingScene();
+
+        template <class SCENE, class... ARGS> void beginLoading(ARGS&&... args)
+            { mNextScene = std::make_shared<SCENE>(std::forward<ARGS>(args)...); }
 
         float currentProgress() const { return mCurrentProgress; }
 

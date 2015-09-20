@@ -79,6 +79,7 @@ namespace Engine
 
         virtual void setViewport(int x, int y, int w, int h) = 0;
 
+        virtual void setClearColor(const glm::vec4& color) = 0;
         virtual void clear() = 0;
 
         virtual ShaderPtr createShader() = 0;

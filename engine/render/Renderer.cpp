@@ -39,7 +39,6 @@ namespace Engine
         , mShouldRebindUniforms(true)
         , mShouldRebindAttributes(true)
     {
-        glClearColor(0.7f, 0.3f, 0.1f, 1.0f);
     }
 
     Renderer::~Renderer()
@@ -67,6 +66,11 @@ namespace Engine
     void Renderer::setViewport(int x, int y, int w, int h)
     {
         glViewport(x, y, w, h);
+    }
+
+    void Renderer::setClearColor(const glm::vec4& color)
+    {
+        glClearColor(color.r, color.g, color.b, color.a);
     }
 
     void Renderer::clear()

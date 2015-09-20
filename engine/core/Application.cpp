@@ -109,6 +109,7 @@ namespace Engine
         renderer->beginFrame();
 
         renderer->setViewport(0, 0, mScreenSize.x, mScreenSize.y);
+        renderer->setClearColor(glm::vec4(0.7f, 0.3f, 0.1f, 1.0f));
         renderer->clear();
 
         if (mCurrentScene) {
