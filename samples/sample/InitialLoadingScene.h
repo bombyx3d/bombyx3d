@@ -22,10 +22,8 @@
 
 #pragma once
 #include "engine/scene/AbstractLoadingScene.h"
-#include "engine/interfaces/render/IIndexBuffer.h"
-#include "engine/interfaces/render/IVertexBuffer.h"
 #include "engine/interfaces/render/ITexture.h"
-#include "engine/interfaces/render/IVertexSource.h"
+#include "engine/math/Quad.h"
 #include <glm/glm.hpp>
 
 namespace Game
@@ -42,14 +40,8 @@ namespace Game
 
     private:
         glm::mat4 mProjectionMatrix;
-        glm::vec2 mPoint1;
-        glm::vec2 mPoint2;
-        Engine::Atom mTextureUniform;
+        Engine::Quad mProgressBarQuad;
         Engine::TexturePtr mProgressBarTexture;
-        Engine::ShaderPtr mProgressBarShader;
-        Engine::VertexBufferPtr mVertexBuffer;
-        Engine::IndexBufferPtr mIndexBuffer;
-        Engine::VertexSourcePtr mVertexSource;
         float mCurrentProgress;
         float mTargetProgress;
     };

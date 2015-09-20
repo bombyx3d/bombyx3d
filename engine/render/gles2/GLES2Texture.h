@@ -34,10 +34,13 @@ namespace Engine
 
         size_t handle() const { return mHandle; }
 
+        const glm::vec2& size() const override { return mSize; }
+
         void upload(const IImage& image) override;
 
     private:
         size_t mHandle;
+        glm::vec2 mSize;
 
         Z_DISABLE_COPY(GLES2Texture);
     };

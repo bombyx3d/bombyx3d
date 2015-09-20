@@ -27,6 +27,7 @@
 namespace Engine
 {
     GLES2Texture::GLES2Texture()
+        : mSize(0.0f)
     {
         GLuint handle = 0;
         glGenTextures(1, &handle);
@@ -90,5 +91,6 @@ namespace Engine
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
         glBindTexture(GL_TEXTURE_2D, GLuint(previousTexture));
+        mSize = glm::vec2(float(image.width()), float(image.height()));
     }
 }

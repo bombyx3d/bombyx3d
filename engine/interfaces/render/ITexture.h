@@ -23,6 +23,7 @@
 #pragma once
 #include "engine/interfaces/image/IImage.h"
 #include <memory>
+#include <glm/glm.hpp>
 
 namespace Engine
 {
@@ -30,6 +31,8 @@ namespace Engine
     {
     public:
         virtual ~ITexture() = default;
+
+        virtual const glm::vec2& size() const = 0;
 
         virtual void upload(const IImage& image) = 0;
     };

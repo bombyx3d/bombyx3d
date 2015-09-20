@@ -196,6 +196,14 @@ namespace Engine
             glm::vec2(0.0f), glm::vec2(1.0f), colorVal);
     }
 
+    void ImmediateModeRenderer::drawSolidQuad(const Quad& quad, const glm::vec2& texCoord0,
+        const glm::vec2& texCoord1, float z, const glm::vec4& colorVal)
+    {
+        drawSolidQuad(glm::vec3(quad.topLeft, z), glm::vec3(quad.topRight, z),
+            glm::vec3(quad.bottomRight, z), glm::vec3(quad.bottomLeft, z),
+            texCoord0, texCoord1, colorVal);
+    }
+
     void ImmediateModeRenderer::drawSolidQuad(const glm::vec3& topLeft, const glm::vec3& topRight,
         const glm::vec3& bottomRight, const glm::vec3& bottomLeft,
         const glm::vec2& texCoord0, const glm::vec2& texCoord1, const glm::vec4& colorVal)
