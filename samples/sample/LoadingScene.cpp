@@ -31,15 +31,7 @@ using namespace Engine;
 
 namespace Game
 {
-    namespace
-    {
-        Z_VERTEX_FORMAT(Vertex,
-            (glm::vec3) position,
-            (glm::vec2) texCoord
-        )
-
-        const glm::vec2 BAR_SIZE(120.0f, 12.0f);
-    }
+    static const glm::vec2 BAR_SIZE(120.0f, 12.0f);
 
     LoadingScene::LoadingScene()
         : mProjectionMatrix(1.0f)
