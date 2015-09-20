@@ -87,16 +87,13 @@ namespace Engine
 
     GLES2Uniform::GLES2Uniform()
         : mValue(nullptr)
-        , mBoundToLocation(-1)
     {
     }
 
     GLES2Uniform::GLES2Uniform(GLES2Uniform&& other)
         : mValue(other.mValue)
-        , mBoundToLocation(other.mBoundToLocation)
     {
         other.mValue = nullptr;
-        other.mBoundToLocation = -1;
     }
 
     GLES2Uniform::~GLES2Uniform()
@@ -107,9 +104,7 @@ namespace Engine
     GLES2Uniform& GLES2Uniform::operator=(GLES2Uniform&& other)
     {
         mValue = other.mValue;
-        mBoundToLocation = other.mBoundToLocation;
         other.mValue = nullptr;
-        other.mBoundToLocation = -1;
         return *this;
     }
 
@@ -117,7 +112,6 @@ namespace Engine
     {
         delete mValue;
         mValue = nullptr;
-        mBoundToLocation = -1;
     }
 
     void GLES2Uniform::setFloat(float value)
@@ -160,12 +154,7 @@ namespace Engine
     {
         if (!mValue || location < 0)
             return false;
-
-        if (mBoundToLocation != location) {
-            mValue->upload(location, textureCount);
-            mBoundToLocation = location;
-        }
-
+        mValue->upload(location, textureCount);
         return true;
     }
 }

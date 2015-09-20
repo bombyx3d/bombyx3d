@@ -52,7 +52,6 @@ namespace Engine
 
     private:
         IUniformValue* mValue;
-        int mBoundToLocation;
 
         Z_DISABLE_COPY(GLES2Uniform);
     };
