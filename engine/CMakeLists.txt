@@ -64,6 +64,7 @@ set(source_files
     interfaces/render/IIndexBuffer.h
     interfaces/render/IRenderer.h
     interfaces/render/IShader.h
+    interfaces/render/ISprite.h
     interfaces/render/ITexture.h
     interfaces/render/IVertexBuffer.h
     interfaces/render/IVertexSource.h
@@ -105,6 +106,8 @@ set(source_files
     render/Canvas.h
     render/ImmediateModeRenderer.cpp
     render/ImmediateModeRenderer.h
+    render/Sprite.cpp
+    render/Sprite.h
     scene/3d/camera/AbstractCamera.cpp
     scene/3d/camera/AbstractCamera.h
     scene/3d/camera/AbstractOrthogonalCamera.cpp

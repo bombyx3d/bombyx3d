@@ -19,33 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Canvas.h"
-#include "engine/math/Quad.h"
+
+#pragma once
+#include "engine/interfaces/render/ITexture.h"
+#include <memory>
+#include <glm/glm.hpp>
 
 namespace Engine
 {
-    Canvas::Canvas()
+    class ISprite
     {
-        setBlend(true);
-        setDepthTest(false);
-    }
+    public:
+        virtual ~ISprite() = default;
 
-    Canvas::~Canvas()
-    {
-    }
+        virtual const glm::vec2& size() const = 0;
+        virtual const glm::vec2& anchor() const = 0;
 
-    void Canvas::drawSprite(const glm::vec2& position, const SpritePtr& sprite)
-    {
-        if (!sprite)
-            return;
+        virtual const TexturePtr& texture() const = 0;
+        virtual const std::pair<glm::vec2, glm::vec2>& textureCoordinates() const = 0;
+    };
 
-        const TexturePtr& texture = sprite->texture();
-        if (!texture)
-            return;
-
-        setTexture(texture);
-
-        const glm::vec2& size = sprite->size();
-        drawSolidQuad(Quad::fromTopLeftAndSize(position - size * sprite->anchor(), size));
-    }
+    using SpritePtr = std::shared_ptr<ISprite>;
 }

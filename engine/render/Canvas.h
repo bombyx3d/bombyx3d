@@ -23,6 +23,7 @@
 #pragma once
 #include "engine/core/macros.h"
 #include "engine/render/ImmediateModeRenderer.h"
+#include "engine/interfaces/render/ISprite.h"
 
 namespace Engine
 {
@@ -32,7 +33,7 @@ namespace Engine
         Canvas();
         ~Canvas();
 
-        void drawSprite(const glm::vec2& position, const TexturePtr& texture);
+        void drawSprite(const glm::vec2& position, const SpritePtr& sprite);
 
     private:
         Z_DISABLE_COPY(Canvas);

@@ -19,33 +19,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Canvas.h"
-#include "engine/math/Quad.h"
+
+#pragma once
+#include "engine/core/macros.h"
+#include "engine/interfaces/render/ISprite.h"
 
 namespace Engine
 {
-    Canvas::Canvas()
+    class Sprite : public ISprite
     {
-        setBlend(true);
-        setDepthTest(false);
-    }
+    public:
+        Sprite();
+        ~Sprite();
 
-    Canvas::~Canvas()
-    {
-    }
+        const glm::vec2& size() const override { return mSize; }
+        void setSize(const glm::vec2& size) { mSize = size; }
 
-    void Canvas::drawSprite(const glm::vec2& position, const SpritePtr& sprite)
-    {
-        if (!sprite)
-            return;
+        const glm::vec2& anchor() const override { return mAnchor; }
+        void setAnchor(const glm::vec2& anchor) { mAnchor = anchor; }
 
-        const TexturePtr& texture = sprite->texture();
-        if (!texture)
-            return;
+        const TexturePtr& texture() const override { return mTexture; }
+        void setTexture(const TexturePtr& texture) { mTexture = texture; }
 
-        setTexture(texture);
+        const std::pair<glm::vec2, glm::vec2>& textureCoordinates() const override { return mTextureCoordinates;}
+        void setTextureCoordinates(const glm::vec2& from, const glm::vec2& to);
 
-        const glm::vec2& size = sprite->size();
-        drawSolidQuad(Quad::fromTopLeftAndSize(position - size * sprite->anchor(), size));
-    }
+    private:
+        TexturePtr mTexture;
+        glm::vec2 mSize;
+        glm::vec2 mAnchor;
+        std::pair<glm::vec2, glm::vec2> mTextureCoordinates;
+
+        Z_DISABLE_COPY(Sprite);
+    };
 }

@@ -19,33 +19,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Canvas.h"
-#include "engine/math/Quad.h"
+#include "Sprite.h"
 
 namespace Engine
 {
-    Canvas::Canvas()
-    {
-        setBlend(true);
-        setDepthTest(false);
-    }
-
-    Canvas::~Canvas()
+    Sprite::Sprite()
+        : mSize(0.0f)
+        , mAnchor(0.5f)
+        , mTextureCoordinates(glm::vec2(0.0f), glm::vec2(1.0f))
     {
     }
 
-    void Canvas::drawSprite(const glm::vec2& position, const SpritePtr& sprite)
+    void Sprite::setTextureCoordinates(const glm::vec2& from, const glm::vec2& to)
     {
-        if (!sprite)
-            return;
-
-        const TexturePtr& texture = sprite->texture();
-        if (!texture)
-            return;
-
-        setTexture(texture);
-
-        const glm::vec2& size = sprite->size();
-        drawSolidQuad(Quad::fromTopLeftAndSize(position - size * sprite->anchor(), size));
+        mTextureCoordinates.first = from;
+        mTextureCoordinates.second = to;
     }
 }
