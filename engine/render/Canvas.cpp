@@ -24,8 +24,7 @@
 
 namespace Engine
 {
-    Canvas::Canvas(const glm::vec2& size)
-        : mSize(size)
+    Canvas::Canvas()
     {
         setBlend(true);
         setDepthTest(false);

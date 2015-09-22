@@ -25,26 +25,33 @@
 #include "engine/interfaces/core/IApplication.h"
 #include "engine/interfaces/input/IInputObserver.h"
 #include "engine/interfaces/scene/IScene.h"
+#include "engine/render/Canvas.h"
 #include <functional>
 #include <unordered_set>
+#include <memory>
+#include <cassert>
 
 namespace Engine
 {
     class Application : public IApplication, public IInputObserver
     {
     public:
-        static Application* instance() { return mInstance; }
-
         glm::ivec2 preferredScreenSize() const override;
         int preferredDepthBits() const override;
         int preferredStencilBits() const override;
 
-        const glm::ivec2& screenSize() { return mScreenSize; }
-        float screenAspect() const { return mScreenAspect; }
+        static const glm::ivec2& screenSize() { assert(mInstance != nullptr); return mInstance->mScreenSize; }
+        static float screenAspect() { assert(mInstance != nullptr); return mInstance->mScreenAspect; }
 
-        const ScenePtr& currentScene() const { return mCurrentScene; }
-        void setCurrentScene(const ScenePtr& scene);
-        void setCurrentScene(ScenePtr&& scene);
+        static Canvas& canvas() {
+            assert(mInstance != nullptr);
+            assert(mInstance->mCanvas != nullptr);
+            return *mInstance->mCanvas;
+        }
+
+        static const ScenePtr& currentScene() { assert(mInstance != nullptr); return mInstance->mCurrentScene; }
+        static void setCurrentScene(const ScenePtr& scene);
+        static void setCurrentScene(ScenePtr&& scene);
 
     protected:
         Application();
@@ -59,6 +66,7 @@ namespace Engine
         float mScreenAspect;
         ScenePtr mPreviousScene;
         ScenePtr mCurrentScene;
+        std::unique_ptr<Canvas> mCanvas;
 
         void initialize(const glm::ivec2& screenSize) final override;
         void shutdown() final override;

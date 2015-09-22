@@ -29,17 +29,12 @@ namespace Engine
     class Canvas : public ImmediateModeRenderer
     {
     public:
-        explicit Canvas(const glm::vec2& size);
+        Canvas();
         ~Canvas();
-
-        const glm::vec2& size() const { return mSize; }
-        void setSize(const glm::vec2& size) { mSize = size; }
 
         void drawSprite(const glm::vec2& position, const TexturePtr& texture);
 
     private:
-        glm::vec2 mSize;
-
         Z_DISABLE_COPY(Canvas);
     };
 }

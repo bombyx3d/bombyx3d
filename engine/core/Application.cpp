@@ -61,25 +61,28 @@ namespace Engine
 
     void Application::setCurrentScene(const ScenePtr& scene)
     {
+        assert(mInstance != nullptr);
         Services::inputManager()->resetAll();
-        mPreviousScene = std::move(mCurrentScene);
-        mCurrentScene = scene;
-        if (mCurrentScene)
-            mCurrentScene->resize(mScreenSize);
+        mInstance->mPreviousScene = std::move(mInstance->mCurrentScene);
+        mInstance->mCurrentScene = scene;
+        if (mInstance->mCurrentScene)
+            mInstance->mCurrentScene->resize(mInstance->mScreenSize);
     }
 
     void Application::setCurrentScene(ScenePtr&& scene)
     {
+        assert(mInstance != nullptr);
         Services::inputManager()->resetAll();
-        mPreviousScene = std::move(mCurrentScene);
-        mCurrentScene = std::move(scene);
-        if (mCurrentScene)
-            mCurrentScene->resize(mScreenSize);
+        mInstance->mPreviousScene = std::move(mInstance->mCurrentScene);
+        mInstance->mCurrentScene = std::move(scene);
+        if (mInstance->mCurrentScene)
+            mInstance->mCurrentScene->resize(mInstance->mScreenSize);
     }
 
     void Application::initialize(const glm::ivec2& screenSize)
     {
         Services::setResourceManager(std::make_shared<ResourceManager>());
+        mCanvas.reset(new Canvas);
         resize(screenSize);
         setCurrentScene(createInitialScene());
     }
@@ -88,6 +91,7 @@ namespace Engine
     {
         setCurrentScene(ScenePtr());
         mPreviousScene.reset();
+        mCanvas.reset();
         Services::setResourceManager(nullptr);
     }
 
@@ -124,6 +128,7 @@ namespace Engine
         if (mPreviousScene)
             mPreviousScene.reset();
 
+        mCanvas->flush();
         renderer->endFrame();
     }
 
