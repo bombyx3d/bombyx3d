@@ -20,7 +20,6 @@
  * THE SOFTWARE.
  */
 #include "XmlSpriteSheetLoader.h"
-#include "engine/sprites/SpriteSheet.h"
 #include "engine/core/Log.h"
 
 namespace Engine
@@ -31,11 +30,11 @@ namespace Engine
         return true;
     }
 
-    SpriteSheetPtr XmlSpriteSheetLoader::loadSpriteSheet(IFile* file)
+    bool XmlSpriteSheetLoader::loadSpriteSheet(IFile* file, SpriteSheet* sheet)
     {
         if (!file)
-            return std::make_shared<SpriteSheet>();
+            return false;
 
-        return std::make_shared<SpriteSheet>();
+        return true;
     }
 }

@@ -24,6 +24,7 @@
 #include "engine/core/Services.h"
 #include "engine/material/Material.h"
 #include "engine/image/Image.h"
+#include "engine/sprites/SpriteSheet.h"
 #include "engine/mesh/Mesh.h"
 #include "engine/mesh/RawMeshData.h"
 #include "engine/interfaces/render/IRenderer.h"
@@ -234,6 +235,35 @@ namespace Engine
         };
 
         return getResource<TextureResourceLoader>(mTextures, fileName, async, mCounters);
+    }
+
+    ////////////////
+    // Sprite sheet
+
+    SpriteSheetPtr ResourceManager::getSpriteSheet(const std::string& fileName, bool async)
+    {
+        struct SpriteSheetResourceLoader : public ResourceLoader<SpriteSheetPtr>
+        {
+            std::shared_ptr<SpriteSheet> mSpriteSheet;
+
+            SpriteSheetPtr create() override
+            {
+                mSpriteSheet = std::make_shared<SpriteSheet>();
+                return mSpriteSheet;
+            }
+
+            bool load() override
+            {
+                return mSpriteSheet->load(fileName);
+            }
+
+            void setup(const SpriteSheetPtr&) override
+            {
+                mSpriteSheet->loadPendingResources();
+            }
+        };
+
+        return getResource<SpriteSheetResourceLoader>(mSpriteSheets, fileName, async, mCounters);
     }
 
     ////////////////

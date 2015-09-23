@@ -22,6 +22,7 @@
 #include "SpriteSheet.h"
 #include "engine/core/Services.h"
 #include "engine/core/Log.h"
+#include "engine/sprites/Sprite.h"
 
 namespace Engine
 {
@@ -33,6 +34,54 @@ namespace Engine
     }
 
     SpriteSheet::~SpriteSheet()
+    {
+    }
+
+    SpritePtr SpriteSheet::getSprite(const std::string& name)
+    {
+        auto it = mSprites.find(name);
+        if (it != mSprites.end())
+            return std::make_shared<Sprite>(shared_from_this(), it->second);
+        return std::make_shared<Sprite>();
+    }
+
+    bool SpriteSheet::load(const std::string& fileName)
+    {
+        return load(Services::fileSystem()->openFile(fileName).get());
+    }
+
+    bool SpriteSheet::load(const FilePtr& file)
+    {
+        return load(file.get());
+    }
+
+    bool SpriteSheet::load(IFile* file)
+    {
+        if (!file)
+            return false;
+
+        Z_LOGI("Loading sprite sheet \"" << file->name() << "\"");
+
+        ISpriteSheetLoader* spriteSheetLoader = nullptr;
+        {
+            std::lock_guard<decltype(mSpriteSheetLoadersMutex)> lock(mSpriteSheetLoadersMutex);
+            for (const auto& loader : mSpriteSheetLoaders) {
+                if (loader->canLoadSpriteSheet(file)) {
+                    spriteSheetLoader = loader.get();
+                    break;
+                }
+            }
+        }
+
+        if (!spriteSheetLoader) {
+            Z_LOGE("There is no loader able to read sprite sheet \"" << file->name() << "\".");
+            return false;
+        }
+
+        return spriteSheetLoader->loadSpriteSheet(file, this);
+    }
+
+    void SpriteSheet::loadPendingResources()
     {
     }
 
@@ -51,25 +100,10 @@ namespace Engine
         if (!file)
             return std::make_shared<SpriteSheet>();
 
-        Z_LOGI("Loading sprite sheet \"" << file->name() << "\"");
+        auto sheet = std::make_shared<SpriteSheet>();
+        sheet->load(file);
 
-        ISpriteSheetLoader* spriteSheetLoader = nullptr;
-        {
-            std::lock_guard<decltype(mSpriteSheetLoadersMutex)> lock(mSpriteSheetLoadersMutex);
-            for (const auto& loader : mSpriteSheetLoaders) {
-                if (loader->canLoadSpriteSheet(file)) {
-                    spriteSheetLoader = loader.get();
-                    break;
-                }
-            }
-        }
-
-        if (!spriteSheetLoader) {
-            Z_LOGE("There is no loader able to read sprite sheet \"" << file->name() << "\".");
-            return std::make_shared<SpriteSheet>();
-        }
-
-        return spriteSheetLoader->loadSpriteSheet(file);
+        return sheet;
     }
 
     void SpriteSheet::registerLoader(std::unique_ptr<ISpriteSheetLoader>&& loader)

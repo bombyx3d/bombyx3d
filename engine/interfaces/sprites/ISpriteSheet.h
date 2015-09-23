@@ -21,6 +21,8 @@
  */
 
 #pragma once
+#include "engine/interfaces/sprites/ISprite.h"
+#include <string>
 #include <memory>
 
 namespace Engine
@@ -29,6 +31,8 @@ namespace Engine
     {
     public:
         virtual ~ISpriteSheet() = default;
+
+        virtual SpritePtr getSprite(const std::string& name) = 0;
     };
 
     using SpriteSheetPtr = std::shared_ptr<ISpriteSheet>;

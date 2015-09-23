@@ -23,6 +23,7 @@
 #pragma once
 #include "engine/core/macros.h"
 #include "engine/interfaces/sprites/ISprite.h"
+#include "engine/sprites/SpriteSheet.h"
 
 namespace Engine
 {
@@ -30,25 +31,18 @@ namespace Engine
     {
     public:
         Sprite();
+        Sprite(std::shared_ptr<SpriteSheet>&& sheet, const std::shared_ptr<SpriteSheet::Element>& element);
         ~Sprite();
 
-        const glm::vec2& size() const override { return mSize; }
-        void setSize(const glm::vec2& size) { mSize = size; }
+        const Quad& originalQuad() const override { return mElement->originalQuad; }
+        const Quad& trimmedQuad() const override { return mElement->trimmedQuad; }
 
-        const glm::vec2& anchor() const override { return mAnchor; }
-        void setAnchor(const glm::vec2& anchor) { mAnchor = anchor; }
-
-        const TexturePtr& texture() const override { return mTexture; }
-        void setTexture(const TexturePtr& texture) { mTexture = texture; }
-
-        const std::pair<glm::vec2, glm::vec2>& textureCoordinates() const override { return mTextureCoordinates;}
-        void setTextureCoordinates(const glm::vec2& from, const glm::vec2& to);
+        const TexturePtr& texture() const override { return mElement->texture; }
+        const Quad& textureCoordinates() const override { return mElement->textureCoordinates; }
 
     private:
-        TexturePtr mTexture;
-        glm::vec2 mSize;
-        glm::vec2 mAnchor;
-        std::pair<glm::vec2, glm::vec2> mTextureCoordinates;
+        SpriteSheetPtr mSpriteSheet;
+        std::shared_ptr<SpriteSheet::Element> mElement;
 
         Z_DISABLE_COPY(Sprite);
     };

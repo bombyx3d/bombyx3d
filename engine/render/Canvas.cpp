@@ -45,7 +45,7 @@ namespace Engine
 
         setTexture(texture);
 
-        const glm::vec2& size = sprite->size();
-        drawSolidQuad(Quad::fromTopLeftAndSize(position - size * sprite->anchor(), size));
+        //const glm::vec2& size = sprite->size();
+        //drawSolidQuad(Quad::fromTopLeftAndSize(position - size * sprite->anchor(), size));
     }
 }

@@ -56,6 +56,7 @@ namespace Engine
         MaterialPtr getMaterial(const std::string& fileName, bool async = true) override;
         ShaderPtr getShader(const std::string& fileName, bool async = true) override;
         TexturePtr getTexture(const std::string& fileName, bool async = true) override;
+        SpriteSheetPtr getSpriteSheet(const std::string& fileName, bool async = true) override;
         MeshPtr getStaticMesh(const std::string& fileName, bool async = true) override;
 
     private:
@@ -63,6 +64,7 @@ namespace Engine
         std::unordered_map<std::string, std::weak_ptr<IShader>> mShaders;
         std::unordered_map<const void*, std::shared_ptr<IShader>> mBuiltinShaders;
         std::unordered_map<std::string, std::weak_ptr<ITexture>> mTextures;
+        std::unordered_map<std::string, std::weak_ptr<ISpriteSheet>> mSpriteSheets;
         std::unordered_map<std::string, std::weak_ptr<IMesh>> mStaticMeshes;
         std::shared_ptr<Counters> mCounters;
 

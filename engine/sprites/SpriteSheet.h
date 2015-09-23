@@ -26,16 +26,33 @@
 #include "engine/interfaces/sprites/ISpriteSheetLoader.h"
 #include "engine/interfaces/io/IFile.h"
 #include <mutex>
+#include <unordered_map>
 #include <vector>
 #include <memory>
 
 namespace Engine
 {
-    class SpriteSheet : public ISpriteSheet
+    class SpriteSheet : public ISpriteSheet, public std::enable_shared_from_this<SpriteSheet>
     {
     public:
+        struct Element
+        {
+            TexturePtr texture;
+            Quad originalQuad;
+            Quad trimmedQuad;
+            Quad textureCoordinates;
+        };
+
         SpriteSheet();
         ~SpriteSheet();
+
+        SpritePtr getSprite(const std::string& name) override;
+
+        bool load(const std::string& fileName);
+        bool load(const FilePtr& file);
+        bool load(IFile* file);
+
+        void loadPendingResources();
 
         static SpriteSheetPtr fromFile(const std::string& name);
         static SpriteSheetPtr fromFile(const FilePtr& file);
@@ -48,6 +65,8 @@ namespace Engine
     private:
         static std::vector<std::unique_ptr<ISpriteSheetLoader>> mSpriteSheetLoaders;
         static std::mutex mSpriteSheetLoadersMutex;
+
+        std::unordered_map<std::string, std::shared_ptr<Element>> mSprites;
 
         Z_DISABLE_COPY(SpriteSheet);
     };

@@ -21,6 +21,7 @@
  */
 
 #pragma once
+#include "engine/math/Quad.h"
 #include "engine/interfaces/render/ITexture.h"
 #include <memory>
 #include <glm/glm.hpp>
@@ -32,11 +33,11 @@ namespace Engine
     public:
         virtual ~ISprite() = default;
 
-        virtual const glm::vec2& size() const = 0;
-        virtual const glm::vec2& anchor() const = 0;
+        virtual const Quad& originalQuad() const = 0;
+        virtual const Quad& trimmedQuad() const = 0;
 
         virtual const TexturePtr& texture() const = 0;
-        virtual const std::pair<glm::vec2, glm::vec2>& textureCoordinates() const = 0;
+        virtual const Quad& textureCoordinates() const = 0;
     };
 
     using SpritePtr = std::shared_ptr<ISprite>;

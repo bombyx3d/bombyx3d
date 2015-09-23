@@ -22,16 +22,17 @@
 
 #pragma once
 #include "engine/interfaces/io/IFile.h"
-#include "engine/interfaces/sprites/ISpriteSheet.h"
 
 namespace Engine
 {
+    class SpriteSheet;
+
     class ISpriteSheetLoader
     {
     public:
         virtual ~ISpriteSheetLoader() = default;
 
         virtual bool canLoadSpriteSheet(IFile* file) = 0;
-        virtual SpriteSheetPtr loadSpriteSheet(IFile* file) = 0;
+        virtual bool loadSpriteSheet(IFile* file, SpriteSheet* sheet) = 0;
     };
 }

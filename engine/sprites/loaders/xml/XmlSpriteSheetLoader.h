@@ -31,6 +31,6 @@ namespace Engine
         XmlSpriteSheetLoader() = default;
 
         bool canLoadSpriteSheet(IFile* file) override;
-        SpriteSheetPtr loadSpriteSheet(IFile* file) override;
+        bool loadSpriteSheet(IFile* file, SpriteSheet* sheet) override;
     };
 }

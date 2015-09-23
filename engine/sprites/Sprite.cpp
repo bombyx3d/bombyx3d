@@ -23,20 +23,33 @@
 
 namespace Engine
 {
+    namespace
+    {
+        struct NullElement : public SpriteSheet::Element
+        {
+            NullElement()
+            {
+                originalQuad = Quad::allZero();
+                trimmedQuad = Quad::allZero();
+                textureCoordinates = Quad::allZero();
+            }
+        };
+
+        static const std::shared_ptr<SpriteSheet::Element> gNullElement = std::make_shared<NullElement>();
+    }
+
     Sprite::Sprite()
-        : mSize(0.0f)
-        , mAnchor(0.5f)
-        , mTextureCoordinates(glm::vec2(0.0f), glm::vec2(1.0f))
+        : mElement(gNullElement)
+    {
+    }
+
+    Sprite::Sprite(std::shared_ptr<SpriteSheet>&& sheet, const std::shared_ptr<SpriteSheet::Element>& element)
+        : mSpriteSheet(sheet)
+        , mElement(element)
     {
     }
 
     Sprite::~Sprite()
     {
-    }
-
-    void Sprite::setTextureCoordinates(const glm::vec2& from, const glm::vec2& to)
-    {
-        mTextureCoordinates.first = from;
-        mTextureCoordinates.second = to;
     }
 }
