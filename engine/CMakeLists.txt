@@ -64,12 +64,14 @@ set(source_files
     interfaces/render/IIndexBuffer.h
     interfaces/render/IRenderer.h
     interfaces/render/IShader.h
-    interfaces/render/ISprite.h
     interfaces/render/ITexture.h
     interfaces/render/IVertexBuffer.h
     interfaces/render/IVertexSource.h
     interfaces/scene/3d/camera/ICamera.h
     interfaces/scene/IScene.h
+    interfaces/sprites/ISprite.h
+    interfaces/sprites/ISpriteSheet.h
+    interfaces/sprites/ISpriteSheetLoader.h
     material/Material.cpp
     material/Material.h
     material/MaterialPass.cpp
@@ -106,8 +108,6 @@ set(source_files
     render/Canvas.h
     render/ImmediateModeRenderer.cpp
     render/ImmediateModeRenderer.h
-    render/Sprite.cpp
-    render/Sprite.h
     scene/3d/camera/AbstractCamera.cpp
     scene/3d/camera/AbstractCamera.h
     scene/3d/camera/AbstractOrthogonalCamera.cpp
@@ -120,6 +120,10 @@ set(source_files
     scene/AbstractLoadingScene.h
     scene/AbstractScene.cpp
     scene/AbstractScene.h
+    sprites/Sprite.cpp
+    sprites/Sprite.h
+    sprites/SpriteSheet.cpp
+    sprites/SpriteSheet.h
     utility/FileUtils.cpp
     utility/FileUtils.h
     utility/MemoryPool.cpp
@@ -142,6 +146,7 @@ z_set_source_groups(${source_files})
 set_target_properties(engine PROPERTIES CXX_STANDARD 11)
 target_link_libraries(engine platform glm boost)
 
-add_subdirectory(image/loaders/png)
-add_subdirectory(material/loaders/text)
-add_subdirectory(mesh/loaders/assimp)
+add_subdirectory(image/loaders)
+add_subdirectory(material/loaders)
+add_subdirectory(mesh/loaders)
+add_subdirectory(sprites/loaders)

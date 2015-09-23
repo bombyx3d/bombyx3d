@@ -19,37 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "engine/core/macros.h"
-#include "engine/interfaces/render/ISprite.h"
+#include "Sprite.h"
 
 namespace Engine
 {
-    class Sprite : public ISprite
+    Sprite::Sprite()
+        : mSize(0.0f)
+        , mAnchor(0.5f)
+        , mTextureCoordinates(glm::vec2(0.0f), glm::vec2(1.0f))
     {
-    public:
-        Sprite();
-        ~Sprite();
+    }
 
-        const glm::vec2& size() const override { return mSize; }
-        void setSize(const glm::vec2& size) { mSize = size; }
+    Sprite::~Sprite()
+    {
+    }
 
-        const glm::vec2& anchor() const override { return mAnchor; }
-        void setAnchor(const glm::vec2& anchor) { mAnchor = anchor; }
-
-        const TexturePtr& texture() const override { return mTexture; }
-        void setTexture(const TexturePtr& texture) { mTexture = texture; }
-
-        const std::pair<glm::vec2, glm::vec2>& textureCoordinates() const override { return mTextureCoordinates;}
-        void setTextureCoordinates(const glm::vec2& from, const glm::vec2& to);
-
-    private:
-        TexturePtr mTexture;
-        glm::vec2 mSize;
-        glm::vec2 mAnchor;
-        std::pair<glm::vec2, glm::vec2> mTextureCoordinates;
-
-        Z_DISABLE_COPY(Sprite);
-    };
+    void Sprite::setTextureCoordinates(const glm::vec2& from, const glm::vec2& to)
+    {
+        mTextureCoordinates.first = from;
+        mTextureCoordinates.second = to;
+    }
 }

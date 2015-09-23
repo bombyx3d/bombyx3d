@@ -20,19 +20,4 @@
 # THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.2)
-include(../../cmake/Engine.cmake)
-
-z_make_executable(sample
-    SOURCES
-        LoadingScene.cpp
-        LoadingScene.h
-        main.cpp
-        MainScene.cpp
-        MainScene.h
-    LIBRARIES
-        engine-image-png
-        engine-sprites-xml
-        engine-material-text
-        engine-mesh-assimp
-)
+add_subdirectory(xml)

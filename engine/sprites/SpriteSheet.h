@@ -19,26 +19,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "engine/core/Application.h"
-#include "engine/image/Image.h"
-#include "engine/image/loaders/png/PngImageLoader.h"
-#include "engine/sprites/SpriteSheet.h"
-#include "engine/sprites/loaders/xml/XmlSpriteSheetLoader.h"
-#include "engine/material/Material.h"
-#include "engine/mesh/RawMeshData.h"
-#include "engine/material/loaders/text/TextMaterialLoader.h"
-#include "engine/mesh/loaders/assimp/AssImpMeshLoader.h"
-#include "MainScene.h"
-#include "LoadingScene.h"
 
-using namespace Engine;
+#pragma once
+#include "engine/core/macros.h"
+#include "engine/interfaces/sprites/ISpriteSheet.h"
+#include "engine/interfaces/sprites/ISpriteSheetLoader.h"
+#include "engine/interfaces/io/IFile.h"
+#include <mutex>
+#include <vector>
+#include <memory>
 
-IApplication* IApplication::create()
+namespace Engine
 {
-    Image::registerLoader<PngImageLoader>();
-    SpriteSheet::registerLoader<XmlSpriteSheetLoader>();
-    Material::registerLoader<TextMaterialLoader>();
-    RawMeshData::registerLoader<AssImpMeshLoader>();
+    class SpriteSheet : public ISpriteSheet
+    {
+    public:
+        SpriteSheet();
+        ~SpriteSheet();
 
-    return createApplicationWithInitialScene<Game::LoadingSceneFor<Game::MainScene>>();
+        static SpriteSheetPtr fromFile(const std::string& name);
+        static SpriteSheetPtr fromFile(const FilePtr& file);
+        static SpriteSheetPtr fromFile(IFile* file);
+
+        static void registerLoader(std::unique_ptr<ISpriteSheetLoader>&& loader);
+        template <typename TYPE, typename... ARGS> static void registerLoader(ARGS&&... args)
+            { registerLoader(std::unique_ptr<TYPE>(new TYPE(std::forward<ARGS>(args)...))); }
+
+    private:
+        static std::vector<std::unique_ptr<ISpriteSheetLoader>> mSpriteSheetLoaders;
+        static std::mutex mSpriteSheetLoadersMutex;
+
+        Z_DISABLE_COPY(SpriteSheet);
+    };
 }

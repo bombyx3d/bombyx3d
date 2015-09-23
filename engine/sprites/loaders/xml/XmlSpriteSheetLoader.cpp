@@ -19,26 +19,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "engine/core/Application.h"
-#include "engine/image/Image.h"
-#include "engine/image/loaders/png/PngImageLoader.h"
+#include "XmlSpriteSheetLoader.h"
 #include "engine/sprites/SpriteSheet.h"
-#include "engine/sprites/loaders/xml/XmlSpriteSheetLoader.h"
-#include "engine/material/Material.h"
-#include "engine/mesh/RawMeshData.h"
-#include "engine/material/loaders/text/TextMaterialLoader.h"
-#include "engine/mesh/loaders/assimp/AssImpMeshLoader.h"
-#include "MainScene.h"
-#include "LoadingScene.h"
+#include "engine/core/Log.h"
 
-using namespace Engine;
-
-IApplication* IApplication::create()
+namespace Engine
 {
-    Image::registerLoader<PngImageLoader>();
-    SpriteSheet::registerLoader<XmlSpriteSheetLoader>();
-    Material::registerLoader<TextMaterialLoader>();
-    RawMeshData::registerLoader<AssImpMeshLoader>();
+    bool XmlSpriteSheetLoader::canLoadSpriteSheet(IFile* file)
+    {
+        // FIXME
+        return true;
+    }
 
-    return createApplicationWithInitialScene<Game::LoadingSceneFor<Game::MainScene>>();
+    SpriteSheetPtr XmlSpriteSheetLoader::loadSpriteSheet(IFile* file)
+    {
+        if (!file)
+            return std::make_shared<SpriteSheet>();
+
+        return std::make_shared<SpriteSheet>();
+    }
 }

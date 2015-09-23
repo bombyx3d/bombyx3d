@@ -20,19 +20,13 @@
 # THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.2)
-include(../../cmake/Engine.cmake)
-
-z_make_executable(sample
-    SOURCES
-        LoadingScene.cpp
-        LoadingScene.h
-        main.cpp
-        MainScene.cpp
-        MainScene.h
-    LIBRARIES
-        engine-image-png
-        engine-sprites-xml
-        engine-material-text
-        engine-mesh-assimp
+set(source_files
+    XmlSpriteSheetLoader.cpp
+    XmlSpriteSheetLoader.h
 )
+
+add_library(engine-sprites-xml STATIC EXCLUDE_FROM_ALL ${source_files})
+z_set_source_groups(${source_files})
+
+set_target_properties(engine-sprites-xml PROPERTIES CXX_STANDARD 11)
+target_link_libraries(engine-sprites-xml engine tinyxml)

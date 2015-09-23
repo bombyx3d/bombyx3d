@@ -19,26 +19,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "engine/core/Application.h"
-#include "engine/image/Image.h"
-#include "engine/image/loaders/png/PngImageLoader.h"
-#include "engine/sprites/SpriteSheet.h"
-#include "engine/sprites/loaders/xml/XmlSpriteSheetLoader.h"
-#include "engine/material/Material.h"
-#include "engine/mesh/RawMeshData.h"
-#include "engine/material/loaders/text/TextMaterialLoader.h"
-#include "engine/mesh/loaders/assimp/AssImpMeshLoader.h"
-#include "MainScene.h"
-#include "LoadingScene.h"
 
-using namespace Engine;
+#pragma once
+#include "engine/core/macros.h"
+#include "engine/interfaces/sprites/ISprite.h"
 
-IApplication* IApplication::create()
+namespace Engine
 {
-    Image::registerLoader<PngImageLoader>();
-    SpriteSheet::registerLoader<XmlSpriteSheetLoader>();
-    Material::registerLoader<TextMaterialLoader>();
-    RawMeshData::registerLoader<AssImpMeshLoader>();
+    class Sprite : public ISprite
+    {
+    public:
+        Sprite();
+        ~Sprite();
 
-    return createApplicationWithInitialScene<Game::LoadingSceneFor<Game::MainScene>>();
+        const glm::vec2& size() const override { return mSize; }
+        void setSize(const glm::vec2& size) { mSize = size; }
+
+        const glm::vec2& anchor() const override { return mAnchor; }
+        void setAnchor(const glm::vec2& anchor) { mAnchor = anchor; }
+
+        const TexturePtr& texture() const override { return mTexture; }
+        void setTexture(const TexturePtr& texture) { mTexture = texture; }
+
+        const std::pair<glm::vec2, glm::vec2>& textureCoordinates() const override { return mTextureCoordinates;}
+        void setTextureCoordinates(const glm::vec2& from, const glm::vec2& to);
+
+    private:
+        TexturePtr mTexture;
+        glm::vec2 mSize;
+        glm::vec2 mAnchor;
+        std::pair<glm::vec2, glm::vec2> mTextureCoordinates;
+
+        Z_DISABLE_COPY(Sprite);
+    };
 }

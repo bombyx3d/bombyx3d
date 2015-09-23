@@ -19,20 +19,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Sprite.h"
+
+#pragma once
+#include <memory>
 
 namespace Engine
 {
-    Sprite::Sprite()
-        : mSize(0.0f)
-        , mAnchor(0.5f)
-        , mTextureCoordinates(glm::vec2(0.0f), glm::vec2(1.0f))
+    class ISpriteSheet
     {
-    }
+    public:
+        virtual ~ISpriteSheet() = default;
+    };
 
-    void Sprite::setTextureCoordinates(const glm::vec2& from, const glm::vec2& to)
-    {
-        mTextureCoordinates.first = from;
-        mTextureCoordinates.second = to;
-    }
+    using SpriteSheetPtr = std::shared_ptr<ISpriteSheet>;
 }
