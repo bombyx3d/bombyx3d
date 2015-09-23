@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
+# Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,24 +20,11 @@
 # THE SOFTWARE.
 #
 
-if(MSVC)
-    add_definitions(-D_SCL_SECURE_NO_WARNINGS)
-    add_definitions(/wd4047 /wd4244 /wd4267 /wd4305 /wd4456 /wd4458)
-else()
-    add_definitions(-w)
-endif()
+cmake_minimum_required(VERSION 3.2)
+project(tinyxml)
 
-add_subdirectory(assimp)
-add_subdirectory(boost)
-add_subdirectory(bzip2)
-add_subdirectory(cvtutf)
-add_subdirectory(glew)
-add_subdirectory(glfw)
-add_subdirectory(glm)
-add_subdirectory(irrxml)
-add_subdirectory(libpng)
-add_subdirectory(minizip)
-add_subdirectory(pegtl)
-add_subdirectory(poly2tri)
-add_subdirectory(tinyxml)
-add_subdirectory(zlib)
+file(GLOB files *.cpp *.h)
+source_group("Source Files" FILES ${files})
+
+add_library(tinyxml STATIC EXCLUDE_FROM_ALL ${files})
+target_include_directories(tinyxml SYSTEM BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
