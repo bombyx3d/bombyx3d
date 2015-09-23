@@ -26,7 +26,7 @@
 #include "engine/platform/shared/CxxThreadManager.h"
 #include "engine/platform/shared/GlfwWrapper.h"
 #include "engine/platform/shared/PosixLogger.h"
-#include "engine/render/opengl.h"
+#include "engine/render/gles2/opengl.h"
 #include <clocale>
 
 using namespace Engine;
