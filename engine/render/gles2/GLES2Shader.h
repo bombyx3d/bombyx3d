@@ -47,7 +47,7 @@ namespace Engine
 
         void use();
 
-        bool compile();
+        bool compile() override;
 
     private:
         size_t mVertexShader;

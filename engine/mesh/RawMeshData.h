@@ -39,7 +39,7 @@ namespace Engine
         RawMeshData();
         ~RawMeshData();
 
-        const std::vector<RawMeshElementDataPtr>& elements() const { return mElements; }
+        const std::vector<RawMeshElementDataPtr>& elements() const override { return mElements; }
         template <class TYPE> RawMeshElementData<TYPE>* addElement(PrimitiveType primitiveType)
         {
             auto element = new RawMeshElementData<TYPE>(this, primitiveType);

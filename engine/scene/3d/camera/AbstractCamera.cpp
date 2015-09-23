@@ -36,7 +36,7 @@ namespace Engine
     {
         if (mFlags & ProjectionMatrixDirty) {
             calcProjectionMatrix(mProjectionMatrix);
-            mFlags &= ~ProjectionMatrixDirty;
+            mFlags &= ~size_t(ProjectionMatrixDirty);
         }
         return mProjectionMatrix;
     }
@@ -45,7 +45,7 @@ namespace Engine
     {
         if (mFlags & InverseProjectionMatrixDirty) {
             calcInverseProjectionMatrix(mInverseProjectionMatrix);
-            mFlags &= ~InverseProjectionMatrixDirty;
+            mFlags &= ~size_t(InverseProjectionMatrixDirty);
         }
         return mInverseProjectionMatrix;
     }
@@ -54,7 +54,7 @@ namespace Engine
     {
         if (mFlags & ViewMatrixDirty) {
             calcViewMatrix(mViewMatrix);
-            mFlags &= ~ViewMatrixDirty;
+            mFlags &= ~size_t(ViewMatrixDirty);
         }
         return mViewMatrix;
     }
@@ -63,7 +63,7 @@ namespace Engine
     {
         if (mFlags & InverseViewMatrixDirty) {
             calcInverseViewMatrix(mInverseViewMatrix);
-            mFlags &= ~InverseViewMatrixDirty;
+            mFlags &= ~size_t(InverseViewMatrixDirty);
         }
         return mInverseViewMatrix;
     }
