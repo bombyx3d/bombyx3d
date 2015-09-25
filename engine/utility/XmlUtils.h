@@ -24,6 +24,7 @@
 #include "engine/utility/FileUtils.h"
 #include "engine/core/Log.h"
 #include "engine/core/Services.h"
+#include <iterator>
 #include <sstream>
 #include <string>
 #include <exception>
@@ -35,6 +36,8 @@ namespace Engine
     namespace XmlUtils
     {
         class ParseError {};
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         class ElementIterator
         {
@@ -56,6 +59,8 @@ namespace Engine
         private:
             const TiXmlElement* mElement;
         };
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         inline TiXmlDocument parseFile(IFile* file)
         {
@@ -235,15 +240,12 @@ namespace Engine
     }
 }
 
-namespace std
+inline Engine::XmlUtils::ElementIterator begin(const TiXmlElement* element)
 {
-    inline Engine::XmlUtils::ElementIterator begin(const TiXmlElement* element)
-    {
-        return Engine::XmlUtils::ElementIterator(element ? element->FirstChildElement() : nullptr);
-    }
+    return Engine::XmlUtils::ElementIterator(element ? element->FirstChildElement() : nullptr);
+}
 
-    inline Engine::XmlUtils::ElementIterator end(const TiXmlElement*)
-    {
-        return Engine::XmlUtils::ElementIterator();
-    }
+inline Engine::XmlUtils::ElementIterator end(const TiXmlElement*)
+{
+    return Engine::XmlUtils::ElementIterator();
 }

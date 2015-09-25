@@ -43,7 +43,7 @@ namespace Engine
         {
             TiXmlDocument doc = XmlUtils::parseFile(file);
 
-            TiXmlElement* root = doc.RootElement();
+            const TiXmlElement* root = doc.RootElement();
             XmlUtils::assertTagNameEquals(root, "TextureAtlas");
 
             int atlasWidth = XmlUtils::getIntAttribute(root, "width");
