@@ -23,6 +23,7 @@
 #include "engine/core/Services.h"
 #include "engine/core/Log.h"
 #include "engine/sprites/Sprite.h"
+#include <cassert>
 
 namespace Engine
 {
@@ -35,6 +36,13 @@ namespace Engine
 
     SpriteSheet::~SpriteSheet()
     {
+    }
+
+    void SpriteSheet::addSprite(const std::string& name, std::shared_ptr<Element>&& element)
+    {
+        auto r = mSprites.emplace(name, std::move(element));
+        if (!r.second)
+            Z_LOGW("Duplicate sprite \"" << name << "\" in sprite sheet.");
     }
 
     SpritePtr SpriteSheet::getSprite(const std::string& name)

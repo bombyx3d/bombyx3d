@@ -46,6 +46,7 @@ namespace Engine
         SpriteSheet();
         ~SpriteSheet();
 
+        void addSprite(const std::string& name, std::shared_ptr<Element>&& element);
         SpritePtr getSprite(const std::string& name) override;
 
         bool load(const std::string& fileName);

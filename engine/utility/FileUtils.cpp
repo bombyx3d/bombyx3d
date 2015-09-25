@@ -70,6 +70,7 @@ namespace Engine
             return result;
 
         size_t fileSize = size_t(file->size());
+        result.reserve(fileSize + 1);
         result.resize(fileSize);
 
         size_t offset = 0;
