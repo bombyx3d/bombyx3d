@@ -22,6 +22,7 @@
 
 #pragma once
 #include "engine/interfaces/mesh/IMeshLoader.h"
+#include "engine/mesh/RawMeshData.h"
 
 namespace Engine
 {

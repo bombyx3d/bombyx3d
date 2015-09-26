@@ -34,5 +34,5 @@ z_make_executable(sample
         imageloader-png
         engine-sprites-xml
         materialloader-text
-        engine-mesh-assimp
+        meshloader-assimp
 )

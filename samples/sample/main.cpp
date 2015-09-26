@@ -23,9 +23,8 @@
 #include "plugins/imageloader-png/PngImageLoader.h"
 #include "engine/sprites/SpriteSheet.h"
 #include "engine/sprites/loaders/xml/XmlSpriteSheetLoader.h"
-#include "engine/mesh/RawMeshData.h"
 #include "plugins/materialloader-text/TextMaterialLoader.h"
-#include "engine/mesh/loaders/assimp/AssImpMeshLoader.h"
+#include "plugins/meshloader-assimp/AssImpMeshLoader.h"
 #include "MainScene.h"
 #include "LoadingScene.h"
 

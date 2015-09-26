@@ -20,4 +20,19 @@
 # THE SOFTWARE.
 #
 
-add_subdirectory(assimp)
+set(source_files
+    AssImpIOStream.cpp
+    AssImpIOStream.h
+    AssImpIOSystem.cpp
+    AssImpIOSystem.h
+    AssImpLogStream.cpp
+    AssImpLogStream.h
+    AssImpMeshLoader.cpp
+    AssImpMeshLoader.h
+)
+
+add_library(meshloader-assimp STATIC EXCLUDE_FROM_ALL ${source_files})
+z_set_source_groups(${source_files})
+
+set_target_properties(meshloader-assimp PROPERTIES CXX_STANDARD 11)
+z_target_link_libraries(meshloader-assimp engine assimp)
