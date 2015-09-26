@@ -38,9 +38,33 @@ namespace Engine
         struct Element
         {
             TexturePtr texture;
+            std::unique_ptr<std::string> textureName;
             Quad originalQuad;
             Quad trimmedQuad;
             Quad textureCoordinates;
+
+            Element()
+            {
+            }
+
+            Element(Element&& other)
+                : texture(std::move(other.texture))
+                , textureName(std::move(other.textureName))
+                , originalQuad(std::move(other.originalQuad))
+                , trimmedQuad(std::move(other.trimmedQuad))
+                , textureCoordinates(std::move(other.textureCoordinates))
+            {
+            }
+
+            Element& operator=(Element&& other)
+            {
+                texture = std::move(other.texture);
+                textureName = std::move(other.textureName);
+                originalQuad = std::move(other.originalQuad);
+                trimmedQuad = std::move(other.trimmedQuad);
+                textureCoordinates = std::move(other.textureCoordinates);
+                return *this;
+            }
         };
 
         SpriteSheet();

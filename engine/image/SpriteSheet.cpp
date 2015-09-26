@@ -100,6 +100,13 @@ namespace Engine
 
     void SpriteSheet::loadPendingResources()
     {
+        for (auto& it : mSprites) {
+            const auto& sprite = it.second;
+            if (!sprite->texture && sprite->textureName) {
+                sprite->texture = Services::resourceManager()->getTexture(*sprite->textureName);
+                sprite->textureName.reset();
+            }
+        }
     }
 
     SpriteSheetPtr SpriteSheet::fromFile(const std::string& name)

@@ -44,7 +44,7 @@ namespace Engine
 
     void GLES2Texture::upload(const IImage& image)
     {
-        if (!image.data())
+        if (!image.data() || !mHandle)
             return;
 
         GLenum format = 0, type = 0;

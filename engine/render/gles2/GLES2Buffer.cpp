@@ -50,6 +50,8 @@ namespace Engine
 
     void GLES2Buffer::initEmpty(size_t size, BufferUsage usage)
     {
+        if (!mHandle)
+            return;
         glBindBuffer(GLenum(mTarget), GLuint(mHandle));
         glBufferData(GLenum(mTarget), GLsizeiptr(size), nullptr, bufferUsageToGL(usage));
         mSize = size;
@@ -57,6 +59,8 @@ namespace Engine
 
     void GLES2Buffer::setData(const void* data, size_t size, BufferUsage usage)
     {
+        if (!mHandle)
+            return;
         glBindBuffer(GLenum(mTarget), GLuint(mHandle));
         glBufferData(GLenum(mTarget), GLsizeiptr(size), data, bufferUsageToGL(usage));
         mSize = size;

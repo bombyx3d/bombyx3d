@@ -46,18 +46,16 @@ namespace Engine
             const TiXmlElement* root = doc.RootElement();
             XmlUtils::assertTagNameEquals(root, "TextureAtlas");
 
-            int atlasWidth = XmlUtils::getIntAttribute(root, "width");
-            int atlasHeight = XmlUtils::getIntAttribute(root, "height");
-
             std::string textureName = XmlUtils::getStringAttribute(root, "imagePath");
             std::string texturePath = FileUtils::makeFullPath(textureName, file->name());
-            TexturePtr texture = Services::resourceManager()->getTexture(texturePath);
+            int atlasWidth = XmlUtils::getIntAttribute(root, "width");
+            int atlasHeight = XmlUtils::getIntAttribute(root, "height");
 
             for (auto spriteElement : root) {
                 XmlUtils::assertTagNameEquals(spriteElement, "sprite");
 
                 SpriteSheet::Element element;
-                element.texture = texture;
+                element.textureName.reset(new std::string(texturePath));
 
                 std::string name = XmlUtils::getStringAttribute(spriteElement, "n");
                 bool rotated = XmlUtils::getStringAttribute(spriteElement, "r", std::string()) == "y";
