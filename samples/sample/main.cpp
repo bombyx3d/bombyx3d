@@ -21,8 +21,7 @@
  */
 #include "engine/core/Application.h"
 #include "plugins/imageloader-png/PngImageLoader.h"
-#include "engine/sprites/SpriteSheet.h"
-#include "engine/sprites/loaders/xml/XmlSpriteSheetLoader.h"
+#include "plugins/spritesheetloader-xml/XmlSpriteSheetLoader.h"
 #include "plugins/materialloader-text/TextMaterialLoader.h"
 #include "plugins/meshloader-assimp/AssImpMeshLoader.h"
 #include "MainScene.h"

@@ -32,7 +32,7 @@ z_make_executable(sample
         MainScene.h
     LIBRARIES
         imageloader-png
-        engine-sprites-xml
+        spritesheetloader-xml
         materialloader-text
         meshloader-assimp
 )

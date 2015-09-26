@@ -22,6 +22,7 @@
 
 #pragma once
 #include "engine/interfaces/sprites/ISpriteSheetLoader.h"
+#include "engine/sprites/SpriteSheet.h"
 
 namespace Engine
 {
