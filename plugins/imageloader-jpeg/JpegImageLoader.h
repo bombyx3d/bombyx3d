@@ -19,24 +19,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "engine/core/Application.h"
-#include "plugins/imageloader-jpeg/JpegImageLoader.h"
-#include "plugins/imageloader-png/PngImageLoader.h"
-#include "plugins/spritesheetloader-xml/XmlSpriteSheetLoader.h"
-#include "plugins/materialloader-text/TextMaterialLoader.h"
-#include "plugins/meshloader-assimp/AssImpMeshLoader.h"
-#include "MainScene.h"
-#include "LoadingScene.h"
 
-using namespace Engine;
+#pragma once
+#include "engine/interfaces/image/IImageLoader.h"
+#include "engine/image/Image.h"
 
-IApplication* IApplication::create()
+namespace Engine
 {
-    Image::registerLoader<JpegImageLoader>();
-    Image::registerLoader<PngImageLoader>();
-    SpriteSheet::registerLoader<XmlSpriteSheetLoader>();
-    Material::registerLoader<TextMaterialLoader>();
-    RawMeshData::registerLoader<AssImpMeshLoader>();
+    class JpegImageLoader : public IImageLoader
+    {
+    public:
+        JpegImageLoader() = default;
 
-    return createApplicationWithInitialScene<Game::LoadingSceneFor<Game::MainScene>>();
+        bool canLoadImage(IFile* file) override;
+        ImagePtr loadImage(IFile* file) override;
+    };
 }

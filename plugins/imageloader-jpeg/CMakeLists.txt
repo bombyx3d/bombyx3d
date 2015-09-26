@@ -20,20 +20,13 @@
 # THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.2)
-include(../../cmake/Engine.cmake)
-
-z_make_executable(sample
-    SOURCES
-        LoadingScene.cpp
-        LoadingScene.h
-        main.cpp
-        MainScene.cpp
-        MainScene.h
-    LIBRARIES
-        imageloader-jpeg
-        imageloader-png
-        spritesheetloader-xml
-        materialloader-text
-        meshloader-assimp
+set(source_files
+    JpegImageLoader.cpp
+    JpegImageLoader.h
 )
+
+add_library(imageloader-jpeg STATIC EXCLUDE_FROM_ALL ${source_files})
+z_set_source_groups(${source_files})
+
+set_target_properties(imageloader-jpeg PROPERTIES CXX_STANDARD 11)
+z_target_link_libraries(imageloader-jpeg engine jpeglib)
