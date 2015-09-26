@@ -22,6 +22,7 @@
 
 #pragma once
 #include "engine/interfaces/material/IMaterialLoader.h"
+#include "engine/material/Material.h"
 
 namespace Engine
 {
