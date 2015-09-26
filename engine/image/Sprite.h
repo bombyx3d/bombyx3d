@@ -21,19 +21,29 @@
  */
 
 #pragma once
-#include "engine/interfaces/sprites/ISprite.h"
-#include <string>
-#include <memory>
+#include "engine/core/macros.h"
+#include "engine/interfaces/image/ISprite.h"
+#include "engine/image/SpriteSheet.h"
 
 namespace Engine
 {
-    class ISpriteSheet
+    class Sprite : public ISprite
     {
     public:
-        virtual ~ISpriteSheet() = default;
+        Sprite();
+        Sprite(std::shared_ptr<SpriteSheet>&& sheet, const std::shared_ptr<SpriteSheet::Element>& element);
+        ~Sprite();
 
-        virtual SpritePtr getSprite(const std::string& name) = 0;
+        const Quad& originalQuad() const override { return mElement->originalQuad; }
+        const Quad& trimmedQuad() const override { return mElement->trimmedQuad; }
+
+        const TexturePtr& texture() const override { return mElement->texture; }
+        const Quad& textureCoordinates() const override { return mElement->textureCoordinates; }
+
+    private:
+        SpriteSheetPtr mSpriteSheet;
+        std::shared_ptr<SpriteSheet::Element> mElement;
+
+        Z_DISABLE_COPY(Sprite);
     };
-
-    using SpriteSheetPtr = std::shared_ptr<ISpriteSheet>;
 }

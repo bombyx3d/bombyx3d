@@ -24,7 +24,7 @@
 #include "engine/core/Services.h"
 #include "engine/material/Material.h"
 #include "engine/image/Image.h"
-#include "engine/sprites/SpriteSheet.h"
+#include "engine/image/SpriteSheet.h"
 #include "engine/mesh/Mesh.h"
 #include "engine/mesh/RawMeshData.h"
 #include "engine/interfaces/render/IRenderer.h"

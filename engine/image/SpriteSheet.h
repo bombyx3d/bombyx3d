@@ -22,8 +22,8 @@
 
 #pragma once
 #include "engine/core/macros.h"
-#include "engine/interfaces/sprites/ISpriteSheet.h"
-#include "engine/interfaces/sprites/ISpriteSheetLoader.h"
+#include "engine/interfaces/image/ISpriteSheet.h"
+#include "engine/interfaces/image/ISpriteSheetLoader.h"
 #include "engine/interfaces/io/IFile.h"
 #include <mutex>
 #include <unordered_map>

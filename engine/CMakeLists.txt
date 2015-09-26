@@ -39,6 +39,10 @@ set(source_files
     core/Services.h
     image/Image.cpp
     image/Image.h
+    image/Sprite.cpp
+    image/Sprite.h
+    image/SpriteSheet.cpp
+    image/SpriteSheet.h
     input/InputManager.cpp
     input/InputManager.h
     input/MouseButton.h
@@ -48,6 +52,9 @@ set(source_files
     interfaces/core/IThreadManager.h
     interfaces/image/IImage.h
     interfaces/image/IImageLoader.h
+    interfaces/image/ISprite.h
+    interfaces/image/ISpriteSheet.h
+    interfaces/image/ISpriteSheetLoader.h
     interfaces/input/IInputManager.h
     interfaces/input/IInputObserver.h
     interfaces/io/IFile.h
@@ -69,9 +76,6 @@ set(source_files
     interfaces/render/IVertexSource.h
     interfaces/scene/3d/camera/ICamera.h
     interfaces/scene/IScene.h
-    interfaces/sprites/ISprite.h
-    interfaces/sprites/ISpriteSheet.h
-    interfaces/sprites/ISpriteSheetLoader.h
     material/Material.cpp
     material/Material.h
     material/MaterialPass.cpp
@@ -120,10 +124,6 @@ set(source_files
     scene/AbstractLoadingScene.h
     scene/AbstractScene.cpp
     scene/AbstractScene.h
-    sprites/Sprite.cpp
-    sprites/Sprite.h
-    sprites/SpriteSheet.cpp
-    sprites/SpriteSheet.h
     utility/FileUtils.cpp
     utility/FileUtils.h
     utility/MemoryPool.cpp

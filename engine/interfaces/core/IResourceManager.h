@@ -22,7 +22,7 @@
 
 #pragma once
 #include "engine/interfaces/material/IMaterial.h"
-#include "engine/interfaces/sprites/ISpriteSheet.h"
+#include "engine/interfaces/image/ISpriteSheet.h"
 #include "engine/interfaces/mesh/IMesh.h"
 #include "engine/interfaces/render/IShader.h"
 #include "engine/interfaces/render/ITexture.h"

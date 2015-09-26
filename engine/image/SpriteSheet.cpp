@@ -22,7 +22,7 @@
 #include "SpriteSheet.h"
 #include "engine/core/Services.h"
 #include "engine/core/Log.h"
-#include "engine/sprites/Sprite.h"
+#include "engine/image/Sprite.h"
 #include <cassert>
 
 namespace Engine

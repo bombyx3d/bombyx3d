@@ -23,7 +23,7 @@
 #pragma once
 #include "engine/core/macros.h"
 #include "engine/render/ImmediateModeRenderer.h"
-#include "engine/interfaces/sprites/ISprite.h"
+#include "engine/interfaces/image/ISprite.h"
 
 namespace Engine
 {

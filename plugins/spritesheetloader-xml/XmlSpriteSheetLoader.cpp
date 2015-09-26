@@ -21,7 +21,7 @@
  */
 #include "XmlSpriteSheetLoader.h"
 #include "engine/core/Log.h"
-#include "engine/sprites/SpriteSheet.h"
+#include "engine/image/SpriteSheet.h"
 #include "engine/utility/FileUtils.h"
 #include "engine/utility/XmlUtils.h"
 #include <tinyxml.h>
