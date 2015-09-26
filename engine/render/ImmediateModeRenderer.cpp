@@ -303,6 +303,20 @@ namespace Engine
         return emitVertex();
     }
 
+    size_t ImmediateModeRenderer::vertex(const glm::vec2& vertex)
+    {
+        assert(mInBeginEnd);
+        mCurrentVertex.position = glm::vec3(vertex, 0.0f);
+        return emitVertex();
+    }
+
+    size_t ImmediateModeRenderer::vertex(const glm::vec2& vertex, float z)
+    {
+        assert(mInBeginEnd);
+        mCurrentVertex.position = glm::vec3(vertex, z);
+        return emitVertex();
+    }
+
     size_t ImmediateModeRenderer::vertex(const glm::vec3& vertex)
     {
         assert(mInBeginEnd);

@@ -38,19 +38,28 @@ namespace Engine
     {
     }
 
-    void SpriteSheet::addSprite(const std::string& name, std::shared_ptr<Element>&& element)
-    {
-        auto r = mSprites.emplace(name, std::move(element));
-        if (!r.second)
-            Z_LOGW("Duplicate sprite \"" << name << "\" in sprite sheet.");
-    }
-
     SpritePtr SpriteSheet::getSprite(const std::string& name)
     {
+        std::lock_guard<decltype(mMutex)> lock(mMutex);
+        auto it = mSprites.find(name);
+        if (it == mSprites.end()) {
+            auto element = std::make_shared<Element>();
+            element->originalQuad = Quad::allZero();
+            element->trimmedQuad = Quad::allZero();
+            element->textureCoordinates = Quad::allZero();
+            it = mSprites.emplace(name, std::move(element)).first;
+        }
+        return std::make_shared<Sprite>(shared_from_this(), it->second);
+    }
+
+    void SpriteSheet::setSprite(const std::string& name, Element&& element)
+    {
+        std::lock_guard<decltype(mMutex)> lock(mMutex);
         auto it = mSprites.find(name);
         if (it != mSprites.end())
-            return std::make_shared<Sprite>(shared_from_this(), it->second);
-        return std::make_shared<Sprite>();
+            *it->second = std::move(element);
+        else
+            mSprites.emplace(name, std::make_shared<Element>(std::move(element)));
     }
 
     bool SpriteSheet::load(const std::string& fileName)

@@ -56,10 +56,11 @@ namespace Engine
             for (auto spriteElement : root) {
                 XmlUtils::assertTagNameEquals(spriteElement, "sprite");
 
-                auto element = std::make_shared<SpriteSheet::Element>();
-                element->texture = texture;
+                SpriteSheet::Element element;
+                element.texture = texture;
 
                 std::string name = XmlUtils::getStringAttribute(spriteElement, "n");
+                bool rotated = XmlUtils::getStringAttribute(spriteElement, "r", std::string()) == "y";
 
                 int textureX = XmlUtils::getIntAttribute(spriteElement, "x");
                 int textureY = XmlUtils::getIntAttribute(spriteElement, "y");
@@ -70,26 +71,32 @@ namespace Engine
 
                 int xOffset = XmlUtils::getIntAttribute(spriteElement, "oX", 0);
                 int yOffset = XmlUtils::getIntAttribute(spriteElement, "oY", 0);
-                int width = XmlUtils::getIntAttribute(spriteElement, "oW", textureW);
-                int height = XmlUtils::getIntAttribute(spriteElement, "oH", textureH);
-
-                bool rotated = XmlUtils::getStringAttribute(spriteElement, "r", std::string()) == "r";
+                int width = XmlUtils::getIntAttribute(spriteElement, "oW", rotated ? textureH : textureW);
+                int height = XmlUtils::getIntAttribute(spriteElement, "oH", rotated ? textureW : textureH);
 
                 float originalX = -float(width) * anchorX;
                 float originalY = -float(height) * anchorY;
-                element->originalQuad = Quad::fromTopLeftAndSize(originalX, originalY, float(width), float(height));
+                element.originalQuad = Quad::fromTopLeftAndSize(originalX, originalY, float(width), float(height));
 
                 float trimmedX = originalX + float(xOffset);
                 float trimmedY = originalY + float(yOffset);
-                element->trimmedQuad = Quad::fromTopLeftAndSize(trimmedX, trimmedY, float(textureW), float(textureH));
+                element.trimmedQuad = Quad::fromTopLeftAndSize(trimmedX, trimmedY,
+                    float(rotated ? textureH : textureW), float(rotated ? textureW : textureH));
 
                 float tX1 = float(textureX) / float(atlasWidth - 1);
                 float tY1 = float(textureY) / float(atlasHeight - 1);
                 float tX2 = float(textureX + textureW - 1) / float(atlasWidth - 1);
                 float tY2 = float(textureY + textureH - 1) / float(atlasHeight - 1);
-                element->textureCoordinates = Quad::fromTopLeftAndBottomRight(tX1, tY1, tX2, tY2);
+                if (!rotated)
+                    element.textureCoordinates = Quad::fromTopLeftAndBottomRight(tX1, tY1, tX2, tY2);
+                else {
+                    element.textureCoordinates.topLeft = glm::vec2(tX2, tY1);
+                    element.textureCoordinates.topRight = glm::vec2(tX2, tY2);
+                    element.textureCoordinates.bottomRight = glm::vec2(tX1, tY2);
+                    element.textureCoordinates.bottomLeft = glm::vec2(tX1, tY1);
+                }
 
-                sheet->addSprite(name, std::move(element));
+                sheet->setSprite(name, std::move(element));
             }
         }
         catch (const XmlUtils::ParseError&)

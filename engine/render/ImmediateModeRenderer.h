@@ -80,6 +80,8 @@ namespace Engine
         void color(const glm::vec4& color);
         size_t vertex(float x, float y);
         size_t vertex(float x, float y, float z);
+        size_t vertex(const glm::vec2& vertex);
+        size_t vertex(const glm::vec2& vertex, float z);
         size_t vertex(const glm::vec3& vertex);
         void index(size_t index);
         void end();

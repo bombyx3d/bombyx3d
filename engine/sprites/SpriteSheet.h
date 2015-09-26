@@ -46,8 +46,8 @@ namespace Engine
         SpriteSheet();
         ~SpriteSheet();
 
-        void addSprite(const std::string& name, std::shared_ptr<Element>&& element);
         SpritePtr getSprite(const std::string& name) override;
+        void setSprite(const std::string& name, Element&& element);
 
         bool load(const std::string& fileName);
         bool load(const FilePtr& file);
@@ -67,6 +67,7 @@ namespace Engine
         static std::vector<std::unique_ptr<ISpriteSheetLoader>> mSpriteSheetLoaders;
         static std::mutex mSpriteSheetLoadersMutex;
 
+        std::mutex mMutex;
         std::unordered_map<std::string, std::shared_ptr<Element>> mSprites;
 
         Z_DISABLE_COPY(SpriteSheet);

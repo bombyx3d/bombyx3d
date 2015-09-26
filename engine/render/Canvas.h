@@ -33,7 +33,7 @@ namespace Engine
         Canvas();
         ~Canvas();
 
-        void drawSprite(const glm::vec2& position, const SpritePtr& sprite);
+        void drawSprite(const glm::vec2& position, const SpritePtr& sprite, float z = 0.0f);
 
     private:
         Z_DISABLE_COPY(Canvas);

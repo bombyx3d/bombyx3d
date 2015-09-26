@@ -34,7 +34,7 @@ namespace Engine
     {
     }
 
-    void Canvas::drawSprite(const glm::vec2& position, const SpritePtr& sprite)
+    void Canvas::drawSprite(const glm::vec2& position, const SpritePtr& sprite, float z)
     {
         if (!sprite)
             return;
@@ -45,7 +45,20 @@ namespace Engine
 
         setTexture(texture);
 
-        //const glm::vec2& size = sprite->size();
-        //drawSolidQuad(Quad::fromTopLeftAndSize(position - size * sprite->anchor(), size));
+        const Quad& coord = sprite->trimmedQuad();
+        const Quad& tex = sprite->textureCoordinates();
+        begin(PrimitiveType::Triangles);
+            color(glm::vec4(1.0f));
+
+            // Triangle #1
+            texCoord(tex.topLeft); vertex(position + coord.topLeft, z);
+            texCoord(tex.topRight); auto i2 = vertex(position + coord.topRight, z);
+            texCoord(tex.bottomLeft); auto i3 = vertex(position + coord.bottomLeft, z);
+
+            // Triangle #2
+            index(i3);
+            index(i2);
+            texCoord(tex.bottomRight); vertex(position + coord.bottomRight, z);
+        end();
     }
 }
