@@ -1,5 +1,6 @@
 
 project(glew C)
+include(../../cmake/DisableWarnings.cmake)
 
 find_package(OpenGL)
 

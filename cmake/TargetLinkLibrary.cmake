@@ -20,23 +20,23 @@
 # THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.2)
+get_filename_component(CMakeScriptsPath "${CMAKE_CURRENT_LIST_FILE}" ABSOLUTE)
+get_filename_component(CMakeScriptsPath "${CMakeScriptsPath}" PATH)
+get_filename_component(EnginePath "${CMakeScriptsPath}" PATH)
 
-if(NOT _Z_ENGINE_INCLUDED)
-    set(_Z_ENGINE_INCLUDED TRUE)
-
-    get_filename_component(CMakeScriptsPath "${CMAKE_CURRENT_LIST_FILE}" ABSOLUTE)
-    get_filename_component(CMakeScriptsPath "${CMakeScriptsPath}" PATH)
-    get_filename_component(EnginePath "${CMakeScriptsPath}" PATH)
-
-    include("${CMakeScriptsPath}/SetSourceGroups.cmake")
-    include("${CMakeScriptsPath}/TargetLinkLibrary.cmake")
-    include("${CMakeScriptsPath}/MakeExecutable.cmake")
-
-    find_package(Threads REQUIRED)
-    include_directories("${EnginePath}")
-
-    if(NOT TARGET engine)
-        add_subdirectory("${EnginePath}/engine" z_engine)
+macro(z_target_link_library target name)
+    if(NOT TARGET "${name}")
+        if(EXISTS "${EnginePath}/libs/${name}/CMakeLists.txt")
+            add_subdirectory("${EnginePath}/libs/${name}" "z_lib_${name}")
+        elseif(EXISTS "${EnginePath}/plugins/${name}/CMakeLists.txt")
+            add_subdirectory("${EnginePath}/plugins/${name}" "z_plugin_${name}")
+        endif()
     endif()
-endif()
+    target_link_libraries("${target}" "${name}")
+endmacro()
+
+macro(z_target_link_libraries target)
+    foreach(library ${ARGN})
+        z_target_link_library("${target}" "${library}")
+    endforeach()
+endmacro()

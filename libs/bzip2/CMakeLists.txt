@@ -1,5 +1,6 @@
 
 project(bzip2 C)
+include(../../cmake/DisableWarnings.cmake)
 
 file(GLOB root_files *.c *.h)
 source_group("Source Files" FILES ${root_files})

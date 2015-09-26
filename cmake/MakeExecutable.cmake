@@ -37,6 +37,10 @@ macro(z_make_executable name)
     add_executable("${name}" ${ARGS_SOURCES})
 
     set_target_properties("${name}" PROPERTIES CXX_STANDARD "${ARGS_CXX_STANDARD}")
-    target_link_libraries("${name}" engine ${ARGS_LIBRARIES})
+    target_link_libraries("${name}" engine)
+
+    foreach(library ${ARGS_LIBRARIES})
+        z_target_link_library("${name}" "${library}")
+    endforeach()
 
 endmacro()

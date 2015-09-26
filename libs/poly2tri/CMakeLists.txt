@@ -1,5 +1,6 @@
 
 project(poly2tri)
+include(../../cmake/DisableWarnings.cmake)
 
 file(GLOB_RECURSE source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" poly2tri/*)
 z_set_source_groups(${source_files})

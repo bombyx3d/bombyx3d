@@ -86,5 +86,5 @@ add_library(platform STATIC EXCLUDE_FROM_ALL ${source_files})
 z_set_source_groups(${source_files})
 
 set_target_properties(platform PROPERTIES CXX_STANDARD 11)
-target_link_libraries(platform engine glm ${libraries})
+z_target_link_libraries(platform engine glm ${libraries})
 target_compile_definitions(platform PUBLIC ${defines})

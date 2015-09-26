@@ -1,4 +1,6 @@
+
 project(GLFW C)
+include(../../cmake/DisableWarnings.cmake)
 
 if (WIN32)
     option(GLFW_USE_DWM_SWAP_INTERVAL "Set swap interval even when DWM compositing is enabled" OFF)

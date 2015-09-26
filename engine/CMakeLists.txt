@@ -145,9 +145,19 @@ add_library(engine STATIC EXCLUDE_FROM_ALL ${source_files})
 z_set_source_groups(${source_files})
 
 set_target_properties(engine PROPERTIES CXX_STANDARD 11)
-target_link_libraries(engine platform glm boost)
+target_link_libraries(engine platform ${CMAKE_THREAD_LIBS_INIT})
+z_target_link_libraries(engine glm boost)
 
-add_subdirectory(image/loaders)
-add_subdirectory(material/loaders)
-add_subdirectory(mesh/loaders)
-add_subdirectory(sprites/loaders)
+if(MSVC)
+    target_compile_definitions(engine PUBLIC
+        _CRT_SECURE_NO_WARNINGS
+        _CRT_SECURE_NO_DEPRECATE
+        _CRT_NONSTDC_NO_DEPRECATE
+    )
+else()
+    set(flags -pedantic -Wall -Wextra -Wconversion)
+    if(NOT CMAKE_COMPILER_IS_GNUCC AND NOT CMAKE_COMPILER_IS_GNUCC)
+        list(APPEND flags -Wshadow)
+    endif()
+    target_compile_options(engine BEFORE PUBLIC "${flags}")
+endif()

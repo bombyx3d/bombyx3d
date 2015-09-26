@@ -1,5 +1,6 @@
 
 project(boost)
+include(../../cmake/DisableWarnings.cmake)
 
 file(GLOB_RECURSE source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" boost/*)
 list(APPEND source_files boost.cpp)

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com)
+# Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,8 +20,8 @@
 # THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.2)
 project(tinyxml)
+include(../../cmake/DisableWarnings.cmake)
 
 file(GLOB files *.cpp *.h)
 source_group("Source Files" FILES ${files})

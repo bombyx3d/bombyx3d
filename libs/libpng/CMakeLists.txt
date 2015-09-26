@@ -1,5 +1,6 @@
 
 project(libpng C)
+include(../../cmake/DisableWarnings.cmake)
 
 configure_file(scripts/pnglibconf.h.prebuilt "${CMAKE_CURRENT_BINARY_DIR}/pnglibconf.h" COPYONLY)
 

@@ -1,5 +1,6 @@
 
 project(zlib C)
+include(../../cmake/DisableWarnings.cmake)
 
 file(GLOB source_files *.c *.h)
 source_group("Source Files" FILES ${source_files})

@@ -1,5 +1,6 @@
 
 project(assimp)
+include(../../cmake/DisableWarnings.cmake)
 
 set(GIT_BRANCH "master")
 set(GIT_COMMIT_HASH 0)

@@ -1,5 +1,6 @@
 
 project(cvtutf)
+include(../../cmake/DisableWarnings.cmake)
 
 set(source_files ConvertUTF.c ConvertUTF.h)
 z_set_source_groups(${source_files})

@@ -1,5 +1,6 @@
 
 project(minizip C)
+include(../../cmake/DisableWarnings.cmake)
 
 add_definitions(-DHAVE_BZIP2)
 
