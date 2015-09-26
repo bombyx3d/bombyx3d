@@ -19,4 +19,4 @@ set_source_files_properties(scripts/pnglibconf.h.prebuilt PROPERTIES HEADER_FILE
 set_target_properties(libpng PROPERTIES OUTPUT_NAME "png")
 target_include_directories(libpng BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(libpng BEFORE PUBLIC "${CMAKE_CURRENT_BINARY_DIR}")
-target_link_libraries(libpng zlib)
+z_target_link_libraries(libpng zlib)

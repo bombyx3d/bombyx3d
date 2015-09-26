@@ -22,6 +22,7 @@
 
 #pragma once
 #include "engine/interfaces/image/IImageLoader.h"
+#include "engine/image/Image.h"
 
 namespace Engine
 {

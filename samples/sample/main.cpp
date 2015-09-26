@@ -20,8 +20,7 @@
  * THE SOFTWARE.
  */
 #include "engine/core/Application.h"
-#include "engine/image/Image.h"
-#include "engine/image/loaders/png/PngImageLoader.h"
+#include "plugins/imageloader-png/PngImageLoader.h"
 #include "engine/sprites/SpriteSheet.h"
 #include "engine/sprites/loaders/xml/XmlSpriteSheetLoader.h"
 #include "engine/material/Material.h"

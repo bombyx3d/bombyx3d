@@ -20,4 +20,13 @@
 # THE SOFTWARE.
 #
 
-add_subdirectory(png)
+set(source_files
+    PngImageLoader.cpp
+    PngImageLoader.h
+)
+
+add_library(imageloader-png STATIC EXCLUDE_FROM_ALL ${source_files})
+z_set_source_groups(${source_files})
+
+set_target_properties(imageloader-png PROPERTIES CXX_STANDARD 11)
+z_target_link_libraries(imageloader-png engine libpng)

@@ -31,7 +31,7 @@ z_make_executable(sample
         MainScene.cpp
         MainScene.h
     LIBRARIES
-        engine-image-png
+        imageloader-png
         engine-sprites-xml
         engine-material-text
         engine-mesh-assimp
