@@ -92,6 +92,7 @@ set(source_files
     material/ShaderLoader.h
     math/AspectRatio.h
     math/Axis.h
+    math/Direction.h
     math/BoundingBox.cpp
     math/BoundingBox.h
     math/Quad.h
@@ -137,6 +138,10 @@ set(source_files
     scene/AbstractSceneComponent.h
     scene/SceneManager.cpp
     scene/SceneManager.h
+    ui/UIElement.cpp
+    ui/UIElement.h
+    ui/UIProgressBar.cpp
+    ui/UIProgressBar.h
     utility/FileUtils.cpp
     utility/FileUtils.h
     utility/MemoryPool.cpp

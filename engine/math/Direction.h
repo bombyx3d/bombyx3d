@@ -21,33 +21,12 @@
  */
 
 #pragma once
-#include "engine/scene/AbstractLoadingScene.h"
-#include "engine/ui/UIProgressBar.h"
-#include "engine/scene/camera/OrthogonalCamera.h"
-#include <functional>
-#include <glm/glm.hpp>
 
-namespace Game
+namespace Engine
 {
-    class LoadingScene : public Engine::AbstractLoadingScene
+    enum class Direction
     {
-    public:
-        LoadingScene();
-        explicit LoadingScene(const std::function<Engine::ScenePtr()>& sceneFactory);
-
-        void update(double time) override;
-        void draw(Engine::ICanvas* canvas) const override;
-
-    private:
-        Engine::OrthogonalCameraPtr mCamera;
-        Engine::UIProgressBarPtr mProgressBar;
-        float mCurrentProgress;
-        float mTargetProgress;
-    };
-
-    template <class SCENE> class LoadingSceneFor : public LoadingScene
-    {
-    public:
-        LoadingSceneFor() : LoadingScene([](){ return std::make_shared<SCENE>(); }) {}
+        Horizontal,
+        Vertical,
     };
 }

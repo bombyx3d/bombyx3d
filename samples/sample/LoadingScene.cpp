@@ -22,6 +22,7 @@
 #include "LoadingScene.h"
 #include "engine/core/Application.h"
 #include "engine/core/Services.h"
+#include "engine/scene/components/ChildrenListComponent.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <utility>
 #include <algorithm>
@@ -39,9 +40,15 @@ namespace Game
         mCamera = std::make_shared<OrthogonalCamera>(glm::vec2(1024.0f, 768.0f), AspectRatio::Fit);
         addComponent(mCamera);
 
+        auto childrenList = std::make_shared<ChildrenListComponent>();
+        addComponent(childrenList);
+
+        mProgressBar = std::make_shared<UIProgressBar>();
+        childrenList->appendChild(mProgressBar);
+
         auto spriteSheet = Services::resourceManager()->getSpriteSheet("loading/ProgressBar.xml", false);
-        mBorder = spriteSheet->getSprite("border");
-        mFiller = spriteSheet->getSprite("gray");
+        mProgressBar->setOverlay(spriteSheet->getSprite("border"));
+        mProgressBar->setFiller(spriteSheet->getSprite("gray"));
     }
 
     LoadingScene::LoadingScene(const std::function<ScenePtr()>& sceneFactory)
@@ -65,26 +72,13 @@ namespace Game
             if (mCurrentProgress > mTargetProgress)
                 mCurrentProgress = mTargetProgress;
         }
+
+        mProgressBar->setProgress(mCurrentProgress);
     }
 
     void LoadingScene::draw(ICanvas* canvas) const
     {
         canvas->setClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
         canvas->clear();
-
-        canvas->setBlend(true);
-
-        glm::vec2 pos = glm::vec2(512.0f, mCamera->visibleArea().bottomRight.y - 2.0f * mBorder->originalSize().y);
-
-        #define interpolate(from, to) ((to).x = (from).x + ((to).x - (from).x) * mCurrentProgress)
-        Quad filler = mFiller->trimmedQuad() + pos;
-        interpolate(filler.topLeft, filler.topRight);
-        interpolate(filler.bottomLeft, filler.bottomRight);
-        Quad fillerTexCoord = mFiller->textureCoordinates();
-        interpolate(fillerTexCoord.topLeft, fillerTexCoord.topRight);
-        interpolate(fillerTexCoord.bottomLeft, fillerTexCoord.bottomRight);
-        canvas->drawTexturedQuad(filler, fillerTexCoord, mFiller->texture());
-
-        canvas->drawSprite(pos, mBorder);
     }
 }

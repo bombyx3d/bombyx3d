@@ -32,11 +32,12 @@ namespace Engine
     public:
         ~AbstractScene();
 
-        const glm::vec2& size() const { return mSize; }
-
         void addComponent(const SceneComponentPtr& component) override;
         void addComponent(SceneComponentPtr&& component) override;
         void removeComponent(const SceneComponentPtr& component) override;
+
+        void onResize(const glm::vec2& newSize) final override;
+        const glm::vec2& size() const { return mSize; }
 
     protected:
         AbstractScene();
@@ -55,8 +56,6 @@ namespace Engine
         std::vector<SceneComponentPtr> mComponents;
         glm::vec2 mSize;
         mutable int mIterating;
-
-        void onResize(const glm::vec2& newSize) final override;
 
         void onUpdate(double time) final override;
         void onDraw(ICanvas* canvas) const final override;

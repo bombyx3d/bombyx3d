@@ -19,35 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "UIElement.h"
 
-#pragma once
-#include "engine/scene/AbstractLoadingScene.h"
-#include "engine/ui/UIProgressBar.h"
-#include "engine/scene/camera/OrthogonalCamera.h"
-#include <functional>
-#include <glm/glm.hpp>
-
-namespace Game
+namespace Engine
 {
-    class LoadingScene : public Engine::AbstractLoadingScene
+    UIElement::UIElement()
     {
-    public:
-        LoadingScene();
-        explicit LoadingScene(const std::function<Engine::ScenePtr()>& sceneFactory);
+    }
 
-        void update(double time) override;
-        void draw(Engine::ICanvas* canvas) const override;
-
-    private:
-        Engine::OrthogonalCameraPtr mCamera;
-        Engine::UIProgressBarPtr mProgressBar;
-        float mCurrentProgress;
-        float mTargetProgress;
-    };
-
-    template <class SCENE> class LoadingSceneFor : public LoadingScene
+    UIElement::~UIElement()
     {
-    public:
-        LoadingSceneFor() : LoadingScene([](){ return std::make_shared<SCENE>(); }) {}
-    };
+    }
 }

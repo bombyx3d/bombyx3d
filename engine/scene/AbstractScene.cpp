@@ -74,6 +74,13 @@ namespace Engine
         }
     }
 
+    void AbstractScene::onResize(const glm::vec2& newSize)
+    {
+        mSize = newSize;
+        FOR_EACH_COMPONENT(onSceneSizeChanged(this, newSize));
+        resize(newSize);
+    }
+
     void AbstractScene::resize(const glm::vec2&)
     {
     }
@@ -101,13 +108,6 @@ namespace Engine
 
     void AbstractScene::cancelTouch(int, const glm::vec2&)
     {
-    }
-
-    void AbstractScene::onResize(const glm::vec2& newSize)
-    {
-        mSize = newSize;
-        FOR_EACH_COMPONENT(onSceneSizeChanged(this, newSize));
-        resize(newSize);
     }
 
     void AbstractScene::onUpdate(double time)
