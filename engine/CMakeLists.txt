@@ -124,6 +124,8 @@ set(source_files
     scene/AbstractLoadingScene.h
     scene/AbstractScene.cpp
     scene/AbstractScene.h
+    scene/LayeredScene.cpp
+    scene/LayeredScene.h
     utility/FileUtils.cpp
     utility/FileUtils.h
     utility/MemoryPool.cpp

@@ -20,7 +20,10 @@
  * THE SOFTWARE.
  */
 #include "LayeredScene.h"
+#include "engine/core/Services.h"
 #include <cassert>
+#include <algorithm>
+#include <utility>
 
 namespace Engine
 {
