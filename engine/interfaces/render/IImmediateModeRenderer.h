@@ -24,6 +24,7 @@
 #include "engine/interfaces/render/lowlevel/IShader.h"
 #include "engine/interfaces/render/lowlevel/ITexture.h"
 #include "engine/interfaces/render/lowlevel/IRenderer.h"
+#include "engine/interfaces/scene/3d/camera/ICamera.h"
 #include <glm/glm.hpp>
 
 namespace Engine
@@ -56,6 +57,9 @@ namespace Engine
         virtual void setModelViewMatrix(const glm::mat4& matrix) = 0;
         virtual void pushModelViewMatrix() = 0;
         virtual void popModelViewMatrix() = 0;
+
+        virtual void applyCamera(ICamera* camera) = 0;
+        virtual void applyCamera(const CameraPtr& camera) = 0;
 
         virtual void setBlend(bool flag) = 0;
         virtual void setBlendFunc(BlendFunc srcFactor, BlendFunc dstFactor) = 0;
