@@ -32,7 +32,7 @@ namespace Engine
     struct MaterialPass::UniformValue
     {
         virtual ~UniformValue() = default;
-        virtual void loadPendingResources() const {}
+        virtual void loadPendingResources(bool) const {}
         virtual void upload(IRenderer* renderer, Atom name) const = 0;
     };
 
@@ -56,17 +56,17 @@ namespace Engine
         {
         }
 
-        void loadPendingResources() const final override
+        void loadPendingResources(bool async) const final override
         {
             if (!mTexture && mTexturePath) {
-                mTexture = Services::resourceManager()->getTexture(*mTexturePath);
+                mTexture = Services::resourceManager()->getTexture(*mTexturePath, async);
                 mTexturePath.reset();
             }
         }
 
         void upload(IRenderer* renderer, Atom name) const final override
         {
-            loadPendingResources();
+            loadPendingResources(true);
             renderer->setUniform(name, mTexture);
         }
 
@@ -92,7 +92,7 @@ namespace Engine
 
     const ShaderPtr& MaterialPass::shader() const
     {
-        ensureShaderLoaded();
+        ensureShaderLoaded(true);
         return mShader;
     }
 
@@ -210,19 +210,19 @@ namespace Engine
         }
     }
 
-    void MaterialPass::loadPendingResources()
+    void MaterialPass::loadPendingResources(bool async)
     {
-        ensureShaderLoaded();
+        ensureShaderLoaded(async);
         for (const auto& it : mUniforms) {
             if (it.second)
-                it.second->loadPendingResources();
+                it.second->loadPendingResources(async);
         }
     }
 
-    void MaterialPass::ensureShaderLoaded() const
+    void MaterialPass::ensureShaderLoaded(bool async) const
     {
         if (!mShader && mShaderPath) {
-            mShader = Services::resourceManager()->getShader(*mShaderPath);
+            mShader = Services::resourceManager()->getShader(*mShaderPath, async);
             mShaderPath.reset();
         }
     }

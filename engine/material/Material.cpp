@@ -107,10 +107,10 @@ namespace Engine
         return materialLoader->loadMaterial(file, this);
     }
 
-    void Material::loadPendingResources()
+    void Material::loadPendingResources(bool async)
     {
         for (const auto& technique : mTechniques)
-            technique->loadPendingResources();
+            technique->loadPendingResources(async);
     }
 
     MaterialPtr Material::fromFile(const std::string& name)

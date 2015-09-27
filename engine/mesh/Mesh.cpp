@@ -34,7 +34,7 @@ namespace Engine
     {
     }
 
-    void Mesh::setData(const RawMeshDataPtr& data, BufferUsage usage)
+    void Mesh::setData(const RawMeshDataPtr& data, BufferUsage usage, bool async)
     {
         assert(data != nullptr);
         if (!data)
@@ -58,7 +58,7 @@ namespace Engine
             meshElement.firstIndex = dataElement->firstIndex();
             meshElement.indexCount = dataElement->indexCount();
 
-            meshElement.material = Services::resourceManager()->getMaterial(dataElement->materialName());
+            meshElement.material = Services::resourceManager()->getMaterial(dataElement->materialName(), async);
 
             meshElement.vertexSource = Services::renderer()->createVertexSource();
             meshElement.vertexSource->setAttributes(

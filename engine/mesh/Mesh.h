@@ -37,7 +37,7 @@ namespace Engine
 
         const BoundingBox& boundingBox() const override { return mBoundingBox; }
 
-        void setData(const RawMeshDataPtr& data, BufferUsage usage);
+        void setData(const RawMeshDataPtr& data, BufferUsage usage, bool async = true);
 
         void render() const override;
 

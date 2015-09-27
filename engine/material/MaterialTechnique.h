@@ -43,7 +43,7 @@ namespace Engine
         void addPass(const MaterialPassPtr& pass);
         void addPass(MaterialPassPtr&& pass);
 
-        void loadPendingResources() override;
+        void loadPendingResources(bool async) override;
 
     private:
         std::string mName;

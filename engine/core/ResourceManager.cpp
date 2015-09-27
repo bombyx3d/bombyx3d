@@ -46,7 +46,7 @@ namespace Engine
 
             virtual RESOURCEPTR create() = 0;
             virtual bool load() = 0;
-            virtual void setup(const RESOURCEPTR& resource) = 0;
+            virtual void setup(const RESOURCEPTR& resource, bool async) = 0;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +60,7 @@ namespace Engine
             resource = loader.create();
 
             if (loader.load())
-                loader.setup(resource);
+                loader.setup(resource, false);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,7 +91,7 @@ namespace Engine
                 }
 
                 Services::threadManager()->performInRenderThread([context]() {
-                    context->loader.setup(context->resource);
+                    context->loader.setup(context->resource, true);
                     context->counters->onEndLoadResource();
                 });
             });
@@ -170,9 +170,9 @@ namespace Engine
                 return mMaterial->load(fileName);
             }
 
-            void setup(const MaterialPtr&) override
+            void setup(const MaterialPtr&, bool async) override
             {
-                mMaterial->loadPendingResources();
+                mMaterial->loadPendingResources(async);
             }
         };
 
@@ -197,7 +197,7 @@ namespace Engine
                 return ShaderLoader::loadFile(fileName);
             }
 
-            void setup(const ShaderPtr& shader) override
+            void setup(const ShaderPtr& shader, bool) override
             {
                 shader->setVertexSource(ShaderLoader::vertexSource());
                 shader->setFragmentSource(ShaderLoader::fragmentSource());
@@ -228,7 +228,7 @@ namespace Engine
                 return mImage && mImage->pixelFormat() != PixelFormat::Invalid;
             }
 
-            void setup(const TexturePtr& texture) override
+            void setup(const TexturePtr& texture, bool) override
             {
                 texture->upload(*mImage);
             }
@@ -257,9 +257,9 @@ namespace Engine
                 return mSpriteSheet->load(fileName);
             }
 
-            void setup(const SpriteSheetPtr&) override
+            void setup(const SpriteSheetPtr&, bool async) override
             {
-                mSpriteSheet->loadPendingResources();
+                mSpriteSheet->loadPendingResources(async);
             }
         };
 
@@ -288,9 +288,9 @@ namespace Engine
                 return mMeshData != nullptr;
             }
 
-            void setup(const MeshPtr&) override
+            void setup(const MeshPtr&, bool async) override
             {
-                mMesh->setData(mMeshData, BufferUsage::Static);
+                mMesh->setData(mMeshData, BufferUsage::Static, async);
             }
         };
 

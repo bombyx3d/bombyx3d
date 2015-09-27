@@ -35,7 +35,7 @@ namespace Engine
 
         virtual const std::string& name() const = 0;
 
-        virtual void loadPendingResources() = 0;
+        virtual void loadPendingResources(bool async) = 0;
 
         virtual void apply(const RendererPtr& renderer) const = 0;
         virtual void apply(IRenderer* renderer) const = 0;

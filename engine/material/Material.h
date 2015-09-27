@@ -51,7 +51,7 @@ namespace Engine
         bool load(const FilePtr& file);
         bool load(IFile* file);
 
-        void loadPendingResources() override;
+        void loadPendingResources(bool async);
 
         static MaterialPtr fromFile(const std::string& fileName);
         static MaterialPtr fromFile(const FilePtr& file);

@@ -77,7 +77,7 @@ namespace Engine
         bool load(const FilePtr& file);
         bool load(IFile* file);
 
-        void loadPendingResources();
+        void loadPendingResources(bool async);
 
         static SpriteSheetPtr fromFile(const std::string& name);
         static SpriteSheetPtr fromFile(const FilePtr& file);

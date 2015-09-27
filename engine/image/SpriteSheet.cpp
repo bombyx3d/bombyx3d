@@ -98,12 +98,12 @@ namespace Engine
         return spriteSheetLoader->loadSpriteSheet(file, this);
     }
 
-    void SpriteSheet::loadPendingResources()
+    void SpriteSheet::loadPendingResources(bool async)
     {
         for (auto& it : mSprites) {
             const auto& sprite = it.second;
             if (!sprite->texture && sprite->textureName) {
-                sprite->texture = Services::resourceManager()->getTexture(*sprite->textureName);
+                sprite->texture = Services::resourceManager()->getTexture(*sprite->textureName, async);
                 sprite->textureName.reset();
             }
         }

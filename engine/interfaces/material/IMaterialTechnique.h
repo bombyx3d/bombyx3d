@@ -34,7 +34,7 @@ namespace Engine
 
         virtual const std::string& name() const = 0;
 
-        virtual void loadPendingResources() = 0;
+        virtual void loadPendingResources(bool async) = 0;
 
         virtual size_t numPasses() const = 0;
         virtual const MaterialPassPtr& pass(const std::string& name) const = 0;

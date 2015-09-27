@@ -76,7 +76,7 @@ namespace Engine
         void apply(const RendererPtr& renderer) const override;
         void apply(IRenderer* renderer) const override;
 
-        void loadPendingResources() override;
+        void loadPendingResources(bool async) override;
 
     private:
         enum Flag {
@@ -100,7 +100,7 @@ namespace Engine
         std::unordered_map<Atom, size_t> mUniformNames;
 
         void setFlag(Flag flag, bool value) { mFlags = value ? (mFlags | flag) : (mFlags & ~flag); }
-        void ensureShaderLoaded() const;
+        void ensureShaderLoaded(bool async) const;
         size_t uniformIndex(Atom name);
 
         Z_DISABLE_COPY(MaterialPass);
