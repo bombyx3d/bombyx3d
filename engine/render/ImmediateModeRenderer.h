@@ -21,16 +21,14 @@
  */
 
 #pragma once
-#include "engine/core/macros.h"
-#include "engine/core/Atom.h"
 #include "engine/interfaces/render/IIndexBuffer.h"
 #include "engine/interfaces/render/IVertexBuffer.h"
 #include "engine/interfaces/render/IVertexSource.h"
-#include "engine/interfaces/render/IShader.h"
+#include "engine/interfaces/render/ICanvas.h"
+#include "engine/core/macros.h"
+#include "engine/core/Atom.h"
 #include "engine/mesh/VertexFormat.h"
 #include "engine/material/MaterialPass.h"
-#include "engine/math/Quad.h"
-#include "engine/math/BoundingBox.h"
 #include <glm/glm.hpp>
 #include <vector>
 #include <memory>
@@ -38,7 +36,7 @@
 
 namespace Engine
 {
-    class ImmediateModeRenderer
+    class ImmediateModeRenderer : public ICanvas
     {
     public:
         static const size_t MAX_INDEX = 65534;
@@ -46,45 +44,45 @@ namespace Engine
         ImmediateModeRenderer();
         ~ImmediateModeRenderer();
 
-        const ShaderPtr& customShader() const { return mCustomShader; }
-        void setCustomShader(const ShaderPtr& shader);
+        const ShaderPtr& customShader() const override { return mCustomShader; }
+        void setCustomShader(const ShaderPtr& shader) override;
 
-        const TexturePtr& texture() const { return mTexture; }
-        void setTexture(const TexturePtr& texture);
+        const TexturePtr& texture() const override { return mTexture; }
+        void setTexture(const TexturePtr& texture) override;
 
-        void resetMatrixStacks();
+        void resetMatrixStacks() override;
 
-        const glm::mat4& projectionMatrix() const;
-        void setProjectionMatrix(const glm::mat4& matrix);
-        void pushProjectionMatrix();
-        void popProjectionMatrix();
+        const glm::mat4& projectionMatrix() const override;
+        void setProjectionMatrix(const glm::mat4& matrix) override;
+        void pushProjectionMatrix() override;
+        void popProjectionMatrix() override;
 
-        const glm::mat4& modelViewMatrix() const;
-        void setModelViewMatrix(const glm::mat4& matrix);
-        void pushModelViewMatrix();
-        void popModelViewMatrix();
+        const glm::mat4& modelViewMatrix() const override;
+        void setModelViewMatrix(const glm::mat4& matrix) override;
+        void pushModelViewMatrix() override;
+        void popModelViewMatrix() override;
 
-        void setBlend(bool flag);
-        void setBlendFunc(BlendFunc srcFactor, BlendFunc dstFactor);
+        void setBlend(bool flag) override;
+        void setBlendFunc(BlendFunc srcFactor, BlendFunc dstFactor) override;
 
-        void setDepthTest(bool flag);
-        void setDepthWrite(bool flag);
+        void setDepthTest(bool flag) override;
+        void setDepthWrite(bool flag) override;
 
-        void begin(PrimitiveType primitive);
-        void texCoord(float x, float y);
-        void texCoord(const glm::vec2& coord);
-        void color(float r, float g, float b);
-        void color(float r, float g, float b, float a);
-        void color(const glm::vec4& color);
-        size_t vertex(float x, float y);
-        size_t vertex(float x, float y, float z);
-        size_t vertex(const glm::vec2& vertex);
-        size_t vertex(const glm::vec2& vertex, float z);
-        size_t vertex(const glm::vec3& vertex);
-        void index(size_t index);
-        void end();
+        void begin(PrimitiveType primitive) override;
+        void texCoord(float x, float y) override;
+        void texCoord(const glm::vec2& coord) override;
+        void color(float r, float g, float b) override;
+        void color(float r, float g, float b, float a) override;
+        void color(const glm::vec4& color) override;
+        size_t vertex(float x, float y) override;
+        size_t vertex(float x, float y, float z) override;
+        size_t vertex(const glm::vec2& vertex) override;
+        size_t vertex(const glm::vec2& vertex, float z) override;
+        size_t vertex(const glm::vec3& vertex) override;
+        void index(size_t index) override;
+        void end() override;
 
-        void flush();
+        void flush() override;
 
     private:
         Z_VERTEX_FORMAT(Vertex,

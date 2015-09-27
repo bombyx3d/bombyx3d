@@ -68,7 +68,9 @@ set(source_files
     interfaces/mesh/IRawMeshData.h
     interfaces/mesh/IRawMeshElementData.h
     interfaces/render/IBuffer.h
+    interfaces/render/ICanvas.h
     interfaces/render/IIndexBuffer.h
+    interfaces/render/IImmediateModeRenderer.h
     interfaces/render/IRenderer.h
     interfaces/render/IShader.h
     interfaces/render/ITexture.h

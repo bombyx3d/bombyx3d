@@ -58,7 +58,7 @@ namespace Engine
         end();
     }
 
-    void Canvas::drawTexturedQuad(const Quad& quad, const Quad& texCoords, const TexturePtr& texture, float z)
+    void Canvas::drawTexturedQuad(const Quad& quad, const Quad& tc, const TexturePtr& texture, float z)
     {
         if (!texture)
             return;
@@ -68,14 +68,14 @@ namespace Engine
             color(glm::vec4(1.0f));
 
             // Triangle #1
-            texCoord(texCoords.topLeft); vertex(quad.topLeft + PIXEL_PERFECTNESS_OFFSET, z);
-            texCoord(texCoords.topRight); auto i2 = vertex(quad.topRight + PIXEL_PERFECTNESS_OFFSET, z);
-            texCoord(texCoords.bottomLeft); auto i3 = vertex(quad.bottomLeft + PIXEL_PERFECTNESS_OFFSET, z);
+            texCoord(tc.topLeft); vertex(quad.topLeft + PIXEL_PERFECTNESS_OFFSET, z);
+            texCoord(tc.topRight); auto i2 = vertex(quad.topRight + PIXEL_PERFECTNESS_OFFSET, z);
+            texCoord(tc.bottomLeft); auto i3 = vertex(quad.bottomLeft + PIXEL_PERFECTNESS_OFFSET, z);
 
             // Triangle #2
             index(i3);
             index(i2);
-            texCoord(texCoords.bottomRight); vertex(quad.bottomRight + PIXEL_PERFECTNESS_OFFSET, z);
+            texCoord(tc.bottomRight); vertex(quad.bottomRight + PIXEL_PERFECTNESS_OFFSET, z);
         end();
     }
 

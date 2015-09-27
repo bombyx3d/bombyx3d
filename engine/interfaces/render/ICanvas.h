@@ -21,26 +21,24 @@
  */
 
 #pragma once
-#include "engine/core/macros.h"
-#include "engine/render/ImmediateModeRenderer.h"
-#include "engine/interfaces/render/ICanvas.h"
+#include "engine/interfaces/render/IImmediateModeRenderer.h"
+#include "engine/math/BoundingBox.h"
+#include "engine/math/Quad.h"
+#include "engine/interfaces/image/ISprite.h"
+#include <glm/glm.hpp>
 
 namespace Engine
 {
-    class Canvas : public ImmediateModeRenderer
+    class ICanvas : public IImmediateModeRenderer
     {
     public:
-        Canvas();
-        ~Canvas();
+        virtual ~ICanvas() = default;
 
-        void drawSprite(const glm::vec2& position, const SpritePtr& sprite, float z = 0.0f) override;
+        virtual void drawSprite(const glm::vec2& position, const SpritePtr& sprite, float z = 0.0f) = 0;
 
-        void drawWireframeQuad(const Quad& quad, float z = 0.0f, const glm::vec4& colorVal = glm::vec4(1.0f)) override;
-        void drawTexturedQuad(const Quad& quad, const Quad& tc, const TexturePtr& texture, float z = 0.0f) override;
+        virtual void drawWireframeQuad(const Quad& quad, float z = 0.0f, const glm::vec4& color = glm::vec4(1.0f)) = 0;
+        virtual void drawTexturedQuad(const Quad& quad, const Quad& tc, const TexturePtr& texture, float z = 0.0f) = 0;
 
-        void drawWireframeBoundingBox(const BoundingBox& box, const glm::vec4& colorVal = glm::vec4(1.0f)) override;
-
-    private:
-        Z_DISABLE_COPY(Canvas);
+        virtual void drawWireframeBoundingBox(const BoundingBox& box, const glm::vec4& colorVal = glm::vec4(1.0f)) = 0;
     };
 }
