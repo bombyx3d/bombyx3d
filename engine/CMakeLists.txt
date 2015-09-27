@@ -88,6 +88,7 @@ set(source_files
     material/MaterialTechnique.h
     material/ShaderLoader.cpp
     material/ShaderLoader.h
+    math/AspectRatio.h
     math/Axis.h
     math/BoundingBox.cpp
     math/BoundingBox.h
