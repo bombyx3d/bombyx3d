@@ -20,28 +20,20 @@
  * THE SOFTWARE.
  */
 #include "Application.h"
-#include "engine/interfaces/render/lowlevel/IRenderer.h"
 #include "engine/core/ResourceManager.h"
+#include "engine/scene/SceneManager.h"
 #include "engine/core/Log.h"
 #include "engine/core/Services.h"
 #include <cassert>
 
 namespace Engine
 {
-    Application* Application::mInstance;
-
     Application::Application()
     {
-        assert(mInstance == nullptr);
-        mInstance = this;
-        Services::inputManager()->addObserver(this);
     }
 
     Application::~Application()
     {
-        assert(mInstance == this);
-        Services::inputManager()->removeObserver(this);
-        mInstance = nullptr;
     }
 
     glm::ivec2 Application::preferredScreenSize() const
@@ -59,108 +51,37 @@ namespace Engine
         return 8;
     }
 
-    void Application::setCurrentScene(const ScenePtr& scene)
+    void Application::initialize(RendererPtr&& renderer, const glm::vec2& screenSize)
     {
-        assert(mInstance != nullptr);
-        Services::inputManager()->resetAll();
-        mInstance->mPreviousScene = std::move(mInstance->mCurrentScene);
-        mInstance->mCurrentScene = scene;
-        if (mInstance->mCurrentScene)
-            mInstance->mCurrentScene->resize(mInstance->mScreenSize);
-    }
-
-    void Application::setCurrentScene(ScenePtr&& scene)
-    {
-        assert(mInstance != nullptr);
-        Services::inputManager()->resetAll();
-        mInstance->mPreviousScene = std::move(mInstance->mCurrentScene);
-        mInstance->mCurrentScene = std::move(scene);
-        if (mInstance->mCurrentScene)
-            mInstance->mCurrentScene->resize(mInstance->mScreenSize);
-    }
-
-    void Application::initialize(const RendererPtr& renderer, const glm::vec2& screenSize)
-    {
-        mRenderer = renderer;
+        Services::setRendererResourceFactory(renderer);
         Services::setResourceManager(std::make_shared<ResourceManager>());
-        mCanvas.reset(new Canvas(renderer));
-        resize(screenSize);
-        setCurrentScene(createInitialScene());
+
+        mSceneManager = std::make_shared<SceneManager>(renderer, screenSize);
+        Services::setSceneManager(mSceneManager);
+        mSceneManager->setCurrentScene(createInitialScene());
+
+        onApplicationDidFinishLaunching();
     }
 
     void Application::shutdown()
     {
-        setCurrentScene(ScenePtr());
-        mPreviousScene.reset();
-        mCanvas.reset();
+        onApplicationWillTerminate();
+
+        mSceneManager->setCurrentScene(nullptr);
+        Services::setSceneManager(nullptr);
+        mSceneManager.reset();
+
         Services::setResourceManager(nullptr);
+        Services::setRendererResourceFactory(nullptr);
     }
 
     void Application::resize(const glm::vec2& screenSize)
     {
-        mScreenSize = screenSize;
-
-        if (mScreenSize.x <= 0 || mScreenSize.y <= 0)
-            mScreenAspect = 1.0f;
-        else
-            mScreenAspect = float(mScreenSize.x) / float(mScreenSize.y);
-
-        Services::inputManager()->resetAll();
-        if (mCurrentScene)
-            mCurrentScene->resize(screenSize);
+        mSceneManager->resize(screenSize);
     }
 
     void Application::runFrame(double time)
     {
-        mRenderer->beginFrame();
-        mCanvas->resetMatrixStacks();
-
-        mRenderer->setViewport(0, 0, int(mScreenSize.x), int(mScreenSize.y));
-        mRenderer->setClearColor(glm::vec4(0.7f, 0.3f, 0.1f, 1.0f));
-        mRenderer->clear();
-
-        if (mCurrentScene) {
-            ScenePtr currentScene = mCurrentScene;
-            currentScene->update(time);
-            currentScene->draw(mCanvas.get());
-        }
-
-        if (mPreviousScene)
-            mPreviousScene.reset();
-
-        mCanvas->flush(true);
-        mRenderer->endFrame();
-    }
-
-    void Application::onTouchBegan(int fingerIndex, const glm::vec2& position)
-    {
-        if (mCurrentScene) {
-            if (mCurrentScene->onTouchBegan(fingerIndex, position))
-                mActiveTouches.insert(fingerIndex);
-        }
-    }
-
-    void Application::onTouchMoved(int fingerIndex, const glm::vec2& position)
-    {
-        if (mCurrentScene && mActiveTouches.find(fingerIndex) != mActiveTouches.end())
-            mCurrentScene->onTouchMoved(fingerIndex, position);
-    }
-
-    void Application::onTouchEnded(int fingerIndex)
-    {
-        auto it = mActiveTouches.find(fingerIndex);
-        if (mCurrentScene && it != mActiveTouches.end()) {
-            mActiveTouches.erase(it);
-            mCurrentScene->onTouchEnded(fingerIndex);
-        }
-    }
-
-    void Application::onTouchCancelled(int fingerIndex)
-    {
-        auto it = mActiveTouches.find(fingerIndex);
-        if (mCurrentScene && it != mActiveTouches.end()) {
-            mActiveTouches.erase(it);
-            mCurrentScene->onTouchCancelled(fingerIndex);
-        }
+        mSceneManager->runFrame(time);
     }
 }

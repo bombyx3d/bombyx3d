@@ -19,52 +19,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "Services.h"
+
+#pragma once
+#include "engine/interfaces/scene/IScene.h"
+#include <memory>
+#include <glm/glm.hpp>
 
 namespace Engine
 {
-    Services Services::mInstance;
-
-    Services::Services()
+    class ISceneManager
     {
-    }
+    public:
+        virtual ~ISceneManager() = default;
 
-    Services::~Services()
-    {
-    }
+        virtual const glm::vec4& defaultClearColor() const = 0;
+        virtual void setDefaultClearColor(const glm::vec4& color) = 0;
 
-    void Services::setLogger(const LoggerPtr& instance)
-    {
-        mInstance.mLogger = instance;
-    }
+        virtual const glm::vec2& screenSize() const = 0;
+        virtual float screenAspect() const = 0;
 
-    void Services::setFileSystem(const FileSystemPtr& instance)
-    {
-        mInstance.mFileSystem = instance;
-    }
+        virtual const ScenePtr& currentScene() const = 0;
+        virtual void setCurrentScene(const ScenePtr& scene) = 0;
+        virtual void setCurrentScene(ScenePtr&& scene) = 0;
+    };
 
-    void Services::setThreadManager(const ThreadManagerPtr& instance)
-    {
-        mInstance.mThreadManager = instance;
-    }
-
-    void Services::setRendererResourceFactory(const RendererResourceFactoryPtr& instance)
-    {
-        mInstance.mRendererResFactory = instance;
-    }
-
-    void Services::setResourceManager(const ResourceManagerPtr& instance)
-    {
-        mInstance.mResourceManager = instance;
-    }
-
-    void Services::setInputManager(const InputManagerPtr& instance)
-    {
-        mInstance.mInputManager = instance;
-    }
-
-    void Services::setSceneManager(const SceneManagerPtr& instance)
-    {
-        mInstance.mSceneManager = instance;
-    }
+    using SceneManagerPtr = std::shared_ptr<ISceneManager>;
 }

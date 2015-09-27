@@ -23,57 +23,36 @@
 #pragma once
 #include "engine/core/macros.h"
 #include "engine/interfaces/core/IApplication.h"
-#include "engine/interfaces/input/IInputObserver.h"
-#include "engine/interfaces/scene/IScene.h"
-#include "engine/render/Canvas.h"
+#include "engine/scene/SceneManager.h"
 #include <functional>
-#include <unordered_set>
 #include <memory>
-#include <cassert>
 
 namespace Engine
 {
-    class Application : public IApplication, public IInputObserver
+    class Application : public IApplication
     {
     public:
         glm::ivec2 preferredScreenSize() const override;
         int preferredDepthBits() const override;
         int preferredStencilBits() const override;
 
-        static const glm::vec2& screenSize() { assert(mInstance != nullptr); return mInstance->mScreenSize; }
-        static float screenAspect() { assert(mInstance != nullptr); return mInstance->mScreenAspect; }
-
-        static const ScenePtr& currentScene() { assert(mInstance != nullptr); return mInstance->mCurrentScene; }
-        static void setCurrentScene(const ScenePtr& scene);
-        static void setCurrentScene(ScenePtr&& scene);
-
     protected:
         Application();
         ~Application();
 
+        virtual void onApplicationDidFinishLaunching() {}
+        virtual void onApplicationWillTerminate() {}
+
         virtual ScenePtr createInitialScene() = 0;
 
     private:
-        static Application* mInstance;
-        std::unordered_set<int> mActiveTouches;
-        glm::vec2 mScreenSize;
-        float mScreenAspect;
-        ScenePtr mPreviousScene;
-        ScenePtr mCurrentScene;
-        RendererPtr mRenderer;
-        std::unique_ptr<Canvas> mCanvas;
+        std::shared_ptr<SceneManager> mSceneManager;
 
-        void initialize(const RendererPtr& renderer, const glm::vec2& screenSize) final override;
+        void initialize(RendererPtr&& renderer, const glm::vec2& screenSize) final override;
         void shutdown() final override;
 
         void resize(const glm::vec2& screenSize) final override;
-
         void runFrame(double time) final override;
-
-        void onTouchBegan(int fingerIndex, const glm::vec2& position) final override;
-        void onTouchMoved(int fingerIndex, const glm::vec2& position) final override;
-        void onTouchEnded(int fingerIndex) final override;
-        void onTouchCancelled(int fingerIndex) final override;
 
         Z_DISABLE_COPY(Application);
     };

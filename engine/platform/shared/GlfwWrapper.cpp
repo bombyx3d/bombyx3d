@@ -111,9 +111,7 @@ namespace Engine
         glfwGetFramebufferSize(mWindow, &screenSize.x, &screenSize.y);
 
         Z_LOGI("Initializing application with window size (" << screenSize.x << ", " << screenSize.y << ").");
-        auto renderer = std::make_shared<Renderer>();
-        Services::setRendererResourceFactory(renderer);
-        mApplication->initialize(renderer, glm::vec2(screenSize));
+        mApplication->initialize(std::make_shared<Renderer>(), glm::vec2(screenSize));
 
         while (!glfwWindowShouldClose(mWindow)) {
             double time = glfwGetTime();
@@ -139,8 +137,6 @@ namespace Engine
 
         Z_LOGI("Application is shutting down.");
         mApplication->shutdown();
-        Services::setRendererResourceFactory(nullptr);
-        renderer.reset();
 
         destroyWindow();
     }

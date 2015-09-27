@@ -79,6 +79,7 @@ set(source_files
     interfaces/render/IImmediateModeRenderer.h
     interfaces/scene/3d/camera/ICamera.h
     interfaces/scene/IScene.h
+    interfaces/scene/ISceneManager.h
     material/Material.cpp
     material/Material.h
     material/MaterialPass.cpp
@@ -129,6 +130,8 @@ set(source_files
     scene/AbstractScene.h
     scene/LayeredScene.cpp
     scene/LayeredScene.h
+    scene/SceneManager.cpp
+    scene/SceneManager.h
     utility/FileUtils.cpp
     utility/FileUtils.h
     utility/MemoryPool.cpp

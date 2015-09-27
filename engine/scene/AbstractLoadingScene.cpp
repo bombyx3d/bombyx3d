@@ -50,7 +50,7 @@ namespace Engine
 
     void AbstractLoadingScene::switchToNextScene()
     {
-        Application::setCurrentScene(mNextScene);
+        Services::sceneManager()->setCurrentScene(mNextScene);
     }
 
     void AbstractLoadingScene::update(double)

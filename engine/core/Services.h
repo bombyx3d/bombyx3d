@@ -28,6 +28,7 @@
 #include "engine/interfaces/input/IInputManager.h"
 #include "engine/interfaces/io/IFileSystem.h"
 #include "engine/interfaces/render/lowlevel/IRendererResourceFactory.h"
+#include "engine/interfaces/scene/ISceneManager.h"
 
 namespace Engine
 {
@@ -40,6 +41,7 @@ namespace Engine
         static const RendererResourceFactoryPtr& rendererResourceFactory() { return mInstance.mRendererResFactory; }
         static const ResourceManagerPtr& resourceManager() { return mInstance.mResourceManager; }
         static const InputManagerPtr& inputManager() { return mInstance.mInputManager; }
+        static const SceneManagerPtr& sceneManager() { return mInstance.mSceneManager; }
 
         static void setLogger(const LoggerPtr& instance);
         static void setFileSystem(const FileSystemPtr& instance);
@@ -47,6 +49,7 @@ namespace Engine
         static void setRendererResourceFactory(const RendererResourceFactoryPtr& instance);
         static void setResourceManager(const ResourceManagerPtr& instance);
         static void setInputManager(const InputManagerPtr& instance);
+        static void setSceneManager(const SceneManagerPtr& instance);
 
     private:
         static Services mInstance;
@@ -57,6 +60,7 @@ namespace Engine
         RendererResourceFactoryPtr mRendererResFactory;
         ResourceManagerPtr mResourceManager;
         InputManagerPtr mInputManager;
+        SceneManagerPtr mSceneManager;
 
         Services();
         ~Services();
