@@ -21,26 +21,26 @@
  */
 
 #pragma once
-#include "engine/interfaces/render/lowlevel/IRenderer.h"
-#include <glm/glm.hpp>
+#include "engine/interfaces/render/lowlevel/IShader.h"
+#include "engine/interfaces/render/lowlevel/ITexture.h"
+#include "engine/interfaces/render/lowlevel/IVertexBuffer.h"
+#include "engine/interfaces/render/lowlevel/IIndexBuffer.h"
+#include "engine/interfaces/render/lowlevel/IVertexSource.h"
+#include <memory>
 
 namespace Engine
 {
-    class IApplication
+    class IRendererResourceFactory
     {
     public:
-        static IApplication* create();
-        virtual ~IApplication() = default;
+        virtual ~IRendererResourceFactory() = default;
 
-        virtual glm::ivec2 preferredScreenSize() const = 0;
-        virtual int preferredDepthBits() const = 0;
-        virtual int preferredStencilBits() const = 0;
-
-        virtual void initialize(const RendererPtr& renderer, const glm::vec2& screenSize) = 0;
-        virtual void shutdown() = 0;
-
-        virtual void resize(const glm::vec2& screenSize) = 0;
-
-        virtual void runFrame(double time) = 0;
+        virtual ShaderPtr createShader() = 0;
+        virtual TexturePtr createTexture() = 0;
+        virtual VertexBufferPtr createVertexBuffer() = 0;
+        virtual IndexBufferPtr createIndexBuffer() = 0;
+        virtual VertexSourcePtr createVertexSource() = 0;
     };
+
+    using RendererResourceFactoryPtr = std::shared_ptr<IRendererResourceFactory>;
 }

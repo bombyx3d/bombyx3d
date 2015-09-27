@@ -26,8 +26,8 @@ namespace Engine
 {
     Mesh::Mesh()
     {
-        mVertexBuffer = Services::renderer()->createVertexBuffer();
-        mIndexBuffer = Services::renderer()->createIndexBuffer();
+        mVertexBuffer = Services::rendererResourceFactory()->createVertexBuffer();
+        mIndexBuffer = Services::rendererResourceFactory()->createIndexBuffer();
     }
 
     Mesh::~Mesh()
@@ -60,7 +60,7 @@ namespace Engine
 
             meshElement.material = Services::resourceManager()->getMaterial(dataElement->materialName(), async);
 
-            meshElement.vertexSource = Services::renderer()->createVertexSource();
+            meshElement.vertexSource = Services::rendererResourceFactory()->createVertexSource();
             meshElement.vertexSource->setAttributes(
                 *dataElement->vertexFormat(), mVertexBuffer, dataElement->vertexBufferOffset());
             meshElement.vertexSource->setIndexBuffer(mIndexBuffer);

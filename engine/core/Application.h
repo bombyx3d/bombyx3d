@@ -60,9 +60,10 @@ namespace Engine
         float mScreenAspect;
         ScenePtr mPreviousScene;
         ScenePtr mCurrentScene;
+        RendererPtr mRenderer;
         std::unique_ptr<Canvas> mCanvas;
 
-        void initialize(const glm::vec2& screenSize) final override;
+        void initialize(const RendererPtr& renderer, const glm::vec2& screenSize) final override;
         void shutdown() final override;
 
         void resize(const glm::vec2& screenSize) final override;

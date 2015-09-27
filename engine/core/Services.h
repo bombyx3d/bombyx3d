@@ -27,7 +27,7 @@
 #include "engine/interfaces/core/IThreadManager.h"
 #include "engine/interfaces/input/IInputManager.h"
 #include "engine/interfaces/io/IFileSystem.h"
-#include "engine/interfaces/render/lowlevel/IRenderer.h"
+#include "engine/interfaces/render/lowlevel/IRendererResourceFactory.h"
 
 namespace Engine
 {
@@ -37,14 +37,14 @@ namespace Engine
         static const LoggerPtr& logger() { return mInstance.mLogger; }
         static const FileSystemPtr& fileSystem() { return mInstance.mFileSystem; }
         static const ThreadManagerPtr& threadManager() { return mInstance.mThreadManager; }
-        static const RendererPtr& renderer() { return mInstance.mRenderer; }
+        static const RendererResourceFactoryPtr& rendererResourceFactory() { return mInstance.mRendererResFactory; }
         static const ResourceManagerPtr& resourceManager() { return mInstance.mResourceManager; }
         static const InputManagerPtr& inputManager() { return mInstance.mInputManager; }
 
         static void setLogger(const LoggerPtr& instance);
         static void setFileSystem(const FileSystemPtr& instance);
         static void setThreadManager(const ThreadManagerPtr& instance);
-        static void setRenderer(const RendererPtr& instance);
+        static void setRendererResourceFactory(const RendererResourceFactoryPtr& instance);
         static void setResourceManager(const ResourceManagerPtr& instance);
         static void setInputManager(const InputManagerPtr& instance);
 
@@ -54,7 +54,7 @@ namespace Engine
         LoggerPtr mLogger;
         FileSystemPtr mFileSystem;
         ThreadManagerPtr mThreadManager;
-        RendererPtr mRenderer;
+        RendererResourceFactoryPtr mRendererResFactory;
         ResourceManagerPtr mResourceManager;
         InputManagerPtr mInputManager;
 

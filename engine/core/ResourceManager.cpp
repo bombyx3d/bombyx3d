@@ -188,7 +188,7 @@ namespace Engine
         {
             ShaderPtr create() override
             {
-                return Services::renderer()->createShader();
+                return Services::rendererResourceFactory()->createShader();
             }
 
             bool load() override
@@ -219,7 +219,7 @@ namespace Engine
 
             TexturePtr create() override
             {
-                return Services::renderer()->createTexture();
+                return Services::rendererResourceFactory()->createTexture();
             }
 
             bool load() override

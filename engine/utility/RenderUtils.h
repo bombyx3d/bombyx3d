@@ -34,7 +34,7 @@ namespace Engine
     {
         template <typename TYPE> VertexSourcePtr createVertexSource(const VertexBufferPtr& vertexBuffer)
         {
-            VertexSourcePtr vertexSource = Services::renderer()->createVertexSource();
+            VertexSourcePtr vertexSource = Services::rendererResourceFactory()->createVertexSource();
             vertexSource->setAttributes(TYPE::attributes(), vertexBuffer);
             return vertexSource;
         }
@@ -42,7 +42,7 @@ namespace Engine
         template <typename TYPE>
         VertexSourcePtr createVertexSource(const VertexBufferPtr& vertexBuffer, const IndexBufferPtr& indexBuffer)
         {
-            VertexSourcePtr vertexSource = Services::renderer()->createVertexSource();
+            VertexSourcePtr vertexSource = Services::rendererResourceFactory()->createVertexSource();
             vertexSource->setAttributes(TYPE::attributes(), vertexBuffer);
             vertexSource->setIndexBuffer(indexBuffer);
             return vertexSource;

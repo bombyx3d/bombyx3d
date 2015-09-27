@@ -79,10 +79,11 @@ namespace Engine
             mInstance->mCurrentScene->resize(mInstance->mScreenSize);
     }
 
-    void Application::initialize(const glm::vec2& screenSize)
+    void Application::initialize(const RendererPtr& renderer, const glm::vec2& screenSize)
     {
+        mRenderer = renderer;
         Services::setResourceManager(std::make_shared<ResourceManager>());
-        mCanvas.reset(new Canvas(Services::renderer()));
+        mCanvas.reset(new Canvas(renderer));
         resize(screenSize);
         setCurrentScene(createInitialScene());
     }
@@ -111,14 +112,12 @@ namespace Engine
 
     void Application::runFrame(double time)
     {
-        const auto& renderer = Services::renderer();
-
-        renderer->beginFrame();
+        mRenderer->beginFrame();
         mCanvas->resetMatrixStacks();
 
-        renderer->setViewport(0, 0, int(mScreenSize.x), int(mScreenSize.y));
-        renderer->setClearColor(glm::vec4(0.7f, 0.3f, 0.1f, 1.0f));
-        renderer->clear();
+        mRenderer->setViewport(0, 0, int(mScreenSize.x), int(mScreenSize.y));
+        mRenderer->setClearColor(glm::vec4(0.7f, 0.3f, 0.1f, 1.0f));
+        mRenderer->clear();
 
         if (mCurrentScene) {
             ScenePtr currentScene = mCurrentScene;
@@ -130,7 +129,7 @@ namespace Engine
             mPreviousScene.reset();
 
         mCanvas->flush(true);
-        renderer->endFrame();
+        mRenderer->endFrame();
     }
 
     void Application::onTouchBegan(int fingerIndex, const glm::vec2& position)

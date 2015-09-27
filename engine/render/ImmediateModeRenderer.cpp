@@ -86,8 +86,8 @@ namespace Engine
         mColoredShader = Services::resourceManager()->compileShader(&gDefaultColoredShader, "<builtin-colored>");
         mTexturedShader = Services::resourceManager()->compileShader(&gDefaultTexturedShader, "<builtin-textured>");
 
-        mVertexBuffer = Services::renderer()->createVertexBuffer();
-        mIndexBuffer = Services::renderer()->createIndexBuffer();
+        mVertexBuffer = Services::rendererResourceFactory()->createVertexBuffer();
+        mIndexBuffer = Services::rendererResourceFactory()->createIndexBuffer();
         mVertexSource = RenderUtils::createVertexSource<Vertex>(mVertexBuffer, mIndexBuffer);
 
         mMaterial->setCullFace(CullFace::None);

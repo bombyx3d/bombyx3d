@@ -124,7 +124,7 @@ namespace Engine
     ShaderPtr ShaderLoader::compile(const std::string& fileName, const std::vector<std::string>& lines)
     {
         ShaderLoader loader;
-        ShaderPtr shader = Services::renderer()->createShader();
+        ShaderPtr shader = Services::rendererResourceFactory()->createShader();
 
         if (loader.loadMemory(fileName, lines)) {
             shader->setVertexSource(loader.vertexSource());
@@ -138,7 +138,7 @@ namespace Engine
     ShaderPtr ShaderLoader::compile(const std::string& fileName, std::vector<std::string>&& lines)
     {
         ShaderLoader loader;
-        ShaderPtr shader = Services::renderer()->createShader();
+        ShaderPtr shader = Services::rendererResourceFactory()->createShader();
 
         if (loader.loadMemory(fileName, std::move(lines))) {
             shader->setVertexSource(loader.vertexSource());

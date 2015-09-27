@@ -22,11 +22,7 @@
 
 #pragma once
 #include "engine/core/Atom.h"
-#include "engine/interfaces/render/lowlevel/IShader.h"
-#include "engine/interfaces/render/lowlevel/ITexture.h"
-#include "engine/interfaces/render/lowlevel/IVertexBuffer.h"
-#include "engine/interfaces/render/lowlevel/IIndexBuffer.h"
-#include "engine/interfaces/render/lowlevel/IVertexSource.h"
+#include "engine/interfaces/render/lowlevel/IRendererResourceFactory.h"
 #include <memory>
 #include <glm/glm.hpp>
 
@@ -69,7 +65,7 @@ namespace Engine
         SrcAlphaSaturate,
     };
 
-    class IRenderer
+    class IRenderer : public IRendererResourceFactory
     {
     public:
         virtual ~IRenderer() = default;
@@ -81,12 +77,6 @@ namespace Engine
 
         virtual void setClearColor(const glm::vec4& color) = 0;
         virtual void clear() = 0;
-
-        virtual ShaderPtr createShader() = 0;
-        virtual TexturePtr createTexture() = 0;
-        virtual VertexBufferPtr createVertexBuffer() = 0;
-        virtual IndexBufferPtr createIndexBuffer() = 0;
-        virtual VertexSourcePtr createVertexSource() = 0;
 
         virtual void setCullFace(CullFace face) = 0;
         virtual void setFrontFace(FrontFace face) = 0;

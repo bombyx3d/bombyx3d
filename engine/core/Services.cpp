@@ -48,9 +48,9 @@ namespace Engine
         mInstance.mThreadManager = instance;
     }
 
-    void Services::setRenderer(const RendererPtr& instance)
+    void Services::setRendererResourceFactory(const RendererResourceFactoryPtr& instance)
     {
-        mInstance.mRenderer = instance;
+        mInstance.mRendererResFactory = instance;
     }
 
     void Services::setResourceManager(const ResourceManagerPtr& instance)

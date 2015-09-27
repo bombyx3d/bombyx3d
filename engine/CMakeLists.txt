@@ -70,6 +70,7 @@ set(source_files
     interfaces/render/lowlevel/IBuffer.h
     interfaces/render/lowlevel/IIndexBuffer.h
     interfaces/render/lowlevel/IRenderer.h
+    interfaces/render/lowlevel/IRendererResourceFactory.h
     interfaces/render/lowlevel/IShader.h
     interfaces/render/lowlevel/ITexture.h
     interfaces/render/lowlevel/IVertexBuffer.h
