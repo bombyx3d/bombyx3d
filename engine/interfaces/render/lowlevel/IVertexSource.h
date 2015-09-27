@@ -21,14 +21,38 @@
  */
 
 #pragma once
-#include "engine/interfaces/render/IBuffer.h"
+#include "engine/interfaces/render/lowlevel/IVertexBuffer.h"
+#include "engine/interfaces/render/lowlevel/IIndexBuffer.h"
+#include "engine/core/Atom.h"
 #include <memory>
 
 namespace Engine
 {
-    class IVertexBuffer : public IBuffer
+    enum class VertexAttributeType
     {
+        Float,
+        Float2,
+        Float3,
+        Float4,
     };
 
-    using VertexBufferPtr = std::shared_ptr<IVertexBuffer>;
+    class IVertexFormatAttributeList;
+
+    class IVertexSource
+    {
+    public:
+        virtual ~IVertexSource() = default;
+
+        virtual void setAttribute(const Atom& name, VertexAttributeType type,
+            const VertexBufferPtr& buffer, size_t offset = 0, size_t stride = 0, bool normalize = false) = 0;
+        virtual void setAttributes(const IVertexFormatAttributeList& attributes,
+            const VertexBufferPtr& buffer, size_t offset = 0) = 0;
+
+        template <typename T> void setAttributes(const VertexBufferPtr& buffer, size_t offset)
+            { setAttributes(buffer, T::attributes(), offset); }
+
+        virtual void setIndexBuffer(const IndexBufferPtr& indexBuffer) = 0;
+    };
+
+    using VertexSourcePtr = std::shared_ptr<IVertexSource>;
 }

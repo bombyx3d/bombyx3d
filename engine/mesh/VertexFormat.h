@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "engine/interfaces/render/IVertexSource.h"
+#include "engine/interfaces/render/lowlevel/IVertexSource.h"
 #include <exception>
 #include <cstddef>
 #include <glm/glm.hpp>

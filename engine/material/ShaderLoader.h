@@ -22,7 +22,7 @@
 
 #pragma once
 #include "engine/core/macros.h"
-#include "engine/interfaces/render/IShader.h"
+#include "engine/interfaces/render/lowlevel/IShader.h"
 #include "engine/interfaces/io/IFile.h"
 #include <vector>
 #include <string>

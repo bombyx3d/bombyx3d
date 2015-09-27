@@ -27,7 +27,7 @@
 #include "engine/interfaces/core/IThreadManager.h"
 #include "engine/interfaces/input/IInputManager.h"
 #include "engine/interfaces/io/IFileSystem.h"
-#include "engine/interfaces/render/IRenderer.h"
+#include "engine/interfaces/render/lowlevel/IRenderer.h"
 
 namespace Engine
 {

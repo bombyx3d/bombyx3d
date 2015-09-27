@@ -23,7 +23,7 @@
 #pragma once
 #include "engine/core/macros.h"
 #include "engine/core/Atom.h"
-#include "engine/interfaces/render/IRenderer.h"
+#include "engine/interfaces/render/lowlevel/IRenderer.h"
 #include "engine/render/gles2/GLES2Shader.h"
 #include "engine/render/gles2/GLES2VertexSource.h"
 #include "engine/render/gles2/GLES2Uniform.h"

@@ -21,14 +21,14 @@
  */
 
 #pragma once
-#include "engine/interfaces/render/IBuffer.h"
+#include "engine/interfaces/render/lowlevel/IBuffer.h"
 #include <memory>
 
 namespace Engine
 {
-    class IIndexBuffer : public IBuffer
+    class IVertexBuffer : public IBuffer
     {
     };
 
-    using IndexBufferPtr = std::shared_ptr<IIndexBuffer>;
+    using VertexBufferPtr = std::shared_ptr<IVertexBuffer>;
 }

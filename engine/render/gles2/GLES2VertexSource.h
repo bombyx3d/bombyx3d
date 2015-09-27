@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "engine/interfaces/render/IVertexSource.h"
+#include "engine/interfaces/render/lowlevel/IVertexSource.h"
 #include "engine/core/macros.h"
 #include "engine/render/gles2/GLES2Buffer.h"
 #include "engine/render/gles2/GLES2Shader.h"

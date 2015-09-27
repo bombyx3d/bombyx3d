@@ -27,7 +27,7 @@
 #include "engine/image/SpriteSheet.h"
 #include "engine/mesh/Mesh.h"
 #include "engine/mesh/RawMeshData.h"
-#include "engine/interfaces/render/IRenderer.h"
+#include "engine/interfaces/render/lowlevel/IRenderer.h"
 #include "engine/interfaces/core/IThreadManager.h"
 #include "engine/material/ShaderLoader.h"
 #include <glm/glm.hpp>

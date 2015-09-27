@@ -23,7 +23,7 @@
 #pragma once
 #include "engine/math/BoundingBox.h"
 #include "engine/interfaces/material/IMaterial.h"
-#include "engine/interfaces/render/IRenderer.h"
+#include "engine/interfaces/render/lowlevel/IRenderer.h"
 #include <memory>
 #include <string>
 

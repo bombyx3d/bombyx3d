@@ -22,7 +22,7 @@
 
 #pragma once
 #include "engine/math/Quad.h"
-#include "engine/interfaces/render/ITexture.h"
+#include "engine/interfaces/render/lowlevel/ITexture.h"
 #include <memory>
 #include <glm/glm.hpp>
 

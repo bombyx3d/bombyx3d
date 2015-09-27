@@ -35,8 +35,8 @@
  #include <GL/gl.h>
 #endif
 
-#include "engine/interfaces/render/IRenderer.h"
-#include "engine/interfaces/render/IBuffer.h"
+#include "engine/interfaces/render/lowlevel/IRenderer.h"
+#include "engine/interfaces/render/lowlevel/IBuffer.h"
 
 namespace Engine
 {

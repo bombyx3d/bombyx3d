@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "engine/interfaces/render/IRenderer.h"
+#include "engine/interfaces/render/lowlevel/IRenderer.h"
 #include <memory>
 #include <string>
 #include <cstdint>

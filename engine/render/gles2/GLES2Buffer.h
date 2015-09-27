@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#include "engine/interfaces/render/IIndexBuffer.h"
-#include "engine/interfaces/render/IVertexBuffer.h"
+#include "engine/interfaces/render/lowlevel/IIndexBuffer.h"
+#include "engine/interfaces/render/lowlevel/IVertexBuffer.h"
 #include "engine/core/macros.h"
 
 namespace Engine

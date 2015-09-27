@@ -21,9 +21,9 @@
  */
 
 #pragma once
-#include "engine/interfaces/render/IShader.h"
-#include "engine/interfaces/render/ITexture.h"
-#include "engine/interfaces/render/IRenderer.h"
+#include "engine/interfaces/render/lowlevel/IShader.h"
+#include "engine/interfaces/render/lowlevel/ITexture.h"
+#include "engine/interfaces/render/lowlevel/IRenderer.h"
 #include <glm/glm.hpp>
 
 namespace Engine

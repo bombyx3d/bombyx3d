@@ -22,11 +22,11 @@
 
 #pragma once
 #include "engine/core/Atom.h"
-#include "engine/interfaces/render/IShader.h"
-#include "engine/interfaces/render/ITexture.h"
-#include "engine/interfaces/render/IVertexBuffer.h"
-#include "engine/interfaces/render/IIndexBuffer.h"
-#include "engine/interfaces/render/IVertexSource.h"
+#include "engine/interfaces/render/lowlevel/IShader.h"
+#include "engine/interfaces/render/lowlevel/ITexture.h"
+#include "engine/interfaces/render/lowlevel/IVertexBuffer.h"
+#include "engine/interfaces/render/lowlevel/IIndexBuffer.h"
+#include "engine/interfaces/render/lowlevel/IVertexSource.h"
 #include <memory>
 #include <glm/glm.hpp>
 

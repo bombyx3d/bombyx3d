@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 #include "Application.h"
-#include "engine/interfaces/render/IRenderer.h"
+#include "engine/interfaces/render/lowlevel/IRenderer.h"
 #include "engine/core/ResourceManager.h"
 #include "engine/core/Log.h"
 #include "engine/core/Services.h"

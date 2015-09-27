@@ -23,7 +23,6 @@
 #pragma once
 #include "engine/scene/AbstractLoadingScene.h"
 #include "engine/interfaces/image/ISprite.h"
-#include "engine/interfaces/render/ITexture.h"
 #include <functional>
 #include <glm/glm.hpp>
 

@@ -22,7 +22,7 @@
 
 #pragma once
 #include "engine/core/macros.h"
-#include "engine/interfaces/render/ITexture.h"
+#include "engine/interfaces/render/lowlevel/ITexture.h"
 #include "engine/utility/PoolAllocator.h"
 #include <glm/glm.hpp>
 

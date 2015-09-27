@@ -21,7 +21,6 @@
  */
 
 #pragma once
-#include "engine/interfaces/render/IRenderer.h"
 #include "engine/interfaces/render/ICanvas.h"
 #include <memory>
 #include <glm/glm.hpp>

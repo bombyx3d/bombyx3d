@@ -22,7 +22,7 @@
 
 #pragma once
 #include "engine/core/macros.h"
-#include "engine/interfaces/render/IVertexSource.h"
+#include "engine/interfaces/render/lowlevel/IVertexSource.h"
 #include "engine/core/Services.h"
 #include "engine/mesh/VertexFormat.h"
 #include <vector>

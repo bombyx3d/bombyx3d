@@ -67,15 +67,15 @@ set(source_files
     interfaces/mesh/IMeshLoader.h
     interfaces/mesh/IRawMeshData.h
     interfaces/mesh/IRawMeshElementData.h
-    interfaces/render/IBuffer.h
+    interfaces/render/lowlevel/IBuffer.h
+    interfaces/render/lowlevel/IIndexBuffer.h
+    interfaces/render/lowlevel/IRenderer.h
+    interfaces/render/lowlevel/IShader.h
+    interfaces/render/lowlevel/ITexture.h
+    interfaces/render/lowlevel/IVertexBuffer.h
+    interfaces/render/lowlevel/IVertexSource.h
     interfaces/render/ICanvas.h
-    interfaces/render/IIndexBuffer.h
     interfaces/render/IImmediateModeRenderer.h
-    interfaces/render/IRenderer.h
-    interfaces/render/IShader.h
-    interfaces/render/ITexture.h
-    interfaces/render/IVertexBuffer.h
-    interfaces/render/IVertexSource.h
     interfaces/scene/3d/camera/ICamera.h
     interfaces/scene/IScene.h
     material/Material.cpp

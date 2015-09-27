@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "engine/interfaces/render/IShader.h"
+#include "engine/interfaces/render/lowlevel/IShader.h"
 #include "engine/core/Atom.h"
 #include "engine/core/macros.h"
 #include <sstream>

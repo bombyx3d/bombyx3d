@@ -24,8 +24,8 @@
 #include "engine/interfaces/material/IMaterial.h"
 #include "engine/interfaces/image/ISpriteSheet.h"
 #include "engine/interfaces/mesh/IMesh.h"
-#include "engine/interfaces/render/IShader.h"
-#include "engine/interfaces/render/ITexture.h"
+#include "engine/interfaces/render/lowlevel/IShader.h"
+#include "engine/interfaces/render/lowlevel/ITexture.h"
 #include <memory>
 #include <vector>
 #include <string>
