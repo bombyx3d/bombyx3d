@@ -61,4 +61,51 @@ namespace Engine
             texCoord(tex.bottomRight); vertex(position + coord.bottomRight, z);
         end();
     }
+
+    void Canvas::drawWireframeQuad(const Quad& quad, float z, const glm::vec4& colorVal)
+    {
+        setTexture(nullptr);
+        begin(PrimitiveType::Lines);
+            color(colorVal);
+            texCoord(0.0f, 0.0f);
+
+            auto i1 = vertex(quad.topLeft, z); auto i2 = vertex(quad.topRight, z);      // Edge #1
+            index(i2); auto i3 = vertex(quad.bottomRight, z);                           // Edge #2
+            index(i3); auto i4 = vertex(quad.bottomLeft, z);                            // Edge #3
+            index(i4); index(i1);                                                       // Edge #4
+        end();
+    }
+
+    void Canvas::drawWireframeBoundingBox(const BoundingBox& box, const glm::vec4& colorVal)
+    {
+        const auto& mn = box.min;
+        const auto& mx = box.max;
+
+        setTexture(nullptr);
+        begin(PrimitiveType::Lines);
+            color(colorVal);
+            texCoord(0.0f, 0.0f);
+
+            // -X
+            auto i1 = vertex(mn.x, mn.y, mn.z); auto i2 = vertex(mn.x, mx.y, mn.z);     // Edge #1
+            index(i2); auto i3 = vertex(mn.x, mx.y, mx.z);                              // Edge #2
+            index(i3); auto i4 = vertex(mn.x, mn.y, mx.z);                              // Edge #3
+            index(i4); index(i1);                                                       // Edge #4
+
+            // +X
+            auto i5 = vertex(mx.x, mn.y, mn.z); auto i6 = vertex(mx.x, mx.y, mn.z);     // Edge #1
+            index(i6); auto i7 = vertex(mx.x, mx.y, mx.z);                              // Edge #2
+            index(i7); auto i8 = vertex(mx.x, mn.y, mx.z);                              // Edge #3
+            index(i8); index(i5);                                                       // Edge #4
+
+            // -Z
+            index(i1); index(i5);
+            index(i6); index(i2);
+
+            // +Z
+            index(i4); index(i8);
+            index(i7); index(i3);
+
+        end();
+    }
 }

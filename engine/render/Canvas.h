@@ -22,6 +22,7 @@
 
 #pragma once
 #include "engine/core/macros.h"
+#include "engine/math/BoundingBox.h"
 #include "engine/render/ImmediateModeRenderer.h"
 #include "engine/interfaces/image/ISprite.h"
 
@@ -34,6 +35,9 @@ namespace Engine
         ~Canvas();
 
         void drawSprite(const glm::vec2& position, const SpritePtr& sprite, float z = 0.0f);
+
+        void drawWireframeQuad(const Quad& quad, float z = 0.0f, const glm::vec4& colorVal = glm::vec4(1.0f));
+        void drawWireframeBoundingBox(const BoundingBox& box, const glm::vec4& colorVal = glm::vec4(1.0f));
 
     private:
         Z_DISABLE_COPY(Canvas);
