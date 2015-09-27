@@ -20,15 +20,25 @@
  * THE SOFTWARE.
  */
 #include "AbstractScene.h"
+#include <cassert>
 
 namespace Engine
 {
     #define FOR_EACH_COMPONENT(METHOD) \
+        ++mIterating; \
         for (const auto& component : mComponents) \
-            component->METHOD;
+            component->METHOD; \
+        --mIterating;
+
+    #define FOR_EACH_COMPONENT_REVERSE(METHOD) \
+        ++mIterating; \
+        for (auto it = mComponents.crbegin(); it != mComponents.crend(); ++it) \
+            (*it)->METHOD; \
+        --mIterating;
 
     AbstractScene::AbstractScene()
         : mSize(0.0f)
+        , mIterating(0)
     {
     }
 
@@ -38,18 +48,24 @@ namespace Engine
 
     void AbstractScene::addComponent(const SceneComponentPtr& component)
     {
+        assert(!mIterating);
+
         mComponents.emplace_back(component);
         mComponents.back()->onSceneSizeChanged(this, mSize);
     }
 
     void AbstractScene::addComponent(SceneComponentPtr&& component)
     {
+        assert(!mIterating);
+
         mComponents.emplace_back(std::move(component));
         mComponents.back()->onSceneSizeChanged(this, mSize);
     }
 
     void AbstractScene::removeComponent(const SceneComponentPtr& component)
     {
+        assert(!mIterating);
+
         for (auto it = mComponents.begin(); it != mComponents.end(); ++it) {
             if (*it == component) {
                 mComponents.erase(it);
@@ -98,51 +114,54 @@ namespace Engine
     {
         FOR_EACH_COMPONENT(onBeforeUpdateScene(this, time));
         update(time);
-        FOR_EACH_COMPONENT(onAfterUpdateScene(this, time));
+        FOR_EACH_COMPONENT_REVERSE(onAfterUpdateScene(this, time));
     }
 
     void AbstractScene::onDraw(ICanvas* canvas) const
     {
         FOR_EACH_COMPONENT(onBeforeDrawScene(this, canvas));
         draw(canvas);
-        FOR_EACH_COMPONENT(onAfterDrawScene(this, canvas));
+        FOR_EACH_COMPONENT_REVERSE(onAfterDrawScene(this, canvas));
     }
 
     bool AbstractScene::onTouchBegan(int fingerIndex, const glm::vec2& position)
     {
         glm::vec2 p = position;
         bool result = false;
-        FOR_EACH_COMPONENT(onBeforeTouchEvent(TouchEvent::Begin, p, result));
+        FOR_EACH_COMPONENT(onBeforeTouchEvent(TouchEvent::Begin, fingerIndex, p, result));
         if (!result)
             result = beginTouch(fingerIndex, position);
-        FOR_EACH_COMPONENT(onAfterTouchEvent(TouchEvent::Begin, p, result));
+        FOR_EACH_COMPONENT_REVERSE(onAfterTouchEvent(TouchEvent::Begin, fingerIndex, p, result));
         return result;
     }
 
     void AbstractScene::onTouchMoved(int fingerIndex, const glm::vec2& position)
     {
         glm::vec2 p = position;
-        bool result = true;
-        FOR_EACH_COMPONENT(onBeforeTouchEvent(TouchEvent::Move, p, result));
-        moveTouch(fingerIndex, position);
-        FOR_EACH_COMPONENT(onAfterTouchEvent(TouchEvent::Move, p, result));
+        bool result = false;
+        FOR_EACH_COMPONENT(onBeforeTouchEvent(TouchEvent::Move, fingerIndex, p, result));
+        if (!result)
+            moveTouch(fingerIndex, position);
+        FOR_EACH_COMPONENT_REVERSE(onAfterTouchEvent(TouchEvent::Move, fingerIndex, p, result));
     }
 
     void AbstractScene::onTouchEnded(int fingerIndex, const glm::vec2& position)
     {
         glm::vec2 p = position;
-        bool result = true;
-        FOR_EACH_COMPONENT(onBeforeTouchEvent(TouchEvent::End, p, result));
-        endTouch(fingerIndex, position);
-        FOR_EACH_COMPONENT(onAfterTouchEvent(TouchEvent::End, p, result));
+        bool result = false;
+        FOR_EACH_COMPONENT(onBeforeTouchEvent(TouchEvent::End, fingerIndex, p, result));
+        if (!result)
+            endTouch(fingerIndex, position);
+        FOR_EACH_COMPONENT_REVERSE(onAfterTouchEvent(TouchEvent::End, fingerIndex, p, result));
     }
 
     void AbstractScene::onTouchCancelled(int fingerIndex, const glm::vec2& position)
     {
         glm::vec2 p = position;
-        bool result = true;
-        FOR_EACH_COMPONENT(onBeforeTouchEvent(TouchEvent::Cancel, p, result));
-        cancelTouch(fingerIndex, position);
-        FOR_EACH_COMPONENT(onAfterTouchEvent(TouchEvent::Cancel, p, result));
+        bool result = false;
+        FOR_EACH_COMPONENT(onBeforeTouchEvent(TouchEvent::Cancel, fingerIndex, p, result));
+        if (!result)
+            cancelTouch(fingerIndex, position);
+        FOR_EACH_COMPONENT_REVERSE(onAfterTouchEvent(TouchEvent::Cancel, fingerIndex, p, result));
     }
 }

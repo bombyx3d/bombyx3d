@@ -43,8 +43,8 @@ namespace Engine
         virtual void onBeforeDrawScene(const IScene* scene, ICanvas* canvas) = 0;
         virtual void onAfterDrawScene(const IScene* scene, ICanvas* canvas) = 0;
 
-        virtual void onBeforeTouchEvent(TouchEvent event, glm::vec2& position, bool& result) = 0;
-        virtual void onAfterTouchEvent(TouchEvent event, const glm::vec2& position, bool& result) = 0;
+        virtual void onBeforeTouchEvent(TouchEvent event, int fingerIndex, glm::vec2& position, bool& result) = 0;
+        virtual void onAfterTouchEvent(TouchEvent event, int fingerIndex, const glm::vec2& position, bool& result) = 0;
     };
 
     using SceneComponentPtr = std::shared_ptr<ISceneComponent>;

@@ -54,6 +54,7 @@ namespace Engine
     private:
         std::vector<SceneComponentPtr> mComponents;
         glm::vec2 mSize;
+        mutable int mIterating;
 
         void onResize(const glm::vec2& newSize) final override;
 

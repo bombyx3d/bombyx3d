@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "LayeredScene.h"
+#include "ChildrenListComponent.h"
 #include "engine/core/Services.h"
 #include <cassert>
 #include <algorithm>
@@ -31,29 +31,29 @@ namespace Engine
         using diff_t = std::vector<ScenePtr>::difference_type;
     }
 
-    LayeredScene::LayeredScene()
+    ChildrenListComponent::ChildrenListComponent()
     {
     }
 
-    LayeredScene::~LayeredScene()
+    ChildrenListComponent::~ChildrenListComponent()
     {
     }
 
-    void LayeredScene::insertChild(size_t index, const ScenePtr& child)
+    void ChildrenListComponent::insertChild(size_t index, const ScenePtr& child)
     {
         assert(index <= mChildren.size());
         Services::inputManager()->resetAll();
         mChildren.emplace(mChildren.begin() + diff_t(std::min(index, mChildren.size())), child);
     }
 
-    void LayeredScene::insertChild(size_t index, ScenePtr&& child)
+    void ChildrenListComponent::insertChild(size_t index, ScenePtr&& child)
     {
         assert(index <= mChildren.size());
         Services::inputManager()->resetAll();
         mChildren.emplace(mChildren.begin() + diff_t(std::min(index, mChildren.size())), std::move(child));
     }
 
-    void LayeredScene::removeChild(size_t index)
+    void ChildrenListComponent::removeChild(size_t index)
     {
         assert(index < mChildren.size());
         if (index < mChildren.size()) {
@@ -62,7 +62,7 @@ namespace Engine
         }
     }
 
-    void LayeredScene::removeLastChild()
+    void ChildrenListComponent::removeLastChild()
     {
         assert(!mChildren.empty());
         if (!mChildren.empty()) {
@@ -71,81 +71,95 @@ namespace Engine
         }
     }
 
-    void LayeredScene::appendChild(const ScenePtr& child)
+    void ChildrenListComponent::appendChild(const ScenePtr& child)
     {
         assert(child);
         Services::inputManager()->resetAll();
         mChildren.emplace_back(child);
     }
 
-    void LayeredScene::appendChild(ScenePtr&& child)
+    void ChildrenListComponent::appendChild(ScenePtr&& child)
     {
         assert(child);
         Services::inputManager()->resetAll();
         mChildren.emplace_back(std::move(child));
     }
 
-    void LayeredScene::resize(const glm::vec2& newSize)
+    void ChildrenListComponent::onSceneSizeChanged(IScene*, const glm::vec2& newSize)
     {
         for (const auto& child : mChildren)
             child->onResize(newSize);
     }
 
-    void LayeredScene::update(double time)
+    void ChildrenListComponent::onAfterUpdateScene(IScene*, double time)
     {
         for (const auto& child : mChildren)
             child->onUpdate(time);
     }
 
-    void LayeredScene::draw(ICanvas* canvas) const
+    void ChildrenListComponent::onAfterDrawScene(const IScene*, ICanvas* canvas)
     {
         for (const auto& child : mChildren)
             child->onDraw(canvas);
     }
 
-    bool LayeredScene::beginTouch(int fingerIndex, const glm::vec2& position)
+    void ChildrenListComponent::onBeforeTouchEvent(TouchEvent event, int fingerIndex, glm::vec2& position, bool& r)
     {
-        if (mTouchedChild) {
-            if (mTouchedChild->onTouchBegan(fingerIndex, position)) {
-                ++mActiveTouchCount;
-                return true;
+        if (r)
+            return;
+
+        switch (event)
+        {
+        case TouchEvent::Begin:
+            if (mTouchedChild) {
+                if (mTouchedChild->onTouchBegan(fingerIndex, position))
+                    mTouchedFingers.insert(fingerIndex);
+                r = true;
+                return;
             }
-            return false;
-        }
 
-        for (auto it = mChildren.crbegin(); it != mChildren.crend(); ++it) {
-            if ((*it)->onTouchBegan(fingerIndex, position)) {
-                ++mActiveTouchCount;
-                return true;
+            for (auto it = mChildren.crbegin(); it != mChildren.crend(); ++it) {
+                if ((*it)->onTouchBegan(fingerIndex, position)) {
+                    r = true;
+                    mTouchedFingers.insert(fingerIndex);
+                    return;
+                }
             }
-        }
+            return;
 
-        return false;
-    }
+        case TouchEvent::Move:
+            if (mTouchedChild) {
+                if (mTouchedFingers.find(fingerIndex) != mTouchedFingers.end())
+                    mTouchedChild->onTouchMoved(fingerIndex, position);
+                r = true;
+            }
+            return;
 
-    void LayeredScene::moveTouch(int fingerIndex, const glm::vec2& position)
-    {
-        if (mTouchedChild)
-            mTouchedChild->onTouchMoved(fingerIndex, position);
-    }
+        case TouchEvent::End:
+            if (mTouchedChild) {
+                auto it = mTouchedFingers.find(fingerIndex);
+                if (it != mTouchedFingers.end()) {
+                    mTouchedFingers.erase(it);
+                    mTouchedChild->onTouchEnded(fingerIndex, position);
+                    if (mTouchedFingers.empty())
+                        mTouchedChild.reset();
+                }
+                r = true;
+            }
+            return;
 
-    void LayeredScene::endTouch(int fingerIndex, const glm::vec2& position)
-    {
-        if (mTouchedChild) {
-            mTouchedChild->onTouchEnded(fingerIndex, position);
-            assert(mActiveTouchCount > 0);
-            if (--mActiveTouchCount == 0)
-                mTouchedChild.reset();
-        }
-    }
-
-    void LayeredScene::cancelTouch(int fingerIndex, const glm::vec2& position)
-    {
-        if (mTouchedChild) {
-            mTouchedChild->onTouchCancelled(fingerIndex, position);
-            assert(mActiveTouchCount > 0);
-            if (--mActiveTouchCount == 0)
-                mTouchedChild.reset();
+        case TouchEvent::Cancel:
+            if (mTouchedChild) {
+                auto it = mTouchedFingers.find(fingerIndex);
+                if (it != mTouchedFingers.end()) {
+                    mTouchedFingers.erase(it);
+                    mTouchedChild->onTouchCancelled(fingerIndex, position);
+                    if (mTouchedFingers.empty())
+                        mTouchedChild.reset();
+                }
+                r = true;
+            }
+            return;
         }
     }
 }

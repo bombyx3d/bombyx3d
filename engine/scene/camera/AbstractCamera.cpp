@@ -78,18 +78,6 @@ namespace Engine
         matrix = glm::inverse(viewMatrix());
     }
 
-    void AbstractCamera::onSceneSizeChanged(IScene*, const glm::vec2&)
-    {
-    }
-
-    void AbstractCamera::onBeforeUpdateScene(IScene*, double)
-    {
-    }
-
-    void AbstractCamera::onAfterUpdateScene(IScene*, double)
-    {
-    }
-
     void AbstractCamera::onBeforeDrawScene(const IScene*, ICanvas* canvas)
     {
         canvas->pushProjectionMatrix();
@@ -105,12 +93,8 @@ namespace Engine
         canvas->popProjectionMatrix();
     }
 
-    void AbstractCamera::onBeforeTouchEvent(TouchEvent, glm::vec2& position, bool&)
+    void AbstractCamera::onBeforeTouchEvent(TouchEvent, int, glm::vec2& position, bool&)
     {
         position = glm::vec2(inverseProjectionMatrix() * inverseViewMatrix() * glm::vec4(position, 0.0f, 1.0f));
-    }
-
-    void AbstractCamera::onAfterTouchEvent(TouchEvent, const glm::vec2&, bool&)
-    {
     }
 }

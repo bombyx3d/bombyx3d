@@ -28,7 +28,7 @@
 
 namespace Engine
 {
-    class AbstractCamera : public ISceneComponent, public ICamera
+    class AbstractCamera : public AbstractSceneComponent, public ICamera
     {
     public:
         AbstractCamera();
@@ -49,16 +49,10 @@ namespace Engine
         virtual void calcViewMatrix(glm::mat4& matrix) const = 0;
         virtual void calcInverseViewMatrix(glm::mat4& matrix) const;
 
-        void onSceneSizeChanged(IScene* scene, const glm::vec2& newSize) override;
-
-        void onBeforeUpdateScene(IScene* scene, double time) override;
-        void onAfterUpdateScene(IScene* scene, double time) override;
-
         void onBeforeDrawScene(const IScene* scene, ICanvas* canvas) override;
         void onAfterDrawScene(const IScene* scene, ICanvas* canvas) override;
 
-        void onBeforeTouchEvent(TouchEvent event, glm::vec2& position, bool& result) override;
-        void onAfterTouchEvent(TouchEvent event, const glm::vec2& position, bool& result) override;
+        void onBeforeTouchEvent(TouchEvent event, int fingerIndex, glm::vec2& position, bool& result) override;
 
     private:
         enum Flag

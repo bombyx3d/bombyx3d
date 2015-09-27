@@ -51,11 +51,11 @@ namespace Engine
     {
     }
 
-    void AbstractSceneComponent::onBeforeTouchEvent(TouchEvent, glm::vec2&, bool&)
+    void AbstractSceneComponent::onBeforeTouchEvent(TouchEvent, int, glm::vec2&, bool&)
     {
     }
 
-    void AbstractSceneComponent::onAfterTouchEvent(TouchEvent, const glm::vec2&, bool&)
+    void AbstractSceneComponent::onAfterTouchEvent(TouchEvent, int, const glm::vec2&, bool&)
     {
     }
 }

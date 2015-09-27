@@ -127,14 +127,14 @@ set(source_files
     scene/camera/OrbitCamera.h
     scene/camera/OrthogonalCamera.cpp
     scene/camera/OrthogonalCamera.h
+    scene/components/ChildrenListComponent.cpp
+    scene/components/ChildrenListComponent.h
     scene/AbstractLoadingScene.cpp
     scene/AbstractLoadingScene.h
     scene/AbstractScene.cpp
     scene/AbstractScene.h
     scene/AbstractSceneComponent.cpp
     scene/AbstractSceneComponent.h
-    scene/LayeredScene.cpp
-    scene/LayeredScene.h
     scene/SceneManager.cpp
     scene/SceneManager.h
     utility/FileUtils.cpp

@@ -22,16 +22,18 @@
 
 #pragma once
 #include "engine/core/macros.h"
-#include "engine/scene/AbstractScene.h"
+#include "engine/scene/AbstractSceneComponent.h"
+#include "engine/interfaces/scene/IScene.h"
 #include <vector>
+#include <unordered_set>
 
 namespace Engine
 {
-    class LayeredScene : public AbstractScene
+    class ChildrenListComponent : public AbstractSceneComponent
     {
     public:
-        LayeredScene();
-        ~LayeredScene();
+        ChildrenListComponent();
+        ~ChildrenListComponent();
 
         size_t childrenCount() const { return mChildren.size(); }
         void insertChild(size_t index, const ScenePtr& child);
@@ -41,21 +43,17 @@ namespace Engine
         void appendChild(const ScenePtr& child);
         void appendChild(ScenePtr&& child);
 
-        void resize(const glm::vec2& newSize) override;
-
-        void update(double time) override;
-        void draw(ICanvas* canvas) const override;
-
-        bool beginTouch(int fingerIndex, const glm::vec2& position) override;
-        void moveTouch(int fingerIndex, const glm::vec2& position) override;
-        void endTouch(int fingerIndex, const glm::vec2& position) override;
-        void cancelTouch(int fingerIndex, const glm::vec2& position) override;
+    protected:
+        void onSceneSizeChanged(IScene* scene, const glm::vec2& newSize) override;
+        void onAfterUpdateScene(IScene* scene, double time) override;
+        void onAfterDrawScene(const IScene* scene, ICanvas* canvas) override;
+        void onBeforeTouchEvent(TouchEvent event, int fingerIndex, glm::vec2& position, bool& result) override;
 
     private:
         std::vector<ScenePtr> mChildren;
+        std::unordered_set<int> mTouchedFingers;
         ScenePtr mTouchedChild;
-        int mActiveTouchCount = 0;
 
-        Z_DISABLE_COPY(LayeredScene);
+        Z_DISABLE_COPY(ChildrenListComponent);
     };
 }

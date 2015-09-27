@@ -39,8 +39,8 @@ namespace Engine
         void onBeforeDrawScene(const IScene* scene, ICanvas* canvas) override;
         void onAfterDrawScene(const IScene* scene, ICanvas* canvas) override;
 
-        void onBeforeTouchEvent(TouchEvent event, glm::vec2& position, bool& result) override;
-        void onAfterTouchEvent(TouchEvent event, const glm::vec2& position, bool& result) override;
+        void onBeforeTouchEvent(TouchEvent event, int fingerIndex, glm::vec2& position, bool& result) override;
+        void onAfterTouchEvent(TouchEvent event, int fingerIndex, const glm::vec2& position, bool& result) override;
 
     protected:
         AbstractSceneComponent();
