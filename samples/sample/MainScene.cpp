@@ -22,7 +22,6 @@
 #include "MainScene.h"
 #include "engine/core/Services.h"
 #include "engine/core/Log.h"
-#include "engine/render/Canvas.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace Engine;
@@ -56,7 +55,7 @@ namespace Game
         mCamera->setTarget(mMesh->boundingBox().center());
     }
 
-    void MainScene::draw(IRenderer* renderer) const
+    void MainScene::draw(ICanvas* canvas) const
     {
         glm::mat4 matrix = mCamera->viewMatrix();
         matrix = matrix * glm::translate(glm::mat4(1.0f), mCamera->target());
@@ -64,14 +63,12 @@ namespace Game
         matrix = matrix * glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         matrix = matrix * glm::translate(glm::mat4(1.0f), -mCamera->target());
 
-        renderer->setProjectionMatrix(mCamera->projectionMatrix());
-        renderer->setModelViewMatrix(matrix);
+        canvas->setProjectionMatrix(mCamera->projectionMatrix());
+        canvas->setModelViewMatrix(matrix);
 
+        canvas->setDepthTest(true);
         mMesh->render();
-
-        Canvas r;
-        r.setDepthTest(true);
-        r.drawWireframeBoundingBox(mMesh->boundingBox());
+        canvas->drawWireframeBoundingBox(mMesh->boundingBox());
     }
 
     bool MainScene::onTouchBegan(int fingerIndex, const glm::vec2& position)

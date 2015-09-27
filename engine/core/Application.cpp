@@ -114,6 +114,7 @@ namespace Engine
         const auto& renderer = Services::renderer();
 
         renderer->beginFrame();
+        mCanvas->resetMatrixStacks();
 
         renderer->setViewport(0, 0, int(mScreenSize.x), int(mScreenSize.y));
         renderer->setClearColor(glm::vec4(0.7f, 0.3f, 0.1f, 1.0f));
@@ -122,7 +123,7 @@ namespace Engine
         if (mCurrentScene) {
             ScenePtr currentScene = mCurrentScene;
             currentScene->update(time);
-            currentScene->draw(renderer.get());
+            currentScene->draw(mCanvas.get());
         }
 
         if (mPreviousScene)

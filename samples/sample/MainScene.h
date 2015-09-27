@@ -36,7 +36,7 @@ namespace Game
         void resize(const glm::vec2& newSize) override;
 
         void update(double time) override;
-        void draw(Engine::IRenderer* renderer) const override;
+        void draw(Engine::ICanvas* canvas) const override;
 
         bool onTouchBegan(int fingerIndex, const glm::vec2& position) override;
         void onTouchMoved(int fingerIndex, const glm::vec2& position) override;

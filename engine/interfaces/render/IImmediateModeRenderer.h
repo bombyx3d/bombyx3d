@@ -33,6 +33,9 @@ namespace Engine
     public:
         virtual ~IImmediateModeRenderer() = default;
 
+        virtual void setClearColor(const glm::vec4& color) = 0;
+        virtual void clear() = 0;
+
         virtual const ShaderPtr& customShader() const = 0;
         virtual void setCustomShader(const ShaderPtr& shader) = 0;
 

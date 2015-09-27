@@ -22,6 +22,7 @@
 
 #pragma once
 #include "engine/interfaces/render/IRenderer.h"
+#include "engine/interfaces/render/ICanvas.h"
 #include <memory>
 #include <glm/glm.hpp>
 
@@ -35,7 +36,7 @@ namespace Engine
         virtual void resize(const glm::vec2& newSize) = 0;
 
         virtual void update(double time) = 0;
-        virtual void draw(IRenderer* renderer) const = 0;
+        virtual void draw(ICanvas* canvas) const = 0;
 
         virtual bool onTouchBegan(int fingerIndex, const glm::vec2& position) = 0;
         virtual void onTouchMoved(int fingerIndex, const glm::vec2& position) = 0;

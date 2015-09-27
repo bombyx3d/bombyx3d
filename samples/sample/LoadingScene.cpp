@@ -22,7 +22,6 @@
 #include "LoadingScene.h"
 #include "engine/core/Application.h"
 #include "engine/core/Services.h"
-#include "engine/render/Canvas.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <utility>
 #include <algorithm>
@@ -72,16 +71,15 @@ namespace Game
         }
     }
 
-    void LoadingScene::draw(IRenderer* renderer) const
+    void LoadingScene::draw(ICanvas* canvas) const
     {
-        renderer->setClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-        renderer->clear();
+        canvas->setClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+        canvas->clear();
 
-        renderer->setProjectionMatrix(mProjectionMatrix);
-        renderer->setModelViewMatrix(glm::mat4(1.0f));
+        canvas->setProjectionMatrix(mProjectionMatrix);
+        canvas->setModelViewMatrix(glm::mat4(1.0f));
 
-        Canvas r;
-        r.setBlend(true);
+        canvas->setBlend(true);
 
         #define interpolate(from, to) ((to).x = (from).x + ((to).x - (from).x) * mCurrentProgress)
         Quad filler = mFiller->trimmedQuad() + mProgressBarPosition;
@@ -90,8 +88,8 @@ namespace Game
         Quad fillerTexCoord = mFiller->textureCoordinates();
         interpolate(fillerTexCoord.topLeft, fillerTexCoord.topRight);
         interpolate(fillerTexCoord.bottomLeft, fillerTexCoord.bottomRight);
-        r.drawTexturedQuad(filler, fillerTexCoord, mFiller->texture());
+        canvas->drawTexturedQuad(filler, fillerTexCoord, mFiller->texture());
 
-        r.drawSprite(mProgressBarPosition, mBorder);
+        canvas->drawSprite(mProgressBarPosition, mBorder);
     }
 }

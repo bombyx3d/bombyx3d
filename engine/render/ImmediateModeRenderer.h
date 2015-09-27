@@ -44,6 +44,9 @@ namespace Engine
         ImmediateModeRenderer();
         ~ImmediateModeRenderer();
 
+        void setClearColor(const glm::vec4& color) override;
+        void clear() override;
+
         const ShaderPtr& customShader() const override { return mCustomShader; }
         void setCustomShader(const ShaderPtr& shader) override;
 

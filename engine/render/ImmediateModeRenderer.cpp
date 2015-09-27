@@ -98,6 +98,19 @@ namespace Engine
         flush();
     }
 
+    void ImmediateModeRenderer::setClearColor(const glm::vec4& color)
+    {
+        assert(!mInBeginEnd);
+        Services::renderer()->setClearColor(color);
+    }
+
+    void ImmediateModeRenderer::clear()
+    {
+        assert(!mInBeginEnd);
+        flush();
+        Services::renderer()->clear();
+    }
+
     void ImmediateModeRenderer::setCustomShader(const ShaderPtr& shader)
     {
         assert(!mInBeginEnd);
@@ -123,12 +136,10 @@ namespace Engine
 
     void ImmediateModeRenderer::resetMatrixStacks()
     {
-        mProjectionMatrix = glm::mat4(1.0f);
-        mModelViewMatrix = glm::mat4(1.0f);
-        mMaterial->setUniform(mProjectionMatrixUniform, mProjectionMatrix);
-        mMaterial->setUniform(mModelViewUniform, mModelViewMatrix);
         mProjectionMatrixStack.clear();
         mModelViewMatrixStack.clear();
+        setProjectionMatrix(glm::mat4(1.0f));
+        setModelViewMatrix(glm::mat4(1.0f));
     }
 
     const glm::mat4& ImmediateModeRenderer::projectionMatrix() const

@@ -93,10 +93,10 @@ namespace Engine
             child->update(time);
     }
 
-    void LayeredScene::draw(IRenderer* renderer) const
+    void LayeredScene::draw(ICanvas* canvas) const
     {
         for (const auto& child : mChildren)
-            child->draw(renderer);
+            child->draw(canvas);
     }
 
     bool LayeredScene::onTouchBegan(int fingerIndex, const glm::vec2& position)

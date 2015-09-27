@@ -43,12 +43,6 @@ namespace Engine
         static const glm::vec2& screenSize() { assert(mInstance != nullptr); return mInstance->mScreenSize; }
         static float screenAspect() { assert(mInstance != nullptr); return mInstance->mScreenAspect; }
 
-        static Canvas& canvas() {
-            assert(mInstance != nullptr);
-            assert(mInstance->mCanvas != nullptr);
-            return *mInstance->mCanvas;
-        }
-
         static const ScenePtr& currentScene() { assert(mInstance != nullptr); return mInstance->mCurrentScene; }
         static void setCurrentScene(const ScenePtr& scene);
         static void setCurrentScene(ScenePtr&& scene);

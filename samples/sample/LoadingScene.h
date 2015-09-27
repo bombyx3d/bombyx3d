@@ -38,7 +38,7 @@ namespace Game
         void resize(const glm::vec2& newSize) override;
 
         void update(double time) override;
-        void draw(Engine::IRenderer* renderer) const override;
+        void draw(Engine::ICanvas* canvas) const override;
 
     private:
         glm::mat4 mProjectionMatrix;
