@@ -39,6 +39,7 @@ namespace Engine
         {
             TexturePtr texture;
             std::unique_ptr<std::string> textureName;
+            glm::vec2 originalSize;
             Quad originalQuad;
             Quad trimmedQuad;
             Quad textureCoordinates;
@@ -50,6 +51,7 @@ namespace Engine
             Element(Element&& other)
                 : texture(std::move(other.texture))
                 , textureName(std::move(other.textureName))
+                , originalSize(std::move(other.originalSize))
                 , originalQuad(std::move(other.originalQuad))
                 , trimmedQuad(std::move(other.trimmedQuad))
                 , textureCoordinates(std::move(other.textureCoordinates))
@@ -60,6 +62,7 @@ namespace Engine
             {
                 texture = std::move(other.texture);
                 textureName = std::move(other.textureName);
+                originalSize = std::move(other.originalSize);
                 originalQuad = std::move(other.originalQuad);
                 trimmedQuad = std::move(other.trimmedQuad);
                 textureCoordinates = std::move(other.textureCoordinates);

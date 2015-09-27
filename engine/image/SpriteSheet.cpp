@@ -44,6 +44,7 @@ namespace Engine
         auto it = mSprites.find(name);
         if (it == mSprites.end()) {
             auto element = std::make_shared<Element>();
+            element->originalSize = glm::vec2(0.0f);
             element->originalQuad = Quad::allZero();
             element->trimmedQuad = Quad::allZero();
             element->textureCoordinates = Quad::allZero();

@@ -23,6 +23,7 @@
 #include "engine/core/Log.h"
 #include "engine/image/SpriteSheet.h"
 #include "engine/utility/FileUtils.h"
+#include "engine/utility/StringUtils.h"
 #include "engine/utility/XmlUtils.h"
 #include <tinyxml.h>
 
@@ -30,8 +31,7 @@ namespace Engine
 {
     bool XmlSpriteSheetLoader::canLoadSpriteSheet(IFile* file)
     {
-        // FIXME
-        return true;
+        return file && StringUtils::endsWith(file->name(), ".xml");
     }
 
     bool XmlSpriteSheetLoader::loadSpriteSheet(IFile* file, SpriteSheet* sheet)
@@ -71,6 +71,7 @@ namespace Engine
                 int yOffset = XmlUtils::getIntAttribute(spriteElement, "oY", 0);
                 int width = XmlUtils::getIntAttribute(spriteElement, "oW", rotated ? textureH : textureW);
                 int height = XmlUtils::getIntAttribute(spriteElement, "oH", rotated ? textureW : textureH);
+                element.originalSize = glm::vec2(width, height);
 
                 float originalX = -float(width) * anchorX;
                 float originalY = -float(height) * anchorY;

@@ -33,6 +33,8 @@ namespace Engine
     public:
         virtual ~ISprite() = default;
 
+        virtual const glm::vec2& originalSize() const = 0;
+
         virtual const Quad& originalQuad() const = 0;
         virtual const Quad& trimmedQuad() const = 0;
 

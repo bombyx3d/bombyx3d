@@ -34,11 +34,13 @@ namespace Engine
         Sprite(std::shared_ptr<SpriteSheet>&& sheet, const std::shared_ptr<SpriteSheet::Element>& element);
         ~Sprite();
 
-        const Quad& originalQuad() const override { return mElement->originalQuad; }
-        const Quad& trimmedQuad() const override { return mElement->trimmedQuad; }
+        const glm::vec2& originalSize() const override;
 
-        const TexturePtr& texture() const override { return mElement->texture; }
-        const Quad& textureCoordinates() const override { return mElement->textureCoordinates; }
+        const Quad& originalQuad() const override;
+        const Quad& trimmedQuad() const override;
+
+        const TexturePtr& texture() const override;
+        const Quad& textureCoordinates() const override;
 
     private:
         SpriteSheetPtr mSpriteSheet;

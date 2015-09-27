@@ -52,4 +52,29 @@ namespace Engine
     Sprite::~Sprite()
     {
     }
+
+    const glm::vec2& Sprite::originalSize() const
+    {
+        return mElement->originalSize;
+    }
+
+    const Quad& Sprite::originalQuad() const
+    {
+        return mElement->originalQuad;
+    }
+
+    const Quad& Sprite::trimmedQuad() const
+    {
+        return mElement->trimmedQuad;
+    }
+
+    const TexturePtr& Sprite::texture() const
+    {
+        return mElement->texture;
+    }
+
+    const Quad& Sprite::textureCoordinates() const
+    {
+        return mElement->textureCoordinates;
+    }
 }
