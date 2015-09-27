@@ -24,6 +24,8 @@
 
 namespace Engine
 {
+    static const float PIXEL_PERFECTNESS_OFFSET = 0.375f;
+
     Canvas::Canvas()
     {
         setBlend(true);
@@ -38,28 +40,7 @@ namespace Engine
     {
         if (!sprite)
             return;
-
-        const TexturePtr& texture = sprite->texture();
-        if (!texture)
-            return;
-
-        setTexture(texture);
-
-        const Quad& coord = sprite->trimmedQuad();
-        const Quad& tex = sprite->textureCoordinates();
-        begin(PrimitiveType::Triangles);
-            color(glm::vec4(1.0f));
-
-            // Triangle #1
-            texCoord(tex.topLeft); vertex(position + coord.topLeft, z);
-            texCoord(tex.topRight); auto i2 = vertex(position + coord.topRight, z);
-            texCoord(tex.bottomLeft); auto i3 = vertex(position + coord.bottomLeft, z);
-
-            // Triangle #2
-            index(i3);
-            index(i2);
-            texCoord(tex.bottomRight); vertex(position + coord.bottomRight, z);
-        end();
+        drawTexturedQuad(sprite->trimmedQuad() + position, sprite->textureCoordinates(), sprite->texture(), z);
     }
 
     void Canvas::drawWireframeQuad(const Quad& quad, float z, const glm::vec4& colorVal)
@@ -69,10 +50,32 @@ namespace Engine
             color(colorVal);
             texCoord(0.0f, 0.0f);
 
-            auto i1 = vertex(quad.topLeft, z); auto i2 = vertex(quad.topRight, z);      // Edge #1
-            index(i2); auto i3 = vertex(quad.bottomRight, z);                           // Edge #2
-            index(i3); auto i4 = vertex(quad.bottomLeft, z);                            // Edge #3
-            index(i4); index(i1);                                                       // Edge #4
+            auto i1 = vertex(quad.topLeft + PIXEL_PERFECTNESS_OFFSET, z);                   // Edge #1
+            auto i2 = vertex(quad.topRight + PIXEL_PERFECTNESS_OFFSET, z);
+            index(i2); auto i3 = vertex(quad.bottomRight + PIXEL_PERFECTNESS_OFFSET, z);    // Edge #2
+            index(i3); auto i4 = vertex(quad.bottomLeft + PIXEL_PERFECTNESS_OFFSET, z);     // Edge #3
+            index(i4); index(i1);                                                           // Edge #4
+        end();
+    }
+
+    void Canvas::drawTexturedQuad(const Quad& quad, const Quad& texCoords, const TexturePtr& texture, float z)
+    {
+        if (!texture)
+            return;
+        setTexture(texture);
+
+        begin(PrimitiveType::Triangles);
+            color(glm::vec4(1.0f));
+
+            // Triangle #1
+            texCoord(texCoords.topLeft); vertex(quad.topLeft + PIXEL_PERFECTNESS_OFFSET, z);
+            texCoord(texCoords.topRight); auto i2 = vertex(quad.topRight + PIXEL_PERFECTNESS_OFFSET, z);
+            texCoord(texCoords.bottomLeft); auto i3 = vertex(quad.bottomLeft + PIXEL_PERFECTNESS_OFFSET, z);
+
+            // Triangle #2
+            index(i3);
+            index(i2);
+            texCoord(texCoords.bottomRight); vertex(quad.bottomRight + PIXEL_PERFECTNESS_OFFSET, z);
         end();
     }
 

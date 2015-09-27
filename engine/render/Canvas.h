@@ -37,6 +37,8 @@ namespace Engine
         void drawSprite(const glm::vec2& position, const SpritePtr& sprite, float z = 0.0f);
 
         void drawWireframeQuad(const Quad& quad, float z = 0.0f, const glm::vec4& colorVal = glm::vec4(1.0f));
+        void drawTexturedQuad(const Quad& quad, const Quad& texCoords, const TexturePtr& texture, float z = 0.0f);
+
         void drawWireframeBoundingBox(const BoundingBox& box, const glm::vec4& colorVal = glm::vec4(1.0f));
 
     private:

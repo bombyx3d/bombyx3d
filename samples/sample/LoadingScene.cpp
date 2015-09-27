@@ -22,7 +22,7 @@
 #include "LoadingScene.h"
 #include "engine/core/Application.h"
 #include "engine/core/Services.h"
-#include "engine/render/ImmediateModeRenderer.h"
+#include "engine/render/Canvas.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <utility>
 #include <algorithm>
@@ -31,13 +31,13 @@ using namespace Engine;
 
 namespace Game
 {
-    static const glm::vec2 BAR_SIZE(120.0f, 12.0f);
-
     LoadingScene::LoadingScene()
         : mProjectionMatrix(1.0f)
         , mCurrentProgress(0.0f)
     {
-        mProgressBarTexture = Services::resourceManager()->getTexture("loading/ProgressBar.png", false);
+        auto spriteSheet = Services::resourceManager()->getSpriteSheet("loading/ProgressBar.xml", false);
+        mBorder = spriteSheet->getSprite("border");
+        mFiller = spriteSheet->getSprite("gray");
         setAutoSwitchScene(false);
     }
 
@@ -52,7 +52,7 @@ namespace Game
         float w = newSize.x;
         float h = newSize.y;
         mProjectionMatrix = glm::ortho(0.0f, w, h, 0.0f, -1.0f, 1.0f);
-        mProgressBarQuad = Quad::fromCenterAndSize(glm::vec2(w, h) * 0.5f, BAR_SIZE);
+        mProgressBarPosition = glm::vec2(w * 0.5f, h - 2.0f * mBorder->originalSize().y);
     }
 
     void LoadingScene::update(double time)
@@ -80,22 +80,18 @@ namespace Game
         renderer->setProjectionMatrix(mProjectionMatrix);
         renderer->setModelViewMatrix(glm::mat4(1.0f));
 
-        const glm::vec2 texSize = mProgressBarTexture->size();
-        float barY = BAR_SIZE.y * 4.0f /* 1 - 5 */;
-
-        const glm::vec2 borderTC0 = glm::vec2(0.0f);
-        const glm::vec2 borderTC1 = BAR_SIZE / texSize;
-        const glm::vec2 barTC0 = glm::vec2(0.0f, barY) / texSize;
-        const glm::vec2 barTC1 = glm::vec2(BAR_SIZE.x * mCurrentProgress, barY + BAR_SIZE.y) / texSize;
-
-        Quad q = mProgressBarQuad;
-        q.topRight.x = q.topLeft.x + (q.topRight.x - q.topLeft.x) * mCurrentProgress;
-        q.bottomRight.x = q.bottomLeft.x + (q.bottomRight.x - q.bottomLeft.x) * mCurrentProgress;
-
-        ImmediateModeRenderer r;
+        Canvas r;
         r.setBlend(true);
-        r.setTexture(mProgressBarTexture);
-        r.drawSolidQuad(q, barTC0, barTC1, 0.0f);
-        r.drawSolidQuad(mProgressBarQuad, borderTC0, borderTC1, 1.0f);
+
+        #define interpolate(from, to) ((to).x = (from).x + ((to).x - (from).x) * mCurrentProgress)
+        Quad filler = mFiller->trimmedQuad() + mProgressBarPosition;
+        interpolate(filler.topLeft, filler.topRight);
+        interpolate(filler.bottomLeft, filler.bottomRight);
+        Quad fillerTexCoord = mFiller->textureCoordinates();
+        interpolate(fillerTexCoord.topLeft, fillerTexCoord.topRight);
+        interpolate(fillerTexCoord.bottomLeft, fillerTexCoord.bottomRight);
+        r.drawTexturedQuad(filler, fillerTexCoord, mFiller->texture());
+
+        r.drawSprite(mProgressBarPosition, mBorder);
     }
 }

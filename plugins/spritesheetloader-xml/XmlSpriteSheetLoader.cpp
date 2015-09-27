@@ -29,6 +29,8 @@
 
 namespace Engine
 {
+    static const float PIXEL_PERFECTNESS_OFFSET = 0.375f;
+
     bool XmlSpriteSheetLoader::canLoadSpriteSheet(IFile* file)
     {
         return file && StringUtils::endsWith(file->name(), ".xml");
@@ -82,10 +84,10 @@ namespace Engine
                 element.trimmedQuad = Quad::fromTopLeftAndSize(trimmedX, trimmedY,
                     float(rotated ? textureH : textureW), float(rotated ? textureW : textureH));
 
-                float tX1 = float(textureX) / float(atlasWidth - 1);
-                float tY1 = float(textureY) / float(atlasHeight - 1);
-                float tX2 = float(textureX + textureW - 1) / float(atlasWidth - 1);
-                float tY2 = float(textureY + textureH - 1) / float(atlasHeight - 1);
+                float tX1 = (float(textureX) + PIXEL_PERFECTNESS_OFFSET) / float(atlasWidth);
+                float tY1 = (float(textureY) + PIXEL_PERFECTNESS_OFFSET) / float(atlasHeight);
+                float tX2 = (float(textureX + textureW) + PIXEL_PERFECTNESS_OFFSET) / float(atlasWidth);
+                float tY2 = (float(textureY + textureH) + PIXEL_PERFECTNESS_OFFSET) / float(atlasHeight);
                 if (!rotated)
                     element.textureCoordinates = Quad::fromTopLeftAndBottomRight(tX1, tY1, tX2, tY2);
                 else {

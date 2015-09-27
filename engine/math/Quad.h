@@ -236,5 +236,37 @@ namespace Engine
             bottomRight = p2;
             return *this;
         }
+
+        Quad operator+(const glm::vec2& p) const
+        {
+            Quad q = *this;
+            q += p;
+            return q;
+        }
+
+        Quad& operator+=(const glm::vec2& p)
+        {
+            topLeft += p;
+            topRight += p;
+            bottomLeft += p;
+            bottomRight += p;
+            return *this;
+        }
+
+        Quad operator-(const glm::vec2& p) const
+        {
+            Quad q = *this;
+            q -= p;
+            return q;
+        }
+
+        Quad& operator-=(const glm::vec2& p)
+        {
+            topLeft -= p;
+            topRight -= p;
+            bottomLeft -= p;
+            bottomRight -= p;
+            return *this;
+        }
     };
 }

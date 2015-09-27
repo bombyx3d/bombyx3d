@@ -22,8 +22,8 @@
 
 #pragma once
 #include "engine/scene/AbstractLoadingScene.h"
+#include "engine/interfaces/image/ISprite.h"
 #include "engine/interfaces/render/ITexture.h"
-#include "engine/math/Quad.h"
 #include <functional>
 #include <glm/glm.hpp>
 
@@ -42,8 +42,9 @@ namespace Game
 
     private:
         glm::mat4 mProjectionMatrix;
-        Engine::Quad mProgressBarQuad;
-        Engine::TexturePtr mProgressBarTexture;
+        glm::vec2 mProgressBarPosition;
+        Engine::SpritePtr mBorder;
+        Engine::SpritePtr mFiller;
         float mCurrentProgress;
         float mTargetProgress;
     };
