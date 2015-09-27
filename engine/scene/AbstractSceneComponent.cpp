@@ -19,43 +19,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "engine/core/macros.h"
-#include "engine/scene/AbstractScene.h"
-#include <vector>
+#include "AbstractSceneComponent.h"
 
 namespace Engine
 {
-    class LayeredScene : public AbstractScene
+    AbstractSceneComponent::AbstractSceneComponent()
     {
-    public:
-        LayeredScene();
-        ~LayeredScene();
+    }
 
-        size_t childrenCount() const { return mChildren.size(); }
-        void insertChild(size_t index, const ScenePtr& child);
-        void insertChild(size_t index, ScenePtr&& child);
-        void removeChild(size_t index);
-        void removeLastChild();
-        void appendChild(const ScenePtr& child);
-        void appendChild(ScenePtr&& child);
+    AbstractSceneComponent::~AbstractSceneComponent()
+    {
+    }
 
-        void resize(const glm::vec2& newSize) override;
+    void AbstractSceneComponent::onSceneSizeChanged(IScene*, const glm::vec2&)
+    {
+    }
 
-        void update(double time) override;
-        void draw(ICanvas* canvas) const override;
+    void AbstractSceneComponent::onBeforeUpdateScene(IScene*, double)
+    {
+    }
 
-        bool onTouchBegan(int fingerIndex, const glm::vec2& position) override;
-        void onTouchMoved(int fingerIndex, const glm::vec2& position) override;
-        void onTouchEnded(int fingerIndex) override;
-        void onTouchCancelled(int fingerIndex) override;
+    void AbstractSceneComponent::onAfterUpdateScene(IScene*, double)
+    {
+    }
 
-    private:
-        std::vector<ScenePtr> mChildren;
-        ScenePtr mTouchedChild;
-        int mActiveTouchCount = 0;
+    void AbstractSceneComponent::onBeforeDrawScene(const IScene*, ICanvas*)
+    {
+    }
 
-        Z_DISABLE_COPY(LayeredScene);
-    };
+    void AbstractSceneComponent::onAfterDrawScene(const IScene*, ICanvas*)
+    {
+    }
 }

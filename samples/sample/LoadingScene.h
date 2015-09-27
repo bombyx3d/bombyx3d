@@ -23,6 +23,7 @@
 #pragma once
 #include "engine/scene/AbstractLoadingScene.h"
 #include "engine/interfaces/image/ISprite.h"
+#include "engine/scene/2d/camera/OrthogonalCamera.h"
 #include <functional>
 #include <glm/glm.hpp>
 
@@ -34,18 +35,15 @@ namespace Game
         LoadingScene();
         explicit LoadingScene(const std::function<Engine::ScenePtr()>& sceneFactory);
 
-        void resize(const glm::vec2& newSize) override;
-
         void update(double time) override;
         void draw(Engine::ICanvas* canvas) const override;
 
     private:
-        glm::mat4 mProjectionMatrix;
-        glm::vec2 mProgressBarPosition;
         Engine::SpritePtr mBorder;
         Engine::SpritePtr mFiller;
         float mCurrentProgress;
         float mTargetProgress;
+        Engine::OrthogonalCameraPtr mCamera;
     };
 
     template <class SCENE> class LoadingSceneFor : public LoadingScene

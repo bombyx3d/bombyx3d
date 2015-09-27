@@ -21,33 +21,15 @@
  */
 
 #pragma once
+#include "engine/interfaces/scene/ISceneComponent.h"
 #include "engine/core/macros.h"
-#include "engine/interfaces/scene/3d/camera/ICamera.h"
-#include "engine/scene/AbstractSceneComponent.h"
-#include <glm/glm.hpp>
 
 namespace Engine
 {
-    class AbstractCamera : public ISceneComponent, public ICamera
+    class AbstractSceneComponent : public ISceneComponent
     {
     public:
-        AbstractCamera();
-        ~AbstractCamera();
-
-        const glm::mat4& projectionMatrix() const override;
-        const glm::mat4& inverseProjectionMatrix() const override;
-
-        const glm::mat4& viewMatrix() const override;
-        const glm::mat4& inverseViewMatrix() const override;
-
-    protected:
-        void setProjectionMatrixDirty() { mFlags |= ProjectionMatrixDirty | InverseProjectionMatrixDirty; }
-        virtual void calcProjectionMatrix(glm::mat4& matrix) const = 0;
-        virtual void calcInverseProjectionMatrix(glm::mat4& matrix) const;
-
-        void setViewMatrixDirty() { mFlags |= ViewMatrixDirty | InverseViewMatrixDirty; }
-        virtual void calcViewMatrix(glm::mat4& matrix) const = 0;
-        virtual void calcInverseViewMatrix(glm::mat4& matrix) const;
+        ~AbstractSceneComponent();
 
         void onSceneSizeChanged(IScene* scene, const glm::vec2& newSize) override;
 
@@ -57,21 +39,9 @@ namespace Engine
         void onBeforeDrawScene(const IScene* scene, ICanvas* canvas) override;
         void onAfterDrawScene(const IScene* scene, ICanvas* canvas) override;
 
-    private:
-        enum Flag
-        {
-            ProjectionMatrixDirty = 0x0001,
-            InverseProjectionMatrixDirty = 0x0002,
-            ViewMatrixDirty = 0x0004,
-            InverseViewMatrixDirty = 0x0008,
-        };
+    protected:
+        AbstractSceneComponent();
 
-        mutable glm::mat4 mProjectionMatrix;
-        mutable glm::mat4 mInverseProjectionMatrix;
-        mutable glm::mat4 mViewMatrix;
-        mutable glm::mat4 mInverseViewMatrix;
-        mutable size_t mFlags;
-
-        Z_DISABLE_COPY(AbstractCamera);
+        Z_DISABLE_COPY(AbstractSceneComponent);
     };
 }

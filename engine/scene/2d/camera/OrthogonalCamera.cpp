@@ -68,4 +68,9 @@ namespace Engine
     {
         matrix = glm::translate(glm::mat4(1.0f), glm::vec3(-mPosition, 0.0f));
     }
+
+    void OrthogonalCamera::onSceneSizeChanged(IScene*, const glm::vec2& newSize)
+    {
+        setPhysicalResolution(newSize);
+    }
 }

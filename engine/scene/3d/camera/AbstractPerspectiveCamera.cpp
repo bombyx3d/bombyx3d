@@ -46,4 +46,9 @@ namespace Engine
     {
         matrix = glm::perspective(mFovY, mAspect, mNearZ, mFarZ);
     }
+
+    void AbstractPerspectiveCamera::onSceneSizeChanged(IScene*, const glm::vec2& newSize)
+    {
+        setAspectRatioFromSize(newSize);
+    }
 }

@@ -88,19 +88,19 @@ namespace Engine
     void LayeredScene::resize(const glm::vec2& newSize)
     {
         for (const auto& child : mChildren)
-            child->resize(newSize);
+            child->onResize(newSize);
     }
 
     void LayeredScene::update(double time)
     {
         for (const auto& child : mChildren)
-            child->update(time);
+            child->onUpdate(time);
     }
 
     void LayeredScene::draw(ICanvas* canvas) const
     {
         for (const auto& child : mChildren)
-            child->draw(canvas);
+            child->onDraw(canvas);
     }
 
     bool LayeredScene::onTouchBegan(int fingerIndex, const glm::vec2& position)

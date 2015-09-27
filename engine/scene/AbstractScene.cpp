@@ -24,11 +24,34 @@
 namespace Engine
 {
     AbstractScene::AbstractScene()
+        : mSize(0.0f)
     {
     }
 
     AbstractScene::~AbstractScene()
     {
+    }
+
+    void AbstractScene::addComponent(const SceneComponentPtr& component)
+    {
+        mComponents.emplace_back(component);
+        mComponents.back()->onSceneSizeChanged(this, mSize);
+    }
+
+    void AbstractScene::addComponent(SceneComponentPtr&& component)
+    {
+        mComponents.emplace_back(std::move(component));
+        mComponents.back()->onSceneSizeChanged(this, mSize);
+    }
+
+    void AbstractScene::removeComponent(const SceneComponentPtr& component)
+    {
+        for (auto it = mComponents.begin(); it != mComponents.end(); ++it) {
+            if (*it == component) {
+                mComponents.erase(it);
+                return;
+            }
+        }
     }
 
     void AbstractScene::resize(const glm::vec2&)
@@ -58,5 +81,31 @@ namespace Engine
 
     void AbstractScene::onTouchCancelled(int)
     {
+    }
+
+    void AbstractScene::onResize(const glm::vec2& newSize)
+    {
+        mSize = newSize;
+        for (const auto& component : mComponents)
+            component->onSceneSizeChanged(this, newSize);
+        resize(newSize);
+    }
+
+    void AbstractScene::onUpdate(double time)
+    {
+        for (const auto& component : mComponents)
+            component->onBeforeUpdateScene(this, time);
+        update(time);
+        for (const auto& component : mComponents)
+            component->onAfterUpdateScene(this, time);
+    }
+
+    void AbstractScene::onDraw(ICanvas* canvas) const
+    {
+        for (const auto& component : mComponents)
+            component->onBeforeDrawScene(this, canvas);
+        draw(canvas);
+        for (const auto& component : mComponents)
+            component->onAfterDrawScene(this, canvas);
     }
 }

@@ -21,18 +21,22 @@
  */
 
 #pragma once
-#include "engine/interfaces/scene/IScene.h"
 #include "engine/core/macros.h"
+#include "engine/interfaces/scene/IScene.h"
+#include <vector>
 
 namespace Engine
 {
     class AbstractScene : public IScene
     {
     public:
-        void resize(const glm::vec2& newSize) override;
+        ~AbstractScene();
 
-        void update(double time) override;
-        void draw(ICanvas* canvas) const override;
+        const glm::vec2& size() const { return mSize; }
+
+        void addComponent(const SceneComponentPtr& component) override;
+        void addComponent(SceneComponentPtr&& component) override;
+        void removeComponent(const SceneComponentPtr& component) override;
 
         bool onTouchBegan(int fingerIndex, const glm::vec2& position) override;
         void onTouchMoved(int fingerIndex, const glm::vec2& position) override;
@@ -41,7 +45,20 @@ namespace Engine
 
     protected:
         AbstractScene();
-        ~AbstractScene();
+
+        virtual void resize(const glm::vec2& newSize);
+
+        virtual void update(double time);
+        virtual void draw(ICanvas* canvas) const;
+
+    private:
+        std::vector<SceneComponentPtr> mComponents;
+        glm::vec2 mSize;
+
+        void onResize(const glm::vec2& newSize) final override;
+
+        void onUpdate(double time) final override;
+        void onDraw(ICanvas* canvas) const final override;
 
         Z_DISABLE_COPY(AbstractScene);
     };

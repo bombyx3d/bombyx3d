@@ -49,6 +49,8 @@ namespace Engine
         void calcProjectionMatrix(glm::mat4& matrix) const override;
         void calcViewMatrix(glm::mat4& matrix) const override = 0;
 
+        void onSceneSizeChanged(IScene* scene, const glm::vec2& newSize) override;
+
     private:
         float mFovY;        // in radians
         float mAspect;

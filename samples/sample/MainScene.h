@@ -33,8 +33,6 @@ namespace Game
         MainScene();
         ~MainScene();
 
-        void resize(const glm::vec2& newSize) override;
-
         void update(double time) override;
         void draw(Engine::ICanvas* canvas) const override;
 

@@ -60,6 +60,8 @@ namespace Engine
         void calcProjectionMatrix(glm::mat4& matrix) const override;
         void calcViewMatrix(glm::mat4& matrix) const override;
 
+        void onSceneSizeChanged(IScene* scene, const glm::vec2& newSize) override;
+
     private:
         mutable Quad mVisibleArea;
         glm::vec2 mVirtualResolution;

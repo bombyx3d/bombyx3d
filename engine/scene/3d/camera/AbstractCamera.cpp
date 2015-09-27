@@ -77,4 +77,31 @@ namespace Engine
     {
         matrix = glm::inverse(viewMatrix());
     }
+
+    void AbstractCamera::onSceneSizeChanged(IScene*, const glm::vec2&)
+    {
+    }
+
+    void AbstractCamera::onBeforeUpdateScene(IScene*, double)
+    {
+    }
+
+    void AbstractCamera::onAfterUpdateScene(IScene*, double)
+    {
+    }
+
+    void AbstractCamera::onBeforeDrawScene(const IScene*, ICanvas* canvas)
+    {
+        canvas->pushProjectionMatrix();
+        canvas->pushModelViewMatrix();
+
+        canvas->setProjectionMatrix(projectionMatrix());
+        canvas->setModelViewMatrix(viewMatrix());
+    }
+
+    void AbstractCamera::onAfterDrawScene(const IScene*, ICanvas* canvas)
+    {
+        canvas->popModelViewMatrix();
+        canvas->popProjectionMatrix();
+    }
 }

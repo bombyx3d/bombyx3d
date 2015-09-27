@@ -49,7 +49,7 @@ namespace Engine
         Services::inputManager()->resetAll();
         mCurrentScene = scene;
         if (mCurrentScene)
-            mCurrentScene->resize(mScreenSize);
+            mCurrentScene->onResize(mScreenSize);
     }
 
     void SceneManager::setCurrentScene(ScenePtr&& scene)
@@ -57,7 +57,7 @@ namespace Engine
         Services::inputManager()->resetAll();
         mCurrentScene = std::move(scene);
         if (mCurrentScene)
-            mCurrentScene->resize(mScreenSize);
+            mCurrentScene->onResize(mScreenSize);
     }
 
     void SceneManager::resize(const glm::vec2& screenSize)
@@ -71,7 +71,7 @@ namespace Engine
 
         Services::inputManager()->resetAll();
         if (mCurrentScene)
-            mCurrentScene->resize(screenSize);
+            mCurrentScene->onResize(screenSize);
     }
 
     void SceneManager::runFrame(double time)
@@ -85,8 +85,8 @@ namespace Engine
 
         if (mCurrentScene) {
             ScenePtr currentScene = mCurrentScene;
-            currentScene->update(time);
-            currentScene->draw(mCanvas.get());
+            currentScene->onUpdate(time);
+            currentScene->onDraw(mCanvas.get());
         }
 
         mCanvas->flush(true);

@@ -122,7 +122,6 @@ namespace Engine
         glm::mat4 mModelViewMatrix;
         bool mInBeginEnd;
         bool mInDirectRendering;
-        bool mMaterialChanged;
 
         void setPrimitiveType(PrimitiveType primitive);
         size_t emitVertex();

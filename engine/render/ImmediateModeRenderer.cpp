@@ -81,7 +81,6 @@ namespace Engine
         , mModelViewMatrix(1.0f)
         , mInBeginEnd(false)
         , mInDirectRendering(false)
-        , mMaterialChanged(true)
     {
         mColoredShader = Services::resourceManager()->compileShader(&gDefaultColoredShader, "<builtin-colored>");
         mTexturedShader = Services::resourceManager()->compileShader(&gDefaultTexturedShader, "<builtin-textured>");
@@ -150,7 +149,6 @@ namespace Engine
         if (mCustomShader != shader) {
             flush(GeometryOnly);
             mCustomShader = shader;
-            mMaterialChanged = true;
         }
     }
 
@@ -167,8 +165,6 @@ namespace Engine
                 mMaterial->unsetUniform(mTextureUniform);
             else
                 mMaterial->setUniform(mTextureUniform, texture);
-
-            mMaterialChanged = true;
         }
     }
 
@@ -193,9 +189,9 @@ namespace Engine
         assert(!mInBeginEnd);
         assert(!mInDirectRendering);
 
+        flush(GeometryOnly);
         mProjectionMatrix = matrix;
         mMaterial->setUniform(mProjectionMatrixUniform, matrix);
-        mMaterialChanged = true;
     }
 
     void ImmediateModeRenderer::pushProjectionMatrix()
@@ -226,9 +222,9 @@ namespace Engine
         assert(!mInBeginEnd);
         assert(!mInDirectRendering);
 
+        flush(GeometryOnly);
         mModelViewMatrix = matrix;
         mMaterial->setUniform(mModelViewMatrixUniform, matrix);
-        mMaterialChanged = true;
     }
 
     void ImmediateModeRenderer::pushModelViewMatrix()
@@ -273,7 +269,6 @@ namespace Engine
         if (flag != mMaterial->blendingEnabled()) {
             flush(GeometryOnly);
             mMaterial->setBlendingEnabled(flag);
-            mMaterialChanged = true;
         }
     }
 
@@ -286,7 +281,6 @@ namespace Engine
             flush(GeometryOnly);
             mMaterial->setBlendingSourceFactor(srcFactor);
             mMaterial->setBlendingDestinationFactor(dstFactor);
-            mMaterialChanged = true;
         }
     }
 
@@ -298,7 +292,6 @@ namespace Engine
         if (flag != mMaterial->depthTestingEnabled()) {
             flush(GeometryOnly);
             mMaterial->setDepthTestingEnabled(flag);
-            mMaterialChanged = true;
         }
     }
 
@@ -310,7 +303,6 @@ namespace Engine
         if (flag != mMaterial->depthWritingEnabled()) {
             flush(GeometryOnly);
             mMaterial->setDepthWritingEnabled(flag);
-            mMaterialChanged = true;
         }
     }
 

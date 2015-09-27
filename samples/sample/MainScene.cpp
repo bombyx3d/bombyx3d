@@ -33,20 +33,14 @@ namespace Game
         mCamera = std::make_shared<OrbitCamera>();
         mCamera->setHorizontalAngle(glm::radians(0.0f));
         mCamera->setVerticalAngle(glm::radians(0.0f));
-
-        mCamera->setNearZ(0.1f);
-        mCamera->setFarZ(10.0f);
+        mCamera->setDepthRange(0.1f, 10.0f);
+        addComponent(mCamera);
 
         mMesh = Services::resourceManager()->getStaticMesh("girl/girl.obj");
     }
 
     MainScene::~MainScene()
     {
-    }
-
-    void MainScene::resize(const glm::vec2& newSize)
-    {
-        mCamera->setAspectRatioFromSize(newSize);
     }
 
     void MainScene::update(double)
@@ -57,13 +51,10 @@ namespace Game
 
     void MainScene::draw(ICanvas* canvas) const
     {
-        glm::mat4 matrix = mCamera->viewMatrix();
-        matrix = matrix * glm::translate(glm::mat4(1.0f), mCamera->target());
+        glm::mat4 matrix = canvas->modelViewMatrix() * glm::translate(glm::mat4(1.0f), mCamera->target());
         matrix = matrix * glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         matrix = matrix * glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         matrix = matrix * glm::translate(glm::mat4(1.0f), -mCamera->target());
-
-        canvas->setProjectionMatrix(mCamera->projectionMatrix());
         canvas->setModelViewMatrix(matrix);
 
         canvas->setDepthTest(true);
