@@ -25,18 +25,13 @@
 #include "engine/render/gles2/GLES2Buffer.h"
 #include "engine/render/gles2/GLES2VertexSource.h"
 #include "engine/core/Log.h"
-#include "engine/core/AtomTable.h"
 #include "opengl.h"
 #include <cassert>
 
 namespace Engine
 {
     Renderer::Renderer()
-        : mProjectionMatrixUniform(AtomTable::getAtom("uProjection"))
-        , mModelViewMatrixUniform(AtomTable::getAtom("uModelView"))
-        , mProjectionMatrix(1.0f)
-        , mModelViewMatrix(1.0f)
-        , mShouldRebindUniforms(true)
+        : mShouldRebindUniforms(true)
         , mShouldRebindAttributes(true)
     {
     }
@@ -47,14 +42,8 @@ namespace Engine
 
     void Renderer::beginFrame()
     {
-        mProjectionMatrix = glm::mat4(1.0f);
-        mModelViewMatrix = glm::mat4(1.0f);
-        mProjectionMatrixStack.clear();
-        mModelViewMatrixStack.clear();
-
         for (auto& it : mUniforms)
             it.second.reset();
-
         resetOpenGLBindings();
     }
 
@@ -102,52 +91,6 @@ namespace Engine
     VertexSourcePtr Renderer::createVertexSource()
     {
         return std::make_shared<GLES2VertexSource>();
-    }
-
-    const glm::mat4& Renderer::projectionMatrix() const
-    {
-        return mProjectionMatrix;
-    }
-
-    void Renderer::setProjectionMatrix(const glm::mat4& matrix)
-    {
-        mProjectionMatrix = matrix;
-        setUniform(mProjectionMatrixUniform, matrix);
-    }
-
-    void Renderer::pushProjectionMatrix()
-    {
-        mProjectionMatrixStack.push_back(mProjectionMatrix);
-    }
-
-    void Renderer::popProjectionMatrix()
-    {
-        assert(!mProjectionMatrixStack.empty());
-        setProjectionMatrix(mProjectionMatrixStack.back());
-        mProjectionMatrixStack.pop_back();
-    }
-
-    const glm::mat4& Renderer::modelViewMatrix() const
-    {
-        return mModelViewMatrix;
-    }
-
-    void Renderer::setModelViewMatrix(const glm::mat4& matrix)
-    {
-        mModelViewMatrix = matrix;
-        setUniform(mModelViewMatrixUniform, matrix);
-    }
-
-    void Renderer::pushModelViewMatrix()
-    {
-        mModelViewMatrixStack.push_back(mModelViewMatrix);
-    }
-
-    void Renderer::popModelViewMatrix()
-    {
-        assert(!mModelViewMatrixStack.empty());
-        setModelViewMatrix(mModelViewMatrixStack.back());
-        mModelViewMatrixStack.pop_back();
     }
 
     void Renderer::setCullFace(CullFace face)

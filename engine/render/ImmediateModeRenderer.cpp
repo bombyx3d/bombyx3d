@@ -22,6 +22,7 @@
 #include "ImmediateModeRenderer.h"
 #include "engine/utility/RenderUtils.h"
 #include "engine/core/Services.h"
+#include "engine/core/AtomTable.h"
 #include <vector>
 #include <cassert>
 #include <cstring>
@@ -68,11 +69,14 @@ namespace Engine
 
     ImmediateModeRenderer::ImmediateModeRenderer()
         : mMaterial(std::make_shared<MaterialPass>(std::string()))
+        , mTextureUniform(AtomTable::getAtom("uTexture"))
+        , mProjectionMatrixUniform(AtomTable::getAtom("uProjection"))
+        , mModelViewMatrixUniform(AtomTable::getAtom("uModelView"))
         , mPrimitiveType(PrimitiveType::Triangles)
+        , mProjectionMatrix(1.0f)
+        , mModelViewMatrix(1.0f)
         , mInBeginEnd(false)
     {
-        mTextureUniform = AtomTable::getAtom("uTexture");
-
         mColoredShader = Services::resourceManager()->compileShader(&gDefaultColoredShader, "<builtin-colored>");
         mTexturedShader = Services::resourceManager()->compileShader(&gDefaultTexturedShader, "<builtin-textured>");
 
@@ -115,6 +119,62 @@ namespace Engine
             else
                 mMaterial->setUniform(mTextureUniform, texture);
         }
+    }
+
+    void ImmediateModeRenderer::resetMatrixStacks()
+    {
+        mProjectionMatrix = glm::mat4(1.0f);
+        mModelViewMatrix = glm::mat4(1.0f);
+        mMaterial->setUniform(mProjectionMatrixUniform, mProjectionMatrix);
+        mMaterial->setUniform(mModelViewUniform, mModelViewMatrix);
+        mProjectionMatrixStack.clear();
+        mModelViewMatrixStack.clear();
+    }
+
+    const glm::mat4& ImmediateModeRenderer::projectionMatrix() const
+    {
+        return mProjectionMatrix;
+    }
+
+    void ImmediateModeRenderer::setProjectionMatrix(const glm::mat4& matrix)
+    {
+        mProjectionMatrix = matrix;
+        mMaterial->setUniform(mProjectionMatrixUniform, matrix);
+    }
+
+    void ImmediateModeRenderer::pushProjectionMatrix()
+    {
+        mProjectionMatrixStack.push_back(mProjectionMatrix);
+    }
+
+    void ImmediateModeRenderer::popProjectionMatrix()
+    {
+        assert(!mProjectionMatrixStack.empty());
+        setProjectionMatrix(mProjectionMatrixStack.back());
+        mProjectionMatrixStack.pop_back();
+    }
+
+    const glm::mat4& ImmediateModeRenderer::modelViewMatrix() const
+    {
+        return mModelViewMatrix;
+    }
+
+    void ImmediateModeRenderer::setModelViewMatrix(const glm::mat4& matrix)
+    {
+        mModelViewMatrix = matrix;
+        mMaterial->setUniform(mModelViewMatrixUniform, matrix);
+    }
+
+    void ImmediateModeRenderer::pushModelViewMatrix()
+    {
+        mModelViewMatrixStack.push_back(mModelViewMatrix);
+    }
+
+    void ImmediateModeRenderer::popModelViewMatrix()
+    {
+        assert(!mModelViewMatrixStack.empty());
+        setModelViewMatrix(mModelViewMatrixStack.back());
+        mModelViewMatrixStack.pop_back();
     }
 
     void ImmediateModeRenderer::setBlend(bool flag)

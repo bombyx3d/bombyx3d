@@ -27,7 +27,6 @@
 #include "engine/render/gles2/GLES2Shader.h"
 #include "engine/render/gles2/GLES2VertexSource.h"
 #include "engine/render/gles2/GLES2Uniform.h"
-#include <vector>
 #include <unordered_map>
 #include <glm/glm.hpp>
 
@@ -53,16 +52,6 @@ namespace Engine
         IndexBufferPtr createIndexBuffer() override;
         VertexSourcePtr createVertexSource() override;
 
-        const glm::mat4& projectionMatrix() const override;
-        void setProjectionMatrix(const glm::mat4& matrix) override;
-        void pushProjectionMatrix() override;
-        void popProjectionMatrix() override;
-
-        const glm::mat4& modelViewMatrix() const override;
-        void setModelViewMatrix(const glm::mat4& matrix) override;
-        void pushModelViewMatrix() override;
-        void popModelViewMatrix() override;
-
         void setCullFace(CullFace face) override;
         void setFrontFace(FrontFace face) override;
 
@@ -85,12 +74,6 @@ namespace Engine
         void drawPrimitive(PrimitiveType primitiveType, size_t first, size_t count) override;
 
     private:
-        Atom mProjectionMatrixUniform;
-        Atom mModelViewMatrixUniform;
-        glm::mat4 mProjectionMatrix;
-        glm::mat4 mModelViewMatrix;
-        std::vector<glm::mat4> mProjectionMatrixStack;
-        std::vector<glm::mat4> mModelViewMatrixStack;
         std::unordered_map<Atom, GLES2Uniform> mUniforms;
         std::shared_ptr<GLES2Shader> mCurrentShader;
         std::shared_ptr<GLES2VertexSource> mCurrentVertexSource;

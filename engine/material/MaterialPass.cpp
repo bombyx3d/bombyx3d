@@ -128,6 +128,11 @@ namespace Engine
         setUniform(AtomTable::getAtom(name), value);
     }
 
+    void MaterialPass::setUniform(const std::string& name, const glm::mat4& value)
+    {
+        setUniform(AtomTable::getAtom(name), value);
+    }
+
     void MaterialPass::setUniform(const std::string& name, const std::string& textureName)
     {
         setUniform(AtomTable::getAtom(name), textureName);
@@ -165,6 +170,12 @@ namespace Engine
     {
         size_t index = uniformIndex(name);
         mUniforms[index].second.reset(new UniformValueT<glm::vec4>(value));
+    }
+
+    void MaterialPass::setUniform(Atom name, const glm::mat4& value)
+    {
+        size_t index = uniformIndex(name);
+        mUniforms[index].second.reset(new UniformValueT<glm::mat4>(value));
     }
 
     void MaterialPass::setUniform(Atom name, const std::string& textureName)

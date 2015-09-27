@@ -88,16 +88,6 @@ namespace Engine
         virtual IndexBufferPtr createIndexBuffer() = 0;
         virtual VertexSourcePtr createVertexSource() = 0;
 
-        virtual const glm::mat4& projectionMatrix() const = 0;
-        virtual void setProjectionMatrix(const glm::mat4& matrix) = 0;
-        virtual void pushProjectionMatrix() = 0;
-        virtual void popProjectionMatrix() = 0;
-
-        virtual const glm::mat4& modelViewMatrix() const = 0;
-        virtual void setModelViewMatrix(const glm::mat4& matrix) = 0;
-        virtual void pushModelViewMatrix() = 0;
-        virtual void popModelViewMatrix() = 0;
-
         virtual void setCullFace(CullFace face) = 0;
         virtual void setFrontFace(FrontFace face) = 0;
 

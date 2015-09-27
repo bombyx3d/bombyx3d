@@ -61,6 +61,7 @@ namespace Engine
         void setUniform(const std::string& name, const glm::vec2& value);
         void setUniform(const std::string& name, const glm::vec3& value);
         void setUniform(const std::string& name, const glm::vec4& value);
+        void setUniform(const std::string& name, const glm::mat4& value);
         void setUniform(const std::string& name, const std::string& textureName);
         void setUniform(const std::string& name, const TexturePtr& texture);
         void unsetUniform(const std::string& name);
@@ -69,6 +70,7 @@ namespace Engine
         void setUniform(Atom name, const glm::vec2& value);
         void setUniform(Atom name, const glm::vec3& value);
         void setUniform(Atom name, const glm::vec4& value);
+        void setUniform(Atom name, const glm::mat4& value);
         void setUniform(Atom name, const std::string& textureName);
         void setUniform(Atom name, const TexturePtr& texture);
         void unsetUniform(Atom name);

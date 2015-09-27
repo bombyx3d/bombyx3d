@@ -52,6 +52,18 @@ namespace Engine
         const TexturePtr& texture() const { return mTexture; }
         void setTexture(const TexturePtr& texture);
 
+        void resetMatrixStacks();
+
+        const glm::mat4& projectionMatrix() const;
+        void setProjectionMatrix(const glm::mat4& matrix);
+        void pushProjectionMatrix();
+        void popProjectionMatrix();
+
+        const glm::mat4& modelViewMatrix() const;
+        void setModelViewMatrix(const glm::mat4& matrix);
+        void pushModelViewMatrix();
+        void popModelViewMatrix();
+
         void setBlend(bool flag);
         void setBlendFunc(BlendFunc srcFactor, BlendFunc dstFactor);
 
@@ -90,11 +102,17 @@ namespace Engine
         VertexSourcePtr mVertexSource;
         TexturePtr mTexture;
         Atom mTextureUniform;
+        Atom mProjectionMatrixUniform;
+        Atom mModelViewMatrixUniform;
         PrimitiveType mPrimitiveType;
-        bool mInBeginEnd;
         Vertex mCurrentVertex;
         std::vector<Vertex> mVertexData;
         std::vector<uint16_t> mIndexData;
+        std::vector<glm::mat4> mProjectionMatrixStack;
+        std::vector<glm::mat4> mModelViewMatrixStack;
+        glm::mat4 mProjectionMatrix;
+        glm::mat4 mModelViewMatrix;
+        bool mInBeginEnd;
 
         void setPrimitiveType(PrimitiveType primitive);
         size_t emitVertex();
