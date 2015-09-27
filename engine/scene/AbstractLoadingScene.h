@@ -21,11 +21,11 @@
  */
 
 #pragma once
-#include "engine/scene/AbstractScene.h"
+#include "engine/scene/LayeredScene.h"
 
 namespace Engine
 {
-    class AbstractLoadingScene : public AbstractScene
+    class AbstractLoadingScene : public LayeredScene
     {
     public:
         AbstractLoadingScene();

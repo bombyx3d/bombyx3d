@@ -22,31 +22,36 @@
 
 #pragma once
 #include "engine/scene/3d/camera/AbstractCamera.h"
+#include "engine/core/macros.h"
+#include "engine/math/AspectRatio.h"
+#include "engine/math/Quad.h"
+#include <memory>
+#include <vector>
 #include <glm/glm.hpp>
 
 namespace Engine
 {
-    class AbstractOrthogonalCamera : public AbstractCamera
+    class OrthogonalCamera : public AbstractCamera
     {
     public:
-        AbstractOrthogonalCamera();
-        ~AbstractOrthogonalCamera();
+        explicit OrthogonalCamera(const glm::vec2& virtResolution, AspectRatio ratio = AspectRatio::Fit);
+        ~OrthogonalCamera();
 
-        const glm::vec2& topLeft() const { return mTopLeft; }
-        const glm::vec2& bottomRight() const { return mBottomRight; }
+        AspectRatio aspectRatio() const { return mAspectRatio; }
+        const glm::vec2& physicalResolution() const { return mPhysicalResolution; }
+        const glm::vec2& virtualResolution() const { return mVirtualResolution; }
+
+        void setAspectRatio(AspectRatio ratio) { mAspectRatio = ratio; setProjectionMatrixDirty(); }
+        void setPhysicalResolution(const glm::vec2& r) { mPhysicalResolution = r; setProjectionMatrixDirty(); }
+        void setVirtualResolution(const glm::vec2& r) { mVirtualResolution = r; setProjectionMatrixDirty(); }
+
+        const glm::vec2& position() const { return mPosition; }
+        void setPosition(const glm::vec2& pos) { mPosition = pos; setViewMatrixDirty(); }
+
+        const Quad& visibleArea() const;
 
         float nearZ() const { return mNearZ; }
         float farZ() const { return mFarZ; }
-
-        void setTopLeft(float x, float y) { mTopLeft.x = x; mTopLeft.y = y; setProjectionMatrixDirty(); }
-        void setTopLeft(const glm::vec2& p) { mTopLeft = p; setProjectionMatrixDirty(); }
-        void setBottomRight(float x, float y) { mBottomRight.x = x; mBottomRight.y = y; setProjectionMatrixDirty(); }
-        void setBottomRight(const glm::vec2& p) { mBottomRight = p; setProjectionMatrixDirty(); }
-        void setDimensions(const glm::vec2& p1, const glm::vec2& p2)
-            { mTopLeft = p1; mBottomRight = p2; setProjectionMatrixDirty(); }
-        void setDimensions(float x1, float y1, float x2, float y2)
-            { mTopLeft = glm::vec2(x1, y1); mBottomRight = glm::vec2(x2, y2); setProjectionMatrixDirty(); }
-
         void setNearZ(float value) { mNearZ = value; setProjectionMatrixDirty(); }
         void setFarZ(float value) { mFarZ = value; setProjectionMatrixDirty(); }
         void setDepthRange(float nz, float fz) { mNearZ = nz; mFarZ = fz; setProjectionMatrixDirty(); }
@@ -56,9 +61,16 @@ namespace Engine
         void calcViewMatrix(glm::mat4& matrix) const override;
 
     private:
-        glm::vec2 mTopLeft;
-        glm::vec2 mBottomRight;
+        mutable Quad mVisibleArea;
+        glm::vec2 mVirtualResolution;
+        glm::vec2 mPhysicalResolution;
+        glm::vec2 mPosition;
         float mNearZ;
         float mFarZ;
+        AspectRatio mAspectRatio;
+
+        Z_DISABLE_COPY(OrthogonalCamera);
     };
+
+    using OrthogonalCameraPtr = std::shared_ptr<OrthogonalCamera>;
 }

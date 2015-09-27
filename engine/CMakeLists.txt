@@ -117,10 +117,10 @@ set(source_files
     render/Canvas.h
     render/ImmediateModeRenderer.cpp
     render/ImmediateModeRenderer.h
+    scene/2d/camera/OrthogonalCamera.cpp
+    scene/2d/camera/OrthogonalCamera.h
     scene/3d/camera/AbstractCamera.cpp
     scene/3d/camera/AbstractCamera.h
-    scene/3d/camera/AbstractOrthogonalCamera.cpp
-    scene/3d/camera/AbstractOrthogonalCamera.h
     scene/3d/camera/AbstractPerspectiveCamera.cpp
     scene/3d/camera/AbstractPerspectiveCamera.h
     scene/3d/camera/OrbitCamera.cpp
