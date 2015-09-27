@@ -112,7 +112,7 @@ namespace Engine
 
         Z_LOGI("Initializing application with window size (" << screenSize.x << ", " << screenSize.y << ").");
         Services::setRenderer(std::make_shared<Renderer>());
-        mApplication->initialize(screenSize);
+        mApplication->initialize(glm::vec2(screenSize));
 
         while (!glfwWindowShouldClose(mWindow)) {
             double time = glfwGetTime();
@@ -124,7 +124,7 @@ namespace Engine
             if (screenSize != newScreenSize) {
                 screenSize = newScreenSize;
                 Z_LOGI("Application window has been resized to (" << screenSize.x << ", " << screenSize.y << ").");
-                mApplication->resize(screenSize);
+                mApplication->resize(glm::vec2(screenSize));
             }
 
             mApplication->runFrame(mFrameTime);
@@ -176,7 +176,7 @@ namespace Engine
 
     void GlfwWrapper::mouseMoveCallback(GLFWwindow*, double mouseX, double mouseY)
     {
-        Services::inputManager()->injectMouseMove(glm::ivec2(int(mouseX), int(mouseY)));
+        Services::inputManager()->injectMouseMove(glm::vec2(float(mouseX), float(mouseY)));
     }
 
     void GlfwWrapper::errorCallback(int, const char* description)

@@ -39,7 +39,7 @@ namespace Engine
         void setFovY(float fovY) { mFovY = fovY; setProjectionMatrixDirty(); }
 
         void setAspectRatio(float ratio) { mAspect = ratio; setProjectionMatrixDirty(); }
-        void setAspectRatioFromSize(const glm::ivec2& size);
+        void setAspectRatioFromSize(const glm::vec2& size);
 
         void setNearZ(float value) { mNearZ = value; setProjectionMatrixDirty(); }
         void setFarZ(float value) { mFarZ = value; setProjectionMatrixDirty(); }

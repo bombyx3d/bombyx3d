@@ -31,7 +31,7 @@ namespace Engine
     {
     }
 
-    void AbstractScene::resize(const glm::ivec2&)
+    void AbstractScene::resize(const glm::vec2&)
     {
     }
 
@@ -43,12 +43,12 @@ namespace Engine
     {
     }
 
-    bool AbstractScene::onTouchBegan(int, const glm::ivec2&)
+    bool AbstractScene::onTouchBegan(int, const glm::vec2&)
     {
         return false;
     }
 
-    void AbstractScene::onTouchMoved(int, const glm::ivec2&)
+    void AbstractScene::onTouchMoved(int, const glm::vec2&)
     {
     }
 

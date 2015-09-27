@@ -79,7 +79,7 @@ namespace Engine
             mInstance->mCurrentScene->resize(mInstance->mScreenSize);
     }
 
-    void Application::initialize(const glm::ivec2& screenSize)
+    void Application::initialize(const glm::vec2& screenSize)
     {
         Services::setResourceManager(std::make_shared<ResourceManager>());
         mCanvas.reset(new Canvas);
@@ -95,7 +95,7 @@ namespace Engine
         Services::setResourceManager(nullptr);
     }
 
-    void Application::resize(const glm::ivec2& screenSize)
+    void Application::resize(const glm::vec2& screenSize)
     {
         mScreenSize = screenSize;
 
@@ -115,7 +115,7 @@ namespace Engine
 
         renderer->beginFrame();
 
-        renderer->setViewport(0, 0, mScreenSize.x, mScreenSize.y);
+        renderer->setViewport(0, 0, int(mScreenSize.x), int(mScreenSize.y));
         renderer->setClearColor(glm::vec4(0.7f, 0.3f, 0.1f, 1.0f));
         renderer->clear();
 
@@ -135,7 +135,7 @@ namespace Engine
     void Application::onTouchBegan(int fingerIndex, const glm::vec2& position)
     {
         if (mCurrentScene) {
-            if (mCurrentScene->onTouchBegan(fingerIndex, glm::ivec2(position)))
+            if (mCurrentScene->onTouchBegan(fingerIndex, position))
                 mActiveTouches.insert(fingerIndex);
         }
     }
@@ -143,7 +143,7 @@ namespace Engine
     void Application::onTouchMoved(int fingerIndex, const glm::vec2& position)
     {
         if (mCurrentScene && mActiveTouches.find(fingerIndex) != mActiveTouches.end())
-            mCurrentScene->onTouchMoved(fingerIndex, glm::ivec2(position));
+            mCurrentScene->onTouchMoved(fingerIndex, position);
     }
 
     void Application::onTouchEnded(int fingerIndex)

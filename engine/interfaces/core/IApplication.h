@@ -35,10 +35,10 @@ namespace Engine
         virtual int preferredDepthBits() const = 0;
         virtual int preferredStencilBits() const = 0;
 
-        virtual void initialize(const glm::ivec2& screenSize) = 0;
+        virtual void initialize(const glm::vec2& screenSize) = 0;
         virtual void shutdown() = 0;
 
-        virtual void resize(const glm::ivec2& screenSize) = 0;
+        virtual void resize(const glm::vec2& screenSize) = 0;
 
         virtual void runFrame(double time) = 0;
     };

@@ -47,10 +47,10 @@ namespace Game
         beginLoading(sceneFactory());
     }
 
-    void LoadingScene::resize(const glm::ivec2& newSize)
+    void LoadingScene::resize(const glm::vec2& newSize)
     {
-        float w = float(newSize.x);
-        float h = float(newSize.y);
+        float w = newSize.x;
+        float h = newSize.y;
         mProjectionMatrix = glm::ortho(0.0f, w, h, 0.0f, -1.0f, 1.0f);
         mProgressBarQuad = Quad::fromCenterAndSize(glm::vec2(w, h) * 0.5f, BAR_SIZE);
     }

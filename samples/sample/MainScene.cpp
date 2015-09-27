@@ -22,7 +22,7 @@
 #include "MainScene.h"
 #include "engine/core/Services.h"
 #include "engine/core/Log.h"
-#include "engine/render/ImmediateModeRenderer.h"
+#include "engine/render/Canvas.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace Engine;
@@ -45,7 +45,7 @@ namespace Game
     {
     }
 
-    void MainScene::resize(const glm::ivec2& newSize)
+    void MainScene::resize(const glm::vec2& newSize)
     {
         mCamera->setAspectRatioFromSize(newSize);
     }
@@ -69,11 +69,12 @@ namespace Game
 
         mMesh->render();
 
-        ImmediateModeRenderer r;
+        Canvas r;
+        r.setDepthTest(true);
         r.drawWireframeBoundingBox(mMesh->boundingBox());
     }
 
-    bool MainScene::onTouchBegan(int fingerIndex, const glm::ivec2& position)
+    bool MainScene::onTouchBegan(int fingerIndex, const glm::vec2& position)
     {
         if (fingerIndex != 0)
             return false;
@@ -82,15 +83,15 @@ namespace Game
         return true;
     }
 
-    void MainScene::onTouchMoved(int fingerIndex, const glm::ivec2& position)
+    void MainScene::onTouchMoved(int fingerIndex, const glm::vec2& position)
     {
         if (fingerIndex != 0)
             return;
 
-        glm::ivec2 delta = position - mPrevTouchPosition;
+        glm::vec2 delta = position - mPrevTouchPosition;
         mPrevTouchPosition = position;
-        mCamera->setHorizontalAngle(mCamera->horizontalAngle() + float(delta.x) * 0.01f);
-        mCamera->setVerticalAngle(glm::clamp(mCamera->verticalAngle() + float(delta.y) * 0.01f,
+        mCamera->setHorizontalAngle(mCamera->horizontalAngle() + delta.x * 0.01f);
+        mCamera->setVerticalAngle(glm::clamp(mCamera->verticalAngle() + delta.y * 0.01f,
             -glm::radians(89.0f), glm::radians(89.0f)));
     }
 

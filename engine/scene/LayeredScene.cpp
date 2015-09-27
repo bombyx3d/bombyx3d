@@ -78,7 +78,7 @@ namespace Engine
         mChildren.emplace_back(std::move(child));
     }
 
-    void LayeredScene::resize(const glm::ivec2& newSize)
+    void LayeredScene::resize(const glm::vec2& newSize)
     {
         for (const auto& child : mChildren)
             child->resize(newSize);
@@ -96,7 +96,7 @@ namespace Engine
             child->draw(renderer);
     }
 
-    bool LayeredScene::onTouchBegan(int fingerIndex, const glm::ivec2& position)
+    bool LayeredScene::onTouchBegan(int fingerIndex, const glm::vec2& position)
     {
         if (mTouchedChild) {
             if (mTouchedChild->onTouchBegan(fingerIndex, position)) {
@@ -116,7 +116,7 @@ namespace Engine
         return false;
     }
 
-    void LayeredScene::onTouchMoved(int fingerIndex, const glm::ivec2& position)
+    void LayeredScene::onTouchMoved(int fingerIndex, const glm::vec2& position)
     {
         if (mTouchedChild)
             mTouchedChild->onTouchMoved(fingerIndex, position);

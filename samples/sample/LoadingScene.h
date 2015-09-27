@@ -35,7 +35,7 @@ namespace Game
         LoadingScene();
         explicit LoadingScene(const std::function<Engine::ScenePtr()>& sceneFactory);
 
-        void resize(const glm::ivec2& newSize) override;
+        void resize(const glm::vec2& newSize) override;
 
         void update(double time) override;
         void draw(Engine::IRenderer* renderer) const override;

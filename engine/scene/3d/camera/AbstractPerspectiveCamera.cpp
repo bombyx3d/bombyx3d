@@ -36,7 +36,7 @@ namespace Engine
     {
     }
 
-    void AbstractPerspectiveCamera::setAspectRatioFromSize(const glm::ivec2& size)
+    void AbstractPerspectiveCamera::setAspectRatioFromSize(const glm::vec2& size)
     {
         mAspect = (size.x > 0 && size.y > 0 ? float(size.x) / float(size.y) : 1.0f);
         setProjectionMatrixDirty();

@@ -40,7 +40,7 @@ namespace Engine
         int preferredDepthBits() const override;
         int preferredStencilBits() const override;
 
-        static const glm::ivec2& screenSize() { assert(mInstance != nullptr); return mInstance->mScreenSize; }
+        static const glm::vec2& screenSize() { assert(mInstance != nullptr); return mInstance->mScreenSize; }
         static float screenAspect() { assert(mInstance != nullptr); return mInstance->mScreenAspect; }
 
         static Canvas& canvas() {
@@ -62,16 +62,16 @@ namespace Engine
     private:
         static Application* mInstance;
         std::unordered_set<int> mActiveTouches;
-        glm::ivec2 mScreenSize;
+        glm::vec2 mScreenSize;
         float mScreenAspect;
         ScenePtr mPreviousScene;
         ScenePtr mCurrentScene;
         std::unique_ptr<Canvas> mCanvas;
 
-        void initialize(const glm::ivec2& screenSize) final override;
+        void initialize(const glm::vec2& screenSize) final override;
         void shutdown() final override;
 
-        void resize(const glm::ivec2& screenSize) final override;
+        void resize(const glm::vec2& screenSize) final override;
 
         void runFrame(double time) final override;
 

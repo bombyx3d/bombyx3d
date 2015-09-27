@@ -29,13 +29,13 @@ namespace Engine
     class AbstractScene : public IScene
     {
     public:
-        void resize(const glm::ivec2& newSize) override;
+        void resize(const glm::vec2& newSize) override;
 
         void update(double time) override;
         void draw(IRenderer* renderer) const override;
 
-        bool onTouchBegan(int fingerIndex, const glm::ivec2& position) override;
-        void onTouchMoved(int fingerIndex, const glm::ivec2& position) override;
+        bool onTouchBegan(int fingerIndex, const glm::vec2& position) override;
+        void onTouchMoved(int fingerIndex, const glm::vec2& position) override;
         void onTouchEnded(int fingerIndex) override;
         void onTouchCancelled(int fingerIndex) override;
 

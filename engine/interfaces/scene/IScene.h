@@ -32,13 +32,13 @@ namespace Engine
     public:
         virtual ~IScene() = default;
 
-        virtual void resize(const glm::ivec2& newSize) = 0;
+        virtual void resize(const glm::vec2& newSize) = 0;
 
         virtual void update(double time) = 0;
         virtual void draw(IRenderer* renderer) const = 0;
 
-        virtual bool onTouchBegan(int fingerIndex, const glm::ivec2& position) = 0;
-        virtual void onTouchMoved(int fingerIndex, const glm::ivec2& position) = 0;
+        virtual bool onTouchBegan(int fingerIndex, const glm::vec2& position) = 0;
+        virtual void onTouchMoved(int fingerIndex, const glm::vec2& position) = 0;
         virtual void onTouchEnded(int fingerIndex) = 0;
         virtual void onTouchCancelled(int fingerIndex) = 0;
     };
