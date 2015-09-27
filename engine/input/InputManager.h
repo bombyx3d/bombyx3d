@@ -68,8 +68,8 @@ namespace Engine
 
         void injectTouchBegin(int fingerIndex, const glm::vec2& position) override;
         void injectTouchMove(int fingerIndex, const glm::vec2& position) override;
-        void injectTouchEnd(int fingerIndex) override;
-        void injectTouchCancel(int fingerIndex) override;
+        void injectTouchEnd(int fingerIndex, const glm::vec2& position) override;
+        void injectTouchCancel(int fingerIndex, const glm::vec2& position) override;
 
     private:
         ObserverList<IInputObserver> mObservers;
@@ -91,8 +91,8 @@ namespace Engine
 
         void emitTouchBegin(int fingerIndex, const glm::vec2& position);
         void emitTouchMove(int fingerIndex, const glm::vec2& position);
-        void emitTouchEnd(int fingerIndex);
-        void emitTouchCancel(int fingerIndex);
+        void emitTouchEnd(int fingerIndex, const glm::vec2& position);
+        void emitTouchCancel(int fingerIndex, const glm::vec2& position);
 
         Z_DISABLE_COPY(InputManager);
     };

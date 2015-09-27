@@ -38,11 +38,6 @@ namespace Engine
         void addComponent(SceneComponentPtr&& component) override;
         void removeComponent(const SceneComponentPtr& component) override;
 
-        bool onTouchBegan(int fingerIndex, const glm::vec2& position) override;
-        void onTouchMoved(int fingerIndex, const glm::vec2& position) override;
-        void onTouchEnded(int fingerIndex) override;
-        void onTouchCancelled(int fingerIndex) override;
-
     protected:
         AbstractScene();
 
@@ -50,6 +45,11 @@ namespace Engine
 
         virtual void update(double time);
         virtual void draw(ICanvas* canvas) const;
+
+        virtual bool beginTouch(int fingerIndex, const glm::vec2& position);
+        virtual void moveTouch(int fingerIndex, const glm::vec2& position);
+        virtual void endTouch(int fingerIndex, const glm::vec2& position);
+        virtual void cancelTouch(int fingerIndex, const glm::vec2& position);
 
     private:
         std::vector<SceneComponentPtr> mComponents;
@@ -59,6 +59,11 @@ namespace Engine
 
         void onUpdate(double time) final override;
         void onDraw(ICanvas* canvas) const final override;
+
+        bool onTouchBegan(int fingerIndex, const glm::vec2& position) final override;
+        void onTouchMoved(int fingerIndex, const glm::vec2& position) final override;
+        void onTouchEnded(int fingerIndex, const glm::vec2& position) final override;
+        void onTouchCancelled(int fingerIndex, const glm::vec2& position) final override;
 
         Z_DISABLE_COPY(AbstractScene);
     };

@@ -23,6 +23,10 @@
 
 namespace Engine
 {
+    #define FOR_EACH_COMPONENT(METHOD) \
+        for (const auto& component : mComponents) \
+            component->METHOD;
+
     AbstractScene::AbstractScene()
         : mSize(0.0f)
     {
@@ -66,46 +70,79 @@ namespace Engine
     {
     }
 
-    bool AbstractScene::onTouchBegan(int, const glm::vec2&)
+    bool AbstractScene::beginTouch(int, const glm::vec2&)
     {
         return false;
     }
 
-    void AbstractScene::onTouchMoved(int, const glm::vec2&)
+    void AbstractScene::moveTouch(int, const glm::vec2&)
     {
     }
 
-    void AbstractScene::onTouchEnded(int)
+    void AbstractScene::endTouch(int, const glm::vec2&)
     {
     }
 
-    void AbstractScene::onTouchCancelled(int)
+    void AbstractScene::cancelTouch(int, const glm::vec2&)
     {
     }
 
     void AbstractScene::onResize(const glm::vec2& newSize)
     {
         mSize = newSize;
-        for (const auto& component : mComponents)
-            component->onSceneSizeChanged(this, newSize);
+        FOR_EACH_COMPONENT(onSceneSizeChanged(this, newSize));
         resize(newSize);
     }
 
     void AbstractScene::onUpdate(double time)
     {
-        for (const auto& component : mComponents)
-            component->onBeforeUpdateScene(this, time);
+        FOR_EACH_COMPONENT(onBeforeUpdateScene(this, time));
         update(time);
-        for (const auto& component : mComponents)
-            component->onAfterUpdateScene(this, time);
+        FOR_EACH_COMPONENT(onAfterUpdateScene(this, time));
     }
 
     void AbstractScene::onDraw(ICanvas* canvas) const
     {
-        for (const auto& component : mComponents)
-            component->onBeforeDrawScene(this, canvas);
+        FOR_EACH_COMPONENT(onBeforeDrawScene(this, canvas));
         draw(canvas);
-        for (const auto& component : mComponents)
-            component->onAfterDrawScene(this, canvas);
+        FOR_EACH_COMPONENT(onAfterDrawScene(this, canvas));
+    }
+
+    bool AbstractScene::onTouchBegan(int fingerIndex, const glm::vec2& position)
+    {
+        glm::vec2 p = position;
+        bool result = false;
+        FOR_EACH_COMPONENT(onBeforeTouchEvent(TouchEvent::Begin, p, result));
+        if (!result)
+            result = beginTouch(fingerIndex, position);
+        FOR_EACH_COMPONENT(onAfterTouchEvent(TouchEvent::Begin, p, result));
+        return result;
+    }
+
+    void AbstractScene::onTouchMoved(int fingerIndex, const glm::vec2& position)
+    {
+        glm::vec2 p = position;
+        bool result = true;
+        FOR_EACH_COMPONENT(onBeforeTouchEvent(TouchEvent::Move, p, result));
+        moveTouch(fingerIndex, position);
+        FOR_EACH_COMPONENT(onAfterTouchEvent(TouchEvent::Move, p, result));
+    }
+
+    void AbstractScene::onTouchEnded(int fingerIndex, const glm::vec2& position)
+    {
+        glm::vec2 p = position;
+        bool result = true;
+        FOR_EACH_COMPONENT(onBeforeTouchEvent(TouchEvent::End, p, result));
+        endTouch(fingerIndex, position);
+        FOR_EACH_COMPONENT(onAfterTouchEvent(TouchEvent::End, p, result));
+    }
+
+    void AbstractScene::onTouchCancelled(int fingerIndex, const glm::vec2& position)
+    {
+        glm::vec2 p = position;
+        bool result = true;
+        FOR_EACH_COMPONENT(onBeforeTouchEvent(TouchEvent::Cancel, p, result));
+        cancelTouch(fingerIndex, position);
+        FOR_EACH_COMPONENT(onAfterTouchEvent(TouchEvent::Cancel, p, result));
     }
 }

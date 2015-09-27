@@ -32,6 +32,7 @@ namespace Game
 {
     LoadingScene::LoadingScene()
         : mCurrentProgress(0.0f)
+        , mTargetProgress(0.0f)
     {
         setAutoSwitchScene(false);
 

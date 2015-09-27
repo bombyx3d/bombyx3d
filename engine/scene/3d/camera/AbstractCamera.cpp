@@ -104,4 +104,13 @@ namespace Engine
         canvas->popModelViewMatrix();
         canvas->popProjectionMatrix();
     }
+
+    void AbstractCamera::onBeforeTouchEvent(TouchEvent, glm::vec2& position, bool&)
+    {
+        position = glm::vec2(inverseProjectionMatrix() * inverseViewMatrix() * glm::vec4(position, 0.0f, 1.0f));
+    }
+
+    void AbstractCamera::onAfterTouchEvent(TouchEvent, const glm::vec2&, bool&)
+    {
+    }
 }

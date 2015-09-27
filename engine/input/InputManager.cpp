@@ -52,8 +52,10 @@ namespace Engine
 
     void InputManager::resetTouches()
     {
-        while (!mPressedFingers.empty())
-            emitTouchCancel(mPressedFingers.begin()->first);
+        while (!mPressedFingers.empty()) {
+            auto it = mPressedFingers.begin();
+            emitTouchCancel(it->first, it->second);
+        }
     }
 
     void InputManager::addObserver(IInputObserver* observer)
@@ -157,15 +159,17 @@ namespace Engine
         emitMouseButtonRelease(button);
         if (mEmulateTouchesFromMouse && button == MouseButton::Left) {
             emitTouchMove(0, mMousePosition);
-            emitTouchEnd(0);
+            emitTouchEnd(0, mMousePosition);
         }
     }
 
     void InputManager::injectMouseButtonCancel(MouseButton button)
     {
         emitMouseButtonCancel(button);
-        if (mEmulateTouchesFromMouse && button == MouseButton::Left)
-            emitTouchCancel(0);
+        if (mEmulateTouchesFromMouse && button == MouseButton::Left) {
+            emitTouchMove(0, mMousePosition);
+            emitTouchCancel(0, mMousePosition);
+        }
     }
 
     void InputManager::injectMouseMove(const glm::vec2& position)
@@ -191,18 +195,23 @@ namespace Engine
             emitMouseMove(position);
     }
 
-    void InputManager::injectTouchEnd(int fingerIndex)
+    void InputManager::injectTouchEnd(int fingerIndex, const glm::vec2& position)
     {
-        emitTouchEnd(fingerIndex);
-        if (mEmulateMouseFromTouches && fingerIndex == 0)
+        emitTouchMove(fingerIndex, position);
+        emitTouchEnd(fingerIndex, position);
+        if (mEmulateMouseFromTouches && fingerIndex == 0) {
+            emitMouseMove(position);
             emitMouseButtonRelease(MouseButton::Left);
+        }
     }
 
-    void InputManager::injectTouchCancel(int fingerIndex)
+    void InputManager::injectTouchCancel(int fingerIndex, const glm::vec2& position)
     {
-        emitTouchCancel(fingerIndex);
-        if (mEmulateMouseFromTouches && fingerIndex == 0)
+        emitTouchCancel(fingerIndex, position);
+        if (mEmulateMouseFromTouches && fingerIndex == 0) {
+            emitMouseMove(position);
             emitMouseButtonCancel(MouseButton::Left);
+        }
     }
 
     void InputManager::emitMouseButtonPress(MouseButton button)
@@ -255,24 +264,24 @@ namespace Engine
         }
     }
 
-    void InputManager::emitTouchEnd(int fingerIndex)
+    void InputManager::emitTouchEnd(int fingerIndex, const glm::vec2& position)
     {
         auto it = mPressedFingers.find(fingerIndex);
         if (it != mPressedFingers.end()) {
             mPressedFingers.erase(it);
-            mObservers.forEach([fingerIndex](IInputObserver* observer) {
-                 observer->onTouchEnded(fingerIndex);
+            mObservers.forEach([fingerIndex, &position](IInputObserver* observer) {
+                 observer->onTouchEnded(fingerIndex, position);
             });
         }
     }
 
-    void InputManager::emitTouchCancel(int fingerIndex)
+    void InputManager::emitTouchCancel(int fingerIndex, const glm::vec2& position)
     {
         auto it = mPressedFingers.find(fingerIndex);
         if (it != mPressedFingers.end()) {
             mPressedFingers.erase(it);
-            mObservers.forEach([fingerIndex](IInputObserver* observer) {
-                 observer->onTouchCancelled(fingerIndex);
+            mObservers.forEach([fingerIndex, &position](IInputObserver* observer) {
+                 observer->onTouchCancelled(fingerIndex, position);
             });
         }
     }

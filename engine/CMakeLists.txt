@@ -46,6 +46,7 @@ set(source_files
     input/InputManager.cpp
     input/InputManager.h
     input/MouseButton.h
+    input/TouchEvent.h
     interfaces/core/IApplication.h
     interfaces/core/ILogger.h
     interfaces/core/IResourceManager.h

@@ -39,7 +39,7 @@ namespace Engine
 
         virtual void onTouchBegan(int, const glm::vec2&) {}
         virtual void onTouchMoved(int, const glm::vec2&) {}
-        virtual void onTouchEnded(int) {}
-        virtual void onTouchCancelled(int) {}
+        virtual void onTouchEnded(int, const glm::vec2&) {}
+        virtual void onTouchCancelled(int, const glm::vec2&) {}
     };
 }

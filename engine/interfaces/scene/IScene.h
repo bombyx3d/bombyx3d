@@ -44,8 +44,8 @@ namespace Engine
 
         virtual bool onTouchBegan(int fingerIndex, const glm::vec2& position) = 0;
         virtual void onTouchMoved(int fingerIndex, const glm::vec2& position) = 0;
-        virtual void onTouchEnded(int fingerIndex) = 0;
-        virtual void onTouchCancelled(int fingerIndex) = 0;
+        virtual void onTouchEnded(int fingerIndex, const glm::vec2& position) = 0;
+        virtual void onTouchCancelled(int fingerIndex, const glm::vec2& position) = 0;
     };
 
     using ScenePtr = std::shared_ptr<IScene>;

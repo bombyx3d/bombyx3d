@@ -103,7 +103,7 @@ namespace Engine
             child->onDraw(canvas);
     }
 
-    bool LayeredScene::onTouchBegan(int fingerIndex, const glm::vec2& position)
+    bool LayeredScene::beginTouch(int fingerIndex, const glm::vec2& position)
     {
         if (mTouchedChild) {
             if (mTouchedChild->onTouchBegan(fingerIndex, position)) {
@@ -123,26 +123,26 @@ namespace Engine
         return false;
     }
 
-    void LayeredScene::onTouchMoved(int fingerIndex, const glm::vec2& position)
+    void LayeredScene::moveTouch(int fingerIndex, const glm::vec2& position)
     {
         if (mTouchedChild)
             mTouchedChild->onTouchMoved(fingerIndex, position);
     }
 
-    void LayeredScene::onTouchEnded(int fingerIndex)
+    void LayeredScene::endTouch(int fingerIndex, const glm::vec2& position)
     {
         if (mTouchedChild) {
-            mTouchedChild->onTouchEnded(fingerIndex);
+            mTouchedChild->onTouchEnded(fingerIndex, position);
             assert(mActiveTouchCount > 0);
             if (--mActiveTouchCount == 0)
                 mTouchedChild.reset();
         }
     }
 
-    void LayeredScene::onTouchCancelled(int fingerIndex)
+    void LayeredScene::cancelTouch(int fingerIndex, const glm::vec2& position)
     {
         if (mTouchedChild) {
-            mTouchedChild->onTouchCancelled(fingerIndex);
+            mTouchedChild->onTouchCancelled(fingerIndex, position);
             assert(mActiveTouchCount > 0);
             if (--mActiveTouchCount == 0)
                 mTouchedChild.reset();

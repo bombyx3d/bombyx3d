@@ -107,21 +107,21 @@ namespace Engine
             mCurrentScene->onTouchMoved(fingerIndex, position);
     }
 
-    void SceneManager::onTouchEnded(int fingerIndex)
+    void SceneManager::onTouchEnded(int fingerIndex, const glm::vec2& position)
     {
         auto it = mActiveTouches.find(fingerIndex);
         if (mCurrentScene && it != mActiveTouches.end()) {
             mActiveTouches.erase(it);
-            mCurrentScene->onTouchEnded(fingerIndex);
+            mCurrentScene->onTouchEnded(fingerIndex, position);
         }
     }
 
-    void SceneManager::onTouchCancelled(int fingerIndex)
+    void SceneManager::onTouchCancelled(int fingerIndex, const glm::vec2& position)
     {
         auto it = mActiveTouches.find(fingerIndex);
         if (mCurrentScene && it != mActiveTouches.end()) {
             mActiveTouches.erase(it);
-            mCurrentScene->onTouchCancelled(fingerIndex);
+            mCurrentScene->onTouchCancelled(fingerIndex, position);
         }
     }
 }

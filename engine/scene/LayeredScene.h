@@ -46,10 +46,10 @@ namespace Engine
         void update(double time) override;
         void draw(ICanvas* canvas) const override;
 
-        bool onTouchBegan(int fingerIndex, const glm::vec2& position) override;
-        void onTouchMoved(int fingerIndex, const glm::vec2& position) override;
-        void onTouchEnded(int fingerIndex) override;
-        void onTouchCancelled(int fingerIndex) override;
+        bool beginTouch(int fingerIndex, const glm::vec2& position) override;
+        void moveTouch(int fingerIndex, const glm::vec2& position) override;
+        void endTouch(int fingerIndex, const glm::vec2& position) override;
+        void cancelTouch(int fingerIndex, const glm::vec2& position) override;
 
     private:
         std::vector<ScenePtr> mChildren;

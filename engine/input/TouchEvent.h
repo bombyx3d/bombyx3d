@@ -21,30 +21,14 @@
  */
 
 #pragma once
-#include "engine/interfaces/scene/ISceneComponent.h"
-#include "engine/core/macros.h"
 
 namespace Engine
 {
-    class AbstractSceneComponent : public ISceneComponent
+    enum class TouchEvent
     {
-    public:
-        ~AbstractSceneComponent();
-
-        void onSceneSizeChanged(IScene* scene, const glm::vec2& newSize) override;
-
-        void onBeforeUpdateScene(IScene* scene, double time) override;
-        void onAfterUpdateScene(IScene* scene, double time) override;
-
-        void onBeforeDrawScene(const IScene* scene, ICanvas* canvas) override;
-        void onAfterDrawScene(const IScene* scene, ICanvas* canvas) override;
-
-        void onBeforeTouchEvent(TouchEvent event, glm::vec2& position, bool& result) override;
-        void onAfterTouchEvent(TouchEvent event, const glm::vec2& position, bool& result) override;
-
-    protected:
-        AbstractSceneComponent();
-
-        Z_DISABLE_COPY(AbstractSceneComponent);
+        Begin,
+        Move,
+        End,
+        Cancel,
     };
 }

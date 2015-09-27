@@ -59,8 +59,8 @@ namespace Engine
 
         virtual void injectTouchBegin(int fingerIndex, const glm::vec2& position) = 0;
         virtual void injectTouchMove(int fingerIndex, const glm::vec2& position) = 0;
-        virtual void injectTouchEnd(int fingerIndex) = 0;
-        virtual void injectTouchCancel(int fingerIndex) = 0;
+        virtual void injectTouchEnd(int fingerIndex, const glm::vec2& position) = 0;
+        virtual void injectTouchCancel(int fingerIndex, const glm::vec2& position) = 0;
     };
 
     using InputManagerPtr = std::shared_ptr<IInputManager>;

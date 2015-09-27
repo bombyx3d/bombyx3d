@@ -50,4 +50,12 @@ namespace Engine
     void AbstractSceneComponent::onAfterDrawScene(const IScene*, ICanvas*)
     {
     }
+
+    void AbstractSceneComponent::onBeforeTouchEvent(TouchEvent, glm::vec2&, bool&)
+    {
+    }
+
+    void AbstractSceneComponent::onAfterTouchEvent(TouchEvent, const glm::vec2&, bool&)
+    {
+    }
 }

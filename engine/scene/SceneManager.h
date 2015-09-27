@@ -63,8 +63,8 @@ namespace Engine
 
         void onTouchBegan(int fingerIndex, const glm::vec2& position) final override;
         void onTouchMoved(int fingerIndex, const glm::vec2& position) final override;
-        void onTouchEnded(int fingerIndex) final override;
-        void onTouchCancelled(int fingerIndex) final override;
+        void onTouchEnded(int fingerIndex, const glm::vec2& position) final override;
+        void onTouchCancelled(int fingerIndex, const glm::vec2& position) final override;
 
         Z_DISABLE_COPY(SceneManager);
     };
