@@ -68,7 +68,7 @@ namespace Engine
         void pushModelViewMatrix() override;
         void popModelViewMatrix() override;
 
-        void applyCamera(ICamera* camera) override;
+        void applyCamera(const ICamera* camera) override;
         void applyCamera(const CameraPtr& camera) override;
 
         void setBlend(bool flag) override;

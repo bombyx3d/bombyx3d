@@ -249,7 +249,7 @@ namespace Engine
         mModelViewMatrixStack.pop_back();
     }
 
-    void ImmediateModeRenderer::applyCamera(ICamera* camera)
+    void ImmediateModeRenderer::applyCamera(const ICamera* camera)
     {
         if (!camera) {
             setProjectionMatrix(glm::mat4(1.0f));

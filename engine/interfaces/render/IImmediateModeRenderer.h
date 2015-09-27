@@ -58,7 +58,7 @@ namespace Engine
         virtual void pushModelViewMatrix() = 0;
         virtual void popModelViewMatrix() = 0;
 
-        virtual void applyCamera(ICamera* camera) = 0;
+        virtual void applyCamera(const ICamera* camera) = 0;
         virtual void applyCamera(const CameraPtr& camera) = 0;
 
         virtual void setBlend(bool flag) = 0;
