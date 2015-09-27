@@ -22,7 +22,7 @@
 
 #pragma once
 #include "engine/scene/AbstractScene.h"
-#include "engine/scene/3d/camera/OrbitCamera.h"
+#include "engine/scene/camera/OrbitCamera.h"
 #include "engine/interfaces/mesh/IMesh.h"
 
 namespace Game

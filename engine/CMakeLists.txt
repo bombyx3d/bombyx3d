@@ -78,7 +78,7 @@ set(source_files
     interfaces/render/lowlevel/IVertexSource.h
     interfaces/render/ICanvas.h
     interfaces/render/IImmediateModeRenderer.h
-    interfaces/scene/3d/camera/ICamera.h
+    interfaces/scene/ICamera.h
     interfaces/scene/IScene.h
     interfaces/scene/ISceneComponent.h
     interfaces/scene/ISceneManager.h
@@ -119,14 +119,14 @@ set(source_files
     render/Canvas.h
     render/ImmediateModeRenderer.cpp
     render/ImmediateModeRenderer.h
-    scene/2d/camera/OrthogonalCamera.cpp
-    scene/2d/camera/OrthogonalCamera.h
-    scene/3d/camera/AbstractCamera.cpp
-    scene/3d/camera/AbstractCamera.h
-    scene/3d/camera/AbstractPerspectiveCamera.cpp
-    scene/3d/camera/AbstractPerspectiveCamera.h
-    scene/3d/camera/OrbitCamera.cpp
-    scene/3d/camera/OrbitCamera.h
+    scene/camera/AbstractCamera.cpp
+    scene/camera/AbstractCamera.h
+    scene/camera/AbstractPerspectiveCamera.cpp
+    scene/camera/AbstractPerspectiveCamera.h
+    scene/camera/OrbitCamera.cpp
+    scene/camera/OrbitCamera.h
+    scene/camera/OrthogonalCamera.cpp
+    scene/camera/OrthogonalCamera.h
     scene/AbstractLoadingScene.cpp
     scene/AbstractLoadingScene.h
     scene/AbstractScene.cpp

@@ -22,7 +22,7 @@
 
 #pragma once
 #include "engine/core/macros.h"
-#include "engine/interfaces/scene/3d/camera/ICamera.h"
+#include "engine/interfaces/scene/ICamera.h"
 #include "engine/scene/AbstractSceneComponent.h"
 #include <glm/glm.hpp>
 

@@ -24,7 +24,7 @@
 #include "engine/interfaces/render/lowlevel/IShader.h"
 #include "engine/interfaces/render/lowlevel/ITexture.h"
 #include "engine/interfaces/render/lowlevel/IRenderer.h"
-#include "engine/interfaces/scene/3d/camera/ICamera.h"
+#include "engine/interfaces/scene/ICamera.h"
 #include <glm/glm.hpp>
 
 namespace Engine

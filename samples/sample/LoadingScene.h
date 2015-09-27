@@ -23,7 +23,7 @@
 #pragma once
 #include "engine/scene/AbstractLoadingScene.h"
 #include "engine/interfaces/image/ISprite.h"
-#include "engine/scene/2d/camera/OrthogonalCamera.h"
+#include "engine/scene/camera/OrthogonalCamera.h"
 #include <functional>
 #include <glm/glm.hpp>
 

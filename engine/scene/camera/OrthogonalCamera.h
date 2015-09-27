@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "engine/scene/3d/camera/AbstractCamera.h"
+#include "engine/scene/camera/AbstractCamera.h"
 #include "engine/core/macros.h"
 #include "engine/math/AspectRatio.h"
 #include "engine/math/Quad.h"
