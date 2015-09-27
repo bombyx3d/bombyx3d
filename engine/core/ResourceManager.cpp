@@ -170,9 +170,9 @@ namespace Engine
                 return mMaterial->load(fileName);
             }
 
-            void setup(const MaterialPtr&, bool async) override
+            void setup(const MaterialPtr&, bool asynchronous) override
             {
-                mMaterial->loadPendingResources(async);
+                mMaterial->loadPendingResources(asynchronous);
             }
         };
 
@@ -257,9 +257,9 @@ namespace Engine
                 return mSpriteSheet->load(fileName);
             }
 
-            void setup(const SpriteSheetPtr&, bool async) override
+            void setup(const SpriteSheetPtr&, bool asynchronous) override
             {
-                mSpriteSheet->loadPendingResources(async);
+                mSpriteSheet->loadPendingResources(asynchronous);
             }
         };
 
@@ -288,9 +288,9 @@ namespace Engine
                 return mMeshData != nullptr;
             }
 
-            void setup(const MeshPtr&, bool async) override
+            void setup(const MeshPtr&, bool asynchronous) override
             {
-                mMesh->setData(mMeshData, BufferUsage::Static, async);
+                mMesh->setData(mMeshData, BufferUsage::Static, asynchronous);
             }
         };
 

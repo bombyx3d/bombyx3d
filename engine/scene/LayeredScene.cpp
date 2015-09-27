@@ -27,6 +27,10 @@
 
 namespace Engine
 {
+    namespace {
+        using diff_t = std::vector<ScenePtr>::difference_type;
+    }
+
     LayeredScene::LayeredScene()
     {
     }
@@ -39,14 +43,14 @@ namespace Engine
     {
         assert(index <= mChildren.size());
         Services::inputManager()->resetAll();
-        mChildren.emplace(mChildren.begin() + std::min(index, mChildren.size()), child);
+        mChildren.emplace(mChildren.begin() + diff_t(std::min(index, mChildren.size())), child);
     }
 
     void LayeredScene::insertChild(size_t index, ScenePtr&& child)
     {
         assert(index <= mChildren.size());
         Services::inputManager()->resetAll();
-        mChildren.emplace(mChildren.begin() + std::min(index, mChildren.size()), std::move(child));
+        mChildren.emplace(mChildren.begin() + diff_t(std::min(index, mChildren.size())), std::move(child));
     }
 
     void LayeredScene::removeChild(size_t index)
@@ -54,7 +58,7 @@ namespace Engine
         assert(index < mChildren.size());
         if (index < mChildren.size()) {
             Services::inputManager()->resetAll();
-            mChildren.erase(mChildren.begin() + index);
+            mChildren.erase(mChildren.begin() + diff_t(index));
         }
     }
 

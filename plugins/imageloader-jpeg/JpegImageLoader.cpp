@@ -157,7 +157,7 @@ namespace Engine
 
         size_t width = cinfo.output_width;
         size_t height = cinfo.output_height;
-        size_t numChannels = cinfo.output_components;
+        size_t numChannels = size_t(cinfo.output_components);
 
         PixelFormat format;
         switch (cinfo.out_color_space)
