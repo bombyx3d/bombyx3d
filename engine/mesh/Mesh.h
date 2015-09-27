@@ -23,7 +23,7 @@
 #pragma once
 #include "engine/interfaces/mesh/IMesh.h"
 #include "engine/interfaces/mesh/IRawMeshData.h"
-#include "engine/interfaces/render/IRenderer.h"
+#include "engine/interfaces/render/ICanvas.h"
 #include "engine/core/macros.h"
 #include <vector>
 
@@ -39,7 +39,7 @@ namespace Engine
 
         void setData(const RawMeshDataPtr& data, BufferUsage usage, bool async = true);
 
-        void render() const override;
+        void render(ICanvas* canvas) const override;
 
     private:
         struct Element

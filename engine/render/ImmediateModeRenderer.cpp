@@ -29,6 +29,9 @@
 
 namespace Engine
 {
+    static const auto GeometryOnly = true;
+    static const auto GeometryAndMaterial = false;
+
     static const std::vector<std::string> gDefaultColoredShader = {
         "varying vec4 vColor;\n",
         "%vertex\n",
@@ -67,8 +70,9 @@ namespace Engine
         "}\n",
     };
 
-    ImmediateModeRenderer::ImmediateModeRenderer()
-        : mMaterial(std::make_shared<MaterialPass>(std::string()))
+    ImmediateModeRenderer::ImmediateModeRenderer(const RendererPtr& renderer)
+        : mRenderer(renderer)
+        , mMaterial(std::make_shared<MaterialPass>(std::string()))
         , mTextureUniform(AtomTable::getAtom("uTexture"))
         , mProjectionMatrixUniform(AtomTable::getAtom("uProjection"))
         , mModelViewMatrixUniform(AtomTable::getAtom("uModelView"))
@@ -76,6 +80,8 @@ namespace Engine
         , mProjectionMatrix(1.0f)
         , mModelViewMatrix(1.0f)
         , mInBeginEnd(false)
+        , mInDirectRendering(false)
+        , mMaterialChanged(true)
     {
         mColoredShader = Services::resourceManager()->compileShader(&gDefaultColoredShader, "<builtin-colored>");
         mTexturedShader = Services::resourceManager()->compileShader(&gDefaultTexturedShader, "<builtin-textured>");
@@ -95,47 +101,82 @@ namespace Engine
     ImmediateModeRenderer::~ImmediateModeRenderer()
     {
         assert(!mInBeginEnd);
-        flush();
+        assert(!mInDirectRendering);
+
+        flush(GeometryAndMaterial);
     }
 
     void ImmediateModeRenderer::setClearColor(const glm::vec4& color)
     {
         assert(!mInBeginEnd);
-        Services::renderer()->setClearColor(color);
+        assert(!mInDirectRendering);
+
+        mRenderer->setClearColor(color);
     }
 
     void ImmediateModeRenderer::clear()
     {
         assert(!mInBeginEnd);
-        flush();
-        Services::renderer()->clear();
+        assert(!mInDirectRendering);
+
+        flush(GeometryOnly);
+        mRenderer->clear();
+    }
+
+    IRenderer* ImmediateModeRenderer::beginDirectRendering()
+    {
+        assert(!mInBeginEnd);
+        assert(!mInDirectRendering);
+
+        flush(GeometryAndMaterial);
+        mInDirectRendering = true;
+
+        return mRenderer.get();
+    }
+
+    void ImmediateModeRenderer::endDirectRendering()
+    {
+        assert(!mInBeginEnd);
+        assert(mInDirectRendering);
+
+        mInDirectRendering = false;
     }
 
     void ImmediateModeRenderer::setCustomShader(const ShaderPtr& shader)
     {
         assert(!mInBeginEnd);
+        assert(!mInDirectRendering);
+
         if (mCustomShader != shader) {
-            flush();
+            flush(GeometryOnly);
             mCustomShader = shader;
+            mMaterialChanged = true;
         }
     }
 
     void ImmediateModeRenderer::setTexture(const TexturePtr& texture)
     {
         assert(!mInBeginEnd);
+        assert(!mInDirectRendering);
+
         if (mTexture != texture) {
-            flush();
+            flush(GeometryOnly);
 
             mTexture = texture;
             if (!texture)
                 mMaterial->unsetUniform(mTextureUniform);
             else
                 mMaterial->setUniform(mTextureUniform, texture);
+
+            mMaterialChanged = true;
         }
     }
 
     void ImmediateModeRenderer::resetMatrixStacks()
     {
+        assert(!mInBeginEnd);
+        assert(!mInDirectRendering);
+
         mProjectionMatrixStack.clear();
         mModelViewMatrixStack.clear();
         setProjectionMatrix(glm::mat4(1.0f));
@@ -149,17 +190,27 @@ namespace Engine
 
     void ImmediateModeRenderer::setProjectionMatrix(const glm::mat4& matrix)
     {
+        assert(!mInBeginEnd);
+        assert(!mInDirectRendering);
+
         mProjectionMatrix = matrix;
         mMaterial->setUniform(mProjectionMatrixUniform, matrix);
+        mMaterialChanged = true;
     }
 
     void ImmediateModeRenderer::pushProjectionMatrix()
     {
+        assert(!mInBeginEnd);
+        assert(!mInDirectRendering);
+
         mProjectionMatrixStack.push_back(mProjectionMatrix);
     }
 
     void ImmediateModeRenderer::popProjectionMatrix()
     {
+        assert(!mInBeginEnd);
+        assert(!mInDirectRendering);
+
         assert(!mProjectionMatrixStack.empty());
         setProjectionMatrix(mProjectionMatrixStack.back());
         mProjectionMatrixStack.pop_back();
@@ -172,17 +223,27 @@ namespace Engine
 
     void ImmediateModeRenderer::setModelViewMatrix(const glm::mat4& matrix)
     {
+        assert(!mInBeginEnd);
+        assert(!mInDirectRendering);
+
         mModelViewMatrix = matrix;
         mMaterial->setUniform(mModelViewMatrixUniform, matrix);
+        mMaterialChanged = true;
     }
 
     void ImmediateModeRenderer::pushModelViewMatrix()
     {
+        assert(!mInBeginEnd);
+        assert(!mInDirectRendering);
+
         mModelViewMatrixStack.push_back(mModelViewMatrix);
     }
 
     void ImmediateModeRenderer::popModelViewMatrix()
     {
+        assert(!mInBeginEnd);
+        assert(!mInDirectRendering);
+
         assert(!mModelViewMatrixStack.empty());
         setModelViewMatrix(mModelViewMatrixStack.back());
         mModelViewMatrixStack.pop_back();
@@ -190,40 +251,58 @@ namespace Engine
 
     void ImmediateModeRenderer::setBlend(bool flag)
     {
+        assert(!mInBeginEnd);
+        assert(!mInDirectRendering);
+
         if (flag != mMaterial->blendingEnabled()) {
-            flush();
+            flush(GeometryOnly);
             mMaterial->setBlendingEnabled(flag);
+            mMaterialChanged = true;
         }
     }
 
     void ImmediateModeRenderer::setBlendFunc(BlendFunc srcFactor, BlendFunc dstFactor)
     {
+        assert(!mInBeginEnd);
+        assert(!mInDirectRendering);
+
         if (srcFactor != mMaterial->blendingSourceFactor() || dstFactor != mMaterial->blendingDestinationFactor()) {
-            flush();
+            flush(GeometryOnly);
             mMaterial->setBlendingSourceFactor(srcFactor);
             mMaterial->setBlendingDestinationFactor(dstFactor);
+            mMaterialChanged = true;
         }
     }
 
     void ImmediateModeRenderer::setDepthTest(bool flag)
     {
+        assert(!mInBeginEnd);
+        assert(!mInDirectRendering);
+
         if (flag != mMaterial->depthTestingEnabled()) {
-            flush();
+            flush(GeometryOnly);
             mMaterial->setDepthTestingEnabled(flag);
+            mMaterialChanged = true;
         }
     }
 
     void ImmediateModeRenderer::setDepthWrite(bool flag)
     {
+        assert(!mInBeginEnd);
+        assert(!mInDirectRendering);
+
         if (flag != mMaterial->depthWritingEnabled()) {
-            flush();
+            flush(GeometryOnly);
             mMaterial->setDepthWritingEnabled(flag);
+            mMaterialChanged = true;
         }
     }
 
     void ImmediateModeRenderer::begin(PrimitiveType primitive)
     {
         assert(!mInBeginEnd);
+        assert(!mInDirectRendering);
+
         setPrimitiveType(primitive);
         memset(&mCurrentVertex, 0, sizeof(mCurrentVertex));
         mInBeginEnd = true;
@@ -232,36 +311,48 @@ namespace Engine
     void ImmediateModeRenderer::texCoord(float x, float y)
     {
         assert(mInBeginEnd);
+        assert(!mInDirectRendering);
+
         mCurrentVertex.texCoord = glm::vec2(x, y);
     }
 
     void ImmediateModeRenderer::texCoord(const glm::vec2& coord)
     {
         assert(mInBeginEnd);
+        assert(!mInDirectRendering);
+
         mCurrentVertex.texCoord = coord;
     }
 
     void ImmediateModeRenderer::color(float r, float g, float b)
     {
         assert(mInBeginEnd);
+        assert(!mInDirectRendering);
+
         mCurrentVertex.color = glm::vec4(r, g, b, 1.0f);
     }
 
     void ImmediateModeRenderer::color(float r, float g, float b, float a)
     {
         assert(mInBeginEnd);
+        assert(!mInDirectRendering);
+
         mCurrentVertex.color = glm::vec4(r, g, b, a);
     }
 
     void ImmediateModeRenderer::color(const glm::vec4& color)
     {
         assert(mInBeginEnd);
+        assert(!mInDirectRendering);
+
         mCurrentVertex.color = color;
     }
 
     size_t ImmediateModeRenderer::vertex(float x, float y)
     {
         assert(mInBeginEnd);
+        assert(!mInDirectRendering);
+
         mCurrentVertex.position = glm::vec3(x, y, 0.0f);
         return emitVertex();
     }
@@ -269,6 +360,8 @@ namespace Engine
     size_t ImmediateModeRenderer::vertex(float x, float y, float z)
     {
         assert(mInBeginEnd);
+        assert(!mInDirectRendering);
+
         mCurrentVertex.position = glm::vec3(x, y, z);
         return emitVertex();
     }
@@ -276,6 +369,8 @@ namespace Engine
     size_t ImmediateModeRenderer::vertex(const glm::vec2& vertex)
     {
         assert(mInBeginEnd);
+        assert(!mInDirectRendering);
+
         mCurrentVertex.position = glm::vec3(vertex, 0.0f);
         return emitVertex();
     }
@@ -283,6 +378,8 @@ namespace Engine
     size_t ImmediateModeRenderer::vertex(const glm::vec2& vertex, float z)
     {
         assert(mInBeginEnd);
+        assert(!mInDirectRendering);
+
         mCurrentVertex.position = glm::vec3(vertex, z);
         return emitVertex();
     }
@@ -290,6 +387,8 @@ namespace Engine
     size_t ImmediateModeRenderer::vertex(const glm::vec3& vertex)
     {
         assert(mInBeginEnd);
+        assert(!mInDirectRendering);
+
         mCurrentVertex.position = vertex;
         return emitVertex();
     }
@@ -297,6 +396,8 @@ namespace Engine
     void ImmediateModeRenderer::index(size_t index)
     {
         assert(mInBeginEnd);
+        assert(!mInDirectRendering);
+
         assert(index <= MAX_INDEX);
         mIndexData.emplace_back(uint16_t(index));
     }
@@ -304,23 +405,19 @@ namespace Engine
     void ImmediateModeRenderer::end()
     {
         assert(mInBeginEnd);
+        assert(!mInDirectRendering);
+
         mInBeginEnd = false;
     }
 
-    void ImmediateModeRenderer::flush()
+    void ImmediateModeRenderer::flush(bool geometryOnly)
     {
         assert(!mInBeginEnd);
-        if (!mIndexData.empty()) {
-            const size_t vertexSize = sizeof(decltype(mVertexData)::value_type);
-            mVertexBuffer->setData(mVertexData.data(), mVertexData.size() * vertexSize, BufferUsage::Stream);
+        assert(!mInDirectRendering);
 
-            size_t indexCount = mIndexData.size();
-            const size_t indexSize = sizeof(decltype(mIndexData)::value_type);
-            mIndexBuffer->setData(mIndexData.data(), indexCount * indexSize, BufferUsage::Stream);
+        bool haveGeometry = !mIndexData.empty();
 
-            mVertexData.clear();
-            mIndexData.clear();
-
+        if (haveGeometry || !geometryOnly) {
             const ShaderPtr* shader;
             if (mCustomShader)
                 shader = &mCustomShader;
@@ -332,17 +429,32 @@ namespace Engine
             if (mMaterial->shader() != *shader)
                 mMaterial->setShader(*shader);
 
-            mMaterial->apply(Services::renderer());
-            Services::renderer()->bindVertexSource(mVertexSource);
-            Services::renderer()->drawPrimitive(mPrimitiveType, 0, indexCount);
+            mMaterial->apply(mRenderer);
+        }
+
+        if (haveGeometry) {
+            const size_t vertexSize = sizeof(decltype(mVertexData)::value_type);
+            mVertexBuffer->setData(mVertexData.data(), mVertexData.size() * vertexSize, BufferUsage::Stream);
+
+            size_t indexCount = mIndexData.size();
+            const size_t indexSize = sizeof(decltype(mIndexData)::value_type);
+            mIndexBuffer->setData(mIndexData.data(), indexCount * indexSize, BufferUsage::Stream);
+
+            mVertexData.clear();
+            mIndexData.clear();
+
+            mRenderer->bindVertexSource(mVertexSource);
+            mRenderer->drawPrimitive(mPrimitiveType, 0, indexCount);
         }
     }
 
     void ImmediateModeRenderer::setPrimitiveType(PrimitiveType primitive)
     {
         assert(!mInBeginEnd);
+        assert(!mInDirectRendering);
+
         if (mPrimitiveType != primitive) {
-            flush();
+            flush(GeometryOnly);
             mPrimitiveType = primitive;
         }
     }

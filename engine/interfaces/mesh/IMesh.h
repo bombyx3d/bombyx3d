@@ -22,6 +22,7 @@
 
 #pragma once
 #include "engine/math/BoundingBox.h"
+#include "engine/interfaces/render/ICanvas.h"
 #include <memory>
 #include <vector>
 
@@ -33,7 +34,7 @@ namespace Engine
         virtual ~IMesh() = default;
 
         virtual const BoundingBox& boundingBox() const = 0;
-        virtual void render() const = 0;
+        virtual void render(ICanvas* canvas) const = 0;
     };
 
     using MeshPtr = std::shared_ptr<IMesh>;

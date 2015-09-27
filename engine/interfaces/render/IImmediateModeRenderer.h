@@ -36,6 +36,9 @@ namespace Engine
         virtual void setClearColor(const glm::vec4& color) = 0;
         virtual void clear() = 0;
 
+        virtual IRenderer* beginDirectRendering() = 0;
+        virtual void endDirectRendering() = 0;
+
         virtual const ShaderPtr& customShader() const = 0;
         virtual void setCustomShader(const ShaderPtr& shader) = 0;
 
@@ -73,7 +76,5 @@ namespace Engine
         virtual size_t vertex(const glm::vec3& vertex) = 0;
         virtual void index(size_t index) = 0;
         virtual void end() = 0;
-
-        virtual void flush() = 0;
     };
 }

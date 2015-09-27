@@ -26,7 +26,8 @@ namespace Engine
 {
     static const float PIXEL_PERFECTNESS_OFFSET = 0.375f;
 
-    Canvas::Canvas()
+    Canvas::Canvas(const RendererPtr& renderer)
+        : ImmediateModeRenderer(renderer)
     {
         setBlend(true);
         setDepthTest(false);

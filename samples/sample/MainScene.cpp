@@ -67,7 +67,7 @@ namespace Game
         canvas->setModelViewMatrix(matrix);
 
         canvas->setDepthTest(true);
-        mMesh->render();
+        mMesh->render(canvas);
         canvas->drawWireframeBoundingBox(mMesh->boundingBox());
     }
 

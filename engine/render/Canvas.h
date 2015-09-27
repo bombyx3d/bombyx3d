@@ -30,7 +30,7 @@ namespace Engine
     class Canvas : public ImmediateModeRenderer
     {
     public:
-        Canvas();
+        explicit Canvas(const RendererPtr& renderer);
         ~Canvas();
 
         void drawSprite(const glm::vec2& position, const SpritePtr& sprite, float z = 0.0f) override;

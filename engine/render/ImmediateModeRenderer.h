@@ -41,11 +41,14 @@ namespace Engine
     public:
         static const size_t MAX_INDEX = 65534;
 
-        ImmediateModeRenderer();
+        explicit ImmediateModeRenderer(const RendererPtr& renderer);
         ~ImmediateModeRenderer();
 
         void setClearColor(const glm::vec4& color) override;
         void clear() override;
+
+        IRenderer* beginDirectRendering() override;
+        void endDirectRendering() override;
 
         const ShaderPtr& customShader() const override { return mCustomShader; }
         void setCustomShader(const ShaderPtr& shader) override;
@@ -85,8 +88,6 @@ namespace Engine
         void index(size_t index) override;
         void end() override;
 
-        void flush() override;
-
     private:
         Z_VERTEX_FORMAT(Vertex,
             (glm::vec3) position,
@@ -94,6 +95,7 @@ namespace Engine
             (glm::vec4) color
         )
 
+        RendererPtr mRenderer;
         ShaderPtr mCustomShader;
         ShaderPtr mTexturedShader;
         ShaderPtr mColoredShader;
@@ -114,6 +116,8 @@ namespace Engine
         glm::mat4 mProjectionMatrix;
         glm::mat4 mModelViewMatrix;
         bool mInBeginEnd;
+        bool mInDirectRendering;
+        bool mMaterialChanged;
 
         void setPrimitiveType(PrimitiveType primitive);
         size_t emitVertex();

@@ -82,7 +82,7 @@ namespace Engine
     void Application::initialize(const glm::vec2& screenSize)
     {
         Services::setResourceManager(std::make_shared<ResourceManager>());
-        mCanvas.reset(new Canvas);
+        mCanvas.reset(new Canvas(Services::renderer()));
         resize(screenSize);
         setCurrentScene(createInitialScene());
     }
@@ -129,7 +129,7 @@ namespace Engine
         if (mPreviousScene)
             mPreviousScene.reset();
 
-        mCanvas->flush();
+        mCanvas->flush(true);
         renderer->endFrame();
     }
 

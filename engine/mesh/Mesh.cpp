@@ -69,9 +69,9 @@ namespace Engine
         }
     }
 
-    void Mesh::render() const
+    void Mesh::render(ICanvas* canvas) const
     {
-        IRenderer* renderer = Services::renderer().get();
+        IRenderer* renderer = canvas->beginDirectRendering();
 
         for (const auto& element : mElements) {
             if (element.material->numTechniques() == 0)
@@ -88,5 +88,7 @@ namespace Engine
                 renderer->drawPrimitive(element.primitiveType, element.firstIndex, element.indexCount);
             }
         }
+
+        canvas->endDirectRendering();
     }
 }
