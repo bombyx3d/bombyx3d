@@ -21,4 +21,6 @@
 #
 
 cmake_minimum_required(VERSION 3.2)
+project(Bombyx3D)
+
 add_subdirectory(samples)
