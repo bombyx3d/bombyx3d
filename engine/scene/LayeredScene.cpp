@@ -32,81 +32,81 @@ namespace Engine
     {
     }
 
-    void LayeredScene::insertScene(size_t index, const ScenePtr& scene)
+    void LayeredScene::insertChild(size_t index, const ScenePtr& child)
     {
-        assert(index <= mScenes.size());
+        assert(index <= mChildren.size());
         Services::inputManager()->resetAll();
-        mScenes.emplace(mScenes.begin() + std::min(index, mScenes.size()), scene);
+        mChildren.emplace(mChildren.begin() + std::min(index, mChildren.size()), child);
     }
 
-    void LayeredScene::insertScene(size_t index, ScenePtr&& scene)
+    void LayeredScene::insertChild(size_t index, ScenePtr&& child)
     {
-        assert(index <= mScenes.size());
+        assert(index <= mChildren.size());
         Services::inputManager()->resetAll();
-        mScenes.emplace(mScenes.begin() + std::min(index, mScenes.size()), std::move(scene));
+        mChildren.emplace(mChildren.begin() + std::min(index, mChildren.size()), std::move(child));
     }
 
-    void LayeredScene::removeScene(size_t index)
+    void LayeredScene::removeChild(size_t index)
     {
-        assert(index < mScenes.size());
-        if (index < mScenes.size()) {
+        assert(index < mChildren.size());
+        if (index < mChildren.size()) {
             Services::inputManager()->resetAll();
-            mScenes.erase(mScenes.begin() + index);
+            mChildren.erase(mChildren.begin() + index);
         }
     }
 
-    void LayeredScene::pushScene(const ScenePtr& scene)
+    void LayeredScene::removeLastChild()
     {
-        assert(scene);
-        Services::inputManager()->resetAll();
-        mScenes.emplace_back(scene);
-    }
-
-    void LayeredScene::pushScene(ScenePtr&& scene)
-    {
-        assert(scene);
-        Services::inputManager()->resetAll();
-        mScenes.emplace_back(std::move(scene));
-    }
-
-    void LayeredScene::popScene()
-    {
-        assert(!mScenes.empty());
-        if (!mScenes.empty()) {
+        assert(!mChildren.empty());
+        if (!mChildren.empty()) {
             Services::inputManager()->resetAll();
-            mScenes.pop_back();
+            mChildren.pop_back();
         }
+    }
+
+    void LayeredScene::appendChild(const ScenePtr& child)
+    {
+        assert(child);
+        Services::inputManager()->resetAll();
+        mChildren.emplace_back(child);
+    }
+
+    void LayeredScene::appendChild(ScenePtr&& child)
+    {
+        assert(child);
+        Services::inputManager()->resetAll();
+        mChildren.emplace_back(std::move(child));
     }
 
     void LayeredScene::resize(const glm::ivec2& newSize)
     {
-        for (const auto& scene : mScenes)
-            scene->resize(newSize);
+        for (const auto& child : mChildren)
+            child->resize(newSize);
     }
 
     void LayeredScene::update(double time)
     {
-        for (const auto& scene : mScenes)
-            scene->update(time);
+        for (const auto& child : mChildren)
+            child->update(time);
     }
 
     void LayeredScene::draw(IRenderer* renderer) const
     {
-        for (const auto& scene : mScenes)
-            scene->draw(renderer);
+        for (const auto& child : mChildren)
+            child->draw(renderer);
     }
 
     bool LayeredScene::onTouchBegan(int fingerIndex, const glm::ivec2& position)
     {
-        if (mTouchedScene) {
-            if (mTouchedScene->onTouchBegan(fingerIndex, position)) {
+        if (mTouchedChild) {
+            if (mTouchedChild->onTouchBegan(fingerIndex, position)) {
                 ++mActiveTouchCount;
                 return true;
             }
             return false;
         }
 
-        for (auto it = mScenes.crbegin(); it != mScenes.crend(); ++it) {
+        for (auto it = mChildren.crbegin(); it != mChildren.crend(); ++it) {
             if ((*it)->onTouchBegan(fingerIndex, position)) {
                 ++mActiveTouchCount;
                 return true;
@@ -118,27 +118,27 @@ namespace Engine
 
     void LayeredScene::onTouchMoved(int fingerIndex, const glm::ivec2& position)
     {
-        if (mTouchedScene)
-            mTouchedScene->onTouchMoved(fingerIndex, position);
+        if (mTouchedChild)
+            mTouchedChild->onTouchMoved(fingerIndex, position);
     }
 
     void LayeredScene::onTouchEnded(int fingerIndex)
     {
-        if (mTouchedScene) {
-            mTouchedScene->onTouchEnded(fingerIndex);
+        if (mTouchedChild) {
+            mTouchedChild->onTouchEnded(fingerIndex);
             assert(mActiveTouchCount > 0);
             if (--mActiveTouchCount == 0)
-                mTouchedScene.reset();
+                mTouchedChild.reset();
         }
     }
 
     void LayeredScene::onTouchCancelled(int fingerIndex)
     {
-        if (mTouchedScene) {
-            mTouchedScene->onTouchCancelled(fingerIndex);
+        if (mTouchedChild) {
+            mTouchedChild->onTouchCancelled(fingerIndex);
             assert(mActiveTouchCount > 0);
             if (--mActiveTouchCount == 0)
-                mTouchedScene.reset();
+                mTouchedChild.reset();
         }
     }
 }

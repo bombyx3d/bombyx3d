@@ -33,13 +33,13 @@ namespace Engine
         LayeredScene();
         ~LayeredScene();
 
-        size_t sceneCount() const { return mScenes.size(); }
-        void insertScene(size_t index, const ScenePtr& scene);
-        void insertScene(size_t index, ScenePtr&& scene);
-        void removeScene(size_t index);
-        void pushScene(const ScenePtr& scene);
-        void pushScene(ScenePtr&& scene);
-        void popScene();
+        size_t childrenCount() const { return mChildren.size(); }
+        void insertChild(size_t index, const ScenePtr& child);
+        void insertChild(size_t index, ScenePtr&& child);
+        void removeChild(size_t index);
+        void removeLastChild();
+        void appendChild(const ScenePtr& child);
+        void appendChild(ScenePtr&& child);
 
         void resize(const glm::ivec2& newSize) override;
 
@@ -52,8 +52,8 @@ namespace Engine
         void onTouchCancelled(int fingerIndex) override;
 
     private:
-        std::vector<ScenePtr> mScenes;
-        ScenePtr mTouchedScene;
+        std::vector<ScenePtr> mChildren;
+        ScenePtr mTouchedChild;
         int mActiveTouchCount = 0;
 
         Z_DISABLE_COPY(LayeredScene);
