@@ -20,10 +20,10 @@
 # THE SOFTWARE.
 #
 
-z_add_plugin(spritesheetloader-xml
+z_add_plugin(utility/xmlutils
     SOURCES
-        XmlSpriteSheetLoader.cpp
-        XmlSpriteSheetLoader.h
+        XmlUtils.cpp
+        XmlUtils.h
     LIBRARIES
-        utility/xmlutils
+        tinyxml
 )
