@@ -20,14 +20,10 @@
 # THE SOFTWARE.
 #
 
-z_add_plugin(materialloader-text
+z_add_plugin(image/png
     SOURCES
-        ParseGrammar.h
-        ParseGrammarActions.h
-        ParseGrammarContext.h
-        ParseTree.h
-        TextMaterialLoader.cpp
-        TextMaterialLoader.h
+        PngImageLoader.cpp
+        PngImageLoader.h
     LIBRARIES
-        pegtl
+        libpng
 )

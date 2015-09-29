@@ -31,9 +31,9 @@ z_add_executable(sample
         MainScene.cpp
         MainScene.h
     LIBRARIES
-        imageloader-jpeg
-        imageloader-png
-        spritesheetloader-xml
-        materialloader-text
-        meshloader-assimp
+        image/jpeg
+        image/png
+        mesh/assimp
+        spritesheet/xml
+        material/parser
 )

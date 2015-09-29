@@ -20,10 +20,10 @@
 # THE SOFTWARE.
 #
 
-z_add_plugin(imageloader-png
+z_add_plugin(spritesheet/xml
     SOURCES
-        PngImageLoader.cpp
-        PngImageLoader.h
+        XmlSpriteSheetLoader.cpp
+        XmlSpriteSheetLoader.h
     LIBRARIES
-        libpng
+        utility/xmlutils
 )

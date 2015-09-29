@@ -20,10 +20,14 @@
 # THE SOFTWARE.
 #
 
-z_add_plugin(imageloader-jpeg
+z_add_plugin(material/parser
     SOURCES
-        JpegImageLoader.cpp
-        JpegImageLoader.h
+        ParseGrammar.h
+        ParseGrammarActions.h
+        ParseGrammarContext.h
+        ParseTree.h
+        TextMaterialLoader.cpp
+        TextMaterialLoader.h
     LIBRARIES
-        jpeglib
+        pegtl
 )

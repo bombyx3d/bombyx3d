@@ -20,11 +20,11 @@
  * THE SOFTWARE.
  */
 #include "engine/core/Application.h"
-#include "plugins/imageloader-jpeg/JpegImageLoader.h"
-#include "plugins/imageloader-png/PngImageLoader.h"
-#include "plugins/spritesheetloader-xml/XmlSpriteSheetLoader.h"
-#include "plugins/materialloader-text/TextMaterialLoader.h"
-#include "plugins/meshloader-assimp/AssImpMeshLoader.h"
+#include "plugins/image/jpeg/JpegImageLoader.h"
+#include "plugins/image/png/PngImageLoader.h"
+#include "plugins/spritesheet/xml/XmlSpriteSheetLoader.h"
+#include "plugins/material/parser/TextMaterialLoader.h"
+#include "plugins/mesh/assimp/AssImpMeshLoader.h"
 #include "MainScene.h"
 #include "LoadingScene.h"
 

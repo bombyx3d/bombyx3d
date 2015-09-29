@@ -20,7 +20,7 @@
 # THE SOFTWARE.
 #
 
-z_add_plugin(meshloader-assimp
+z_add_plugin(mesh/assimp
     SOURCES
         AssImpIOStream.cpp
         AssImpIOStream.h
