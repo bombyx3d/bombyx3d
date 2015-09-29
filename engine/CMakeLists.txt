@@ -154,7 +154,6 @@ set(source_files
     utility/StringUtils.h
     utility/WorkerThread.cpp
     utility/WorkerThread.h
-    utility/XmlUtils.h
 )
 
 add_library(bombyx3d-core STATIC EXCLUDE_FROM_ALL ${source_files})

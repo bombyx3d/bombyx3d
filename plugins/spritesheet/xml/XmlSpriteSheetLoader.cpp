@@ -22,9 +22,9 @@
 #include "XmlSpriteSheetLoader.h"
 #include "engine/core/Log.h"
 #include "engine/image/SpriteSheet.h"
+#include "plugins/utility/xmlutils/XmlUtils.h"
 #include "engine/utility/FileUtils.h"
 #include "engine/utility/StringUtils.h"
-#include "engine/utility/XmlUtils.h"
 #include <tinyxml.h>
 
 namespace Engine
