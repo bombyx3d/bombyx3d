@@ -23,7 +23,6 @@
 #include "engine/core/Application.h"
 #include "engine/core/Services.h"
 #include "engine/scene/components/ChildrenListComponent.h"
-#include <glm/gtc/matrix_transform.hpp>
 #include <utility>
 #include <algorithm>
 
