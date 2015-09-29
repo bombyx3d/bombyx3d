@@ -22,6 +22,38 @@
 
 include(CMakeParseArguments)
 
+macro(_z_generate_plugins_initializer target)
+    get_property(initializers TARGET "${target}" PROPERTY BOMBYX3D_INITIALIZERS)
+    set(string "#undef init\n")
+    set(inits)
+    set(counter 1)
+    foreach(initializer ${initializers})
+        set(string "${string}#define init init_plugin_${counter}\n")
+        set(string "${string}#include \"${initializer}\"\n")
+        set(string "${string}#undef init\n")
+        set(inits "${inits}        init_plugin_${counter}();\n")
+        math(EXPR counter "${counter} + 1")
+    endforeach()
+    set(string "${string}namespace Engine {\n")
+    set(string "${string}    void init_plugins() {\n")
+    set(string "${string}${inits}")
+    set(string "${string}    }\n")
+    set(string "${string}}\n")
+
+    set(filename "${CMAKE_CURRENT_BINARY_DIR}/bombyx3d-startup.cpp")
+    if(NOT EXISTS "${filename}")
+        file(WRITE "${filename}" "${string}")
+    else()
+        file(READ "${filename}" original)
+        if(NOT "${string}" STREQUAL "${original}")
+            file(WRITE "${filename}" "${string}")
+        endif()
+    endif()
+
+    source_group("Generated Files" FILES "${filename}")
+    target_sources("${target}" PRIVATE "${filename}")
+endmacro()
+
 macro(z_add_executable name)
 
     set(options)
@@ -42,5 +74,7 @@ macro(z_add_executable name)
     foreach(library ${ARGS_LIBRARIES})
         z_target_link_library("${name}" "${library}")
     endforeach()
+
+    _z_generate_plugins_initializer("${name}")
 
 endmacro()

@@ -20,23 +20,14 @@
  * THE SOFTWARE.
  */
 #include "engine/core/Application.h"
-#include "plugins/image/jpeg/JpegImageLoader.h"
-#include "plugins/image/png/PngImageLoader.h"
-#include "plugins/spritesheet/xml/XmlSpriteSheetLoader.h"
-#include "plugins/material/parser/TextMaterialLoader.h"
-#include "plugins/mesh/assimp/AssImpMeshLoader.h"
 #include "MainScene.h"
 #include "LoadingScene.h"
 
 using namespace Engine;
+namespace Engine { void init_plugins(); }
 
 IApplication* IApplication::create()
 {
-    Image::registerLoader<JpegImageLoader>();
-    Image::registerLoader<PngImageLoader>();
-    SpriteSheet::registerLoader<XmlSpriteSheetLoader>();
-    Material::registerLoader<TextMaterialLoader>();
-    RawMeshData::registerLoader<AssImpMeshLoader>();
-
+    init_plugins();
     return createApplicationWithInitialScene<Game::LoadingSceneFor<Game::MainScene>>();
 }
