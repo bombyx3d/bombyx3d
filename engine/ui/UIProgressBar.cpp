@@ -20,6 +20,8 @@
  * THE SOFTWARE.
  */
 #include "UIProgressBar.h"
+#include <utility>
+#include <algorithm>
 
 namespace Engine
 {
