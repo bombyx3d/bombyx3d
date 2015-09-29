@@ -21,7 +21,7 @@
  */
 #include "Log.h"
 
-namespace Engine
+namespace B3D
 {
     void Log::write(LogLevel level, const std::ostream& stream)
     {

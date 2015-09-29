@@ -24,7 +24,7 @@
 #include "engine/core/Services.h"
 #include "engine/core/Log.h"
 
-namespace Engine
+namespace B3D
 {
     std::vector<std::unique_ptr<IMeshLoader>> RawMeshData::mMeshLoaders;
     std::mutex RawMeshData::mMeshLoadersMutex;

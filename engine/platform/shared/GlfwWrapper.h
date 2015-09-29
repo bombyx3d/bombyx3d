@@ -29,7 +29,7 @@
 
 struct GLFWwindow;
 
-namespace Engine
+namespace B3D
 {
     class GlfwWrapper
     {

@@ -26,7 +26,7 @@
 #include "engine/mesh/VertexFormat.h"
 #include <cassert>
 
-namespace Engine
+namespace B3D
 {
     GLES2VertexSource::GLES2VertexSource()
     {

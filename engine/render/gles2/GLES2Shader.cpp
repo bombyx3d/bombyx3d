@@ -28,7 +28,7 @@
 #include <iomanip>
 #include <cassert>
 
-namespace Engine
+namespace B3D
 {
     GLES2Shader::GLES2Shader()
         : mProgramCompiled(false)

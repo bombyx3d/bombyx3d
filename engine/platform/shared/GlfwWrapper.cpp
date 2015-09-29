@@ -27,7 +27,7 @@
 #include <cassert>
 #include <GLFW/glfw3.h>
 
-namespace Engine
+namespace B3D
 {
     GlfwWrapper::GlfwWrapper()
     {

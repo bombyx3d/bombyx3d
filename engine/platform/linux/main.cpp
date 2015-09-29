@@ -29,7 +29,7 @@
 #include "engine/render/gles2/opengl.h"
 #include <clocale>
 
-using namespace Engine;
+using namespace B3D;
 
 int main()
 {

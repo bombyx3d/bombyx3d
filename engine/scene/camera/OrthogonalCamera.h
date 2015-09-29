@@ -29,7 +29,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-namespace Engine
+namespace B3D
 {
     class OrthogonalCamera : public AbstractCamera
     {

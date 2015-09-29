@@ -28,7 +28,7 @@
 #include "engine/interfaces/render/lowlevel/IVertexSource.h"
 #include <memory>
 
-namespace Engine
+namespace B3D
 {
     class IRendererResourceFactory
     {

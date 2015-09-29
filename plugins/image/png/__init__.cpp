@@ -2,5 +2,5 @@
 
 static void init()
 {
-    Engine::Image::registerLoader<Engine::PngImageLoader>();
+    B3D::Image::registerLoader<B3D::PngImageLoader>();
 }

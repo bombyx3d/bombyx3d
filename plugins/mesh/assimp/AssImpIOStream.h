@@ -25,7 +25,7 @@
 #include "engine/interfaces/io/IFile.h"
 #include <assimp/IOStream.hpp>
 
-namespace Engine
+namespace B3D
 {
     class AssImpIOStream : public Assimp::IOStream
     {

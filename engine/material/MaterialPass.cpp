@@ -27,7 +27,7 @@
  #pragma warning(disable:4316)      // object allocated on the heap may not be aligned 16
 #endif
 
-namespace Engine
+namespace B3D
 {
     struct MaterialPass::UniformValue
     {

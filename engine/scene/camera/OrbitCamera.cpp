@@ -23,7 +23,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <cmath>
 
-namespace Engine
+namespace B3D
 {
     OrbitCamera::OrbitCamera()
         : mDistance(1.0f)

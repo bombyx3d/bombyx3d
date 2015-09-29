@@ -26,7 +26,7 @@
 #include <string>
 #include <cstdint>
 
-namespace Engine
+namespace B3D
 {
     class IMaterialPass
     {

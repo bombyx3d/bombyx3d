@@ -23,7 +23,7 @@
 #pragma once
 #include <glm/glm.hpp>
 
-namespace Engine
+namespace B3D
 {
     /** 2D quad consisting of four points. */
     struct Quad

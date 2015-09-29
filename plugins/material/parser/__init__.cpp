@@ -2,5 +2,5 @@
 
 static void init()
 {
-    Engine::Material::registerLoader<Engine::TextMaterialLoader>();
+    B3D::Material::registerLoader<B3D::TextMaterialLoader>();
 }

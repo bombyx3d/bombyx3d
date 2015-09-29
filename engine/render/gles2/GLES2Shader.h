@@ -26,7 +26,7 @@
 #include "engine/core/macros.h"
 #include <sstream>
 
-namespace Engine
+namespace B3D
 {
     class GLES2Shader : public IShader
     {

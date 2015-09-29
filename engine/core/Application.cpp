@@ -26,7 +26,7 @@
 #include "engine/core/Services.h"
 #include <cassert>
 
-namespace Engine
+namespace B3D
 {
     Application::Application()
     {

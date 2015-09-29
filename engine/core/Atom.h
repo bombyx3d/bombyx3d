@@ -24,7 +24,7 @@
 #include "engine/core/AtomTable.h"
 #include <functional>
 
-namespace Engine
+namespace B3D
 {
     class Atom
     {
@@ -54,8 +54,8 @@ namespace Engine
 }
 
 namespace std {
-    template <> struct hash<Engine::Atom> {
-        size_t operator()(const Engine::Atom& atom) const {
+    template <> struct hash<B3D::Atom> {
+        size_t operator()(const B3D::Atom& atom) const {
             return std::hash<size_t>()(atom.uniqueID());
         }
     };

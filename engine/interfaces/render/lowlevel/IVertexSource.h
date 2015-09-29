@@ -26,7 +26,7 @@
 #include "engine/core/Atom.h"
 #include <memory>
 
-namespace Engine
+namespace B3D
 {
     enum class VertexAttributeType
     {

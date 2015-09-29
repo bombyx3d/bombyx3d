@@ -21,7 +21,7 @@
  */
 #include "Win32ConsoleLogger.h"
 
-namespace Engine
+namespace B3D
 {
     static const WORD DARK_GRAY = FOREGROUND_INTENSITY;
     static const WORD LIGHT_GRAY = FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_GREEN;

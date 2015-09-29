@@ -27,7 +27,7 @@
 #include "engine/interfaces/scene/ICamera.h"
 #include <glm/glm.hpp>
 
-namespace Engine
+namespace B3D
 {
     class IImmediateModeRenderer
     {

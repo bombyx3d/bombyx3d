@@ -24,7 +24,7 @@
 #include "engine/core/macros.h"
 #include "engine/interfaces/core/ILogger.h"
 
-namespace Engine
+namespace B3D
 {
     class PosixLogger : public ILogger
     {

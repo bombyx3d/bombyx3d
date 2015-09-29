@@ -25,7 +25,7 @@
 #include <algorithm>
 #include <utility>
 
-namespace Engine
+namespace B3D
 {
     namespace {
         using diff_t = std::vector<ScenePtr>::difference_type;

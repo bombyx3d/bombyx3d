@@ -23,7 +23,7 @@
 #include <utility>
 #include <algorithm>
 
-namespace Engine
+namespace B3D
 {
     UIProgressBar::UIProgressBar()
         : mDirection(Direction::Horizontal)

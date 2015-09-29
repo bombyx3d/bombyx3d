@@ -34,7 +34,7 @@
 #include <memory>
 #include <cstdint>
 
-namespace Engine
+namespace B3D
 {
     class ImmediateModeRenderer : public ICanvas
     {

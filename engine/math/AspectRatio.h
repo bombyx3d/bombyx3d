@@ -22,7 +22,7 @@
 
 #pragma once
 
-namespace Engine
+namespace B3D
 {
     enum class AspectRatio
     {

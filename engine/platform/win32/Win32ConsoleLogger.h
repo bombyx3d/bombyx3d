@@ -25,7 +25,7 @@
 #include "engine/interfaces/core/ILogger.h"
 #include "WinAPI.h"
 
-namespace Engine
+namespace B3D
 {
     class Win32ConsoleLogger : public ILogger
     {

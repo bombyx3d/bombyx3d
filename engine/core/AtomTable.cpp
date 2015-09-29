@@ -22,7 +22,7 @@
 #include "AtomTable.h"
 #include "engine/core/Atom.h"
 
-namespace Engine
+namespace B3D
 {
     size_t AtomTable::HashFunction::operator()(const std::string* item) const
     {

@@ -28,7 +28,7 @@
 #include <cstdint>
 #include <memory>
 
-namespace Engine
+namespace B3D
 {
     class IImageLoader;
 

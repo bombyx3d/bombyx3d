@@ -21,7 +21,7 @@
  */
 #include "ProducerConsumerQueue.h"
 
-namespace Engine
+namespace B3D
 {
     namespace Internal
     {

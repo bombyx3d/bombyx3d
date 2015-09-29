@@ -26,7 +26,7 @@
 #include <thread>
 #include <atomic>
 
-namespace Engine
+namespace B3D
 {
     class WorkerThread
     {

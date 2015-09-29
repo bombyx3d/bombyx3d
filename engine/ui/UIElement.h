@@ -24,7 +24,7 @@
 #include "engine/core/macros.h"
 #include "engine/scene/AbstractScene.h"
 
-namespace Engine
+namespace B3D
 {
     class UIElement : public AbstractScene
     {

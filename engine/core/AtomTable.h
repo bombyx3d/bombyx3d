@@ -27,7 +27,7 @@
 #include <memory>
 #include <string>
 
-namespace Engine
+namespace B3D
 {
     class Atom;
 

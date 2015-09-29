@@ -27,7 +27,7 @@
 #include <vector>
 #include <unordered_set>
 
-namespace Engine
+namespace B3D
 {
     class ChildrenListComponent : public AbstractSceneComponent
     {

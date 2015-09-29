@@ -31,7 +31,7 @@
 #include <boost/preprocessor/repetition/for.hpp>
 #include <boost/preprocessor/stringize.hpp>
 
-namespace Engine
+namespace B3D
 {
     // Descriptor for a single attribute in a vertex format
 
@@ -126,16 +126,16 @@ namespace Engine
 
     // This macro declares a struct field
     #define B3D_VERTEX_FORMAT_ELEMENT_DECLARATION(_, __, INDEX, E) \
-        ::Engine::VertexAttributeTypeResolver<B3D_VERTEX_FORMAT_ELEMENT_TYPE(E)>::type \
+        ::B3D::VertexAttributeTypeResolver<B3D_VERTEX_FORMAT_ELEMENT_TYPE(E)>::type \
             B3D_VERTEX_FORMAT_ELEMENT_NAME(E);
 
     // This macro defines a descriptor for a single attribute
     #define B3D_VERTEX_FORMAT_ELEMENT_DESCRIPTOR(_, __, INDEX, E) \
         case (INDEX): { \
-            using Type = ::Engine::VertexAttributeTypeResolver<B3D_VERTEX_FORMAT_ELEMENT_TYPE(E)>::type; \
+            using Type = ::B3D::VertexAttributeTypeResolver<B3D_VERTEX_FORMAT_ELEMENT_TYPE(E)>::type; \
             const char* const name = BOOST_PP_STRINGIZE(B3D_VERTEX_FORMAT_ELEMENT_NAME(E)); \
             const size_t offset = offsetof(Self, B3D_VERTEX_FORMAT_ELEMENT_NAME(E)); \
-            static const ::Engine::VertexFormatAttribute<Type> attribute(name, offset); \
+            static const ::B3D::VertexFormatAttribute<Type> attribute(name, offset); \
             return attribute; \
         }
 
@@ -146,7 +146,7 @@ namespace Engine
             /* Declare struct fields for attributes. */ \
             BOOST_PP_SEQ_FOR_EACH_I(B3D_VERTEX_FORMAT_ELEMENT_DECLARATION, _, BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__)) \
             \
-            static const ::Engine::VertexFormatAttribute<>& attribute(size_t index) { \
+            static const ::B3D::VertexFormatAttribute<>& attribute(size_t index) { \
                 using Self = NAME; \
                 switch (index) { \
                 BOOST_PP_SEQ_FOR_EACH_I(B3D_VERTEX_FORMAT_ELEMENT_DESCRIPTOR, _, BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__)) \
@@ -155,8 +155,8 @@ namespace Engine
                 std::terminate(); \
             } \
             \
-            static const ::Engine::IVertexFormatAttributeList& attributes() { \
-                static Engine::VertexFormatAttributeList<NAME> list; \
+            static const ::B3D::IVertexFormatAttributeList& attributes() { \
+                static B3D::VertexFormatAttributeList<NAME> list; \
                 return list; \
             } \
         };

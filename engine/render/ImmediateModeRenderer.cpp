@@ -27,7 +27,7 @@
 #include <cassert>
 #include <cstring>
 
-namespace Engine
+namespace B3D
 {
     static const auto GeometryOnly = true;
     static const auto GeometryAndMaterial = false;

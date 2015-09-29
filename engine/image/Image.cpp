@@ -26,7 +26,7 @@
 #include "engine/core/Services.h"
 #include <cstring>
 
-namespace Engine
+namespace B3D
 {
     std::vector<std::unique_ptr<IImageLoader>> Image::mImageLoaders;
     std::mutex Image::mImageLoadersMutex;

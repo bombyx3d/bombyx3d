@@ -25,7 +25,7 @@
 #include <cassert>
 #include <cstring>
 
-namespace Engine
+namespace B3D
 {
     AssImpIOSystem::AssImpIOSystem(IFile* primaryFile)
         : mPrimaryFile(primaryFile)

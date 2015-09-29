@@ -26,7 +26,7 @@
 #include <exception>
 #include <cassert>
 
-namespace Engine
+namespace B3D
 {
     XmlUtils::ElementIterator& XmlUtils::ElementIterator::operator++()
     {
@@ -209,12 +209,12 @@ namespace Engine
     }
 }
 
-Engine::XmlUtils::ElementIterator begin(const TiXmlElement* element)
+B3D::XmlUtils::ElementIterator begin(const TiXmlElement* element)
 {
-    return Engine::XmlUtils::ElementIterator(element ? element->FirstChildElement() : nullptr);
+    return B3D::XmlUtils::ElementIterator(element ? element->FirstChildElement() : nullptr);
 }
 
-Engine::XmlUtils::ElementIterator end(const TiXmlElement*)
+B3D::XmlUtils::ElementIterator end(const TiXmlElement*)
 {
-    return Engine::XmlUtils::ElementIterator();
+    return B3D::XmlUtils::ElementIterator();
 }

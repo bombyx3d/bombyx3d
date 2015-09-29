@@ -24,7 +24,7 @@
 #include "engine/interfaces/render/lowlevel/ITexture.h"
 #include "engine/core/macros.h"
 
-namespace Engine
+namespace B3D
 {
     class GLES2Texture : public ITexture
     {

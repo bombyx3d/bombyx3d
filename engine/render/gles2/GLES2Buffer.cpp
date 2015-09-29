@@ -24,7 +24,7 @@
 #include "opengl.h"
 #include <cassert>
 
-namespace Engine
+namespace B3D
 {
     GLES2Buffer::GLES2Buffer(size_t target)
         : mSize(0)

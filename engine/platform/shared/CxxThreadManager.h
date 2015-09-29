@@ -26,7 +26,7 @@
 #include "engine/utility/ProducerConsumerQueue.h"
 #include <memory>
 
-namespace Engine
+namespace B3D
 {
     class CxxThreadManager : public IThreadManager
     {

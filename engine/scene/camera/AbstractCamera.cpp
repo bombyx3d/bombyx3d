@@ -21,7 +21,7 @@
  */
 #include "AbstractCamera.h"
 
-namespace Engine
+namespace B3D
 {
     AbstractCamera::AbstractCamera()
         : mFlags(ProjectionMatrixDirty | InverseProjectionMatrixDirty | ViewMatrixDirty | InverseViewMatrixDirty)

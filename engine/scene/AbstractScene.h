@@ -25,7 +25,7 @@
 #include "engine/interfaces/scene/IScene.h"
 #include <vector>
 
-namespace Engine
+namespace B3D
 {
     class AbstractScene : public IScene
     {

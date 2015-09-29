@@ -24,7 +24,7 @@
 #include "engine/core/Services.h"
 #include <sstream>
 
-namespace Engine
+namespace B3D
 {
     std::string FileUtils::makeFullPath(const std::string& fileName, const std::string& parentFileName)
     {

@@ -25,7 +25,7 @@
 #include "engine/render/ImmediateModeRenderer.h"
 #include "engine/interfaces/render/ICanvas.h"
 
-namespace Engine
+namespace B3D
 {
     class Canvas : public ImmediateModeRenderer
     {

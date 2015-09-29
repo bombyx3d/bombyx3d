@@ -30,7 +30,7 @@
 #include "engine/interfaces/render/lowlevel/IRendererResourceFactory.h"
 #include "engine/interfaces/scene/ISceneManager.h"
 
-namespace Engine
+namespace B3D
 {
     class Services
     {

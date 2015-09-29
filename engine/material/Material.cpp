@@ -25,7 +25,7 @@
 #include <mutex>
 #include <cassert>
 
-namespace Engine
+namespace B3D
 {
     const std::string Material::DEFAULT_FILE_EXTENSION = ".material";
     std::vector<std::unique_ptr<IMaterialLoader>> Material::mMaterialLoaders;

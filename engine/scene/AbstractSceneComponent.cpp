@@ -21,7 +21,7 @@
  */
 #include "AbstractSceneComponent.h"
 
-namespace Engine
+namespace B3D
 {
     AbstractSceneComponent::AbstractSceneComponent()
     {

@@ -30,7 +30,7 @@
 #include <unordered_map>
 #include <glm/glm.hpp>
 
-namespace Engine
+namespace B3D
 {
     class Renderer : public IRenderer
     {

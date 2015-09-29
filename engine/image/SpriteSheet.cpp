@@ -25,7 +25,7 @@
 #include "engine/image/Sprite.h"
 #include <cassert>
 
-namespace Engine
+namespace B3D
 {
     std::vector<std::unique_ptr<ISpriteSheetLoader>> SpriteSheet::mSpriteSheetLoaders;
     std::mutex SpriteSheet::mSpriteSheetLoadersMutex;

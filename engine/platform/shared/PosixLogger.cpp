@@ -24,7 +24,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-namespace Engine
+namespace B3D
 {
     PosixLogger::PosixLogger()
     {

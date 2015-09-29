@@ -23,7 +23,7 @@
 #pragma once
 #include "engine/interfaces/io/IFile.h"
 
-namespace Engine
+namespace B3D
 {
     class SpriteSheet;
 

@@ -22,7 +22,7 @@
 #include "MaterialTechnique.h"
 #include <cassert>
 
-namespace Engine
+namespace B3D
 {
     static const MaterialPassPtr gNullPass;
 

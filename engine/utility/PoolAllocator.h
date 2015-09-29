@@ -25,7 +25,7 @@
 #include "engine/utility/MemoryPool.h"
 #include <vector>
 
-namespace Engine
+namespace B3D
 {
     template <class TYPE> class PoolAllocator
     {

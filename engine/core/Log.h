@@ -25,7 +25,7 @@
 #include "engine/interfaces/core/ILogger.h"
 #include <sstream>
 
-namespace Engine
+namespace B3D
 {
     namespace Log
     {
@@ -33,8 +33,8 @@ namespace Engine
     }
 }
 
-#define B3D_TRACE(message) (::Engine::Log::write(::Engine::LogLevel::Trace, std::ostringstream() << message))
-#define B3D_LOGD(message) (::Engine::Log::write(::Engine::LogLevel::Debug, std::ostringstream() << message))
-#define B3D_LOGI(message) (::Engine::Log::write(::Engine::LogLevel::Info, std::ostringstream() << message))
-#define B3D_LOGW(message) (::Engine::Log::write(::Engine::LogLevel::Warning, std::ostringstream() << message))
-#define B3D_LOGE(message) (::Engine::Log::write(::Engine::LogLevel::Error, std::ostringstream() << message))
+#define B3D_TRACE(message) (::B3D::Log::write(::B3D::LogLevel::Trace, std::ostringstream() << message))
+#define B3D_LOGD(message) (::B3D::Log::write(::B3D::LogLevel::Debug, std::ostringstream() << message))
+#define B3D_LOGI(message) (::B3D::Log::write(::B3D::LogLevel::Info, std::ostringstream() << message))
+#define B3D_LOGW(message) (::B3D::Log::write(::B3D::LogLevel::Warning, std::ostringstream() << message))
+#define B3D_LOGE(message) (::B3D::Log::write(::B3D::LogLevel::Error, std::ostringstream() << message))

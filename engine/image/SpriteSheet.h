@@ -30,7 +30,7 @@
 #include <vector>
 #include <memory>
 
-namespace Engine
+namespace B3D
 {
     class SpriteSheet : public ISpriteSheet, public std::enable_shared_from_this<SpriteSheet>
     {

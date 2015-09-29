@@ -24,7 +24,7 @@
 #include "engine/interfaces/mesh/IMeshLoader.h"
 #include "engine/mesh/RawMeshData.h"
 
-namespace Engine
+namespace B3D
 {
     class AssImpMeshLoader : public IMeshLoader
     {

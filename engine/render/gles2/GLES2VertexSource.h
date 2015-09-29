@@ -29,7 +29,7 @@
 #include <vector>
 #include <unordered_map>
 
-namespace Engine
+namespace B3D
 {
     class GLES2VertexSource : public IVertexSource
     {

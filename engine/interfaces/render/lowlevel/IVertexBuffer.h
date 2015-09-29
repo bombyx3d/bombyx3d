@@ -24,7 +24,7 @@
 #include "engine/interfaces/render/lowlevel/IBuffer.h"
 #include <memory>
 
-namespace Engine
+namespace B3D
 {
     class IVertexBuffer : public IBuffer
     {

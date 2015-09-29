@@ -24,7 +24,7 @@
 #include "engine/interfaces/io/IFile.h"
 #include "engine/interfaces/material/IMaterial.h"
 
-namespace Engine
+namespace B3D
 {
     class Material;
 

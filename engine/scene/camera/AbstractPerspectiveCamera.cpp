@@ -22,7 +22,7 @@
 #include "AbstractPerspectiveCamera.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace Engine
+namespace B3D
 {
     AbstractPerspectiveCamera::AbstractPerspectiveCamera()
         : mFovY(glm::radians(90.0f))

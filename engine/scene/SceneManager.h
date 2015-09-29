@@ -30,7 +30,7 @@
 #include <unordered_set>
 #include <glm/glm.hpp>
 
-namespace Engine
+namespace B3D
 {
     class SceneManager : public ISceneManager, public IInputObserver
     {

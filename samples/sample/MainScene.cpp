@@ -24,7 +24,7 @@
 #include "engine/core/Log.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-using namespace Engine;
+using namespace B3D;
 
 namespace Game
 {

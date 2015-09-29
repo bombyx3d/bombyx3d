@@ -2,5 +2,5 @@
 
 static void init()
 {
-    Engine::SpriteSheet::registerLoader<Engine::XmlSpriteSheetLoader>();
+    B3D::SpriteSheet::registerLoader<B3D::XmlSpriteSheetLoader>();
 }

@@ -24,7 +24,7 @@
 #include "engine/interfaces/image/ISpriteSheetLoader.h"
 #include "engine/image/SpriteSheet.h"
 
-namespace Engine
+namespace B3D
 {
     class XmlSpriteSheetLoader : public ISpriteSheetLoader
     {

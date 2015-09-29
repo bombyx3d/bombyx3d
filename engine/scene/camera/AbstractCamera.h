@@ -26,7 +26,7 @@
 #include "engine/scene/AbstractSceneComponent.h"
 #include <glm/glm.hpp>
 
-namespace Engine
+namespace B3D
 {
     class AbstractCamera : public AbstractSceneComponent, public ICamera
     {

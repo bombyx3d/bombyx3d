@@ -25,7 +25,7 @@
 #include "engine/interfaces/io/IFile.h"
 #include <cstdio>
 
-namespace Engine
+namespace B3D
 {
     class StdIoFile : public IFile
     {

@@ -21,7 +21,7 @@
  */
 #include "WinAPI.h"
 
-namespace Engine
+namespace B3D
 {
     std::vector<WCHAR> Win32::latin1ToWideChar(const std::string& string, size_t extraLength)
     {

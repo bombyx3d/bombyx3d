@@ -29,18 +29,18 @@
 
 namespace Game
 {
-    class LoadingScene : public Engine::AbstractLoadingScene
+    class LoadingScene : public B3D::AbstractLoadingScene
     {
     public:
         LoadingScene();
-        explicit LoadingScene(const std::function<Engine::ScenePtr()>& sceneFactory);
+        explicit LoadingScene(const std::function<B3D::ScenePtr()>& sceneFactory);
 
         void update(double time) override;
-        void draw(Engine::ICanvas* canvas) const override;
+        void draw(B3D::ICanvas* canvas) const override;
 
     private:
-        Engine::OrthogonalCameraPtr mCamera;
-        Engine::UIProgressBarPtr mProgressBar;
+        B3D::OrthogonalCameraPtr mCamera;
+        B3D::UIProgressBarPtr mProgressBar;
         float mCurrentProgress;
         float mTargetProgress;
     };

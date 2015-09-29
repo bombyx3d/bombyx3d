@@ -24,7 +24,7 @@
 #include "engine/interfaces/mesh/IRawMeshElementData.h"
 #include "engine/mesh/RawMeshData.h"
 
-namespace Engine
+namespace B3D
 {
     template <class VERTEX> class RawMeshElementData : public IRawMeshElementData
     {

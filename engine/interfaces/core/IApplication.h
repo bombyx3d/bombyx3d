@@ -24,7 +24,7 @@
 #include "engine/interfaces/render/lowlevel/IRenderer.h"
 #include <glm/glm.hpp>
 
-namespace Engine
+namespace B3D
 {
     class IApplication
     {

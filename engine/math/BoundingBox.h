@@ -24,7 +24,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-namespace Engine
+namespace B3D
 {
     struct BoundingBox
     {

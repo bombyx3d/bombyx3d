@@ -28,7 +28,7 @@
 #include <memory>
 #include <atomic>
 
-namespace Engine
+namespace B3D
 {
     class ResourceManager : public IResourceManager
     {

@@ -22,7 +22,7 @@
 #include "AssImpIOStream.h"
 #include <cassert>
 
-namespace Engine
+namespace B3D
 {
     AssImpIOStream::AssImpIOStream(IFile* file)
         : mFile(file)

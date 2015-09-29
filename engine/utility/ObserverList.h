@@ -26,7 +26,7 @@
 #include <vector>
 #include <cassert>
 
-namespace Engine
+namespace B3D
 {
     template <class TYPE> class ObserverList
     {

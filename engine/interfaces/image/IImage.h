@@ -24,7 +24,7 @@
 #include <cstdint>
 #include <memory>
 
-namespace Engine
+namespace B3D
 {
     enum class PixelFormat
     {

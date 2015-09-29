@@ -22,7 +22,7 @@
 #include "Canvas.h"
 #include "engine/math/Quad.h"
 
-namespace Engine
+namespace B3D
 {
     static const float PIXEL_PERFECTNESS_OFFSET = 0.375f;
 

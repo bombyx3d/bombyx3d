@@ -25,7 +25,7 @@
 #include "engine/core/Services.h"
 #include <cassert>
 
-namespace Engine
+namespace B3D
 {
     static const std::string VERTEX = "%vertex";
     static const std::string VERTEX_LF = "%vertex\n";

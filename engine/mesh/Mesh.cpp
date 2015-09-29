@@ -22,7 +22,7 @@
 #include "Mesh.h"
 #include "engine/core/Services.h"
 
-namespace Engine
+namespace B3D
 {
     Mesh::Mesh()
     {

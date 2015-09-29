@@ -24,7 +24,7 @@
 #include "engine/interfaces/scene/ISceneComponent.h"
 #include "engine/core/macros.h"
 
-namespace Engine
+namespace B3D
 {
     class AbstractSceneComponent : public ISceneComponent
     {

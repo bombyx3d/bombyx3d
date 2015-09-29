@@ -23,7 +23,7 @@
 #pragma once
 #include <string>
 
-namespace Engine
+namespace B3D
 {
     namespace StringUtils
     {

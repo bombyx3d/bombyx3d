@@ -32,7 +32,7 @@
 #include "engine/material/ShaderLoader.h"
 #include <glm/glm.hpp>
 
-namespace Engine
+namespace B3D
 {
     namespace
     {

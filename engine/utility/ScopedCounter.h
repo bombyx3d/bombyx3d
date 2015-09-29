@@ -23,7 +23,7 @@
 #pragma once
 #include "engine/core/macros.h"
 
-namespace Engine
+namespace B3D
 {
     class ScopedCounter
     {

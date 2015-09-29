@@ -26,7 +26,7 @@
 #include <memory>
 #include <vector>
 
-namespace Engine
+namespace B3D
 {
     class IRawMeshData
     {

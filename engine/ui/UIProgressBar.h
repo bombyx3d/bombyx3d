@@ -26,7 +26,7 @@
 #include "engine/ui/UIElement.h"
 #include "engine/math/Direction.h"
 
-namespace Engine
+namespace B3D
 {
     class UIProgressBar : public UIElement
     {

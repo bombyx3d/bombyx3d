@@ -27,7 +27,7 @@
 #include "engine/interfaces/image/ISprite.h"
 #include <glm/glm.hpp>
 
-namespace Engine
+namespace B3D
 {
     class ICanvas : public IImmediateModeRenderer
     {

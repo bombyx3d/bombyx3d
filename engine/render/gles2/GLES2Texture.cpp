@@ -24,7 +24,7 @@
 #include "opengl.h"
 #include <cassert>
 
-namespace Engine
+namespace B3D
 {
     GLES2Texture::GLES2Texture()
         : mSize(0.0f)

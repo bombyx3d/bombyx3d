@@ -27,7 +27,7 @@
 #include "engine/utility/StringUtils.h"
 #include <tinyxml.h>
 
-namespace Engine
+namespace B3D
 {
     static const float PIXEL_PERFECTNESS_OFFSET = 0.375f;
 

@@ -24,7 +24,7 @@
 #include "engine/interfaces/material/IMaterialLoader.h"
 #include "engine/material/Material.h"
 
-namespace Engine
+namespace B3D
 {
     class TextMaterialLoader : public IMaterialLoader
     {

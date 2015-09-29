@@ -24,7 +24,7 @@
 #include <mutex>
 #include <cstring>
 
-namespace Engine
+namespace B3D
 {
     void AssImpLogStream::write(const char* message)
     {

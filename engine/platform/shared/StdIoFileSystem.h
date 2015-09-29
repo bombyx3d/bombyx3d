@@ -24,7 +24,7 @@
 #include "engine/interfaces/io/IFileSystem.h"
 #include "engine/core/macros.h"
 
-namespace Engine
+namespace B3D
 {
     class StdIoFileSystem : public IFileSystem
     {

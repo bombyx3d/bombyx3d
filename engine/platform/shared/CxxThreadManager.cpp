@@ -22,7 +22,7 @@
 #include "CxxThreadManager.h"
 #include <cassert>
 
-namespace Engine
+namespace B3D
 {
     CxxThreadManager::CxxThreadManager()
     {

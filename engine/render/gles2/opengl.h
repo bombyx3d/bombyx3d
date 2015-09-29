@@ -38,7 +38,7 @@
 #include "engine/interfaces/render/lowlevel/IRenderer.h"
 #include "engine/interfaces/render/lowlevel/IBuffer.h"
 
-namespace Engine
+namespace B3D
 {
     GLenum primitiveTypeToGL(PrimitiveType primitiveType);
     GLenum cullFaceToGL(CullFace face);

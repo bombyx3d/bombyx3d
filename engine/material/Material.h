@@ -30,7 +30,7 @@
 #include <mutex>
 #include <vector>
 
-namespace Engine
+namespace B3D
 {
     class Material : public IMaterial
     {

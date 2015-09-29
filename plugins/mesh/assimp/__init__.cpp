@@ -2,5 +2,5 @@
 
 static void init()
 {
-    Engine::RawMeshData::registerLoader<Engine::AssImpMeshLoader>();
+    B3D::RawMeshData::registerLoader<B3D::AssImpMeshLoader>();
 }

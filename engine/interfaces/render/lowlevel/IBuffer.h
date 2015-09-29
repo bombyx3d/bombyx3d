@@ -23,7 +23,7 @@
 #pragma once
 #include <cstddef>
 
-namespace Engine
+namespace B3D
 {
     enum class BufferUsage
     {

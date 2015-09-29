@@ -23,7 +23,7 @@
 #pragma once
 #include <assimp/DefaultLogger.hpp>
 
-namespace Engine
+namespace B3D
 {
     class AssImpLogStream : public Assimp::LogStream
     {

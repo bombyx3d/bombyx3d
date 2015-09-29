@@ -21,7 +21,7 @@
  */
 #include "BoundingBox.h"
 
-namespace Engine
+namespace B3D
 {
     void BoundingBox::initFromPoints(const std::vector<glm::vec3>& points)
     {

@@ -27,7 +27,7 @@
 #include "engine/core/macros.h"
 #include <vector>
 
-namespace Engine
+namespace B3D
 {
     class Mesh : public IMesh
     {

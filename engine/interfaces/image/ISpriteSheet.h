@@ -25,7 +25,7 @@
 #include <string>
 #include <memory>
 
-namespace Engine
+namespace B3D
 {
     class ISpriteSheet
     {

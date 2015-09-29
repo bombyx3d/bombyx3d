@@ -27,7 +27,7 @@
 #include <cstring>
 #include <cerrno>
 
-namespace Engine
+namespace B3D
 {
     StdIoFileSystem::StdIoFileSystem(const std::string& basePath)
         : mBasePath(basePath)

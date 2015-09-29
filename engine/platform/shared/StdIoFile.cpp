@@ -27,7 +27,7 @@
 #include <utility>
 #include <algorithm>
 
-namespace Engine
+namespace B3D
 {
     StdIoFile::StdIoFile(FILE* handle, const std::string& path)
         : mHandle(handle)

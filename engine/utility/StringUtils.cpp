@@ -22,7 +22,7 @@
 #include "StringUtils.h"
 #include <cstring>
 
-namespace Engine
+namespace B3D
 {
     bool StringUtils::endsWith(const std::string& string, const std::string& what)
     {

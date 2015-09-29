@@ -26,7 +26,7 @@
 #include <condition_variable>
 #include <deque>
 
-namespace Engine
+namespace B3D
 {
     namespace Internal
     {

@@ -26,7 +26,7 @@
 #include <string>
 #include <tinyxml.h>
 
-namespace Engine
+namespace B3D
 {
     namespace XmlUtils
     {
@@ -68,5 +68,5 @@ namespace Engine
     }
 }
 
-Engine::XmlUtils::ElementIterator begin(const TiXmlElement* element);
-Engine::XmlUtils::ElementIterator end(const TiXmlElement*);
+B3D::XmlUtils::ElementIterator begin(const TiXmlElement* element);
+B3D::XmlUtils::ElementIterator end(const TiXmlElement*);

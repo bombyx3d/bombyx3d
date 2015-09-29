@@ -24,7 +24,7 @@
 #include "engine/interfaces/image/IImageLoader.h"
 #include "engine/image/Image.h"
 
-namespace Engine
+namespace B3D
 {
     class PngImageLoader : public IImageLoader
     {

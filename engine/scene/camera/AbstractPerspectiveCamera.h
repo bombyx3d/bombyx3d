@@ -23,7 +23,7 @@
 #pragma once
 #include "engine/scene/camera/AbstractCamera.h"
 
-namespace Engine
+namespace B3D
 {
     class AbstractPerspectiveCamera : public AbstractCamera
     {

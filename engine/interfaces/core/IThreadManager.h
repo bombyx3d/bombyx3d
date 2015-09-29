@@ -24,7 +24,7 @@
 #include <functional>
 #include <memory>
 
-namespace Engine
+namespace B3D
 {
     class IThreadManager
     {

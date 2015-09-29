@@ -25,7 +25,7 @@
 #include "engine/interfaces/render/lowlevel/IVertexBuffer.h"
 #include "engine/core/macros.h"
 
-namespace Engine
+namespace B3D
 {
     class GLES2Buffer : public IVertexBuffer, public IIndexBuffer
     {

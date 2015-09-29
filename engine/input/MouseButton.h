@@ -23,7 +23,7 @@
 #pragma once
 #include <functional>
 
-namespace Engine
+namespace B3D
 {
     enum class MouseButton
     {
@@ -34,8 +34,8 @@ namespace Engine
 }
 
 namespace std {
-    template <> struct hash<Engine::MouseButton> {
-        size_t operator()(Engine::MouseButton button) const {
+    template <> struct hash<B3D::MouseButton> {
+        size_t operator()(B3D::MouseButton button) const {
             return std::hash<int>()(int(button));
         }
     };

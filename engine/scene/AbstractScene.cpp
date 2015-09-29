@@ -22,7 +22,7 @@
 #include "AbstractScene.h"
 #include <cassert>
 
-namespace Engine
+namespace B3D
 {
     #define FOR_EACH_COMPONENT(METHOD) \
         ++mIterating; \

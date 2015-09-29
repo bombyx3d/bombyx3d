@@ -24,7 +24,7 @@
 #include <utility>
 #include <algorithm>
 
-namespace Engine
+namespace B3D
 {
     OrthogonalCamera::OrthogonalCamera(const glm::vec2& virtResolution, AspectRatio ratio)
         : mVirtualResolution(virtResolution)

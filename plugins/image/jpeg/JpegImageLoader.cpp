@@ -30,7 +30,7 @@
 #pragma warning(disable:4611)   // interaction between _strjmp and C++ object destruction is non-portable
 #endif
 
-namespace Engine
+namespace B3D
 {
     namespace
     {

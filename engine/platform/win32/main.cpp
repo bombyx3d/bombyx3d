@@ -35,7 +35,7 @@
 #include <vector>
 #include <cstdlib>
 
-using namespace Engine;
+using namespace B3D;
 
 static bool gIsConsoleApplication;
 

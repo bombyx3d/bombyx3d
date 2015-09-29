@@ -29,7 +29,7 @@
 #pragma warning(disable:4611)   // interaction between _strjmp and C++ object destruction is non-portable
 #endif
 
-namespace Engine
+namespace B3D
 {
     static const size_t PNG_SIGNATURE_SIZE = 8;
 

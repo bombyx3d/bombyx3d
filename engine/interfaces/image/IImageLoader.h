@@ -24,7 +24,7 @@
 #include "engine/interfaces/io/IFile.h"
 #include "engine/interfaces/image/IImage.h"
 
-namespace Engine
+namespace B3D
 {
     class IImageLoader
     {

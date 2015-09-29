@@ -23,8 +23,8 @@
 #include "MainScene.h"
 #include "LoadingScene.h"
 
-using namespace Engine;
-namespace Engine { void init_plugins(); }
+using namespace B3D;
+namespace B3D { void init_plugins(); }
 
 IApplication* IApplication::create()
 {

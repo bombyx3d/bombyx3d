@@ -21,7 +21,7 @@
  */
 #include "UIElement.h"
 
-namespace Engine
+namespace B3D
 {
     UIElement::UIElement()
     {

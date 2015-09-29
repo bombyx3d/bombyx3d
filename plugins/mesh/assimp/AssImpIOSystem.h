@@ -25,7 +25,7 @@
 #include "engine/interfaces/io/IFile.h"
 #include <assimp/IOSystem.hpp>
 
-namespace Engine
+namespace B3D
 {
     class AssImpIOSystem : public Assimp::IOSystem
     {

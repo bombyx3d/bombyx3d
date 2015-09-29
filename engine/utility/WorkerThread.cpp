@@ -22,7 +22,7 @@
 #include "WorkerThread.h"
 #include <cassert>
 
-namespace Engine
+namespace B3D
 {
     WorkerThread::WorkerThread()
         : mShouldExit(false)

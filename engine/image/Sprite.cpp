@@ -21,7 +21,7 @@
  */
 #include "Sprite.h"
 
-namespace Engine
+namespace B3D
 {
     namespace
     {

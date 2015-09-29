@@ -21,7 +21,7 @@
  */
 #include "Win32GuiLogger.h"
 
-namespace Engine
+namespace B3D
 {
     Win32GuiLogger::Win32GuiLogger()
     {

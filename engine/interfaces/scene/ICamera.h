@@ -24,7 +24,7 @@
 #include <memory>
 #include <glm/glm.hpp>
 
-namespace Engine
+namespace B3D
 {
     class ICamera
     {

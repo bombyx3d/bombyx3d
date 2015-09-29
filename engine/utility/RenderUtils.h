@@ -28,7 +28,7 @@
 #include <vector>
 #include <string>
 
-namespace Engine
+namespace B3D
 {
     namespace RenderUtils
     {

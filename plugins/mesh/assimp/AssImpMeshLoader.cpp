@@ -35,7 +35,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-namespace Engine
+namespace B3D
 {
     namespace
     {

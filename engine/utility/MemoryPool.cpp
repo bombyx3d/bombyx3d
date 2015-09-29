@@ -24,7 +24,7 @@
 #include <algorithm>
 #include <utility>
 
-namespace Engine
+namespace B3D
 {
     MemoryPool::MemoryPool(size_t arenaSize)
         : mArenas(nullptr)

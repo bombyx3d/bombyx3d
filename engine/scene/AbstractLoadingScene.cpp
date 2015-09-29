@@ -25,7 +25,7 @@
 #include <utility>
 #include <algorithm>
 
-namespace Engine
+namespace B3D
 {
     AbstractLoadingScene::AbstractLoadingScene()
         : mCurrentProgress(0.0f)

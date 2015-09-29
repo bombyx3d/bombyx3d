@@ -21,7 +21,7 @@
  */
 #include "InputManager.h"
 
-namespace Engine
+namespace B3D
 {
     InputManager::InputManager()
         : mHasKeyboard(false)

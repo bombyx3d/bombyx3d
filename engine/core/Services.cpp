@@ -21,7 +21,7 @@
  */
 #include "Services.h"
 
-namespace Engine
+namespace B3D
 {
     Services Services::mInstance;
 

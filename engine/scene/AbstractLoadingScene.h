@@ -23,7 +23,7 @@
 #pragma once
 #include "engine/scene/AbstractScene.h"
 
-namespace Engine
+namespace B3D
 {
     class AbstractLoadingScene : public AbstractScene
     {

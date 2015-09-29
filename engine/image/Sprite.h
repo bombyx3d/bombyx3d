@@ -25,7 +25,7 @@
 #include "engine/interfaces/image/ISprite.h"
 #include "engine/image/SpriteSheet.h"
 
-namespace Engine
+namespace B3D
 {
     class Sprite : public ISprite
     {

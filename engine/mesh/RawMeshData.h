@@ -29,7 +29,7 @@
 #include <vector>
 #include <memory>
 
-namespace Engine
+namespace B3D
 {
     template <class VERTEX> class RawMeshElementData;
 

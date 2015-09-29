@@ -28,7 +28,7 @@
 #include <memory>
 #include <unordered_map>
 
-namespace Engine
+namespace B3D
 {
     class MaterialPass : public IMaterialPass
     {

@@ -27,14 +27,14 @@
 
 namespace Game
 {
-    class MainScene : public Engine::AbstractScene
+    class MainScene : public B3D::AbstractScene
     {
     public:
         MainScene();
         ~MainScene();
 
         void update(double time) override;
-        void draw(Engine::ICanvas* canvas) const override;
+        void draw(B3D::ICanvas* canvas) const override;
 
         bool beginTouch(int fingerIndex, const glm::vec2& position) override;
         void moveTouch(int fingerIndex, const glm::vec2& position) override;
@@ -42,8 +42,8 @@ namespace Game
         void cancelTouch(int fingerIndex, const glm::vec2& position) override;
 
     private:
-        Engine::OrbitCameraPtr mCamera;
-        Engine::MeshPtr mMesh;
+        B3D::OrbitCameraPtr mCamera;
+        B3D::MeshPtr mMesh;
         glm::vec2 mPrevTouchPosition;
     };
 }

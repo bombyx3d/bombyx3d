@@ -27,7 +27,7 @@
 #include "engine/platform/shared/PosixLogger.h"
 #include <clocale>
 
-using namespace Engine;
+using namespace B3D;
 
 int main()
 {
