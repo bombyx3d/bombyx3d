@@ -58,7 +58,7 @@ namespace Engine
         FILE* file = fopen(path.c_str(), "rb");
         if (!file) {
             const char* error = strerror(errno);
-            Z_LOGE("Unable to open file \"" << path << "\": " << error);
+            B3D_LOGE("Unable to open file \"" << path << "\": " << error);
             return nullptr;
         }
 

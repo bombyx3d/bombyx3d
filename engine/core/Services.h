@@ -65,6 +65,6 @@ namespace Engine
         Services();
         ~Services();
 
-        Z_DISABLE_COPY(Services);
+        B3D_DISABLE_COPY(Services);
     };
 }

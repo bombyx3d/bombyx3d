@@ -68,6 +68,6 @@ namespace Engine
         std::unordered_map<std::string, std::weak_ptr<IMesh>> mStaticMeshes;
         std::shared_ptr<Counters> mCounters;
 
-        Z_DISABLE_COPY(ResourceManager);
+        B3D_DISABLE_COPY(ResourceManager);
     };
 }

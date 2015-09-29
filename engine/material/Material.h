@@ -67,6 +67,6 @@ namespace Engine
 
         std::vector<MaterialTechniquePtr> mTechniques;
 
-        Z_DISABLE_COPY(Material);
+        B3D_DISABLE_COPY(Material);
     };
 }

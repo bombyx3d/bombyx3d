@@ -32,7 +32,6 @@ namespace Engine
         UIElement();
         ~UIElement();
 
-    private:
-        Z_DISABLE_COPY(UIElement);
+        B3D_DISABLE_COPY(UIElement);
     };
 }

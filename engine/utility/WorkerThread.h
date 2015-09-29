@@ -48,6 +48,6 @@ namespace Engine
 
         void thread();
 
-        Z_DISABLE_COPY(WorkerThread);
+        B3D_DISABLE_COPY(WorkerThread);
     };
 }

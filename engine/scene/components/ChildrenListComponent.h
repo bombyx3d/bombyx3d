@@ -54,6 +54,6 @@ namespace Engine
         std::unordered_set<int> mTouchedFingers;
         ScenePtr mTouchedChild;
 
-        Z_DISABLE_COPY(ChildrenListComponent);
+        B3D_DISABLE_COPY(ChildrenListComponent);
     };
 }

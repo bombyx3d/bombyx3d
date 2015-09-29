@@ -57,7 +57,7 @@ int main()
             if (glewInit() == GLEW_OK) {
                 glfwWrapper.run([threadManager](){ threadManager->flushRenderThreadQueue(); });
             } else {
-                Z_LOGE("Unable to initialize GLEW.");
+                B3D_LOGE("Unable to initialize GLEW.");
                 glfwWrapper.destroyWindow();
                 exitCode = EXIT_FAILURE;
             }

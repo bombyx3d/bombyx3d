@@ -73,6 +73,6 @@ namespace Engine
         std::vector<uint8_t> mVertexData;
         std::vector<uint16_t> mIndexData;
 
-        Z_DISABLE_COPY(RawMeshData);
+        B3D_DISABLE_COPY(RawMeshData);
     };
 }

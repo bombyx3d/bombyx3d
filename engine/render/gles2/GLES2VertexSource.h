@@ -63,6 +63,6 @@ namespace Engine
         std::vector<int> mEnabledArrays;
         std::shared_ptr<GLES2Buffer> mIndexBuffer;
 
-        Z_DISABLE_COPY(GLES2VertexSource);
+        B3D_DISABLE_COPY(GLES2VertexSource);
     };
 }

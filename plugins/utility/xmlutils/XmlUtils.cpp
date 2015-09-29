@@ -41,7 +41,7 @@ namespace Engine
 
         TiXmlDocument doc(file->name());
         if (!doc.LoadBuffer(bytes.data(), bytes.size() - 1)) {
-            Z_LOGE("Unable to parse XML document \"" << doc.ValueStr() <<
+            B3D_LOGE("Unable to parse XML document \"" << doc.ValueStr() <<
                 "\": at line " << doc.ErrorRow() << ", column " << doc.ErrorCol() << ": " << doc.ErrorDesc());
             throw ParseError();
         }
@@ -73,7 +73,7 @@ namespace Engine
     void XmlUtils::assertNotNull(const void* pointer)
     {
         if (!pointer) {
-            Z_LOGE("Unable to parse XML document: NULL pointer.");
+            B3D_LOGE("Unable to parse XML document: NULL pointer.");
             throw ParseError();
         }
     }
@@ -82,7 +82,7 @@ namespace Engine
     {
         assertNotNull(element);
         if (element->ValueStr() != name) {
-            Z_LOGE(locationOf(element) << "Invalid tag name (expected \"" << name
+            B3D_LOGE(locationOf(element) << "Invalid tag name (expected \"" << name
                 << "\" but found \"" << element->ValueStr() << "\").");
             throw ParseError();
         }
@@ -94,7 +94,7 @@ namespace Engine
 
         TiXmlAttribute* attribute = element->GetAttribute(name);
         if (attribute == nullptr) {
-            Z_LOGE(locationOf(element) << "Attribute \"" << name << "\" is missing in tag \""
+            B3D_LOGE(locationOf(element) << "Attribute \"" << name << "\" is missing in tag \""
                 << element->ValueStr() << "\".");
             throw ParseError();
         }
@@ -118,7 +118,7 @@ namespace Engine
     {
         TiXmlAttribute* attribute = element->GetAttribute(name);
         if (attribute == nullptr) {
-            Z_LOGE(locationOf(element) << "Attribute \"" << name << "\" is missing in tag \""
+            B3D_LOGE(locationOf(element) << "Attribute \"" << name << "\" is missing in tag \""
                 << element->ValueStr() << "\".");
             throw ParseError();
         }
@@ -130,12 +130,12 @@ namespace Engine
             if (pos == string.length())
                 return value;
         } catch (const std::exception& e) {
-            Z_LOGE(locationOf(element) << "Value of attribute \"" << name
+            B3D_LOGE(locationOf(element) << "Value of attribute \"" << name
                 << "\" is not a valid integer (" << e.what() << ").");
             throw ParseError();
         }
 
-        Z_LOGE(locationOf(element) << "Value of attribute \"" << name << "\" is not a valid integer.");
+        B3D_LOGE(locationOf(element) << "Value of attribute \"" << name << "\" is not a valid integer.");
         throw ParseError();
     }
 
@@ -152,12 +152,12 @@ namespace Engine
             if (pos == string.length())
                 return value;
         } catch (const std::exception& e) {
-            Z_LOGE(locationOf(element) << "Value of attribute \"" << name
+            B3D_LOGE(locationOf(element) << "Value of attribute \"" << name
                 << "\" is not a valid integer (" << e.what() << ").");
             throw ParseError();
         }
 
-        Z_LOGE(locationOf(element) << "Value of attribute \"" << name << "\" is not a valid integer.");
+        B3D_LOGE(locationOf(element) << "Value of attribute \"" << name << "\" is not a valid integer.");
         throw ParseError();
     }
 
@@ -165,7 +165,7 @@ namespace Engine
     {
         TiXmlAttribute* attribute = element->GetAttribute(name);
         if (attribute == nullptr) {
-            Z_LOGE(locationOf(element) << "Attribute \"" << name << "\" is missing in tag \""
+            B3D_LOGE(locationOf(element) << "Attribute \"" << name << "\" is missing in tag \""
                 << element->ValueStr() << "\".");
             throw ParseError();
         }
@@ -177,12 +177,12 @@ namespace Engine
             if (pos == string.length())
                 return value;
         } catch (const std::exception& e) {
-            Z_LOGE(locationOf(element) << "Value of attribute \"" << name
+            B3D_LOGE(locationOf(element) << "Value of attribute \"" << name
                 << "\" is not a valid floating-point number (" << e.what() << ").");
             throw ParseError();
         }
 
-        Z_LOGE(locationOf(element) << "Value of attribute \"" << name << "\" is not a valid floating-point number.");
+        B3D_LOGE(locationOf(element) << "Value of attribute \"" << name << "\" is not a valid floating-point number.");
         throw ParseError();
     }
 
@@ -199,12 +199,12 @@ namespace Engine
             if (pos == string.length())
                 return value;
         } catch (const std::exception& e) {
-            Z_LOGE(locationOf(element) << "Value of attribute \"" << name
+            B3D_LOGE(locationOf(element) << "Value of attribute \"" << name
                 << "\" is not a valid floating-point number (" << e.what() << ").");
             throw ParseError();
         }
 
-         Z_LOGE(locationOf(element) << "Value of attribute \"" << name << "\" is not a valid floating-point number.");
+         B3D_LOGE(locationOf(element) << "Value of attribute \"" << name << "\" is not a valid floating-point number.");
          throw ParseError();
     }
 }

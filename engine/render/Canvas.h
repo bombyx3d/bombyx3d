@@ -41,6 +41,6 @@ namespace Engine
         void drawWireframeBoundingBox(const BoundingBox& box, const glm::vec4& colorVal = glm::vec4(1.0f)) override;
 
     private:
-        Z_DISABLE_COPY(Canvas);
+        B3D_DISABLE_COPY(Canvas);
     };
 }

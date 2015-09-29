@@ -22,8 +22,8 @@
 
 cmake_minimum_required(VERSION 3.2)
 
-if(NOT _Z_ENGINE_INCLUDED)
-    set(_Z_ENGINE_INCLUDED TRUE)
+if(NOT _B3D_ENGINE_INCLUDED)
+    set(_B3D_ENGINE_INCLUDED TRUE)
 
     get_filename_component(CMakeScriptsPath "${CMAKE_CURRENT_LIST_FILE}" ABSOLUTE)
     get_filename_component(CMakeScriptsPath "${CMakeScriptsPath}" PATH)

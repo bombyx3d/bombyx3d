@@ -71,7 +71,7 @@ namespace Engine
         float mFarZ;
         AspectRatio mAspectRatio;
 
-        Z_DISABLE_COPY(OrthogonalCamera);
+        B3D_DISABLE_COPY(OrthogonalCamera);
     };
 
     using OrthogonalCameraPtr = std::shared_ptr<OrthogonalCamera>;

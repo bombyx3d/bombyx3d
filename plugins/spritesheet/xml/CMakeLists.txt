@@ -20,7 +20,7 @@
 # THE SOFTWARE.
 #
 
-z_add_plugin(spritesheet/xml
+b3d_add_plugin(spritesheet/xml
     SOURCES
         XmlSpriteSheetLoader.cpp
         XmlSpriteSheetLoader.h

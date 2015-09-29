@@ -117,6 +117,6 @@ namespace Engine
 
         bool shouldWait() const override { return mQueue.empty(); }
 
-        Z_DISABLE_COPY(ProducerConsumerQueue);
+        B3D_DISABLE_COPY(ProducerConsumerQueue);
     };
 }

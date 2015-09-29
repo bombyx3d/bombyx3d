@@ -34,7 +34,7 @@ namespace Engine
         glfwSetErrorCallback(errorCallback);
 
         if (!glfwInit()) {
-            Z_LOGE("Unable to initialize GLFW.");
+            B3D_LOGE("Unable to initialize GLFW.");
             return;
         }
 
@@ -71,11 +71,11 @@ namespace Engine
         glm::ivec2 windowSize = mApplication->preferredScreenSize();
         mWindow = glfwCreateWindow(windowSize.x, windowSize.y, "", nullptr, nullptr);
         if (!mWindow) {
-            Z_LOGE("Unable to create GLFW window with size (" << windowSize.x << ", " << windowSize.y << ").");
+            B3D_LOGE("Unable to create GLFW window with size (" << windowSize.x << ", " << windowSize.y << ").");
             return false;
         }
 
-        Z_TRACE("Created GLFW window with size (" << windowSize.x << ", " << windowSize.y << ").");
+        B3D_TRACE("Created GLFW window with size (" << windowSize.x << ", " << windowSize.y << ").");
 
         glfwSetWindowUserPointer(mWindow, this);
         glfwSetKeyCallback(mWindow, keyCallback);
@@ -99,7 +99,7 @@ namespace Engine
             mWindow = nullptr;
             mFrameTime = 0.0;
 
-            Z_TRACE("Destroyed GLFW window.");
+            B3D_TRACE("Destroyed GLFW window.");
         }
     }
 
@@ -110,7 +110,7 @@ namespace Engine
         glm::ivec2 screenSize(0);
         glfwGetFramebufferSize(mWindow, &screenSize.x, &screenSize.y);
 
-        Z_LOGI("Initializing application with window size (" << screenSize.x << ", " << screenSize.y << ").");
+        B3D_LOGI("Initializing application with window size (" << screenSize.x << ", " << screenSize.y << ").");
         mApplication->initialize(std::make_shared<Renderer>(), glm::vec2(screenSize));
 
         while (!glfwWindowShouldClose(mWindow)) {
@@ -122,7 +122,7 @@ namespace Engine
             glfwGetFramebufferSize(mWindow, &newScreenSize.x, &newScreenSize.y);
             if (screenSize != newScreenSize) {
                 screenSize = newScreenSize;
-                Z_LOGI("Application window has been resized to (" << screenSize.x << ", " << screenSize.y << ").");
+                B3D_LOGI("Application window has been resized to (" << screenSize.x << ", " << screenSize.y << ").");
                 mApplication->resize(glm::vec2(screenSize));
             }
 
@@ -135,7 +135,7 @@ namespace Engine
                 frameCallback();
         }
 
-        Z_LOGI("Application is shutting down.");
+        B3D_LOGI("Application is shutting down.");
         mApplication->shutdown();
 
         destroyWindow();
@@ -179,6 +179,6 @@ namespace Engine
 
     void GlfwWrapper::errorCallback(int, const char* description)
     {
-        Z_LOGE("GLFW error: " << description);
+        B3D_LOGE("GLFW error: " << description);
     }
 }

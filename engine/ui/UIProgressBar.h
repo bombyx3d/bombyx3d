@@ -57,7 +57,7 @@ namespace Engine
         Direction mDirection;
         float mProgress;
 
-        Z_DISABLE_COPY(UIProgressBar);
+        B3D_DISABLE_COPY(UIProgressBar);
     };
 
     using UIProgressBarPtr = std::shared_ptr<UIProgressBar>;

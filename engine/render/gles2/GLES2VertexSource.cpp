@@ -79,7 +79,7 @@ namespace Engine
         for (const auto& it : shader.attributes()) {
             auto jt = mAttributes.find(it.first);
             if (jt == mAttributes.end())
-                Z_LOGW("Missing input for attribute \"" << it.first.text() << "\".");
+                B3D_LOGW("Missing input for attribute \"" << it.first.text() << "\".");
             else {
                 const auto& attr = jt->second;
 

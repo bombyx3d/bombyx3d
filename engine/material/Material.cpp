@@ -86,7 +86,7 @@ namespace Engine
         if (!file)
             return false;
 
-        Z_LOGI("Loading material \"" << file->name() << "\"");
+        B3D_LOGI("Loading material \"" << file->name() << "\"");
 
         IMaterialLoader* materialLoader = nullptr;
         {
@@ -100,7 +100,7 @@ namespace Engine
         }
 
         if (!materialLoader) {
-            Z_LOGE("There is no loader able to read material \"" << file->name() << "\".");
+            B3D_LOGE("There is no loader able to read material \"" << file->name() << "\".");
             return false;
         }
 

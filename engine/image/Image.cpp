@@ -86,7 +86,7 @@ namespace Engine
         if (!file)
             return std::make_shared<Image>();
 
-        Z_LOGI("Loading image \"" << file->name() << "\"");
+        B3D_LOGI("Loading image \"" << file->name() << "\"");
 
         IImageLoader* imageLoader = nullptr;
         {
@@ -100,7 +100,7 @@ namespace Engine
         }
 
         if (!imageLoader) {
-            Z_LOGE("There is no loader able to read image \"" << file->name() << "\".");
+            B3D_LOGE("There is no loader able to read image \"" << file->name() << "\".");
             return std::make_shared<Image>();
         }
 

@@ -26,7 +26,7 @@ set(libraries)
 
 if(WIN32)
     set(platform_name "win32")
-    list(APPEND defines "Z_PLATFORM_WIN32")
+    list(APPEND defines "B3D_PLATFORM_WIN32")
     list(APPEND libraries glfw glew)
     list(APPEND source_files
         shared/CxxThreadManager.cpp
@@ -49,7 +49,7 @@ endif()
 
 if(APPLE)
     set(platform_name "osx")
-    list(APPEND defines "Z_PLATFORM_OSX")
+    list(APPEND defines "B3D_PLATFORM_OSX")
     list(APPEND libraries glfw)
     list(APPEND source_files
         shared/CxxThreadManager.cpp
@@ -68,7 +68,7 @@ endif()
 
 if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
     set(platform_name "linux")
-    list(APPEND defines "Z_PLATFORM_LINUX")
+    list(APPEND defines "B3D_PLATFORM_LINUX")
     list(APPEND libraries glfw glew)
     list(APPEND source_files
         shared/CxxThreadManager.cpp
@@ -86,7 +86,7 @@ if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
 endif()
 
 add_library(bombyx3d-platform STATIC EXCLUDE_FROM_ALL ${source_files})
-z_set_source_groups(${source_files})
+b3d_set_source_groups(${source_files})
 
 set_target_properties(bombyx3d-platform PROPERTIES
     CXX_STANDARD 11
@@ -96,5 +96,5 @@ set_target_properties(bombyx3d-platform PROPERTIES
 )
 
 target_link_libraries(bombyx3d-platform bombyx3d-core)
-z_target_link_libraries(bombyx3d-platform glm ${libraries})
+b3d_target_link_libraries(bombyx3d-platform glm ${libraries})
 target_compile_definitions(bombyx3d-platform PUBLIC ${defines})

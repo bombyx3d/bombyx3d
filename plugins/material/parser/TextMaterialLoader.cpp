@@ -70,7 +70,7 @@ namespace Engine
         const char* p = data.data();
         size_t size = data.size();
         if (size >= 3 && uint8_t(p[0]) == 0xEF && uint8_t(p[1]) == 0xBB && uint8_t(p[2]) == 0xBF) {
-            Z_LOGW("Material file \"" << file->name() << "\" contains an UTF-8 byte order mark.");
+            B3D_LOGW("Material file \"" << file->name() << "\" contains an UTF-8 byte order mark.");
             p += 3;
             size -= 3;
         }
@@ -82,7 +82,7 @@ namespace Engine
             assert(pegtl::analyze<Grammar::File>() == 0);
             pegtl::parse<Grammar::File, GrammarActions::Action>(p, size, "", context);
         } catch (const pegtl::parse_error& error) {
-            Z_LOGE("Unable to parse material \"" << file->name() << "\": " << error.what());
+            B3D_LOGE("Unable to parse material \"" << file->name() << "\": " << error.what());
             return false;
         }
 
@@ -104,7 +104,7 @@ namespace Engine
             auto technique = std::make_shared<MaterialTechnique>(techniqueName);
 
             if (techniqueTree->passes.empty()) {
-                Z_LOGW("In material file \"" << file->name()
+                B3D_LOGW("In material file \"" << file->name()
                     << "\": technique \"" << techniqueName << "\" does not have passes.");
             }
 

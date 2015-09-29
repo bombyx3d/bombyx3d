@@ -56,6 +56,6 @@ namespace Engine
 
         FilePtr openIncludeFile(std::string fileName, const std::string& parentFileName) const;
 
-        Z_DISABLE_COPY(ShaderLoader);
+        B3D_DISABLE_COPY(ShaderLoader);
     };
 }

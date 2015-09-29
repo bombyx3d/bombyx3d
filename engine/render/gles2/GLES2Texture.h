@@ -42,6 +42,6 @@ namespace Engine
         size_t mHandle;
         glm::vec2 mSize;
 
-        Z_DISABLE_COPY(GLES2Texture);
+        B3D_DISABLE_COPY(GLES2Texture);
     };
 }

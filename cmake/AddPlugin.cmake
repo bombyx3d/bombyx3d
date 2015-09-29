@@ -22,7 +22,7 @@
 
 include(CMakeParseArguments)
 
-macro(z_add_plugin name)
+macro(b3d_add_plugin name)
 
     string(REPLACE "/" "-" target "bombyx3d-plugin-${name}")
 
@@ -35,7 +35,7 @@ macro(z_add_plugin name)
         set(ARGS_CXX_STANDARD 11)
     endif()
 
-    z_set_source_groups(${ARGS_SOURCES})
+    b3d_set_source_groups(${ARGS_SOURCES})
     add_library("${target}" STATIC EXCLUDE_FROM_ALL ${ARGS_SOURCES})
 
     set_target_properties("${target}" PROPERTIES CXX_STANDARD "${ARGS_CXX_STANDARD}" FOLDER "Bombyx3D")
@@ -50,7 +50,7 @@ macro(z_add_plugin name)
     endif()
 
     foreach(library ${ARGS_LIBRARIES})
-        z_target_link_library("${target}" "${library}")
+        b3d_target_link_library("${target}" "${library}")
     endforeach()
 
 endmacro()

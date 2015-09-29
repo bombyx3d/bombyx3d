@@ -48,6 +48,6 @@ namespace Engine
         ProducerConsumerQueue<std::function<void()>> mRenderThreadQueue;
         WorkerThread mWorkerThread;
 
-        Z_DISABLE_COPY(CxxThreadManager);
+        B3D_DISABLE_COPY(CxxThreadManager);
     };
 }

@@ -5,7 +5,7 @@ include(../../cmake/DisableWarnings.cmake)
 file(GLOB source_files *.c *.h)
 source_group("Source Files" FILES ${source_files})
 
-z_add_library(zlib STATIC EXCLUDE_FROM_ALL ${source_files})
+b3d_add_library(zlib STATIC EXCLUDE_FROM_ALL ${source_files})
 
 set_target_properties("${zlib}" PROPERTIES OUTPUT_NAME "z")
 target_include_directories("${zlib}" BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

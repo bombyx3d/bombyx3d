@@ -67,7 +67,7 @@ namespace Engine
         AtomTable();
         ~AtomTable();
 
-        Z_DISABLE_COPY(AtomTable);
+        B3D_DISABLE_COPY(AtomTable);
         friend class Atom;
     };
 }

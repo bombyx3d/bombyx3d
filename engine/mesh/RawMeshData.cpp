@@ -68,7 +68,7 @@ namespace Engine
         if (!file)
             return std::make_shared<RawMeshData>();
 
-        Z_LOGI("Loading mesh \"" << file->name() << "\"");
+        B3D_LOGI("Loading mesh \"" << file->name() << "\"");
 
         IMeshLoader* meshLoader = nullptr;
         {
@@ -82,7 +82,7 @@ namespace Engine
         }
 
         if (!meshLoader) {
-            Z_LOGE("There is no loader able to read mesh \"" << file->name() << "\".");
+            B3D_LOGE("There is no loader able to read mesh \"" << file->name() << "\".");
             return std::make_shared<RawMeshData>();
         }
 

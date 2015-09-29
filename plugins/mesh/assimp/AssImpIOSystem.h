@@ -42,6 +42,6 @@ namespace Engine
     private:
         IFile* mPrimaryFile;
 
-        Z_DISABLE_COPY(AssImpIOSystem);
+        B3D_DISABLE_COPY(AssImpIOSystem);
     };
 }

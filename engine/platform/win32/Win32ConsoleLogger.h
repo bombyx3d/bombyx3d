@@ -40,6 +40,6 @@ namespace Engine
         CONSOLE_SCREEN_BUFFER_INFO mConsoleInitialSettings;
         HANDLE mConsoleHandle;
 
-        Z_DISABLE_COPY(Win32ConsoleLogger);
+        B3D_DISABLE_COPY(Win32ConsoleLogger);
     };
 }

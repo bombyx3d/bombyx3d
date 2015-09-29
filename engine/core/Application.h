@@ -54,7 +54,7 @@ namespace Engine
         void resize(const glm::vec2& screenSize) final override;
         void runFrame(double time) final override;
 
-        Z_DISABLE_COPY(Application);
+        B3D_DISABLE_COPY(Application);
     };
 
     template <typename TYPE, typename... ARGS> IApplication* createApplicationWithInitialScene(ARGS... args)

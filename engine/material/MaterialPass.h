@@ -105,6 +105,6 @@ namespace Engine
         void ensureShaderLoaded(bool async) const;
         size_t uniformIndex(Atom name);
 
-        Z_DISABLE_COPY(MaterialPass);
+        B3D_DISABLE_COPY(MaterialPass);
     };
 }

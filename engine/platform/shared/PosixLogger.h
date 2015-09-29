@@ -34,6 +34,6 @@ namespace Engine
 
         void write(LogLevel level, const std::string& message) override;
 
-        Z_DISABLE_COPY(PosixLogger);
+        B3D_DISABLE_COPY(PosixLogger);
     };
 }

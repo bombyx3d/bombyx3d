@@ -22,6 +22,6 @@
 
 #pragma once
 
-#define Z_DISABLE_COPY(CLASS) \
+#define B3D_DISABLE_COPY(CLASS) \
     CLASS(const CLASS&) = delete; \
     CLASS& operator=(const CLASS&) = delete

@@ -46,6 +46,6 @@ namespace Engine
         FILE* mHandle;
         std::string mPath;
 
-        Z_DISABLE_COPY(StdIoFile);
+        B3D_DISABLE_COPY(StdIoFile);
     };
 }

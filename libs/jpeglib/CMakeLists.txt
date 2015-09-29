@@ -77,7 +77,7 @@ set(source_files
     wrtarga.c
 )
 
-z_add_library(jpeglib STATIC ${EXCLUDE_FROM_ALL} ${source_files})
+b3d_add_library(jpeglib STATIC ${EXCLUDE_FROM_ALL} ${source_files})
 
 source_group("Source Files" FILES ${source_files})
 set_source_files_properties(jconfig.vc PROPERTIES HEADER_FILE_ONLY TRUE)

@@ -94,6 +94,6 @@ namespace Engine
         void emitTouchEnd(int fingerIndex, const glm::vec2& position);
         void emitTouchCancel(int fingerIndex, const glm::vec2& position);
 
-        Z_DISABLE_COPY(InputManager);
+        B3D_DISABLE_COPY(InputManager);
     };
 }

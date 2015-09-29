@@ -67,6 +67,6 @@ namespace Engine
         std::vector<TYPE*> mObservers;
         int mIterating = 0;
 
-        Z_DISABLE_COPY(ObserverList);
+        B3D_DISABLE_COPY(ObserverList);
     };
 }

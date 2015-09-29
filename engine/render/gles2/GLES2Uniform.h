@@ -53,6 +53,6 @@ namespace Engine
     private:
         IUniformValue* mValue;
 
-        Z_DISABLE_COPY(GLES2Uniform);
+        B3D_DISABLE_COPY(GLES2Uniform);
     };
 }

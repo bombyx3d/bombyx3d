@@ -73,7 +73,7 @@ namespace Engine
         glUseProgram(GLuint(mProgram));
     }
 
-    #define Z_PRINT_INFO_LOG(STREAM, WHAT, HANDLE) \
+    #define B3D_PRINT_INFO_LOG(STREAM, WHAT, HANDLE) \
         GLint bufferLength = 0; \
         glGet##WHAT##iv(GLuint(HANDLE), GL_INFO_LOG_LENGTH, &bufferLength); \
         if (bufferLength <= 0) { \
@@ -117,9 +117,9 @@ namespace Engine
             ss << "---------------\n";
             formatSource(mFragmentShader, ss);
             ss << "---------------\n";
-            Z_PRINT_INFO_LOG(ss, Program, mProgram);
+            B3D_PRINT_INFO_LOG(ss, Program, mProgram);
             ss << "\n===============";
-            Z_LOGE(ss.str());
+            B3D_LOGE(ss.str());
         }
 
         return status == GL_TRUE;
@@ -138,9 +138,9 @@ namespace Engine
             ss << "===============\n";
             formatSource(shaderHandle, ss);
             ss << "---------------\n";
-            Z_PRINT_INFO_LOG(ss, Shader, shaderHandle);
+            B3D_PRINT_INFO_LOG(ss, Shader, shaderHandle);
             ss << "\n===============";
-            Z_LOGE(ss.str());
+            B3D_LOGE(ss.str());
         }
 
         return status == GL_TRUE;

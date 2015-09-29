@@ -5,7 +5,7 @@ include(../../cmake/DisableWarnings.cmake)
 file(GLOB root_files *.c *.h)
 source_group("Source Files" FILES ${root_files})
 
-z_add_library(bzip2 STATIC EXCLUDE_FROM_ALL
+b3d_add_library(bzip2 STATIC EXCLUDE_FROM_ALL
     blocksort.c
     bzlib.c
     bzlib.h

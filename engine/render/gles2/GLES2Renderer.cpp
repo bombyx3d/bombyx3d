@@ -248,7 +248,7 @@ namespace Engine
                 bound = it->second.upload(uniform.second, &textureCount);
 
             if (!bound)
-                Z_LOGW("Missing value for uniform \"" << uniform.first.text() << "\".");
+                B3D_LOGW("Missing value for uniform \"" << uniform.first.text() << "\".");
         }
     }
 

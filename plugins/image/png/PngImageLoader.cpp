@@ -36,7 +36,7 @@ namespace Engine
     static void pngError(png_structp pngp, png_const_charp message)
     {
         IFile* file = reinterpret_cast<IFile*>(png_get_error_ptr(pngp));
-        Z_LOGE("Unable to decode PNG file \"" << file->name() << "\": " << message);
+        B3D_LOGE("Unable to decode PNG file \"" << file->name() << "\": " << message);
 
         (void)file;
         (void)message;
@@ -47,7 +47,7 @@ namespace Engine
     static void pngWarning(png_structp pngp, png_const_charp message)
     {
         IFile* file = reinterpret_cast<IFile*>(png_get_error_ptr(pngp));
-        Z_LOGW("In PNG file \"" << file->name() << "\": warning: " << message);
+        B3D_LOGW("In PNG file \"" << file->name() << "\": warning: " << message);
 
         (void)file;
         (void)message;
@@ -58,7 +58,7 @@ namespace Engine
         IFile* file = reinterpret_cast<IFile*>(png_get_io_ptr(pngp));
         size_t bytesRead = file->read(data, length);
         if (bytesRead != length) {
-            Z_LOGE("Unable to decode PNG file \"" << file->name() << "\": unexpected end of stream.");
+            B3D_LOGE("Unable to decode PNG file \"" << file->name() << "\": unexpected end of stream.");
             longjmp(png_jmpbuf(pngp), 1);
         }
     }
@@ -89,7 +89,7 @@ namespace Engine
         volatile Context context;
         png_structp pngp = context.pngp = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
         if (!pngp) {
-            Z_LOGE("Unable to decode PNG file \"" << file->name() << "\": out of memory.");
+            B3D_LOGE("Unable to decode PNG file \"" << file->name() << "\": out of memory.");
             return std::make_shared<Image>();
         }
 
@@ -102,7 +102,7 @@ namespace Engine
 
         png_infop infop = context.infop = png_create_info_struct(pngp);
         if (!infop) {
-            Z_LOGE("Unable to decode PNG file \"" << file->name() << "\": out of memory.");
+            B3D_LOGE("Unable to decode PNG file \"" << file->name() << "\": out of memory.");
             return std::make_shared<Image>();
         }
 
@@ -150,7 +150,7 @@ namespace Engine
         png_byte channels = png_get_channels(pngp, infop);
 
         if (depth != 8) {
-            Z_LOGE("Unable to decode PNG file \"" << file->name()
+            B3D_LOGE("Unable to decode PNG file \"" << file->name()
                 << "\": image has invalid bit depth (" << depth << ").");
             return std::make_shared<Image>();
         }
@@ -163,7 +163,7 @@ namespace Engine
         case 3: format = PixelFormat::RGB24; break;
         case 4: format = PixelFormat::RGBA32; break;
         default:
-            Z_LOGE("Unable to decode PNG file \"" << file->name()
+            B3D_LOGE("Unable to decode PNG file \"" << file->name()
                 << "\": image has unsupported number of channels (" << channels << ").");
             return std::make_shared<Image>();
         }

@@ -94,7 +94,7 @@ namespace Engine
         void flush(bool geometryOnly);
 
     private:
-        Z_VERTEX_FORMAT(Vertex,
+        B3D_VERTEX_FORMAT(Vertex,
             (glm::vec3) position,
             (glm::vec2) texCoord,
             (glm::vec4) color
@@ -126,6 +126,6 @@ namespace Engine
         void setPrimitiveType(PrimitiveType primitive);
         size_t emitVertex();
 
-        Z_DISABLE_COPY(ImmediateModeRenderer);
+        B3D_DISABLE_COPY(ImmediateModeRenderer);
     };
 }

@@ -20,7 +20,7 @@
 # THE SOFTWARE.
 #
 
-z_add_plugin(image/jpeg
+b3d_add_plugin(image/jpeg
     SOURCES
         JpegImageLoader.cpp
         JpegImageLoader.h

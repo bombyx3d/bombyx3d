@@ -54,7 +54,7 @@ namespace Engine
             size = position();
         else {
             const char* error = strerror(errno);
-            Z_LOGE("Seek failed in file \"" << mPath << "\": " << error);
+            B3D_LOGE("Seek failed in file \"" << mPath << "\": " << error);
             size = 0;
         }
 
@@ -68,7 +68,7 @@ namespace Engine
         long pos = ftell(mHandle);
         if (pos < 0) {
             const char* error = strerror(errno);
-            Z_LOGE("Unable to determine current position in file \"" << mPath << "\": " << error);
+            B3D_LOGE("Unable to determine current position in file \"" << mPath << "\": " << error);
             return 0;
         }
         return uint64_t(pos);
@@ -78,7 +78,7 @@ namespace Engine
     {
         if (fseek(mHandle, long(pos), SEEK_SET) < 0) {
             const char* error = strerror(errno);
-            Z_LOGE("Seek failed in file \"" << mPath << "\": " << error);
+            B3D_LOGE("Seek failed in file \"" << mPath << "\": " << error);
             return false;
         }
         return true;
@@ -89,7 +89,7 @@ namespace Engine
         size_t bytesRead = fread(buffer, 1, bytes, mHandle);
         if (ferror(mHandle)) {
             const char* error = strerror(errno);
-            Z_LOGE("Error reading file \"" << mPath << "\": " << error);
+            B3D_LOGE("Error reading file \"" << mPath << "\": " << error);
         }
         return bytesRead;
     }

@@ -45,6 +45,6 @@ namespace Engine
         size_t mSize;
         size_t mTarget;
 
-        Z_DISABLE_COPY(GLES2Buffer);
+        B3D_DISABLE_COPY(GLES2Buffer);
     };
 }

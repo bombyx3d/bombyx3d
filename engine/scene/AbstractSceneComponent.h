@@ -45,6 +45,6 @@ namespace Engine
     protected:
         AbstractSceneComponent();
 
-        Z_DISABLE_COPY(AbstractSceneComponent);
+        B3D_DISABLE_COPY(AbstractSceneComponent);
     };
 }

@@ -55,6 +55,6 @@ namespace Engine
         static void mouseMoveCallback(GLFWwindow* window, double x, double y);
         static void errorCallback(int error, const char* description);
 
-        Z_DISABLE_COPY(GlfwWrapper);
+        B3D_DISABLE_COPY(GlfwWrapper);
     };
 }

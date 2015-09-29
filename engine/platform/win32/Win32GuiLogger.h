@@ -35,6 +35,6 @@ namespace Engine
 
         void write(LogLevel level, const std::string& message) override;
 
-        Z_DISABLE_COPY(Win32GuiLogger);
+        B3D_DISABLE_COPY(Win32GuiLogger);
     };
 }

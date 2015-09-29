@@ -33,8 +33,8 @@ namespace Engine
     }
 }
 
-#define Z_TRACE(message) (::Engine::Log::write(::Engine::LogLevel::Trace, std::ostringstream() << message))
-#define Z_LOGD(message) (::Engine::Log::write(::Engine::LogLevel::Debug, std::ostringstream() << message))
-#define Z_LOGI(message) (::Engine::Log::write(::Engine::LogLevel::Info, std::ostringstream() << message))
-#define Z_LOGW(message) (::Engine::Log::write(::Engine::LogLevel::Warning, std::ostringstream() << message))
-#define Z_LOGE(message) (::Engine::Log::write(::Engine::LogLevel::Error, std::ostringstream() << message))
+#define B3D_TRACE(message) (::Engine::Log::write(::Engine::LogLevel::Trace, std::ostringstream() << message))
+#define B3D_LOGD(message) (::Engine::Log::write(::Engine::LogLevel::Debug, std::ostringstream() << message))
+#define B3D_LOGI(message) (::Engine::Log::write(::Engine::LogLevel::Info, std::ostringstream() << message))
+#define B3D_LOGW(message) (::Engine::Log::write(::Engine::LogLevel::Warning, std::ostringstream() << message))
+#define B3D_LOGE(message) (::Engine::Log::write(::Engine::LogLevel::Error, std::ostringstream() << message))

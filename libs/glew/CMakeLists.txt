@@ -9,9 +9,9 @@ if(OPENGL_INCLUDE_DIR)
 endif()
 
 file(GLOB source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" src/*.c include/GL/*.h)
-z_set_source_groups(${source_files})
+b3d_set_source_groups(${source_files})
 
-z_add_library(glew STATIC EXCLUDE_FROM_ALL ${source_files})
+b3d_add_library(glew STATIC EXCLUDE_FROM_ALL ${source_files})
 target_include_directories("${glew}" BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_compile_definitions("${glew}" PUBLIC "GLEW_STATIC" "GLEW_NO_GLU")
 

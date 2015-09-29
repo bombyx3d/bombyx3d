@@ -31,7 +31,7 @@ namespace Engine
         size_t length = strlen(message);
         if (length > 0 && message[length - 1] == '\n')
             --length;
-        Z_LOGI(" - AssImp: " << std::string(message, length));
+        B3D_LOGI(" - AssImp: " << std::string(message, length));
     }
 
     static std::once_flag gInitOnce;

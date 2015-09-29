@@ -85,6 +85,6 @@ namespace Engine
 
         void resetOpenGLBindings();
 
-        Z_DISABLE_COPY(Renderer);
+        B3D_DISABLE_COPY(Renderer);
     };
 }

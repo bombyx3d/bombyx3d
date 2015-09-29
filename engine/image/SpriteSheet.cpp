@@ -78,7 +78,7 @@ namespace Engine
         if (!file)
             return false;
 
-        Z_LOGI("Loading sprite sheet \"" << file->name() << "\"");
+        B3D_LOGI("Loading sprite sheet \"" << file->name() << "\"");
 
         ISpriteSheetLoader* spriteSheetLoader = nullptr;
         {
@@ -92,7 +92,7 @@ namespace Engine
         }
 
         if (!spriteSheetLoader) {
-            Z_LOGE("There is no loader able to read sprite sheet \"" << file->name() << "\".");
+            B3D_LOGE("There is no loader able to read sprite sheet \"" << file->name() << "\".");
             return false;
         }
 

@@ -22,7 +22,7 @@
 
 include(CMakeParseArguments)
 
-macro(z_add_library name)
+macro(b3d_add_library name)
 
     string(REPLACE "/" "-" target "bombyx3d-support-${name}")
     set("${name}" "${target}")

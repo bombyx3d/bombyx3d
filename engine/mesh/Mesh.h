@@ -56,6 +56,6 @@ namespace Engine
         IndexBufferPtr mIndexBuffer;
         std::vector<Element> mElements;
 
-        Z_DISABLE_COPY(Mesh);
+        B3D_DISABLE_COPY(Mesh);
     };
 }

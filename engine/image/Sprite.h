@@ -46,6 +46,6 @@ namespace Engine
         SpriteSheetPtr mSpriteSheet;
         std::shared_ptr<SpriteSheet::Element> mElement;
 
-        Z_DISABLE_COPY(Sprite);
+        B3D_DISABLE_COPY(Sprite);
     };
 }

@@ -66,6 +66,6 @@ namespace Engine
 
         void resetToUncompiledState();
 
-        Z_DISABLE_COPY(GLES2Shader);
+        B3D_DISABLE_COPY(GLES2Shader);
     };
 }

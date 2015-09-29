@@ -20,7 +20,7 @@
 # THE SOFTWARE.
 #
 
-z_add_plugin(image/png
+b3d_add_plugin(image/png
     SOURCES
         PngImageLoader.cpp
         PngImageLoader.h

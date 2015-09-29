@@ -41,7 +41,7 @@ namespace Engine
     {
         static const int MAX_VERTICES_PER_ELEMENT = 65534;
 
-        Z_VERTEX_FORMAT(Vertex,
+        B3D_VERTEX_FORMAT(Vertex,
             (glm::vec3) position,
             (glm::vec3) normal,
             (glm::vec3) tangent,
@@ -94,7 +94,7 @@ namespace Engine
         importer.SetIOHandler(new AssImpIOSystem(file));
         scene = importer.ReadFile(file->name(), flags);
         if (!scene) {
-            Z_LOGE("Unable to load mesh \"" << file->name() << "\": " << importer.GetErrorString());
+            B3D_LOGE("Unable to load mesh \"" << file->name() << "\": " << importer.GetErrorString());
             return mesh;
         }
 
@@ -112,10 +112,10 @@ namespace Engine
             SkeletonPtr skeleton = std::make_shared<Skeleton>(globalInverseTransform);
             readNodeHierarchy(skeleton, scene->mRootNode, SkeletonBone::INVALID_INDEX);
             mesh->setSkeleton(skeleton);
-            //Z_LOGI(" - Total " << skeleton->numBones() << " bone" << (skeleton->numBones() == 1 ? "" : "s") << '.');
+            //B3D_LOGI(" - Total " << skeleton->numBones() << " bone" << (skeleton->numBones() == 1 ? "" : "s") << '.');
 
             if (skeleton->numBones() > 255) {
-                Z_LOGW("In \"" << file->name() <<
+                B3D_LOGW("In \"" << file->name() <<
                     "\": skeleton has more than 255 bones. Probably there will be glitches in animations.");
             }
             */
@@ -130,9 +130,9 @@ namespace Engine
 
             if (sceneMesh->mPrimitiveTypes != aiPrimitiveType_TRIANGLE) {
                 if (sceneMesh->mName.length == 0)
-                    Z_LOGW("In \"" << file->name() << "\": ignoring non-triangulated mesh #" << meshIndex << ".");
+                    B3D_LOGW("In \"" << file->name() << "\": ignoring non-triangulated mesh #" << meshIndex << ".");
                 else {
-                    Z_LOGW("In \"" << file->name() << "\": ignoring non-triangulated mesh #" << meshIndex
+                    B3D_LOGW("In \"" << file->name() << "\": ignoring non-triangulated mesh #" << meshIndex
                         << " (\"" << sceneMesh->mName.C_Str() << "\").");
                 }
                 continue;
@@ -140,9 +140,9 @@ namespace Engine
 
             if (sceneMesh->mNumVertices > MAX_VERTICES_PER_ELEMENT) {
                 if (sceneMesh->mName.length == 0)
-                    Z_LOGW("In \"" << file->name() << "\": mesh #" << meshIndex << " has too many vertices.");
+                    B3D_LOGW("In \"" << file->name() << "\": mesh #" << meshIndex << " has too many vertices.");
                 else {
-                    Z_LOGW("In \"" << file->name() << "\": mesh #" << meshIndex
+                    B3D_LOGW("In \"" << file->name() << "\": mesh #" << meshIndex
                         << " (\"" << sceneMesh->mName.C_Str() << "\") has too many vertices.");
                 }
                 continue;
@@ -240,7 +240,7 @@ namespace Engine
 
                     ISkeletonBone* bone = const_cast<ISkeletonBone*>(mesh->skeleton()->bone(boneName));
                     if (!bone) {
-                        Z_LOGW("In \"" << file->name() << "\": undefined bone \"" << nameString << "\".");
+                        B3D_LOGW("In \"" << file->name() << "\": undefined bone \"" << nameString << "\".");
                         continue;
                     }
 

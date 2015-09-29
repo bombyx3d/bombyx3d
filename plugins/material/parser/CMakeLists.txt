@@ -20,7 +20,7 @@
 # THE SOFTWARE.
 #
 
-z_add_plugin(material/parser
+b3d_add_plugin(material/parser
     SOURCES
         ParseGrammar.h
         ParseGrammarActions.h

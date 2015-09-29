@@ -34,6 +34,6 @@ namespace Engine
     private:
         int* mCounter;
 
-        Z_DISABLE_COPY(ScopedCounter);
+        B3D_DISABLE_COPY(ScopedCounter);
     };
 }

@@ -49,6 +49,6 @@ namespace Engine
 
         Arena* newArena(size_t size);
 
-        Z_DISABLE_COPY(MemoryPool);
+        B3D_DISABLE_COPY(MemoryPool);
     };
 }

@@ -100,7 +100,7 @@ namespace Engine
                     auto include = openIncludeFile(line.substr(INCLUDE.length()), fileName);
                     success = loadFile(include.get(), what) && success;
                 } else {
-                    Z_LOGE(fileName << "(" << lineNumber << "): invalid directive.");
+                    B3D_LOGE(fileName << "(" << lineNumber << "): invalid directive.");
                     what = nullptr;
                     success = false;
                 }
@@ -116,7 +116,7 @@ namespace Engine
         }
 
         if (!success)
-            Z_LOGE("Unable to load shader \"" << fileName << "\".");
+            B3D_LOGE("Unable to load shader \"" << fileName << "\".");
 
         return success;
     }

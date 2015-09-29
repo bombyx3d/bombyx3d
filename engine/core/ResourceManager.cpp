@@ -193,7 +193,7 @@ namespace Engine
 
             bool load() override
             {
-                Z_LOGI("Loading shader \"" << fileName << "\".");
+                B3D_LOGI("Loading shader \"" << fileName << "\".");
                 return ShaderLoader::loadFile(fileName);
             }
 

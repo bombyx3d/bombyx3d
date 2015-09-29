@@ -47,6 +47,6 @@ namespace Engine
         IFile* mFile;
         FilePtr mFilePointer;
 
-        Z_DISABLE_COPY(AssImpIOStream);
+        B3D_DISABLE_COPY(AssImpIOStream);
     };
 }

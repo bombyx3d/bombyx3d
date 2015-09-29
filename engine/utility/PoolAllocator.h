@@ -60,6 +60,6 @@ namespace Engine
         MemoryPool mMemoryPool;
         std::vector<TYPE*> mFreeList;
 
-        Z_DISABLE_COPY(PoolAllocator);
+        B3D_DISABLE_COPY(PoolAllocator);
     };
 }

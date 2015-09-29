@@ -49,6 +49,6 @@ namespace Engine
         std::string mName;
         std::vector<MaterialPassPtr> mPasses;
 
-        Z_DISABLE_COPY(MaterialTechnique);
+        B3D_DISABLE_COPY(MaterialTechnique);
     };
 }

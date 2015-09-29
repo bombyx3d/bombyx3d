@@ -20,7 +20,7 @@
 # THE SOFTWARE.
 #
 
-z_add_plugin(utility/xmlutils
+b3d_add_plugin(utility/xmlutils
     SOURCES
         XmlUtils.cpp
         XmlUtils.h

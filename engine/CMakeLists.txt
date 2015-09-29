@@ -157,11 +157,11 @@ set(source_files
 )
 
 add_library(bombyx3d-core STATIC EXCLUDE_FROM_ALL ${source_files})
-z_set_source_groups(${source_files})
+b3d_set_source_groups(${source_files})
 
 set_target_properties(bombyx3d-core PROPERTIES CXX_STANDARD 11 FOLDER "Bombyx3D")
 target_link_libraries(bombyx3d-core bombyx3d-platform ${CMAKE_THREAD_LIBS_INIT})
-z_target_link_libraries(bombyx3d-core glm boost)
+b3d_target_link_libraries(bombyx3d-core glm boost)
 
 if(MSVC)
     target_compile_definitions(bombyx3d-core PUBLIC

@@ -38,6 +38,6 @@ namespace Engine
     private:
         std::string mBasePath;
 
-        Z_DISABLE_COPY(StdIoFileSystem);
+        B3D_DISABLE_COPY(StdIoFileSystem);
     };
 }

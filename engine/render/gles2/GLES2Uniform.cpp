@@ -36,7 +36,7 @@ namespace Engine
         void operator delete(void* ptr);
     };
 
-    #define Z_UNIFORM_VALUE(NAME, TYPE, UPLOAD) \
+    #define B3D_UNIFORM_VALUE(NAME, TYPE, UPLOAD) \
         struct NAME : public GLES2Uniform::IUniformValue \
         { \
             const TYPE value; \
@@ -46,13 +46,13 @@ namespace Engine
 
     namespace
     {
-        Z_UNIFORM_VALUE(FloatValue, float, glUniform1f(location, value));
-        Z_UNIFORM_VALUE(Vec2Value, glm::vec2, glUniform2fv(location, 1, &value[0]));
-        Z_UNIFORM_VALUE(Vec3Value, glm::vec3, glUniform3fv(location, 1, &value[0]));
-        Z_UNIFORM_VALUE(Vec4Value, glm::vec4, glUniform4fv(location, 1, &value[0]));
-        Z_UNIFORM_VALUE(Mat4Value, glm::mat4, glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]));
+        B3D_UNIFORM_VALUE(FloatValue, float, glUniform1f(location, value));
+        B3D_UNIFORM_VALUE(Vec2Value, glm::vec2, glUniform2fv(location, 1, &value[0]));
+        B3D_UNIFORM_VALUE(Vec3Value, glm::vec3, glUniform3fv(location, 1, &value[0]));
+        B3D_UNIFORM_VALUE(Vec4Value, glm::vec4, glUniform4fv(location, 1, &value[0]));
+        B3D_UNIFORM_VALUE(Mat4Value, glm::mat4, glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]));
 
-        Z_UNIFORM_VALUE(TextureValue, TexturePtr, {
+        B3D_UNIFORM_VALUE(TextureValue, TexturePtr, {
             glActiveTexture(GLenum(GL_TEXTURE0 + *textureCount));
             glBindTexture(GL_TEXTURE_2D, GLuint(static_cast<GLES2Texture&>(*value).handle()));
             glUniform1i(location, *textureCount);

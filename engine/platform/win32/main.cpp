@@ -66,7 +66,7 @@ static int win32Main()
             if (glewInit() == GLEW_OK) {
                 glfwWrapper.run([threadManager](){ threadManager->flushRenderThreadQueue(); });
             } else {
-                Z_LOGE("Unable to initialize GLEW.");
+                B3D_LOGE("Unable to initialize GLEW.");
                 glfwWrapper.destroyWindow();
                 MessageBoxW(nullptr, L"Unable to initialize OpenGL.", L"Error", MB_ICONERROR | MB_OK);
                 exitCode = EXIT_FAILURE;

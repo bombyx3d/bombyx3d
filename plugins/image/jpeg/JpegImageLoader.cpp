@@ -63,7 +63,7 @@ namespace Engine
             char buffer[JMSG_LENGTH_MAX];
             error->format_message(cinfo, buffer);
 
-            Z_LOGW("In JPEG file \"" << error->file->name() << "\": " << buffer);
+            B3D_LOGW("In JPEG file \"" << error->file->name() << "\": " << buffer);
         }
 
         static void jpegInitSource(j_decompress_ptr cinfo)
@@ -165,7 +165,7 @@ namespace Engine
         case JCS_RGB:
             format = PixelFormat::RGB24;
             if (numChannels != 3) {
-                Z_LOGE("Unable to decompress JPEG file \"" << file->name()
+                B3D_LOGE("Unable to decompress JPEG file \"" << file->name()
                     << "\": image has invalid number of color channels.");
                 longjmp(jerr.jmpbuf, 1);
             }
@@ -174,7 +174,7 @@ namespace Engine
         case JCS_GRAYSCALE:
             format = PixelFormat::Luminance8;
             if (numChannels != 1) {
-                Z_LOGE("Unable to decompress JPEG file \"" << file->name()
+                B3D_LOGE("Unable to decompress JPEG file \"" << file->name()
                     << "\": image has invalid number of color channels.");
                 longjmp(jerr.jmpbuf, 1);
             }
@@ -185,7 +185,7 @@ namespace Engine
         case JCS_YCCK:
         case JCS_UNKNOWN:
         default:
-            Z_LOGE("Unable to decompress JPEG file \"" << file->name() << "\": image has unsupported color space.");
+            B3D_LOGE("Unable to decompress JPEG file \"" << file->name() << "\": image has unsupported color space.");
             longjmp(jerr.jmpbuf, 1);
         }
 

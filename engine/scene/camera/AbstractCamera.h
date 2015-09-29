@@ -69,6 +69,6 @@ namespace Engine
         mutable glm::mat4 mInverseViewMatrix;
         mutable size_t mFlags;
 
-        Z_DISABLE_COPY(AbstractCamera);
+        B3D_DISABLE_COPY(AbstractCamera);
     };
 }

@@ -97,6 +97,6 @@ namespace Engine
         std::mutex mMutex;
         std::unordered_map<std::string, std::shared_ptr<Element>> mSprites;
 
-        Z_DISABLE_COPY(SpriteSheet);
+        B3D_DISABLE_COPY(SpriteSheet);
     };
 }
