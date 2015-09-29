@@ -20,17 +20,14 @@
 # THE SOFTWARE.
 #
 
-set(source_files
-    ParseGrammar.h
-    ParseGrammarActions.h
-    ParseGrammarContext.h
-    ParseTree.h
-    TextMaterialLoader.cpp
-    TextMaterialLoader.h
+z_add_plugin(materialloader-text
+    SOURCES
+        ParseGrammar.h
+        ParseGrammarActions.h
+        ParseGrammarContext.h
+        ParseTree.h
+        TextMaterialLoader.cpp
+        TextMaterialLoader.h
+    LIBRARIES
+        pegtl
 )
-
-add_library(materialloader-text STATIC EXCLUDE_FROM_ALL ${source_files})
-z_set_source_groups(${source_files})
-
-set_target_properties(materialloader-text PROPERTIES CXX_STANDARD 11)
-z_target_link_libraries(materialloader-text engine pegtl)

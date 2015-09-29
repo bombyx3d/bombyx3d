@@ -23,7 +23,7 @@
 cmake_minimum_required(VERSION 3.2)
 include(../../cmake/Engine.cmake)
 
-z_make_executable(sample
+z_add_executable(sample
     SOURCES
         LoadingScene.cpp
         LoadingScene.h

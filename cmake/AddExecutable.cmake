@@ -20,10 +20,27 @@
 # THE SOFTWARE.
 #
 
-z_add_plugin(imageloader-png
-    SOURCES
-        PngImageLoader.cpp
-        PngImageLoader.h
-    LIBRARIES
-        libpng
-)
+include(CMakeParseArguments)
+
+macro(z_add_executable name)
+
+    set(options)
+    set(oneValueArgs CXX_STANDARD)
+    set(multiValueArgs SOURCES LIBRARIES)
+    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    if(NOT ARGS_CXX_STANDARD)
+        set(ARGS_CXX_STANDARD 11)
+    endif()
+
+    z_set_source_groups(${ARGS_SOURCES})
+    add_executable("${name}" ${ARGS_SOURCES})
+
+    set_target_properties("${name}" PROPERTIES CXX_STANDARD "${ARGS_CXX_STANDARD}")
+    target_link_libraries("${name}" bombyx3d-core)
+
+    foreach(library ${ARGS_LIBRARIES})
+        z_target_link_library("${name}" "${library}")
+    endforeach()
+
+endmacro()

@@ -20,13 +20,10 @@
 # THE SOFTWARE.
 #
 
-set(source_files
-    XmlSpriteSheetLoader.cpp
-    XmlSpriteSheetLoader.h
+z_add_plugin(spritesheetloader-xml
+    SOURCES
+        XmlSpriteSheetLoader.cpp
+        XmlSpriteSheetLoader.h
+    LIBRARIES
+        tinyxml
 )
-
-add_library(spritesheetloader-xml STATIC EXCLUDE_FROM_ALL ${source_files})
-z_set_source_groups(${source_files})
-
-set_target_properties(spritesheetloader-xml PROPERTIES CXX_STANDARD 11)
-z_target_link_libraries(spritesheetloader-xml engine tinyxml)

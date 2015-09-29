@@ -77,11 +77,11 @@ set(source_files
     wrtarga.c
 )
 
-add_library(jpeglib STATIC ${EXCLUDE_FROM_ALL} ${source_files})
+z_add_library(jpeglib STATIC ${EXCLUDE_FROM_ALL} ${source_files})
 
 source_group("Source Files" FILES ${source_files})
 set_source_files_properties(jconfig.vc PROPERTIES HEADER_FILE_ONLY TRUE)
 
-set_target_properties(jpeglib PROPERTIES OUTPUT_NAME "jpeg")
-target_include_directories(jpeglib BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
-target_include_directories(jpeglib BEFORE PUBLIC "${CMAKE_CURRENT_BINARY_DIR}")
+set_target_properties("${jpeglib}" PROPERTIES OUTPUT_NAME "jpeg")
+target_include_directories("${jpeglib}" BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories("${jpeglib}" BEFORE PUBLIC "${CMAKE_CURRENT_BINARY_DIR}")

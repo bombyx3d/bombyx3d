@@ -29,14 +29,21 @@ if(NOT _Z_ENGINE_INCLUDED)
     get_filename_component(CMakeScriptsPath "${CMakeScriptsPath}" PATH)
     get_filename_component(EnginePath "${CMakeScriptsPath}" PATH)
 
+    set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
+    set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "Bombyx3D")
+    set_property(GLOBAL PROPERTY USE_FOLDERS TRUE)
+
     include("${CMakeScriptsPath}/SetSourceGroups.cmake")
     include("${CMakeScriptsPath}/TargetLinkLibrary.cmake")
-    include("${CMakeScriptsPath}/MakeExecutable.cmake")
+    include("${CMakeScriptsPath}/AddLibrary.cmake")
+    include("${CMakeScriptsPath}/AddPlugin.cmake")
+    include("${CMakeScriptsPath}/AddExecutable.cmake")
 
     find_package(Threads REQUIRED)
     include_directories("${EnginePath}")
 
     if(NOT TARGET engine)
-        add_subdirectory("${EnginePath}/engine" z_engine)
+        file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/bombyx3d")
+        add_subdirectory("${EnginePath}/engine" "${CMAKE_BINARY_DIR}/bombyx3d")
     endif()
 endif()

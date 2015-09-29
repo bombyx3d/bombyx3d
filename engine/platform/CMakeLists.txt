@@ -25,6 +25,7 @@ set(defines)
 set(libraries)
 
 if(WIN32)
+    set(platform_name "win32")
     list(APPEND defines "Z_PLATFORM_WIN32")
     list(APPEND libraries glfw glew)
     list(APPEND source_files
@@ -47,6 +48,7 @@ if(WIN32)
 endif()
 
 if(APPLE)
+    set(platform_name "osx")
     list(APPEND defines "Z_PLATFORM_OSX")
     list(APPEND libraries glfw)
     list(APPEND source_files
@@ -65,6 +67,7 @@ if(APPLE)
 endif()
 
 if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+    set(platform_name "linux")
     list(APPEND defines "Z_PLATFORM_LINUX")
     list(APPEND libraries glfw glew)
     list(APPEND source_files
@@ -82,9 +85,16 @@ if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
     )
 endif()
 
-add_library(platform STATIC EXCLUDE_FROM_ALL ${source_files})
+add_library(bombyx3d-platform STATIC EXCLUDE_FROM_ALL ${source_files})
 z_set_source_groups(${source_files})
 
-set_target_properties(platform PROPERTIES CXX_STANDARD 11)
-z_target_link_libraries(platform engine glm ${libraries})
-target_compile_definitions(platform PUBLIC ${defines})
+set_target_properties(bombyx3d-platform PROPERTIES
+    CXX_STANDARD 11
+    FOLDER "Bombyx3D"
+    PROJECT_LABEL "bombyx3d-core-${platform_name}"
+    OUTPUT_NAME "bombyx3d-core-${platform_name}"
+)
+
+target_link_libraries(bombyx3d-platform bombyx3d-core)
+z_target_link_libraries(bombyx3d-platform glm ${libraries})
+target_compile_definitions(bombyx3d-platform PUBLIC ${defines})

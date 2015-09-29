@@ -26,8 +26,8 @@ file(GLOB code_inl_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" code/*.inl)
 set_source_files_properties(${code_inl_files} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 z_set_source_groups(${source_files} ${code_inl_files})
-add_library(assimp STATIC EXCLUDE_FROM_ALL ${source_files} ${code_inl_files})
-z_target_link_libraries(assimp cvtutf irrxml poly2tri minizip zlib)
+z_add_library(assimp STATIC EXCLUDE_FROM_ALL ${source_files} ${code_inl_files})
+z_target_link_libraries("${assimp}" cvtutf irrxml poly2tri minizip zlib)
 
-target_include_directories(assimp SYSTEM BEFORE PUBLIC
+target_include_directories("${assimp}" SYSTEM BEFORE PUBLIC
     "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/include")

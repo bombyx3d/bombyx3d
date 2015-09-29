@@ -20,10 +20,14 @@
 # THE SOFTWARE.
 #
 
-z_add_plugin(imageloader-png
-    SOURCES
-        PngImageLoader.cpp
-        PngImageLoader.h
-    LIBRARIES
-        libpng
-)
+include(CMakeParseArguments)
+
+macro(z_add_library name)
+
+    string(REPLACE "/" "-" target "bombyx3d-support-${name}")
+    set("${name}" "${target}")
+
+    add_library("${target}" ${ARGN})
+    set_target_properties("${target}" PROPERTIES FOLDER "Bombyx3D")
+
+endmacro()

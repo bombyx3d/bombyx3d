@@ -22,7 +22,9 @@
 
 include(CMakeParseArguments)
 
-macro(z_make_executable name)
+macro(z_add_plugin name)
+
+    string(REPLACE "/" "-" target "bombyx3d-plugin-${name}")
 
     set(options)
     set(oneValueArgs CXX_STANDARD)
@@ -34,13 +36,13 @@ macro(z_make_executable name)
     endif()
 
     z_set_source_groups(${ARGS_SOURCES})
-    add_executable("${name}" ${ARGS_SOURCES})
+    add_library("${target}" STATIC EXCLUDE_FROM_ALL ${ARGS_SOURCES})
 
-    set_target_properties("${name}" PROPERTIES CXX_STANDARD "${ARGS_CXX_STANDARD}")
-    target_link_libraries("${name}" engine)
+    set_target_properties("${target}" PROPERTIES CXX_STANDARD "${ARGS_CXX_STANDARD}" FOLDER "Bombyx3D")
+    target_link_libraries("${target}" bombyx3d-core)
 
     foreach(library ${ARGS_LIBRARIES})
-        z_target_link_library("${name}" "${library}")
+        z_target_link_library("${target}" "${library}")
     endforeach()
 
 endmacro()

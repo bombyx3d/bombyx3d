@@ -19,11 +19,11 @@ set(source_files
 )
 
 source_group("Source Files" FILES ${source_files})
-add_library(minizip STATIC EXCLUDE_FROM_ALL ${source_files})
+z_add_library(minizip STATIC EXCLUDE_FROM_ALL ${source_files})
 
 if(NOT WIN32)
     set_source_files_properties(iowin32.c PROPERTIES HEADER_FILE_ONLY TRUE)
 endif()
 
-target_include_directories(minizip BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
-z_target_link_libraries(minizip zlib bzip2)
+target_include_directories("${minizip}" BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+z_target_link_libraries("${minizip}" zlib bzip2)

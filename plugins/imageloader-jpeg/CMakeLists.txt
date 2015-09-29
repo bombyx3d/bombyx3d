@@ -20,13 +20,10 @@
 # THE SOFTWARE.
 #
 
-set(source_files
-    JpegImageLoader.cpp
-    JpegImageLoader.h
+z_add_plugin(imageloader-jpeg
+    SOURCES
+        JpegImageLoader.cpp
+        JpegImageLoader.h
+    LIBRARIES
+        jpeglib
 )
-
-add_library(imageloader-jpeg STATIC EXCLUDE_FROM_ALL ${source_files})
-z_set_source_groups(${source_files})
-
-set_target_properties(imageloader-jpeg PROPERTIES CXX_STANDARD 11)
-z_target_link_libraries(imageloader-jpeg engine jpeglib)
