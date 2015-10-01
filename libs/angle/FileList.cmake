@@ -1,5 +1,6 @@
 
 set(source_files
+    src/common/angleutils.cpp
     src/common/angleutils.h
     src/common/BitSetIterator.h
     src/common/debug.cpp
@@ -542,5 +543,6 @@ elseif(B3D_WIN32)
         src/libANGLE/renderer/d3d/d3d9/vertexconversion.h
         src/libANGLE/renderer/d3d/d3d9/VertexDeclarationCache.cpp
         src/libANGLE/renderer/d3d/d3d9/VertexDeclarationCache.h
+        src/libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp
     )
 endif()

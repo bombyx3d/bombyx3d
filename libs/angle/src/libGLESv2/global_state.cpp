@@ -77,6 +77,7 @@ Current *GetCurrentData()
     return (current ? current : AllocateCurrent());
 }
 
+/*
 #ifdef ANGLE_PLATFORM_WINDOWS
 extern "C" BOOL WINAPI DllMain(HINSTANCE, DWORD reason, LPVOID)
 {
@@ -112,6 +113,7 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE, DWORD reason, LPVOID)
     return TRUE;
 }
 #endif
+*/
 
 }
 

@@ -59,6 +59,11 @@ namespace B3D
         destroyWindow();
 
         glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE);
+      #if defined(B3D_PLATFORM_WIN32) || defined(B3D_PLATFORM_WINRT)
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+      #endif
 
         glfwWindowHint(GLFW_RED_BITS, 8);
         glfwWindowHint(GLFW_GREEN_BITS, 8);

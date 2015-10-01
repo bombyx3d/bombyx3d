@@ -57,13 +57,13 @@ namespace B3D
     void GLES2Shader::setVertexSource(const std::vector<std::string>& source)
     {
         resetToUncompiledState();
-        setSource(mVertexShader, source);
+        setSource(mVertexShader, source, false);
     }
 
     void GLES2Shader::setFragmentSource(const std::vector<std::string>& source)
     {
         resetToUncompiledState();
-        setSource(mFragmentShader, source);
+        setSource(mFragmentShader, source, true);
     }
 
     void GLES2Shader::use()
@@ -146,14 +146,30 @@ namespace B3D
         return status == GL_TRUE;
     }
 
-    void GLES2Shader::setSource(size_t shaderHandle, const std::vector<std::string>& source)
+    void GLES2Shader::setSource(size_t shaderHandle, const std::vector<std::string>& source, bool fragment)
     {
+        const char* const FRAGMENT_PREFIX[3] = {
+            "#ifdef GL_ES\n",
+            "precision mediump float;\n",
+            "#endif\n"
+        };
+
         std::vector<const GLchar*> lines;
         std::vector<GLint> lengths;
 
         size_t numLines = source.size();
+        if (fragment)
+            numLines += sizeof(FRAGMENT_PREFIX) / sizeof(FRAGMENT_PREFIX[0]);
+
         lines.reserve(numLines);
         lengths.reserve(numLines);
+
+        if (fragment) {
+            for (const char* line : FRAGMENT_PREFIX) {
+                lines.emplace_back(line);
+                lengths.push_back(GLint(strlen(line)));
+            }
+        }
 
         for (const auto& line : source) {
             lines.push_back(line.c_str());

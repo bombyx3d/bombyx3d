@@ -59,7 +59,7 @@ namespace B3D
 
         static bool compileShader(size_t shaderHandle, const char* shaderType);
 
-        static void setSource(size_t shaderHandle, const std::vector<std::string>& source);
+        static void setSource(size_t shaderHandle, const std::vector<std::string>& source, bool fragment);
         static void formatSource(size_t shaderHandle, std::stringstream& stream);
 
         void collectUniformsAndAttributes();

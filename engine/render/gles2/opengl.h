@@ -28,8 +28,7 @@
  #include <GLES2/gl2.h>
 #elif defined(_WIN32)
  #include "engine/platform/win32/WinAPI.h"
- #include <GL/glew.h>
- #include <GL/gl.h>
+ #include <GLES2/gl2.h>
 #elif defined(__linux__)
  #include <GL/glew.h>
  #include <GL/gl.h>

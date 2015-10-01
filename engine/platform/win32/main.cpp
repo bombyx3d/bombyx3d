@@ -30,7 +30,6 @@
 #include "WinAPI.h"
 #include "Win32ConsoleLogger.h"
 #include "Win32GuiLogger.h"
-#include <GL/glew.h>
 #include <clocale>
 #include <vector>
 #include <cstdlib>
@@ -61,17 +60,9 @@ static int win32Main()
     int exitCode = EXIT_SUCCESS;
     {
         GlfwWrapper glfwWrapper;
-        if (glfwWrapper.createWindow()) {
-            glewExperimental = GL_TRUE;
-            if (glewInit() == GLEW_OK) {
-                glfwWrapper.run([threadManager](){ threadManager->flushRenderThreadQueue(); });
-            } else {
-                B3D_LOGE("Unable to initialize GLEW.");
-                glfwWrapper.destroyWindow();
-                MessageBoxW(nullptr, L"Unable to initialize OpenGL.", L"Error", MB_ICONERROR | MB_OK);
-                exitCode = EXIT_FAILURE;
-            }
-        } else {
+        if (glfwWrapper.createWindow())
+            glfwWrapper.run([threadManager](){ threadManager->flushRenderThreadQueue(); });
+        else {
             MessageBoxW(nullptr, L"Unable to initialize OpenGL.", L"Error", MB_ICONERROR | MB_OK);
             exitCode = EXIT_FAILURE;
         }
