@@ -39,6 +39,7 @@ if(NOT _B3D_ENGINE_INCLUDED)
     set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "Bombyx3D")
     set_property(GLOBAL PROPERTY USE_FOLDERS TRUE)
 
+    include("${CMakeScriptsPath}/EnableSSE2.cmake")
     include("${CMakeScriptsPath}/DetectTargetPlatform.cmake")
     include("${CMakeScriptsPath}/SetSourceGroups.cmake")
     include("${CMakeScriptsPath}/TargetLinkLibrary.cmake")

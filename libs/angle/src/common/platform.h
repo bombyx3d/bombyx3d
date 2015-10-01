@@ -77,8 +77,10 @@
 #   undef far
 #endif
 
+#ifndef ANGLE_NO_SSE
 #if !defined(_M_ARM) && !defined(ANGLE_PLATFORM_ANDROID)
 #   define ANGLE_USE_SSE
+#endif
 #endif
 
 #endif // COMMON_PLATFORM_H_

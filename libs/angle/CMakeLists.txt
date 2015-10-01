@@ -2,6 +2,8 @@
 project(angle)
 include(../../cmake/DisableWarnings.cmake)
 
+include(CheckCXXCompilerFlag)
+
 add_definitions(
     "-DANGLE_ENABLE_HLSL"
     "-DANGLE_STANDALONE_BUILD"
@@ -10,6 +12,10 @@ add_definitions(
     "-DGL_GLEXT_PROTOTYPES="
     "-DNOMINMAX"
 )
+
+if(NOT MSVC AND NOT HAVE_COMPILER_SSE2_SUPPORT)
+    add_definitions("-DANGLE_NO_SSE")
+endif()
 
 if(B3D_WINPHONE OR B3D_WINSTORE)
     add_definitions("-DANGLE_ENABLE_D3D11")
@@ -20,6 +26,8 @@ endif()
 include(FileList.cmake)
 b3d_set_source_groups(${source_files})
 b3d_add_library(angle STATIC EXCLUDE_FROM_ALL ${source_files})
+
+set_target_properties("${angle}" PROPERTIES CXX_STANDARD 11)
 
 target_compile_definitions("${angle}" PUBLIC "ANGLE_TRANSLATOR_STATIC")
 
