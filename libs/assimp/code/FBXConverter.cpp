@@ -2174,7 +2174,7 @@ private:
 
 				const std::string& chain_name = NameTransformationChainNode(fixed_name, comp);
 
-				aiNodeAnim* na;
+				aiNodeAnim* na = nullptr;
 				switch(comp) 
 				{
 				case TransformationComp_Rotation:

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
 #
@@ -20,31 +21,39 @@
 # THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.2)
+import errno
+import subprocess
+import os
+import sys
 
-if(NOT _B3D_ENGINE_INCLUDED)
-    set(_B3D_ENGINE_INCLUDED TRUE)
+script_path = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.dirname(script_path)
+build_path = os.path.join(project_path, 'cmake-build', 'winphone81')
 
-    get_filename_component(CMakeScriptsPath "${CMAKE_CURRENT_LIST_FILE}" ABSOLUTE)
-    get_filename_component(CMakeScriptsPath "${CMakeScriptsPath}" PATH)
-    get_filename_component(EnginePath "${CMakeScriptsPath}" PATH)
+try:
+    os.makedirs(build_path)
+except OSError as e:
+    if e.errno == errno.EEXIST and os.path.isdir(build_path):
+        pass
+    else:
+        raise
 
-    set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
-    set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "Bombyx3D")
-    set_property(GLOBAL PROPERTY USE_FOLDERS TRUE)
+os.chdir(build_path)
 
-    include("${CMakeScriptsPath}/DetectTargetPlatform.cmake")
-    include("${CMakeScriptsPath}/SetSourceGroups.cmake")
-    include("${CMakeScriptsPath}/TargetLinkLibrary.cmake")
-    include("${CMakeScriptsPath}/AddLibrary.cmake")
-    include("${CMakeScriptsPath}/AddPlugin.cmake")
-    include("${CMakeScriptsPath}/AddExecutable.cmake")
+command = [
+    'cmake',
+    '-G', 'Visual Studio 12 2013 ARM',
+    '-DCMAKE_SYSTEM_NAME=WindowsPhone',
+    '-DCMAKE_SYSTEM_VERSION=8.1',
+    project_path
+]
+print(' '.join(command))
+subprocess.check_call(command)
 
-    find_package(Threads REQUIRED)
-    include_directories("${EnginePath}")
-
-    if(NOT TARGET engine)
-        file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/bombyx3d")
-        add_subdirectory("${EnginePath}/engine" "${CMAKE_BINARY_DIR}/bombyx3d")
-    endif()
-endif()
+command = [
+    'MSBuild',
+    os.path.join(build_path, 'Bombyx3D.sln'),
+    '/t:sample'
+]
+print(' '.join(command))
+#subprocess.check_call(command)

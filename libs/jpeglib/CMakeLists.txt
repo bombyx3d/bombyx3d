@@ -3,6 +3,7 @@ project(jpeg)
 include(../../cmake/DisableWarnings.cmake)
 
 configure_file(jconfig.vc "${CMAKE_CURRENT_BINARY_DIR}/jconfig.h" COPYONLY)
+add_definitions(-DNO_GETENV)
 
 set(source_files
     cderror.h

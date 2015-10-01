@@ -102,27 +102,33 @@ voidpf ZCALLBACK win32_open64_file_func (voidpf opaque, const void* filename, in
 
     win32_translate_open_mode(mode, &dwDesiredAccess, &dwCreationDisposition, &dwShareMode, &dwFlagsAndAttributes);
 
+    const TCHAR* filenameTC = NULL;
+#if defined(IOWIN32_USING_WINRT_API) && !defined(UNICODE)
+    WCHAR filenameW[FILENAME_MAX + 0x200 + 1];
+#endif
     if ((filename != NULL) && (dwDesiredAccess != 0))
     {
 #ifdef IOWIN32_USING_WINRT_API
 #ifdef UNICODE
+        filenameTC = (LPCTSTR)filename;
         hFile = CreateFile2((LPCTSTR)filename, dwDesiredAccess, dwShareMode, dwCreationDisposition, NULL);
 #else
-        WCHAR filenameW[FILENAME_MAX + 0x200 + 1];
         MultiByteToWideChar(CP_ACP, 0, (const char*)filename, -1, filenameW, FILENAME_MAX + 0x200);
         hFile = CreateFile2(filenameW, dwDesiredAccess, dwShareMode, dwCreationDisposition, NULL);
+        filenameTC = filenameW;
 #endif
 #else
-        hFile = CreateFile((LPCTSTR)filename, dwDesiredAccess, dwShareMode, NULL, dwCreationDisposition, dwFlagsAndAttributes, NULL);
+        filenameTC = (LPCTSTR)filename;
+        hFile = CreateFile(filenameTC, dwDesiredAccess, dwShareMode, NULL, dwCreationDisposition, dwFlagsAndAttributes, NULL);
 #endif
     }
 
     iowin = win32_build_iowin(hFile);
     if (iowin == NULL)
         return NULL;
-    iowin->filenameLength = _tcslen(filename) + 1;
+    iowin->filenameLength = _tcslen(filenameTC) + 1;
     iowin->filename = (void*)malloc(iowin->filenameLength * sizeof(TCHAR));
-    _tcsncpy(iowin->filename, filename, iowin->filenameLength);
+    _tcsncpy(iowin->filename, filenameTC, iowin->filenameLength);
     return iowin; 
 }
 
@@ -193,27 +199,33 @@ voidpf ZCALLBACK win32_open_file_func (voidpf opaque,const char* filename,int mo
 
     win32_translate_open_mode(mode, &dwDesiredAccess, &dwCreationDisposition, &dwShareMode, &dwFlagsAndAttributes);
 
+    const TCHAR* filenameTC = NULL;
+#if defined(IOWIN32_USING_WINRT_API) && !defined(UNICODE)
+    WCHAR filenameW[FILENAME_MAX + 0x200 + 1];
+#endif
     if ((filename != NULL) && (dwDesiredAccess != 0))
     {
 #ifdef IOWIN32_USING_WINRT_API
 #ifdef UNICODE
-        hFile = CreateFile2((LPCTSTR)filename, dwDesiredAccess, dwShareMode, dwCreationDisposition, NULL);
+        filenameTC = (LPCTSTR)filename;
+        hFile = CreateFile2(filenameTC, dwDesiredAccess, dwShareMode, dwCreationDisposition, NULL);
 #else
-        WCHAR filenameW[FILENAME_MAX + 0x200 + 1];
         MultiByteToWideChar(CP_ACP, 0, (const char*)filename, -1, filenameW, FILENAME_MAX + 0x200);
         hFile = CreateFile2(filenameW, dwDesiredAccess, dwShareMode, dwCreationDisposition, NULL);
+        filenameTC = filenameW;
 #endif
 #else
-        hFile = CreateFile((LPCTSTR)filename, dwDesiredAccess, dwShareMode, NULL, dwCreationDisposition, dwFlagsAndAttributes, NULL);
+        filenameTC = (LPCTSTR)filename;
+        hFile = CreateFile(filenameTC, dwDesiredAccess, dwShareMode, NULL, dwCreationDisposition, dwFlagsAndAttributes, NULL);
 #endif
     }
 
     iowin = win32_build_iowin(hFile);
     if (iowin == NULL)
         return NULL;
-    iowin->filenameLength = _tcslen(filename) + 1;
+    iowin->filenameLength = _tcslen(filenameTC) + 1;
     iowin->filename = (void*)malloc(iowin->filenameLength * sizeof(TCHAR));
-    _tcsncpy(iowin->filename, filename, iowin->filenameLength);
+    _tcsncpy(iowin->filename, filenameTC, iowin->filenameLength);
     return iowin; 
 }
 
@@ -312,7 +324,7 @@ voidpf ZCALLBACK win32_opendisk_file_func (voidpf opaque, voidpf stream, int num
         break;
     }
     if (i >= 0)
-        ret = win32_open_file_func(opaque, diskFilename, mode);
+        ret = win32_open_file_func(opaque, (const char*)diskFilename, mode);
     free(diskFilename);
     return ret;
 }

@@ -24,7 +24,7 @@ set(source_files)
 set(defines)
 set(libraries)
 
-if(WIN32)
+if(B3D_WIN32)
     set(platform_name "win32")
     list(APPEND defines "B3D_PLATFORM_WIN32")
     list(APPEND libraries glfw glew)
@@ -47,7 +47,33 @@ if(WIN32)
     )
 endif()
 
-if(APPLE)
+if(B3D_WINRT)
+    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/winrt")
+    set(platform_name "winrt")
+    list(APPEND defines "B3D_PLATFORM_WINRT")
+    list(APPEND libraries angle)
+    list(APPEND source_files
+        shared/CxxThreadManager.cpp
+        shared/CxxThreadManager.h
+        shared/StdIoFile.cpp
+        shared/StdIoFile.h
+        shared/StdIoFileSystem.cpp
+        shared/StdIoFileSystem.h
+        winrt/App.xaml
+        winrt/App.xaml.cpp
+        winrt/App.xaml.h
+        winrt/pch.cpp
+        winrt/pch.h
+    )
+    if(B3D_WINPHONE)
+        list(APPEND defines "B3D_PLATFORM_WINPHONE")
+    endif()
+    if(B3D_WINSTORE)
+        list(APPEND defines "B3D_PLATFORM_WINSTORE")
+    endif()
+endif()
+
+if(B3D_OSX)
     set(platform_name "osx")
     list(APPEND defines "B3D_PLATFORM_OSX")
     list(APPEND libraries glfw)
@@ -66,7 +92,7 @@ if(APPLE)
     )
 endif()
 
-if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+if(B3D_LINUX)
     set(platform_name "linux")
     list(APPEND defines "B3D_PLATFORM_LINUX")
     list(APPEND libraries glfw glew)

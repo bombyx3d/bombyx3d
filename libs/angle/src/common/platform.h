@@ -68,7 +68,7 @@
 #   if defined(ANGLE_ENABLE_WINDOWS_STORE)
 #       include <dxgi1_3.h>
 #       if defined(_DEBUG)
-#           include <DXProgrammableCapture.h>
+//#           include <DXProgrammableCapture.h>
 #           include <dxgidebug.h>
 #       endif
 #   endif

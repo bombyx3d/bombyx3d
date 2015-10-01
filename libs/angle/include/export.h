@@ -9,6 +9,7 @@
 #ifndef LIBGLESV2_EXPORT_H_
 #define LIBGLESV2_EXPORT_H_
 
+/*
 #if defined(_WIN32)
 #   if defined(LIBGLESV2_IMPLEMENTATION) || defined(LIBANGLE_IMPLEMENTATION)
 #       define ANGLE_EXPORT __declspec(dllexport)
@@ -24,5 +25,7 @@
 #else
 #   define ANGLE_EXPORT
 #endif
+*/
+#define ANGLE_EXPORT
 
 #endif // LIBGLESV2_EXPORT_H_

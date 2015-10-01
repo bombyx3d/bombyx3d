@@ -26,7 +26,7 @@
 #include <windows.h>
 #include "common/platform.h"
 
-#if _WIN32_WINNT_WINBLUE
+#if !defined(ANGLE_ENABLE_WINDOWS_STORE) && _WIN32_WINNT_WINBLUE
 #include <versionhelpers.h>
 #endif
 

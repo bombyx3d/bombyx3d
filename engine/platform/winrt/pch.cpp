@@ -19,32 +19,4 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-
-#ifdef __APPLE__
- #include <OpenGL/gl.h>
-#elif defined(B3D_TARGET_WINRT)
- #include <GLES2/gl2.h>
-#elif defined(_WIN32)
- #include "engine/platform/win32/WinAPI.h"
- #include <GL/glew.h>
- #include <GL/gl.h>
-#elif defined(__linux__)
- #include <GL/glew.h>
- #include <GL/gl.h>
-#else
- #include <GL/gl.h>
-#endif
-
-#include "engine/interfaces/render/lowlevel/IRenderer.h"
-#include "engine/interfaces/render/lowlevel/IBuffer.h"
-
-namespace B3D
-{
-    GLenum primitiveTypeToGL(PrimitiveType primitiveType);
-    GLenum cullFaceToGL(CullFace face);
-    GLenum frontFaceToGL(FrontFace face);
-    GLenum blendFuncToGL(BlendFunc func);
-    GLenum bufferUsageToGL(BufferUsage usage);
-}
+#include "pch.h"

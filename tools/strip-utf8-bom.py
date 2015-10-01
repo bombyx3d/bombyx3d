@@ -70,6 +70,8 @@ for root, dirnames, filenames in os.walk('..'):
         '*.txt',
         '*.material',
         '*.glsl',
+        '*.cmake',
+        '*.xaml',
         '.gitignore',
         '.gitattributes',
         'Doxyfile'
