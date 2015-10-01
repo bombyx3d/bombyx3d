@@ -29,7 +29,13 @@ if(NOT _B3D_ENGINE_INCLUDED)
     get_filename_component(CMakeScriptsPath "${CMakeScriptsPath}" PATH)
     get_filename_component(EnginePath "${CMakeScriptsPath}" PATH)
 
+    if(POLICY CMP0063)
+        cmake_policy(SET CMP0063 NEW)
+    endif()
+
     set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
+    set(CMAKE_C_VISIBILITY_PRESET hidden)
+    set(CMAKE_CXX_VISIBILITY_PRESET hidden)
     set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "Bombyx3D")
     set_property(GLOBAL PROPERTY USE_FOLDERS TRUE)
 
