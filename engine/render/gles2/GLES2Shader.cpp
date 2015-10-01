@@ -27,6 +27,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <cassert>
+#include <cstring>
 
 namespace B3D
 {
