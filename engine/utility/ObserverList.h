@@ -23,6 +23,7 @@
 #pragma once
 #include "engine/core/macros.h"
 #include "engine/utility/ScopedCounter.h"
+#include <cstddef>
 #include <vector>
 #include <cassert>
 
