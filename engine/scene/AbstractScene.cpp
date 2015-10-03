@@ -130,7 +130,7 @@ namespace B3D
         bool result = false;
         FOR_EACH_COMPONENT(onBeforeTouchEvent(TouchEvent::Begin, fingerIndex, p, result));
         if (!result)
-            result = beginTouch(fingerIndex, position);
+            result = onTouchBegan(fingerIndex, position);
         FOR_EACH_COMPONENT_REVERSE(onAfterTouchEvent(TouchEvent::Begin, fingerIndex, p, result));
         return result;
     }
@@ -141,7 +141,7 @@ namespace B3D
         bool result = false;
         FOR_EACH_COMPONENT(onBeforeTouchEvent(TouchEvent::Move, fingerIndex, p, result));
         if (!result)
-            moveTouch(fingerIndex, position);
+            onTouchMoved(fingerIndex, position);
         FOR_EACH_COMPONENT_REVERSE(onAfterTouchEvent(TouchEvent::Move, fingerIndex, p, result));
     }
 
@@ -151,7 +151,7 @@ namespace B3D
         bool result = false;
         FOR_EACH_COMPONENT(onBeforeTouchEvent(TouchEvent::End, fingerIndex, p, result));
         if (!result)
-            endTouch(fingerIndex, position);
+            onTouchEnded(fingerIndex, position);
         FOR_EACH_COMPONENT_REVERSE(onAfterTouchEvent(TouchEvent::End, fingerIndex, p, result));
     }
 
@@ -161,7 +161,7 @@ namespace B3D
         bool result = false;
         FOR_EACH_COMPONENT(onBeforeTouchEvent(TouchEvent::Cancel, fingerIndex, p, result));
         if (!result)
-            cancelTouch(fingerIndex, position);
+            onTouchCancelled(fingerIndex, position);
         FOR_EACH_COMPONENT_REVERSE(onAfterTouchEvent(TouchEvent::Cancel, fingerIndex, p, result));
     }
 }
