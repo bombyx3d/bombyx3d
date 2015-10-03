@@ -34,6 +34,6 @@ target_compile_definitions("${angle}" PUBLIC "ANGLE_TRANSLATOR_STATIC")
 target_include_directories("${angle}" SYSTEM BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_include_directories("${angle}" BEFORE PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
-if(WIN32)
+if(B3D_WIN32)
     target_link_libraries("${angle}" d3d9 dxguid)
 endif()

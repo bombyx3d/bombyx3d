@@ -77,4 +77,15 @@ macro(b3d_add_executable name)
 
     _b3d_generate_plugins_initializer("${name}")
 
+    if(B3D_WIN32 AND TARGET bombyx3d-support-angle)
+        if(B3D_ARCH_X86)
+            b3d_copy_file("${name}" "$<TARGET_FILE_DIR:${name}>"
+                "${angle_SOURCE_DIR}/bin/x86/d3dcompiler_47.dll")
+        endif()
+        if(B3D_ARCH_AMD64)
+            b3d_copy_file("${name}" "$<TARGET_FILE_DIR:${name}>"
+                "${angle_SOURCE_DIR}/bin/amd64/d3dcompiler_47.dll")
+        endif()
+    endif()
+
 endmacro()

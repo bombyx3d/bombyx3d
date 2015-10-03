@@ -120,9 +120,18 @@ gl::Error HLSLCompiler::initialize()
 
     TRACE_EVENT0("gpu.angle", "HLSLCompiler::initialize");
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
+/*
 #if defined(ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES)
+*/
     // Find a D3DCompiler module that had already been loaded based on a predefined list of versions.
+    /*
     static const char *d3dCompilerNames[] = ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES;
+    */
+    static const char *d3dCompilerNames[] = {
+        "d3dcompiler_47.dll",
+        "d3dcompiler_46.dll",
+        "d3dcompiler_43.dll",
+    };
 
     for (size_t i = 0; i < ArraySize(d3dCompilerNames); ++i)
     {
@@ -131,12 +140,24 @@ gl::Error HLSLCompiler::initialize()
             break;
         }
     }
+/*
 #endif  // ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES
+*/
 
     if (!mD3DCompilerModule)
     {
+        /*
         // Load the version of the D3DCompiler DLL associated with the Direct3D version ANGLE was built with.
         mD3DCompilerModule = LoadLibrary(D3DCOMPILER_DLL);
+        */
+        for (size_t i = 0; i < ArraySize(d3dCompilerNames); ++i)
+        {
+            mD3DCompilerModule = LoadLibraryA(d3dCompilerNames[i]);
+            if (mD3DCompilerModule)
+            {
+                break;
+            }
+        }
     }
 
     if (!mD3DCompilerModule)
