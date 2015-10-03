@@ -53,13 +53,21 @@ namespace B3D
         template <class CALLBACK> void forEach(CALLBACK&& callback)
         {
             ScopedCounter counter(&mIterating);
-            for (auto it = mObservers.begin(); it != mObservers.end(); ) {
-                if (*it)
-                    callback(*it++);
-                else if (mIterating > 1)
-                    ++it;
-                else
-                    it = mObservers.erase(it);
+            for (size_t i = 0; i < mObservers.size(); ) {
+                TYPE* observer = mObservers[i];
+                if (observer) {
+                    callback(observer);
+                    ++i;
+                } else {
+                    if (mIterating > 1)
+                        ++i;
+                    else {
+                        size_t last = mObservers.size() - 1;
+                        if (i != last)
+                            mObservers[i] = mObservers[last];
+                        mObservers.pop_back();
+                    }
+                }
             }
         }
 
