@@ -24,6 +24,7 @@ import errno
 import glob
 import subprocess
 import argparse
+import multiprocessing
 import os
 import sys
 from StripUtf8Bom import stripUtf8BomFromDirectory
@@ -167,7 +168,11 @@ class Builder:
         ])
         runCommand(command)
 
-        makefilesBuild = [ 'cmake', '--build', buildPath, '--', '-j', '4' ]
+        parallelJobs = multiprocessing.cpu_count()
+        if parallelJobs < 2:
+            parallelJobs = 2
+
+        makefilesBuild = [ 'cmake', '--build', buildPath, '--', '-j', str(parallelJobs) ]
         xcodeBuild = [ 'cmake', '--build', buildPath ]
         msvcBuild = [ 'MSBuild', next(iter(glob.glob(os.path.join(buildPath, '*.sln'))), None), '/nologo',
                 '/verbosity:minimal', '/maxcpucount', ('/p:Configuration=%s' % self.cmakeBuildType) ]
