@@ -39,6 +39,11 @@ if(NOT _B3D_ENGINE_INCLUDED)
     set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "Bombyx3D")
     set_property(GLOBAL PROPERTY USE_FOLDERS TRUE)
 
+    if(B3D_GCC_BITS)
+        set(B3D_GCC_BITS "${B3D_GCC_BITS}" CACHE INTERNAL "" FORCE)
+        add_definitions("-m${B3D_GCC_BITS}")
+    endif()
+
     include("${CMakeScriptsPath}/EnableSSE2.cmake")
     include("${CMakeScriptsPath}/DetectTargetPlatform.cmake")
     include("${CMakeScriptsPath}/SetSourceGroups.cmake")

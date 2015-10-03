@@ -63,8 +63,6 @@ def runCommand(command):
     return commandOutput
 
 class Builder:
-    PLATFORMS = [ 'win32', 'linux', 'osx', 'emscripten', 'ios', 'android', 'winphone81', 'winstore81' ]
-
     def __init__(self):
         self.projectPath = None
         self.outputPath = None
@@ -72,14 +70,15 @@ class Builder:
         self.stripUtf8Bom = False
 
         if sys.platform == 'linux2':
-            self.targetPlatform = 'linux'
-            self.targetPlatformChoices = [ 'linux', 'emscripten', 'android' ]
+            self.targetPlatform = 'linux32'
+            self.targetPlatformChoices = [ 'linux32', 'linux64', 'emscripten', 'android', 'pnacl' ]
         elif sys.platform == 'darwin':
             self.targetPlatform = 'osx'
-            self.targetPlatformChoices = [ 'osx', 'emscripten', 'android' ]
+            self.targetPlatformChoices = [ 'osx', 'emscripten', 'android', 'pnacl' ]
         elif sys.platform == 'win32':
             self.targetPlatform = 'win32'
-            self.targetPlatformChoices = [ 'win32', 'emscripten', 'android', 'winphone81', 'winstore81' ]
+            self.targetPlatformChoices = [ 'win32', 'win32-msvc', 'win64', 'win64-msvc',
+                'emscripten', 'android', 'winphone81', 'winstore81', 'winstore81-x64', 'pnacl' ]
         else:
             print('FATAL ERROR: unsupported host platform. Please run this script on Windows, Linux or OSX.')
             sys.exit(1)
@@ -115,7 +114,8 @@ class Builder:
         if self.outputPath:
             buildPath = self.outputPath
         else:
-            buildPath = os.path.join(os.path.abspath(os.getcwd()), 'cmake-build', self.targetPlatform)
+            buildPath = os.path.join(os.path.abspath(os.getcwd()), 'cmake-build',
+                self.targetPlatform, self.cmakeBuildType)
 
         installPath = os.path.join(buildPath, 'DISTRIBUTION_PACKAGE')
 
@@ -139,15 +139,22 @@ class Builder:
 
         makefilesGenerator = 'MinGW Makefiles' if sys.platform == 'win32' else 'Unix Makefiles'
         EXTRA_CMAKE_OPTIONS = {
-            'win32': [ '-G', makefilesGenerator ],
-            'linux': [ '-G', makefilesGenerator ],
-            'osx': [ '-G', 'Xcode' ],
+            'win32': [ '-G', makefilesGenerator, '-DB3D_GCC_BITS=32' ],
+            'win32-msvc': [ '-G', 'Visual Studio 12 2013' ],
+            'win64': [ '-G', makefilesGenerator, '-DB3D_GCC_BITS=64' ],
+            'win64-msvc': [ '-G', 'Visual Studio 12 2013 Win64' ],
+            'linux32': [ '-G', makefilesGenerator, '-DB3D_GCC_BITS=32' ],
+            'linux64': [ '-G', makefilesGenerator, '-DB3D_GCC_BITS=64' ],
             'emscripten': [ '-G', makefilesGenerator ],
+            'pnacl': [ '-G', makefilesGenerator ],
+            'osx': [ '-G', 'Xcode' ],
             'ios': [ '-G', 'Xcode' ],
             'android': [ '-G', makefilesGenerator ],
             'winphone81': [ 'G', 'Visual Studio 12 2013 ARM',
                 '-DCMAKE_SYSTEM_NAME=WindowsPhone', '-DCMAKE_SYSTEM_VERSION=8.1' ],
             'winstore81': [ 'G', 'Visual Studio 12 2013',
+                '-DCMAKE_SYSTEM_NAME=WindowsStore', '-DCMAKE_SYSTEM_VERSION=8.1' ],
+            'winstore81-x64': [ 'G', 'Visual Studio 12 2013 Win64',
                 '-DCMAKE_SYSTEM_NAME=WindowsStore', '-DCMAKE_SYSTEM_VERSION=8.1' ],
         }
         command = [ 'cmake' ]
@@ -159,16 +166,25 @@ class Builder:
         ])
         runCommand(command)
 
+        makefilesBuild = [ 'cmake', '--build', buildPath, '--', '-j', '4' ]
+        xcodeBuild = [ 'cmake', '--build', buildPath ]
+        msvcBuild = [ 'MSBuild', next(iter(glob.glob(os.path.join(buildPath, '*.sln'))), None), '/nologo',
+                '/verbosity:minimal', '/maxcpucount', ('/p:Configuration=%s' % self.cmakeBuildType) ]
+
         BUILD_COMMAND = {
-            'win32': [ 'cmake', '--build', buildPath, '--', '-j', '4' ],
-            'linux': [ 'cmake', '--build', buildPath, '--', '-j', '4' ],
-            'osx': [ 'cmake', '--build', buildPath ],
-            'emscripten': [ 'cmake', '--build', buildPath, '--', '-j', '4' ],
-            'ios': [ 'cmake', '--build', buildPath ],
-            'android': [ 'cmake', '--build', buildPath, '--', '-j', '4' ],
-            'winphone81': [ 'MSBuild', next(iter(glob.glob(os.path.join(buildPath, '*.sln'))), None), '/nologo',
-                '/verbosity:minimal', '/maxcpucount', ('/p:Configuration=%s' % self.cmakeBuildType) ],
-            'winstore81': [ 'MSBuild', next(iter(glob.glob(os.path.join(buildPath, '*.sln'))), None), '/nologo',
-                '/verbosity:minimal', '/maxcpucount', ('/p:Configuration=%s' % self.cmakeBuildType) ],
+            'win32': makefilesBuild,
+            'win32-msvc': msvcBuild,
+            'win64': makefilesBuild,
+            'win64-msvc': msvcBuild,
+            'linux32': makefilesBuild,
+            'linux64': makefilesBuild,
+            'emscripten': makefilesBuild,
+            'pnacl': makefilesBuild,
+            'osx': xcodeBuild,
+            'ios': xcodeBuild,
+            'android': makefilesBuild,
+            'winphone81': msvcBuild,
+            'winstore81': msvcBuild,
+            'winstore81-x64': msvcBuild,
         }
         runCommand(BUILD_COMMAND[self.targetPlatform])
