@@ -36,10 +36,10 @@ namespace Game
         void update(double time) override;
         void draw(B3D::ICanvas* canvas) const override;
 
-        bool beginTouch(int fingerIndex, const glm::vec2& position) override;
-        void moveTouch(int fingerIndex, const glm::vec2& position) override;
-        void endTouch(int fingerIndex, const glm::vec2& position) override;
-        void cancelTouch(int fingerIndex, const glm::vec2& position) override;
+        bool onTouchBegan(int fingerIndex, const glm::vec2& position) override;
+        void onTouchMoved(int fingerIndex, const glm::vec2& position) override;
+        void onTouchEnded(int fingerIndex, const glm::vec2& position) override;
+        void onTouchCancelled(int fingerIndex, const glm::vec2& position) override;
 
     private:
         B3D::OrbitCameraPtr mCamera;

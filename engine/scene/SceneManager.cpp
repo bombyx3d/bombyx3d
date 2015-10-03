@@ -49,7 +49,7 @@ namespace B3D
         Services::inputManager()->resetAll();
         mCurrentScene = scene;
         if (mCurrentScene)
-            mCurrentScene->onResize(mScreenSize);
+            mCurrentScene->setSize(mScreenSize);
     }
 
     void SceneManager::setCurrentScene(ScenePtr&& scene)
@@ -57,7 +57,7 @@ namespace B3D
         Services::inputManager()->resetAll();
         mCurrentScene = std::move(scene);
         if (mCurrentScene)
-            mCurrentScene->onResize(mScreenSize);
+            mCurrentScene->setSize(mScreenSize);
     }
 
     void SceneManager::resize(const glm::vec2& screenSize)
@@ -71,7 +71,7 @@ namespace B3D
 
         Services::inputManager()->resetAll();
         if (mCurrentScene)
-            mCurrentScene->onResize(screenSize);
+            mCurrentScene->setSize(screenSize);
     }
 
     void SceneManager::runFrame(double time)
@@ -85,8 +85,8 @@ namespace B3D
 
         if (mCurrentScene) {
             ScenePtr currentScene = mCurrentScene;
-            currentScene->onUpdate(time);
-            currentScene->onDraw(mCanvas.get());
+            currentScene->performUpdate(time);
+            currentScene->performDraw(mCanvas.get());
         }
 
         mCanvas->flush(true);
@@ -96,7 +96,7 @@ namespace B3D
     void SceneManager::onTouchBegan(int fingerIndex, const glm::vec2& position)
     {
         if (mCurrentScene) {
-            if (mCurrentScene->onTouchBegan(fingerIndex, position))
+            if (mCurrentScene->beginTouch(fingerIndex, position))
                 mActiveTouches.insert(fingerIndex);
         }
     }
@@ -104,7 +104,7 @@ namespace B3D
     void SceneManager::onTouchMoved(int fingerIndex, const glm::vec2& position)
     {
         if (mCurrentScene && mActiveTouches.find(fingerIndex) != mActiveTouches.end())
-            mCurrentScene->onTouchMoved(fingerIndex, position);
+            mCurrentScene->moveTouch(fingerIndex, position);
     }
 
     void SceneManager::onTouchEnded(int fingerIndex, const glm::vec2& position)
@@ -112,7 +112,7 @@ namespace B3D
         auto it = mActiveTouches.find(fingerIndex);
         if (mCurrentScene && it != mActiveTouches.end()) {
             mActiveTouches.erase(it);
-            mCurrentScene->onTouchEnded(fingerIndex, position);
+            mCurrentScene->endTouch(fingerIndex, position);
         }
     }
 
@@ -121,7 +121,7 @@ namespace B3D
         auto it = mActiveTouches.find(fingerIndex);
         if (mCurrentScene && it != mActiveTouches.end()) {
             mActiveTouches.erase(it);
-            mCurrentScene->onTouchCancelled(fingerIndex, position);
+            mCurrentScene->cancelTouch(fingerIndex, position);
         }
     }
 }

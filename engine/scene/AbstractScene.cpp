@@ -74,14 +74,14 @@ namespace B3D
         }
     }
 
-    void AbstractScene::onResize(const glm::vec2& newSize)
+    void AbstractScene::setSize(const glm::vec2& newSize)
     {
         mSize = newSize;
         FOR_EACH_COMPONENT(onSceneSizeChanged(this, newSize));
-        resize(newSize);
+        onSizeChanged(newSize);
     }
 
-    void AbstractScene::resize(const glm::vec2&)
+    void AbstractScene::onSizeChanged(const glm::vec2&)
     {
     }
 
@@ -93,38 +93,38 @@ namespace B3D
     {
     }
 
-    bool AbstractScene::beginTouch(int, const glm::vec2&)
+    bool AbstractScene::onTouchBegan(int, const glm::vec2&)
     {
         return false;
     }
 
-    void AbstractScene::moveTouch(int, const glm::vec2&)
+    void AbstractScene::onTouchMoved(int, const glm::vec2&)
     {
     }
 
-    void AbstractScene::endTouch(int, const glm::vec2&)
+    void AbstractScene::onTouchEnded(int, const glm::vec2&)
     {
     }
 
-    void AbstractScene::cancelTouch(int, const glm::vec2&)
+    void AbstractScene::onTouchCancelled(int, const glm::vec2&)
     {
     }
 
-    void AbstractScene::onUpdate(double time)
+    void AbstractScene::performUpdate(double time)
     {
         FOR_EACH_COMPONENT(onBeforeUpdateScene(this, time));
         update(time);
         FOR_EACH_COMPONENT_REVERSE(onAfterUpdateScene(this, time));
     }
 
-    void AbstractScene::onDraw(ICanvas* canvas) const
+    void AbstractScene::performDraw(ICanvas* canvas) const
     {
         FOR_EACH_COMPONENT(onBeforeDrawScene(this, canvas));
         draw(canvas);
         FOR_EACH_COMPONENT_REVERSE(onAfterDrawScene(this, canvas));
     }
 
-    bool AbstractScene::onTouchBegan(int fingerIndex, const glm::vec2& position)
+    bool AbstractScene::beginTouch(int fingerIndex, const glm::vec2& position)
     {
         glm::vec2 p = position;
         bool result = false;
@@ -135,7 +135,7 @@ namespace B3D
         return result;
     }
 
-    void AbstractScene::onTouchMoved(int fingerIndex, const glm::vec2& position)
+    void AbstractScene::moveTouch(int fingerIndex, const glm::vec2& position)
     {
         glm::vec2 p = position;
         bool result = false;
@@ -145,7 +145,7 @@ namespace B3D
         FOR_EACH_COMPONENT_REVERSE(onAfterTouchEvent(TouchEvent::Move, fingerIndex, p, result));
     }
 
-    void AbstractScene::onTouchEnded(int fingerIndex, const glm::vec2& position)
+    void AbstractScene::endTouch(int fingerIndex, const glm::vec2& position)
     {
         glm::vec2 p = position;
         bool result = false;
@@ -155,7 +155,7 @@ namespace B3D
         FOR_EACH_COMPONENT_REVERSE(onAfterTouchEvent(TouchEvent::End, fingerIndex, p, result));
     }
 
-    void AbstractScene::onTouchCancelled(int fingerIndex, const glm::vec2& position)
+    void AbstractScene::cancelTouch(int fingerIndex, const glm::vec2& position)
     {
         glm::vec2 p = position;
         bool result = false;

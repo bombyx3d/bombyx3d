@@ -62,7 +62,7 @@ namespace Game
         canvas->drawWireframeBoundingBox(mMesh->boundingBox());
     }
 
-    bool MainScene::beginTouch(int fingerIndex, const glm::vec2& position)
+    bool MainScene::onTouchBegan(int fingerIndex, const glm::vec2& position)
     {
         if (fingerIndex != 0)
             return false;
@@ -71,7 +71,7 @@ namespace Game
         return true;
     }
 
-    void MainScene::moveTouch(int fingerIndex, const glm::vec2& position)
+    void MainScene::onTouchMoved(int fingerIndex, const glm::vec2& position)
     {
         if (fingerIndex != 0)
             return;
@@ -83,11 +83,11 @@ namespace Game
             -glm::radians(89.0f), glm::radians(89.0f)));
     }
 
-    void MainScene::endTouch(int, const glm::vec2&)
+    void MainScene::onTouchEnded(int, const glm::vec2&)
     {
     }
 
-    void MainScene::cancelTouch(int, const glm::vec2&)
+    void MainScene::onTouchCancelled(int, const glm::vec2&)
     {
     }
 }

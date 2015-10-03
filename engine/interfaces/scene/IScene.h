@@ -37,15 +37,15 @@ namespace B3D
         virtual void addComponent(SceneComponentPtr&& component) = 0;
         virtual void removeComponent(const SceneComponentPtr& component) = 0;
 
-        virtual void onResize(const glm::vec2& newSize) = 0;
+        virtual void setSize(const glm::vec2& newSize) = 0;
 
-        virtual void onUpdate(double time) = 0;
-        virtual void onDraw(ICanvas* canvas) const = 0;
+        virtual void performUpdate(double time) = 0;
+        virtual void performDraw(ICanvas* canvas) const = 0;
 
-        virtual bool onTouchBegan(int fingerIndex, const glm::vec2& position) = 0;
-        virtual void onTouchMoved(int fingerIndex, const glm::vec2& position) = 0;
-        virtual void onTouchEnded(int fingerIndex, const glm::vec2& position) = 0;
-        virtual void onTouchCancelled(int fingerIndex, const glm::vec2& position) = 0;
+        virtual bool beginTouch(int fingerIndex, const glm::vec2& position) = 0;
+        virtual void moveTouch(int fingerIndex, const glm::vec2& position) = 0;
+        virtual void endTouch(int fingerIndex, const glm::vec2& position) = 0;
+        virtual void cancelTouch(int fingerIndex, const glm::vec2& position) = 0;
     };
 
     using ScenePtr = std::shared_ptr<IScene>;

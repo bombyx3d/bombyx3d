@@ -36,34 +36,34 @@ namespace B3D
         void addComponent(SceneComponentPtr&& component) override;
         void removeComponent(const SceneComponentPtr& component) override;
 
-        void onResize(const glm::vec2& newSize) final override;
+        void setSize(const glm::vec2& newSize) final override;
         const glm::vec2& size() const { return mSize; }
 
     protected:
         AbstractScene();
 
-        virtual void resize(const glm::vec2& newSize);
+        virtual void onSizeChanged(const glm::vec2& newSize);
 
         virtual void update(double time);
         virtual void draw(ICanvas* canvas) const;
 
-        virtual bool beginTouch(int fingerIndex, const glm::vec2& position);
-        virtual void moveTouch(int fingerIndex, const glm::vec2& position);
-        virtual void endTouch(int fingerIndex, const glm::vec2& position);
-        virtual void cancelTouch(int fingerIndex, const glm::vec2& position);
+        virtual bool onTouchBegan(int fingerIndex, const glm::vec2& position);
+        virtual void onTouchMoved(int fingerIndex, const glm::vec2& position);
+        virtual void onTouchEnded(int fingerIndex, const glm::vec2& position);
+        virtual void onTouchCancelled(int fingerIndex, const glm::vec2& position);
 
     private:
         std::vector<SceneComponentPtr> mComponents;
         glm::vec2 mSize;
         mutable int mIterating;
 
-        void onUpdate(double time) final override;
-        void onDraw(ICanvas* canvas) const final override;
+        void performUpdate(double time) final override;
+        void performDraw(ICanvas* canvas) const final override;
 
-        bool onTouchBegan(int fingerIndex, const glm::vec2& position) final override;
-        void onTouchMoved(int fingerIndex, const glm::vec2& position) final override;
-        void onTouchEnded(int fingerIndex, const glm::vec2& position) final override;
-        void onTouchCancelled(int fingerIndex, const glm::vec2& position) final override;
+        bool beginTouch(int fingerIndex, const glm::vec2& position) final override;
+        void moveTouch(int fingerIndex, const glm::vec2& position) final override;
+        void endTouch(int fingerIndex, const glm::vec2& position) final override;
+        void cancelTouch(int fingerIndex, const glm::vec2& position) final override;
 
         B3D_DISABLE_COPY(AbstractScene);
     };

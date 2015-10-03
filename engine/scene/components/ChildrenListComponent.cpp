@@ -88,19 +88,19 @@ namespace B3D
     void ChildrenListComponent::onSceneSizeChanged(IScene*, const glm::vec2& newSize)
     {
         for (const auto& child : mChildren)
-            child->onResize(newSize);
+            child->setSize(newSize);
     }
 
     void ChildrenListComponent::onAfterUpdateScene(IScene*, double time)
     {
         for (const auto& child : mChildren)
-            child->onUpdate(time);
+            child->performUpdate(time);
     }
 
     void ChildrenListComponent::onAfterDrawScene(const IScene*, ICanvas* canvas)
     {
         for (const auto& child : mChildren)
-            child->onDraw(canvas);
+            child->performDraw(canvas);
     }
 
     void ChildrenListComponent::onBeforeTouchEvent(TouchEvent event, int fingerIndex, glm::vec2& position, bool& r)
@@ -112,14 +112,14 @@ namespace B3D
         {
         case TouchEvent::Begin:
             if (mTouchedChild) {
-                if (mTouchedChild->onTouchBegan(fingerIndex, position))
+                if (mTouchedChild->beginTouch(fingerIndex, position))
                     mTouchedFingers.insert(fingerIndex);
                 r = true;
                 return;
             }
 
             for (auto it = mChildren.crbegin(); it != mChildren.crend(); ++it) {
-                if ((*it)->onTouchBegan(fingerIndex, position)) {
+                if ((*it)->beginTouch(fingerIndex, position)) {
                     r = true;
                     mTouchedFingers.insert(fingerIndex);
                     return;
@@ -130,7 +130,7 @@ namespace B3D
         case TouchEvent::Move:
             if (mTouchedChild) {
                 if (mTouchedFingers.find(fingerIndex) != mTouchedFingers.end())
-                    mTouchedChild->onTouchMoved(fingerIndex, position);
+                    mTouchedChild->moveTouch(fingerIndex, position);
                 r = true;
             }
             return;
@@ -140,7 +140,7 @@ namespace B3D
                 auto it = mTouchedFingers.find(fingerIndex);
                 if (it != mTouchedFingers.end()) {
                     mTouchedFingers.erase(it);
-                    mTouchedChild->onTouchEnded(fingerIndex, position);
+                    mTouchedChild->endTouch(fingerIndex, position);
                     if (mTouchedFingers.empty())
                         mTouchedChild.reset();
                 }
@@ -153,7 +153,7 @@ namespace B3D
                 auto it = mTouchedFingers.find(fingerIndex);
                 if (it != mTouchedFingers.end()) {
                     mTouchedFingers.erase(it);
-                    mTouchedChild->onTouchCancelled(fingerIndex, position);
+                    mTouchedChild->cancelTouch(fingerIndex, position);
                     if (mTouchedFingers.empty())
                         mTouchedChild.reset();
                 }
