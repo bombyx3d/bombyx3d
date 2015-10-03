@@ -695,9 +695,12 @@ gl::Error RendererD3D::getScratchMemoryBuffer(size_t requestedSize, MemoryBuffer
 void RendererD3D::insertEventMarker(GLsizei length, const char *marker)
 {
     std::vector<wchar_t> wcstring (length + 1);
+    /*
     size_t convertedChars = 0;
     errno_t err = mbstowcs_s(&convertedChars, wcstring.data(), length + 1, marker, _TRUNCATE);
     if (err == 0)
+    */
+    size_t convertedChars = mbstowcs(wcstring.data(), marker, length + 1);
     {
         getAnnotator()->setMarker(wcstring.data());
     }
@@ -706,9 +709,12 @@ void RendererD3D::insertEventMarker(GLsizei length, const char *marker)
 void RendererD3D::pushGroupMarker(GLsizei length, const char *marker)
 {
     std::vector<wchar_t> wcstring(length + 1);
+    /*
     size_t convertedChars = 0;
     errno_t err = mbstowcs_s(&convertedChars, wcstring.data(), length + 1, marker, _TRUNCATE);
     if (err == 0)
+    */
+    size_t convertedChars = mbstowcs(wcstring.data(), marker, length + 1);
     {
         getAnnotator()->beginEvent(wcstring.data());
     }
