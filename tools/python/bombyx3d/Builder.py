@@ -37,19 +37,20 @@ def makePath(path):
         else:
             raise
 
-def printCommand(command):
+def commandToString(command):
     args = []
     for arg in command:
         if not ' ' in arg and not '\\' in arg and not '"' in arg:
             args.append(arg)
         else:
             args.append('"%s"' % arg.replace('\\', '\\\\').replace('"', '\\"'))
-    print(' '.join(args))
+    return ' '.join(args)
 
 def runCommand(command):
-    printCommand(command)
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-    commandOutput = ''
+    cmd = commandToString(command)
+    print(cmd)
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    commandOutput = b''
     while True:
         outputLine = process.stdout.readline()
         if outputLine == b'' and process.poll() != None:
@@ -147,7 +148,7 @@ class Builder:
             'linux64': [ '-G', makefilesGenerator, '-DB3D_GCC_BITS=64' ],
             'emscripten': [ '-G', makefilesGenerator ],
             'pnacl': [ '-G', makefilesGenerator ],
-            'osx': [ '-G', 'Xcode' ],
+            'osx': [ '-G', makefilesGenerator ],
             'ios': [ '-G', 'Xcode' ],
             'android': [ '-G', makefilesGenerator ],
             'winphone81': [ 'G', 'Visual Studio 12 2013 ARM',
