@@ -76,6 +76,7 @@ namespace B3D
     void* GLES2Uniform::IUniformValue::operator new(size_t size)
     {
         assert(size <= sizeof(ValueUnion));
+        (void)size;
         return gValueAllocator.alloc();
     }
 

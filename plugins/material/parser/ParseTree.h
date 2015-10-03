@@ -52,9 +52,9 @@ template<> void CullFaceOption::applyToPass(MaterialPass& pass) const
 
 struct BlendOptionValue
 {
-    bool enabled;
-    BlendFunc src;
-    BlendFunc dst;
+    bool enabled = false;
+    BlendFunc src = BlendFunc::SrcAlpha;
+    BlendFunc dst = BlendFunc::OneMinusSrcAlpha;
 };
 using BlendOption = OptionValue<Option::Blend, BlendOptionValue>;
 template<> void BlendOption::applyToPass(MaterialPass& pass) const

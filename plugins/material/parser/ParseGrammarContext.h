@@ -63,6 +63,7 @@ struct Context
     {
         assert(!optionLists.empty());
         assert(optionLists.back().get() == &current);
+        (void)current;
         optionLists.pop_back();
     }
 };

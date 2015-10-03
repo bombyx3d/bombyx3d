@@ -44,6 +44,7 @@ namespace B3D
         bool loadingComplete() const { return mLoadingComplete; }
         float currentProgress() const { return mCurrentProgress; }
 
+    protected:
         void update(double time) override;
 
     private:
