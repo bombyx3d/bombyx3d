@@ -28,6 +28,9 @@ set(source_files
     core/Atom.h
     core/AtomTable.cpp
     core/AtomTable.h
+    core/Event.h
+    core/EventDispatcher.cpp
+    core/EventDispatcher.h
     core/Log.cpp
     core/Log.h
     core/macros.h
@@ -46,6 +49,9 @@ set(source_files
     input/MouseButton.h
     input/TouchEvent.h
     interfaces/core/IApplication.h
+    interfaces/core/IEvent.h
+    interfaces/core/IEventDispatcher.h
+    interfaces/core/IEventObserver.h
     interfaces/core/ILogger.h
     interfaces/core/IResourceManager.h
     interfaces/core/IThreadManager.h
@@ -152,6 +158,7 @@ set(source_files
     utility/ScopedCounter.h
     utility/StringUtils.cpp
     utility/StringUtils.h
+    utility/TypeID.h
     utility/WorkerThread.cpp
     utility/WorkerThread.h
 )
