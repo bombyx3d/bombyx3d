@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
 #
@@ -26,7 +25,7 @@ import fnmatch
 import sys
 import codecs
 
-def strip_utf8_bom(file):
+def stripUtf8BomFromFile(file):
     BUFSIZE = 4096
     BOMLEN = len(codecs.BOM_UTF8)
 
@@ -45,36 +44,37 @@ def strip_utf8_bom(file):
             fp.seek(-BOMLEN, os.SEEK_CUR)
             fp.truncate()
 
-dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-os.chdir(dir)
-
-for root, dirnames, filenames in os.walk('..'):
-    for pattern in [
-        '*.c',
-        '*.cpp',
-        '*.h',
-        '*.hpp',
-        '*.inl',
-        '*.lua',
-        '*.java',
-        '*.cs',
-        '*.dox',
-        '*.cmd',
-        '*.sh',
-        '*.py',
-        '*.xml',
-        '*.yml',
-        '*.md',
-        '*.js',
-        '*.json',
-        '*.txt',
-        '*.material',
-        '*.glsl',
-        '*.cmake',
-        '*.xaml',
-        '.gitignore',
-        '.gitattributes',
-        'Doxyfile'
-    ]:
-        for filename in fnmatch.filter(filenames, pattern):
-            strip_utf8_bom(os.path.join(root, filename))
+def stripUtf8BomFromDirectory(path):
+    exclude = set([ '.git', '.svn', 'cmake-build' ])
+    for root, dirnames, filenames in os.walk(path, topdown=True):
+        dirnames[:] = [d for d in dirnames if d not in exclude]
+        for pattern in [
+            '*.c',
+            '*.cpp',
+            '*.h',
+            '*.hpp',
+            '*.inl',
+            '*.lua',
+            '*.java',
+            '*.cs',
+            '*.dox',
+            '*.bat',
+            '*.cmd',
+            '*.sh',
+            '*.py',
+            '*.xml',
+            '*.yml',
+            '*.md',
+            '*.js',
+            '*.json',
+            '*.txt',
+            '*.material',
+            '*.glsl',
+            '*.cmake',
+            '*.xaml',
+            '.gitignore',
+            '.gitattributes',
+            'Doxyfile'
+        ]:
+            for filename in fnmatch.filter(filenames, pattern):
+                stripUtf8BomFromFile(os.path.join(root, filename))

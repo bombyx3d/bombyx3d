@@ -21,39 +21,14 @@
 # THE SOFTWARE.
 #
 
-import errno
-import subprocess
 import os
 import sys
 
-script_path = os.path.dirname(os.path.abspath(__file__))
-project_path = os.path.dirname(script_path)
-build_path = os.path.join(project_path, 'cmake-build', 'winphone81')
+scriptPath = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(scriptPath, 'tools', 'python'))
+from bombyx3d.Builder import Builder
 
-try:
-    os.makedirs(build_path)
-except OSError as e:
-    if e.errno == errno.EEXIST and os.path.isdir(build_path):
-        pass
-    else:
-        raise
-
-os.chdir(build_path)
-
-command = [
-    'cmake',
-    '-G', 'Visual Studio 12 2013 ARM',
-    '-DCMAKE_SYSTEM_NAME=WindowsPhone',
-    '-DCMAKE_SYSTEM_VERSION=8.1',
-    project_path
-]
-print(' '.join(command))
-subprocess.check_call(command)
-
-command = [
-    'MSBuild',
-    os.path.join(build_path, 'Bombyx3D.sln'),
-    '/t:sample'
-]
-print(' '.join(command))
-#subprocess.check_call(command)
+builder = Builder()
+builder.projectPath = os.path.join(scriptPath, 'samples')
+builder.parseArguments()
+builder.build()

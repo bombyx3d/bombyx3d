@@ -20,7 +20,15 @@
 # THE SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.2)
-project(Bombyx3D)
+import sys
 
-add_subdirectory(samples)
+class StdoutUnbuffered(object):
+    def __init__(self, stream):
+        self.stream = stream
+    def write(self, data):
+        self.stream.write(data)
+        self.stream.flush()
+    def __getattr__(self, attr):
+        return getattr(self.stream, attr)
+
+sys.stdout = StdoutUnbuffered(sys.stdout)
