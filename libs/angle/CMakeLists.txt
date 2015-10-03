@@ -7,6 +7,7 @@ include(CheckCXXCompilerFlag)
 add_definitions(
     "-DANGLE_ENABLE_HLSL"
     "-DANGLE_STANDALONE_BUILD"
+    "-DANGLE_SUPPORT_SHADER_MODEL_2"
     "-DGL_APICALL="
     "-DEGLAPI="
     "-DGL_GLEXT_PROTOTYPES="
