@@ -27,7 +27,7 @@ import argparse
 import multiprocessing
 import os
 import sys
-from StripUtf8Bom import stripUtf8BomFromDirectory
+from bombyx3d.StripUtf8Bom import stripUtf8BomFromDirectory
 
 def makePath(path):
     try:
@@ -57,7 +57,7 @@ def runCommand(command):
         if outputLine == b'' and process.poll() != None:
             break
         commandOutput = commandOutput + outputLine
-        sys.stdout.write(outputLine)
+        os.write(sys.stdout.fileno(), outputLine)
     process.communicate()
     if process.returncode != 0:
         print('ERROR: command \"%s\" has exited with code %d' % (command[0], process.returncode))
@@ -186,7 +186,7 @@ class Builder:
             'linux64': makefilesBuild,
             'emscripten': makefilesBuild,
             'pnacl': makefilesBuild,
-            'osx': xcodeBuild,
+            'osx': makefilesBuild,
             'ios': xcodeBuild,
             'android': makefilesBuild,
             'winphone81': msvcBuild,
