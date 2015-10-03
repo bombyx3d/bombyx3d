@@ -25,11 +25,13 @@
 
 #include <wrl.h>
 #include <wrl/client.h>
-#include <wrl/async.h>
 #include <wrl/wrappers/corewrappers.h>
+#ifdef _MSC_VER
+#include <wrl/async.h>
 #include <Windows.System.Threading.h>
 #include <windows.applicationmodel.core.h>
 #include <windows.graphics.display.h>
+#endif
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
@@ -38,3 +40,34 @@
 #include <GLES3/gl3.h>
 #include <GLES3/gl3ext.h>
 #include <GLSLANG/ShaderLang.h>
+
+#include "src/common/angleutils.h"
+#include "src/common/BitSetIterator.h"
+#include "src/common/debug.h"
+#include "src/common/event_tracer.h"
+#include "src/common/mathutil.h"
+#include "src/common/matrix_utils.h"
+#include "src/common/MemoryBuffer.h"
+#include "src/common/Optional.h"
+#include "src/common/string_utils.h"
+#include "src/common/tls.h"
+#include "src/common/utilities.h"
+#include "src/common/version.h"
+
+#include "src/libANGLE/angletypes.h"
+#include "src/libANGLE/Buffer.h"
+#include "src/libANGLE/Caps.h"
+#include "src/libANGLE/Compiler.h"
+#include "src/libANGLE/Config.h"
+#include "src/libANGLE/Context.h"
+#include "src/libANGLE/Error.h"
+#include "src/libANGLE/Framebuffer.h"
+#include "src/libANGLE/FramebufferAttachment.h"
+#include "src/libANGLE/State.h"
+#include "src/libANGLE/Shader.h"
+#include "src/libANGLE/Query.h"
+#include "src/libANGLE/Renderbuffer.h"
+#include "src/libANGLE/Texture.h"
+#include "src/libANGLE/TransformFeedback.h"
+#include "src/libANGLE/Uniform.h"
+#include "src/libANGLE/VertexArray.h"
