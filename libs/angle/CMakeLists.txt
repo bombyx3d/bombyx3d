@@ -30,7 +30,9 @@ b3d_add_library(angle STATIC EXCLUDE_FROM_ALL ${source_files})
 
 set_target_properties("${angle}" PROPERTIES
     CXX_STANDARD 11
+    COTIRE_C_PREFIX_HEADER_INIT "pch.h"
     COTIRE_CXX_PREFIX_HEADER_INIT "pch.h"
+    COTIRE_ENABLE_PRECOMPILED_HEADER TRUE
     COTIRE_ADD_UNITY_BUILD FALSE
 )
 

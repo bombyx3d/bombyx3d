@@ -33,6 +33,7 @@
 #include <windows.graphics.display.h>
 #endif
 
+#include "include/angle_gl.h"
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <GLES2/gl2.h>
@@ -71,3 +72,5 @@
 #include "src/libANGLE/TransformFeedback.h"
 #include "src/libANGLE/Uniform.h"
 #include "src/libANGLE/VertexArray.h"
+
+#include "src/compiler/translator/Compiler.h"

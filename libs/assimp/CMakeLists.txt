@@ -29,7 +29,15 @@ b3d_set_source_groups(${source_files} ${code_inl_files})
 b3d_add_library(assimp STATIC EXCLUDE_FROM_ALL ${source_files} ${code_inl_files})
 b3d_target_link_libraries("${assimp}" cvtutf irrxml poly2tri minizip zlib)
 
-set_target_properties("${assimp}" PROPERTIES CXX_STANDARD 11)
+set_target_properties("${assimp}" PROPERTIES
+    CXX_STANDARD 11
+    COTIRE_C_PREFIX_HEADER_INIT "code/AssimpPCH.h"
+    COTIRE_CXX_PREFIX_HEADER_INIT "code/AssimpPCH.h"
+    COTIRE_ENABLE_PRECOMPILED_HEADER TRUE
+    COTIRE_ADD_UNITY_BUILD FALSE
+)
 
 target_include_directories("${assimp}" SYSTEM BEFORE PUBLIC
     "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+cotire("${assimp}")

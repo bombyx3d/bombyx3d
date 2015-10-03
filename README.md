@@ -22,43 +22,31 @@ a full list of supported command line options.
 
 The following target platforms and compilers have been tested:
 
-  - *Microsoft Windows* (*Win32* API; *x86* and *amd64*)
-
-    - *MinGW 4.9.1* or newer (options `-t win32` and `-t win64`)
-
+  - *Microsoft Windows* (*x86* and *amd64*)
+    - *MinGW-w64 4.9.3* (option `-t win32`)
+    - **INCOMPLETE** (option `-t win64`)
     - *Visual Studio 2013* (options `-t win32-msvc` and `-t win64-msvc`)
-
-  - *Microsoft Windows* (*WinRT* API; *x86* and *amd64*)
-
-    - **INCOMPLETE** *Visual Studio 2013* targeting *Windows Store 8.1*
-      (options `-t winstore81` and `-t winstore81-x64`)
+    - **INCOMPLETE** *Visual Studio 2013* targeting *Windows Store* (options `-t winstore81` and `-t winstore81-x64`)
 
   - *GNU/Linux* (*x86* and *amd64*)
-
     - *GCC 4.9.2* on *Ubuntu 15.04* (options `-t linux32` and `-t linux64`)
 
-  - Apple OS X
-
+  - *Apple OS X 10.6 (Snow Leopard)* (*amd64*)
     - *GCC 5.2.0* on *OSX 10.6.8* Snow Leopard (option `-t osx`)
 
-  - iOS
-
+  - *iOS*
     - **NOT YET IMPLEMENTED** (option `-t ios`)
 
-  - Android
-
+  - *Google Android*
     - **NOT YET IMPLEMENTED** (option `-t android`)
 
-  - Windows Phone
+  - *Microsoft Windows Phone 8.1*
+    - **INCOMPLETE** *Visual Studio 2013* (option `-t winphone81`)
 
-    - **INCOMPLETE** Visual Studio 2013 (option `-t winphone81`)
-
-  - Google Native Client (PNaCl, Google Chrome)
-
+  - *Google Native Client*
     - **NOT YET IMPLEMENTED** (option `-t pnacl`)
 
-  - HTML5
-
+  - *HTML5*
     - **NOT YET IMPLEMENTED** (option `-t emscripten`)
 
 License
