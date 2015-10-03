@@ -14,7 +14,9 @@
 #include "libANGLE/Error.h"
 
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
+/*
 typedef void* EventRegistrationToken;
+*/
 #else
 #include <EventToken.h>
 #endif

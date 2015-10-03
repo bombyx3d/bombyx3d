@@ -28,7 +28,11 @@ include(FileList.cmake)
 b3d_set_source_groups(${source_files})
 b3d_add_library(angle STATIC EXCLUDE_FROM_ALL ${source_files})
 
-set_target_properties("${angle}" PROPERTIES CXX_STANDARD 11)
+set_target_properties("${angle}" PROPERTIES
+    CXX_STANDARD 11
+    COTIRE_CXX_PREFIX_HEADER_INIT "pch.h"
+    COTIRE_ADD_UNITY_BUILD FALSE
+)
 
 target_compile_definitions("${angle}" PUBLIC "ANGLE_TRANSLATOR_STATIC")
 
@@ -38,3 +42,5 @@ target_include_directories("${angle}" BEFORE PRIVATE "${CMAKE_CURRENT_SOURCE_DIR
 if(B3D_WIN32)
     target_link_libraries("${angle}" d3d9 dxguid)
 endif()
+
+cotire("${angle}")

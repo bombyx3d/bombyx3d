@@ -490,6 +490,7 @@ set(source_files
     src/third_party/systeminfo/SystemInfo.h
     src/third_party/trace_event/trace_event.h
     src/commit.h
+    pch.h
 )
 
 if(B3D_WINPHONE OR B3D_WINSTORE)
