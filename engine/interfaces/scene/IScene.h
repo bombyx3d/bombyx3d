@@ -22,6 +22,7 @@
 
 #pragma once
 #include "engine/interfaces/render/ICanvas.h"
+#include "engine/interfaces/core/IEvent.h"
 #include "engine/interfaces/scene/ISceneComponent.h"
 #include <memory>
 #include <glm/glm.hpp>
@@ -46,6 +47,8 @@ namespace B3D
         virtual void moveTouch(int fingerIndex, const glm::vec2& position) = 0;
         virtual void endTouch(int fingerIndex, const glm::vec2& position) = 0;
         virtual void cancelTouch(int fingerIndex, const glm::vec2& position) = 0;
+
+        virtual void sendEvent(const IEvent* event, bool recursive = true) = 0;
     };
 
     using ScenePtr = std::shared_ptr<IScene>;

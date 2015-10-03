@@ -23,6 +23,7 @@
 #pragma once
 #include "engine/input/TouchEvent.h"
 #include "engine/interfaces/render/ICanvas.h"
+#include "engine/interfaces/core/IEvent.h"
 #include <memory>
 #include <glm/glm.hpp>
 
@@ -45,6 +46,9 @@ namespace B3D
 
         virtual void onBeforeTouchEvent(TouchEvent event, int fingerIndex, glm::vec2& position, bool& result) = 0;
         virtual void onAfterTouchEvent(TouchEvent event, int fingerIndex, const glm::vec2& position, bool& result) = 0;
+
+        virtual void onBeforeSendEvent(const IEvent* event, bool recursive) = 0;
+        virtual void onAfterSendEvent(const IEvent* event, bool recursive) = 0;
     };
 
     using SceneComponentPtr = std::shared_ptr<ISceneComponent>;

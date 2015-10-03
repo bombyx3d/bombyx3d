@@ -48,11 +48,13 @@ namespace B3D
         void onAfterUpdateScene(IScene* scene, double time) override;
         void onAfterDrawScene(const IScene* scene, ICanvas* canvas) override;
         void onBeforeTouchEvent(TouchEvent event, int fingerIndex, glm::vec2& position, bool& result) override;
+        void onAfterSendEvent(const IEvent* event, bool recursive) override;
 
     private:
         std::vector<ScenePtr> mChildren;
         std::unordered_set<int> mTouchedFingers;
         ScenePtr mTouchedChild;
+        mutable int mIterating;
 
         B3D_DISABLE_COPY(ChildrenListComponent);
     };

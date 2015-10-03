@@ -21,6 +21,7 @@
  */
 #include "ChildrenListComponent.h"
 #include "engine/core/Services.h"
+#include "engine/utility/ScopedCounter.h"
 #include <cassert>
 #include <algorithm>
 #include <utility>
@@ -32,6 +33,7 @@ namespace B3D
     }
 
     ChildrenListComponent::ChildrenListComponent()
+        : mIterating(0)
     {
     }
 
@@ -41,6 +43,7 @@ namespace B3D
 
     void ChildrenListComponent::insertChild(size_t index, const ScenePtr& child)
     {
+        assert(!mIterating);
         assert(index <= mChildren.size());
         Services::inputManager()->resetAll();
         mChildren.emplace(mChildren.begin() + diff_t(std::min(index, mChildren.size())), child);
@@ -48,6 +51,7 @@ namespace B3D
 
     void ChildrenListComponent::insertChild(size_t index, ScenePtr&& child)
     {
+        assert(!mIterating);
         assert(index <= mChildren.size());
         Services::inputManager()->resetAll();
         mChildren.emplace(mChildren.begin() + diff_t(std::min(index, mChildren.size())), std::move(child));
@@ -55,6 +59,7 @@ namespace B3D
 
     void ChildrenListComponent::removeChild(size_t index)
     {
+        assert(!mIterating);
         assert(index < mChildren.size());
         if (index < mChildren.size()) {
             Services::inputManager()->resetAll();
@@ -64,6 +69,7 @@ namespace B3D
 
     void ChildrenListComponent::removeLastChild()
     {
+        assert(!mIterating);
         assert(!mChildren.empty());
         if (!mChildren.empty()) {
             Services::inputManager()->resetAll();
@@ -73,6 +79,7 @@ namespace B3D
 
     void ChildrenListComponent::appendChild(const ScenePtr& child)
     {
+        assert(!mIterating);
         assert(child);
         Services::inputManager()->resetAll();
         mChildren.emplace_back(child);
@@ -80,6 +87,7 @@ namespace B3D
 
     void ChildrenListComponent::appendChild(ScenePtr&& child)
     {
+        assert(!mIterating);
         assert(child);
         Services::inputManager()->resetAll();
         mChildren.emplace_back(std::move(child));
@@ -87,18 +95,21 @@ namespace B3D
 
     void ChildrenListComponent::onSceneSizeChanged(IScene*, const glm::vec2& newSize)
     {
+        ScopedCounter counter(&mIterating);
         for (const auto& child : mChildren)
             child->setSize(newSize);
     }
 
     void ChildrenListComponent::onAfterUpdateScene(IScene*, double time)
     {
+        ScopedCounter counter(&mIterating);
         for (const auto& child : mChildren)
             child->performUpdate(time);
     }
 
     void ChildrenListComponent::onAfterDrawScene(const IScene*, ICanvas* canvas)
     {
+        ScopedCounter counter(&mIterating);
         for (const auto& child : mChildren)
             child->performDraw(canvas);
     }
@@ -115,14 +126,14 @@ namespace B3D
                 if (mTouchedChild->beginTouch(fingerIndex, position))
                     mTouchedFingers.insert(fingerIndex);
                 r = true;
-                return;
-            }
-
-            for (auto it = mChildren.crbegin(); it != mChildren.crend(); ++it) {
-                if ((*it)->beginTouch(fingerIndex, position)) {
-                    r = true;
-                    mTouchedFingers.insert(fingerIndex);
-                    return;
+            } else {
+                ScopedCounter counter(&mIterating);
+                for (auto it = mChildren.crbegin(); it != mChildren.crend(); ++it) {
+                    if ((*it)->beginTouch(fingerIndex, position)) {
+                        r = true;
+                        mTouchedFingers.insert(fingerIndex);
+                        return;
+                    }
                 }
             }
             return;
@@ -160,6 +171,15 @@ namespace B3D
                 r = true;
             }
             return;
+        }
+    }
+
+    void ChildrenListComponent::onAfterSendEvent(const IEvent* event, bool recursive)
+    {
+        if (recursive) {
+            ScopedCounter counter(&mIterating);
+            for (const auto& child : mChildren)
+                child->sendEvent(event);
         }
     }
 }

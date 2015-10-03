@@ -81,35 +81,6 @@ namespace B3D
         onSizeChanged(newSize);
     }
 
-    void AbstractScene::onSizeChanged(const glm::vec2&)
-    {
-    }
-
-    void AbstractScene::update(double)
-    {
-    }
-
-    void AbstractScene::draw(ICanvas*) const
-    {
-    }
-
-    bool AbstractScene::onTouchBegan(int, const glm::vec2&)
-    {
-        return false;
-    }
-
-    void AbstractScene::onTouchMoved(int, const glm::vec2&)
-    {
-    }
-
-    void AbstractScene::onTouchEnded(int, const glm::vec2&)
-    {
-    }
-
-    void AbstractScene::onTouchCancelled(int, const glm::vec2&)
-    {
-    }
-
     void AbstractScene::performUpdate(double time)
     {
         FOR_EACH_COMPONENT(onBeforeUpdateScene(this, time));
@@ -163,5 +134,45 @@ namespace B3D
         if (!result)
             onTouchCancelled(fingerIndex, position);
         FOR_EACH_COMPONENT_REVERSE(onAfterTouchEvent(TouchEvent::Cancel, fingerIndex, p, result));
+    }
+
+    void AbstractScene::sendEvent(const IEvent* event, bool recursive)
+    {
+        FOR_EACH_COMPONENT(onBeforeSendEvent(event, recursive));
+        onEvent(event);
+        FOR_EACH_COMPONENT_REVERSE(onAfterSendEvent(event, recursive));
+    }
+
+    void AbstractScene::onSizeChanged(const glm::vec2&)
+    {
+    }
+
+    void AbstractScene::update(double)
+    {
+    }
+
+    void AbstractScene::draw(ICanvas*) const
+    {
+    }
+
+    bool AbstractScene::onTouchBegan(int, const glm::vec2&)
+    {
+        return false;
+    }
+
+    void AbstractScene::onTouchMoved(int, const glm::vec2&)
+    {
+    }
+
+    void AbstractScene::onTouchEnded(int, const glm::vec2&)
+    {
+    }
+
+    void AbstractScene::onTouchCancelled(int, const glm::vec2&)
+    {
+    }
+
+    void AbstractScene::onEvent(const IEvent*)
+    {
     }
 }

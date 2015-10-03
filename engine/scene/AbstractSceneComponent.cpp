@@ -58,4 +58,12 @@ namespace B3D
     void AbstractSceneComponent::onAfterTouchEvent(TouchEvent, int, const glm::vec2&, bool&)
     {
     }
+
+    void AbstractSceneComponent::onBeforeSendEvent(const IEvent*, bool)
+    {
+    }
+
+    void AbstractSceneComponent::onAfterSendEvent(const IEvent*, bool)
+    {
+    }
 }

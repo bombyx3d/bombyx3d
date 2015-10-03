@@ -39,6 +39,16 @@ namespace B3D
         void setSize(const glm::vec2& newSize) final override;
         const glm::vec2& size() const { return mSize; }
 
+        void performUpdate(double time) final override;
+        void performDraw(ICanvas* canvas) const final override;
+
+        bool beginTouch(int fingerIndex, const glm::vec2& position) final override;
+        void moveTouch(int fingerIndex, const glm::vec2& position) final override;
+        void endTouch(int fingerIndex, const glm::vec2& position) final override;
+        void cancelTouch(int fingerIndex, const glm::vec2& position) final override;
+
+        void sendEvent(const IEvent* event, bool recursive = true) final override;
+
     protected:
         AbstractScene();
 
@@ -52,18 +62,12 @@ namespace B3D
         virtual void onTouchEnded(int fingerIndex, const glm::vec2& position);
         virtual void onTouchCancelled(int fingerIndex, const glm::vec2& position);
 
+        virtual void onEvent(const IEvent* event);
+
     private:
         std::vector<SceneComponentPtr> mComponents;
         glm::vec2 mSize;
         mutable int mIterating;
-
-        void performUpdate(double time) final override;
-        void performDraw(ICanvas* canvas) const final override;
-
-        bool beginTouch(int fingerIndex, const glm::vec2& position) final override;
-        void moveTouch(int fingerIndex, const glm::vec2& position) final override;
-        void endTouch(int fingerIndex, const glm::vec2& position) final override;
-        void cancelTouch(int fingerIndex, const glm::vec2& position) final override;
 
         B3D_DISABLE_COPY(AbstractScene);
     };
