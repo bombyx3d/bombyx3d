@@ -94,6 +94,8 @@ set(source_files
     material/MaterialTechnique.h
     material/ShaderLoader.cpp
     material/ShaderLoader.h
+    math/AffineTransform.h
+    math/AffineTransform.cpp
     math/AspectRatio.h
     math/Axis.h
     math/Direction.h
