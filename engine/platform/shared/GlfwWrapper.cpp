@@ -59,7 +59,7 @@ namespace B3D
         destroyWindow();
 
         glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE);
-      #if defined(B3D_PLATFORM_WIN32) || defined(B3D_PLATFORM_WINRT)
+      #if (defined(B3D_PLATFORM_WIN32) && defined(B3D_USE_ANGLE)) || defined(B3D_PLATFORM_WINRT)
         glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);

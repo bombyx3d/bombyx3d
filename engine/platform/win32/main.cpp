@@ -27,6 +27,7 @@
 #include "engine/platform/shared/StdIoFileSystem.h"
 #include "engine/platform/shared/CxxThreadManager.h"
 #include "engine/platform/shared/GlfwWrapper.h"
+#include "engine/render/gles2/opengl.h"
 #include "WinAPI.h"
 #include "Win32ConsoleLogger.h"
 #include "Win32GuiLogger.h"
@@ -60,11 +61,23 @@ static int win32Main()
     int exitCode = EXIT_SUCCESS;
     {
         GlfwWrapper glfwWrapper;
-        if (glfwWrapper.createWindow())
-            glfwWrapper.run([threadManager](){ threadManager->flushRenderThreadQueue(); });
-        else {
+        if (!glfwWrapper.createWindow()) {
+          #ifdef B3D_USE_ANGLE
+            MessageBoxW(nullptr, L"Unable to initialize Direct3D.", L"Error", MB_ICONERROR | MB_OK);
+          #else
             MessageBoxW(nullptr, L"Unable to initialize OpenGL.", L"Error", MB_ICONERROR | MB_OK);
+          #endif
             exitCode = EXIT_FAILURE;
+        } else {
+          #ifndef B3D_USE_ANGLE
+            glewExperimental = GL_TRUE;
+            if (glewInit() != GLEW_OK) {
+                B3D_LOGE("Unable to initialize GLEW.");
+                glfwWrapper.destroyWindow();
+                exitCode = EXIT_FAILURE;
+            } else
+          #endif
+                glfwWrapper.run([threadManager](){ threadManager->flushRenderThreadQueue(); });
         }
     }
 

@@ -28,7 +28,12 @@
  #include <GLES2/gl2.h>
 #elif defined(_WIN32)
  #include "engine/platform/win32/WinAPI.h"
- #include <GLES2/gl2.h>
+ #ifdef B3D_USE_ANGLE
+  #include <GLES2/gl2.h>
+ #else
+  #include <GL/glew.h>
+  #include <GL/gl.h>
+ #endif
 #elif defined(__linux__)
  #include <GL/glew.h>
  #include <GL/gl.h>

@@ -27,7 +27,13 @@ set(libraries)
 if(B3D_WIN32)
     set(platform_name "win32")
     list(APPEND defines "B3D_PLATFORM_WIN32")
-    list(APPEND libraries glfw angle)
+    list(APPEND libraries glfw)
+    if(NOT B3D_USE_ANGLE)
+        list(APPEND libraries glew)
+    else()
+        list(APPEND libraries angle)
+        list(APPEND defines "B3D_USE_ANGLE")
+    endif()
     list(APPEND source_files
         shared/CxxThreadManager.cpp
         shared/CxxThreadManager.h

@@ -183,7 +183,7 @@ set_target_properties(bombyx3d-core PROPERTIES CXX_STANDARD 11 FOLDER "Bombyx3D"
 
 target_link_libraries(bombyx3d-core bombyx3d-platform ${CMAKE_THREAD_LIBS_INIT})
 b3d_target_link_libraries(bombyx3d-core glm boost)
-if(B3D_WIN32 OR B3D_WINRT)
+if((B3D_USE_ANGLE AND B3D_WIN32) OR B3D_WINRT)
     b3d_target_link_libraries(bombyx3d-core angle)
 endif()
 

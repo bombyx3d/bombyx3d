@@ -57,6 +57,10 @@ if(NOT _B3D_ENGINE_INCLUDED)
     find_package(Threads REQUIRED)
     include_directories("${B3D_ENGINE_PATH}")
 
+    if(B3D_WIN32)
+        set(B3D_USE_ANGLE TRUE CACHE BOOLEAN "Use the ANGLE library for rendering")
+    endif()
+
     if(NOT TARGET engine)
         file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/bombyx3d")
         add_subdirectory("${B3D_ENGINE_PATH}/engine" "${CMAKE_BINARY_DIR}/bombyx3d")

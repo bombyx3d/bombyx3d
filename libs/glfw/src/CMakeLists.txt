@@ -60,6 +60,6 @@ b3d_add_library(glfw STATIC EXCLUDE_FROM_ALL ${glfw_SOURCES} ${glfw_HEADERS})
 target_link_libraries("${glfw}" ${glfw_LIBRARIES})
 target_include_directories("${glfw}" SYSTEM PUBLIC BEFORE "${GLFW_SOURCE_DIR}/include" ${glfw_INCLUDE_DIRS})
 
-if(B3D_WIN32 OR B3D_WINRT)
+if((B3D_USE_ANGLE AND B3D_WIN32) OR B3D_WINRT)
     b3d_target_link_libraries("${glfw}" angle)
 endif()
