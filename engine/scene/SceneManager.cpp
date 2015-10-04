@@ -96,15 +96,18 @@ namespace B3D
     void SceneManager::onTouchBegan(int fingerIndex, const glm::vec2& position)
     {
         if (mCurrentScene) {
-            if (mCurrentScene->beginTouch(fingerIndex, position))
+            auto p = adjustTouchPosition(position);
+            if (mCurrentScene->beginTouch(fingerIndex, p))
                 mActiveTouches.insert(fingerIndex);
         }
     }
 
     void SceneManager::onTouchMoved(int fingerIndex, const glm::vec2& position)
     {
-        if (mCurrentScene && mActiveTouches.find(fingerIndex) != mActiveTouches.end())
-            mCurrentScene->moveTouch(fingerIndex, position);
+        if (mCurrentScene && mActiveTouches.find(fingerIndex) != mActiveTouches.end()) {
+            auto p = adjustTouchPosition(position);
+            mCurrentScene->moveTouch(fingerIndex, p);
+        }
     }
 
     void SceneManager::onTouchEnded(int fingerIndex, const glm::vec2& position)
@@ -112,7 +115,8 @@ namespace B3D
         auto it = mActiveTouches.find(fingerIndex);
         if (mCurrentScene && it != mActiveTouches.end()) {
             mActiveTouches.erase(it);
-            mCurrentScene->endTouch(fingerIndex, position);
+            auto p = adjustTouchPosition(position);
+            mCurrentScene->endTouch(fingerIndex, p);
         }
     }
 
@@ -121,7 +125,16 @@ namespace B3D
         auto it = mActiveTouches.find(fingerIndex);
         if (mCurrentScene && it != mActiveTouches.end()) {
             mActiveTouches.erase(it);
-            mCurrentScene->cancelTouch(fingerIndex, position);
+            auto p = adjustTouchPosition(position);
+            mCurrentScene->cancelTouch(fingerIndex, p);
         }
+    }
+
+    glm::vec2 SceneManager::adjustTouchPosition(const glm::vec2& position) const
+    {
+        return glm::vec2(
+             2.0f * position.x / mScreenSize.x - 1.0f,
+            -2.0f * position.y / mScreenSize.y + 1.0f
+        );
     }
 }

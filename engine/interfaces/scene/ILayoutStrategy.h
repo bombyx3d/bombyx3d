@@ -21,27 +21,28 @@
  */
 
 #pragma once
-#include "engine/core/macros.h"
-#include "engine/scene/components/ChildrenListComponent.h"
-#include "engine/scene/AbstractScene.h"
+#include "engine/interfaces/scene/IScene.h"
+#include "engine/interfaces/render/ICanvas.h"
+#include <memory>
+#include <glm/glm.hpp>
 
 namespace B3D
 {
-    class UIElement : public AbstractScene
+    class ILayoutStrategy
     {
     public:
-        UIElement();
-        ~UIElement();
+        virtual ~ILayoutStrategy() = default;
 
-        bool hasChildren() const;
-        ChildrenListComponent& children();
+        virtual void beginLayout(size_t elementCount, const glm::vec2& parentSize) = 0;
+        virtual void measureElement(size_t index, const ScenePtr& element, const glm::vec2& parentSize) = 0;
+        virtual void layoutElement(size_t index, const ScenePtr& element, const glm::vec2& parentSize) = 0;
+        virtual void endLayout(const glm::vec2& parentSize) = 0;
 
-    protected:
-        virtual bool isTouchInside(const glm::vec2& position) const;
+        virtual void onBeforeDrawElement(size_t index, const ScenePtr& element, ICanvas* canvas) = 0;
+        virtual void onAfterDrawElement(size_t index, const ScenePtr& element, ICanvas* canvas) = 0;
 
-    private:
-        mutable ChildrenListComponentPtr mChildren;
-
-        B3D_DISABLE_COPY(UIElement);
+        virtual void adjustTouchPositionForElement(size_t index, const ScenePtr& element, glm::vec2& position) = 0;
     };
+
+    using LayoutStrategyPtr = std::shared_ptr<ILayoutStrategy>;
 }

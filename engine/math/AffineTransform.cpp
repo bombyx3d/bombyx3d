@@ -22,7 +22,7 @@
 #include "AffineTransform.h"
 #include <cmath>
 
-namespace Engine
+namespace B3D
 {
     AffineTransform::AffineTransform()
     {

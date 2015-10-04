@@ -19,29 +19,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "engine/core/macros.h"
-#include "engine/scene/components/ChildrenListComponent.h"
-#include "engine/scene/AbstractScene.h"
+#include "AbstractLayoutStrategy.h"
 
 namespace B3D
 {
-    class UIElement : public AbstractScene
+    void AbstractLayoutStrategy::beginLayout(size_t, const glm::vec2&)
     {
-    public:
-        UIElement();
-        ~UIElement();
+    }
 
-        bool hasChildren() const;
-        ChildrenListComponent& children();
+    void AbstractLayoutStrategy::measureElement(size_t, const ScenePtr&, const glm::vec2&)
+    {
+    }
 
-    protected:
-        virtual bool isTouchInside(const glm::vec2& position) const;
+    void AbstractLayoutStrategy::layoutElement(size_t, const ScenePtr& element, const glm::vec2& parentSize)
+    {
+        element->setSize(parentSize);
+    }
 
-    private:
-        mutable ChildrenListComponentPtr mChildren;
+    void AbstractLayoutStrategy::endLayout(const glm::vec2&)
+    {
+    }
 
-        B3D_DISABLE_COPY(UIElement);
-    };
+    void AbstractLayoutStrategy::onBeforeDrawElement(size_t, const ScenePtr&, ICanvas*)
+    {
+    }
+
+    void AbstractLayoutStrategy::onAfterDrawElement(size_t, const ScenePtr&, ICanvas*)
+    {
+    }
+
+    void AbstractLayoutStrategy::adjustTouchPositionForElement(size_t, const ScenePtr&, glm::vec2&)
+    {
+    }
 }

@@ -21,27 +21,21 @@
  */
 
 #pragma once
-#include "engine/core/macros.h"
-#include "engine/scene/components/ChildrenListComponent.h"
-#include "engine/scene/AbstractScene.h"
+#include "engine/interfaces/scene/ILayoutStrategy.h"
 
 namespace B3D
 {
-    class UIElement : public AbstractScene
+    class AbstractLayoutStrategy : public ILayoutStrategy
     {
     public:
-        UIElement();
-        ~UIElement();
+        void beginLayout(size_t elementCount, const glm::vec2& parentSize) override;
+        void measureElement(size_t index, const ScenePtr& element, const glm::vec2& parentSize) override;
+        void layoutElement(size_t index, const ScenePtr& element, const glm::vec2& parentSize) override;
+        void endLayout(const glm::vec2& parentSize) override;
 
-        bool hasChildren() const;
-        ChildrenListComponent& children();
+        void onBeforeDrawElement(size_t index, const ScenePtr& element, ICanvas* canvas) override;
+        void onAfterDrawElement(size_t index, const ScenePtr& element, ICanvas* canvas) override;
 
-    protected:
-        virtual bool isTouchInside(const glm::vec2& position) const;
-
-    private:
-        mutable ChildrenListComponentPtr mChildren;
-
-        B3D_DISABLE_COPY(UIElement);
+        void adjustTouchPositionForElement(size_t index, const ScenePtr& element, glm::vec2& position) override;
     };
 }

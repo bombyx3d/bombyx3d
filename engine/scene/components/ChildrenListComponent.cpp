@@ -21,6 +21,7 @@
  */
 #include "ChildrenListComponent.h"
 #include "engine/core/Services.h"
+#include "engine/scene/AbstractLayoutStrategy.h"
 #include "engine/utility/ScopedCounter.h"
 #include <cassert>
 #include <algorithm>
@@ -32,8 +33,13 @@ namespace B3D
         using diff_t = std::vector<ScenePtr>::difference_type;
     }
 
+    static const LayoutStrategyPtr gDummyStrategy = std::make_shared<AbstractLayoutStrategy>();
+
     ChildrenListComponent::ChildrenListComponent()
-        : mIterating(0)
+        : mLayoutStrategy(gDummyStrategy)
+        , mSize(0.0f)
+        , mIterating(0)
+        , mNeedsLayout(false)
     {
     }
 
@@ -47,6 +53,7 @@ namespace B3D
         assert(index <= mChildren.size());
         Services::inputManager()->resetAll();
         mChildren.emplace(mChildren.begin() + diff_t(std::min(index, mChildren.size())), child);
+        mNeedsLayout = true;
     }
 
     void ChildrenListComponent::insertChild(size_t index, ScenePtr&& child)
@@ -55,6 +62,7 @@ namespace B3D
         assert(index <= mChildren.size());
         Services::inputManager()->resetAll();
         mChildren.emplace(mChildren.begin() + diff_t(std::min(index, mChildren.size())), std::move(child));
+        mNeedsLayout = true;
     }
 
     void ChildrenListComponent::removeChild(size_t index)
@@ -64,6 +72,7 @@ namespace B3D
         if (index < mChildren.size()) {
             Services::inputManager()->resetAll();
             mChildren.erase(mChildren.begin() + diff_t(index));
+            mNeedsLayout = true;
         }
     }
 
@@ -74,6 +83,7 @@ namespace B3D
         if (!mChildren.empty()) {
             Services::inputManager()->resetAll();
             mChildren.pop_back();
+            mNeedsLayout = true;
         }
     }
 
@@ -83,6 +93,7 @@ namespace B3D
         assert(child);
         Services::inputManager()->resetAll();
         mChildren.emplace_back(child);
+        mNeedsLayout = true;
     }
 
     void ChildrenListComponent::appendChild(ScenePtr&& child)
@@ -91,31 +102,72 @@ namespace B3D
         assert(child);
         Services::inputManager()->resetAll();
         mChildren.emplace_back(std::move(child));
+        mNeedsLayout = true;
+    }
+
+    void ChildrenListComponent::layoutChildren(bool force)
+    {
+        assert(!mIterating);
+
+        if (!force && !mNeedsLayout)
+            return;
+
+        ScopedCounter counter(&mIterating);
+        mLayoutStrategy->beginLayout(mChildren.size(), mSize);
+
+        size_t index = 0;
+        for (const auto& it : mChildren)
+            mLayoutStrategy->measureElement(index++, it, mSize);
+
+        index = 0;
+        for (const auto& it : mChildren)
+            mLayoutStrategy->layoutElement(index++, it, mSize);
+
+        mLayoutStrategy->endLayout(mSize);
+        mNeedsLayout = false;
     }
 
     void ChildrenListComponent::onAfterSizeChanged(IScene*, const glm::vec2& newSize)
     {
-        ScopedCounter counter(&mIterating);
-        for (const auto& child : mChildren)
-            child->setSize(newSize);
+        mSize = newSize;
+        mNeedsLayout = true;
+    }
+
+    void ChildrenListComponent::onBeforeUpdateScene(IScene*, double)
+    {
+        layoutChildren(false);
     }
 
     void ChildrenListComponent::onAfterUpdateScene(IScene*, double time)
     {
+        layoutChildren(false);
+
         ScopedCounter counter(&mIterating);
         for (const auto& child : mChildren)
             child->performUpdate(time);
     }
 
+    void ChildrenListComponent::onBeforeDrawScene(const IScene*, ICanvas*)
+    {
+        layoutChildren(false);
+    }
+
     void ChildrenListComponent::onAfterDrawScene(const IScene*, ICanvas* canvas)
     {
         ScopedCounter counter(&mIterating);
-        for (const auto& child : mChildren)
+        size_t index = 0;
+        for (const auto& child : mChildren) {
+            mLayoutStrategy->onBeforeDrawElement(index, child, canvas);
             child->performDraw(canvas);
+            mLayoutStrategy->onAfterDrawElement(index, child, canvas);
+            ++index;
+        }
     }
 
     void ChildrenListComponent::onBeforeTouchEvent(TouchEvent event, int fingerIndex, glm::vec2& position, bool& r)
     {
+        layoutChildren(false);
+
         if (r)
             return;
 
@@ -123,15 +175,23 @@ namespace B3D
         {
         case TouchEvent::Begin:
             if (mTouchedChild) {
-                if (mTouchedChild->beginTouch(fingerIndex, position))
+                auto adjustedPosition = position;
+                mLayoutStrategy->adjustTouchPositionForElement(mTouchedChildIndex, mTouchedChild, adjustedPosition);
+                if (mTouchedChild->beginTouch(fingerIndex, adjustedPosition))
                     mTouchedFingers.insert(fingerIndex);
                 r = true;
             } else {
                 ScopedCounter counter(&mIterating);
+                size_t index = mChildren.size();
                 for (auto it = mChildren.crbegin(); it != mChildren.crend(); ++it) {
-                    if ((*it)->beginTouch(fingerIndex, position)) {
+                    --index;
+                    auto adjustedPosition = position;
+                    mLayoutStrategy->adjustTouchPositionForElement(index, mTouchedChild,adjustedPosition);
+                    if ((*it)->beginTouch(fingerIndex, adjustedPosition)) {
                         r = true;
                         mTouchedFingers.insert(fingerIndex);
+                        mTouchedChild = *it;
+                        mTouchedChildIndex = index;
                         return;
                     }
                 }
@@ -140,8 +200,11 @@ namespace B3D
 
         case TouchEvent::Move:
             if (mTouchedChild) {
-                if (mTouchedFingers.find(fingerIndex) != mTouchedFingers.end())
-                    mTouchedChild->moveTouch(fingerIndex, position);
+                if (mTouchedFingers.find(fingerIndex) != mTouchedFingers.end()) {
+                    auto adjustedPosition = position;
+                    mLayoutStrategy->adjustTouchPositionForElement(mTouchedChildIndex, mTouchedChild, adjustedPosition);
+                    mTouchedChild->moveTouch(fingerIndex, adjustedPosition);
+                }
                 r = true;
             }
             return;
@@ -151,7 +214,9 @@ namespace B3D
                 auto it = mTouchedFingers.find(fingerIndex);
                 if (it != mTouchedFingers.end()) {
                     mTouchedFingers.erase(it);
-                    mTouchedChild->endTouch(fingerIndex, position);
+                    auto adjustedPosition = position;
+                    mLayoutStrategy->adjustTouchPositionForElement(mTouchedChildIndex, mTouchedChild, adjustedPosition);
+                    mTouchedChild->endTouch(fingerIndex, adjustedPosition);
                     if (mTouchedFingers.empty())
                         mTouchedChild.reset();
                 }
@@ -164,7 +229,9 @@ namespace B3D
                 auto it = mTouchedFingers.find(fingerIndex);
                 if (it != mTouchedFingers.end()) {
                     mTouchedFingers.erase(it);
-                    mTouchedChild->cancelTouch(fingerIndex, position);
+                    auto adjustedPosition = position;
+                    mLayoutStrategy->adjustTouchPositionForElement(mTouchedChildIndex, mTouchedChild, adjustedPosition);
+                    mTouchedChild->cancelTouch(fingerIndex, adjustedPosition);
                     if (mTouchedFingers.empty())
                         mTouchedChild.reset();
                 }

@@ -38,6 +38,7 @@ namespace B3D
         virtual void addComponent(SceneComponentPtr&& component) = 0;
         virtual void removeComponent(const SceneComponentPtr& component) = 0;
 
+        virtual const glm::vec2& size() const = 0;
         virtual void setSize(const glm::vec2& newSize) = 0;
 
         virtual void performUpdate(double time) = 0;

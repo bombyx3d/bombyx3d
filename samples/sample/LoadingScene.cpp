@@ -31,19 +31,14 @@ using namespace B3D;
 namespace Game
 {
     LoadingScene::LoadingScene()
-        : mCurrentProgress(0.0f)
+        : AbstractLoadingScene(glm::vec2(1024.0f, 768.0f), AspectRatio::Fit)
+        , mCurrentProgress(0.0f)
         , mTargetProgress(0.0f)
     {
         setAutoSwitchScene(false);
 
-        mCamera = std::make_shared<OrthogonalCamera>(glm::vec2(1024.0f, 768.0f), AspectRatio::Fit);
-        addComponent(mCamera);
-
-        auto childrenList = std::make_shared<ChildrenListComponent>();
-        addComponent(childrenList);
-
         mProgressBar = std::make_shared<UIProgressBar>();
-        childrenList->appendChild(mProgressBar);
+        children().appendChild(mProgressBar);
 
         auto spriteSheet = Services::resourceManager()->getSpriteSheet("loading/ProgressBar.xml", false);
         mProgressBar->setOverlay(spriteSheet->getSprite("border"));

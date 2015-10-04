@@ -36,8 +36,8 @@ namespace B3D
         void addComponent(SceneComponentPtr&& component) override;
         void removeComponent(const SceneComponentPtr& component) override;
 
+        const glm::vec2& size() const final override { return mSize; }
         void setSize(const glm::vec2& newSize) final override;
-        const glm::vec2& size() const { return mSize; }
 
         void performUpdate(double time) final override;
         void performDraw(ICanvas* canvas) const final override;

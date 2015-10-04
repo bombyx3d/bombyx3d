@@ -22,26 +22,32 @@
 
 #pragma once
 #include "engine/core/macros.h"
-#include "engine/scene/components/ChildrenListComponent.h"
-#include "engine/scene/AbstractScene.h"
+#include "engine/interfaces/image/ISprite.h"
+#include "engine/ui/UIElement.h"
+#include "engine/math/Direction.h"
 
 namespace B3D
 {
-    class UIElement : public AbstractScene
+    class UIImage : public UIElement
     {
     public:
-        UIElement();
-        ~UIElement();
+        UIImage();
+        explicit UIImage(const SpritePtr& image);
+        explicit UIImage(SpritePtr&& image);
+        ~UIImage();
 
-        bool hasChildren() const;
-        ChildrenListComponent& children();
+        const SpritePtr& image() const { return mImage; }
+        void setImage(const SpritePtr& image);
+        void setImage(SpritePtr&& image);
 
     protected:
-        virtual bool isTouchInside(const glm::vec2& position) const;
+        void draw(ICanvas* canvas) const override;
 
     private:
-        mutable ChildrenListComponentPtr mChildren;
+        SpritePtr mImage;
 
-        B3D_DISABLE_COPY(UIElement);
+        B3D_DISABLE_COPY(UIImage);
     };
+
+    using UIImagePtr = std::shared_ptr<UIImage>;
 }

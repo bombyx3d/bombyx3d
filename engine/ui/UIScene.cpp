@@ -19,29 +19,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#pragma once
-#include "engine/core/macros.h"
-#include "engine/scene/components/ChildrenListComponent.h"
-#include "engine/scene/AbstractScene.h"
+#include "UIScene.h"
 
 namespace B3D
 {
-    class UIElement : public AbstractScene
+    UIScene::UIScene(const glm::vec2& virtualSize, AspectRatio aspect)
+        : mChildren(std::make_shared<ChildrenListComponent>())
+        , mCamera(std::make_shared<OrthogonalCamera>(virtualSize, aspect))
     {
-    public:
-        UIElement();
-        ~UIElement();
+        addComponent(mCamera);
+        addComponent(mChildren);
+    }
 
-        bool hasChildren() const;
-        ChildrenListComponent& children();
-
-    protected:
-        virtual bool isTouchInside(const glm::vec2& position) const;
-
-    private:
-        mutable ChildrenListComponentPtr mChildren;
-
-        B3D_DISABLE_COPY(UIElement);
-    };
+    UIScene::~UIScene()
+    {
+    }
 }

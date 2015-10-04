@@ -21,36 +21,46 @@
  */
 
 #pragma once
-#include "engine/ui/UIScene.h"  // FIXME
+#include "engine/ui/UIElement.h"
+#include <unordered_set>
 
 namespace B3D
 {
-    class AbstractLoadingScene : public UIScene // FIXME
+    class UIButton : public UIElement
     {
     public:
-        AbstractLoadingScene(const glm::vec2& virtualSize, AspectRatio aspect);
+        UIButton();
+        ~UIButton();
 
-        void beginLoading(const ScenePtr& scene);
-        void beginLoading(ScenePtr&& scene);
-        template <class SCENE, class... ARGS> void beginLoading(ARGS&&... args)
-            { beginLoading(std::make_shared<SCENE>(std::forward<ARGS>(args)...)); }
+        const ScenePtr& normal() const { return mNormal; }
+        void setNormal(const ScenePtr& scene);
+        void setNormal(ScenePtr&& scene);
+        void setNormal(const SpritePtr& sprite);
+        void setNormal(SpritePtr&& sprite);
 
-        const ScenePtr& nextScene() const { return mNextScene; }
-        void switchToNextScene();
-
-        bool autoSwitchScene() const { return mAutoSwitchScene; }
-        void setAutoSwitchScene(bool flag) { mAutoSwitchScene = flag; }
-
-        bool loadingComplete() const { return mLoadingComplete; }
-        float currentProgress() const { return mCurrentProgress; }
+        const ScenePtr& pressed() const { return mPressed; }
+        void setPressed(const ScenePtr& scene);
+        void setPressed(ScenePtr&& scene);
+        void setPressed(const SpritePtr& sprite);
+        void setPressed(SpritePtr&& sprite);
 
     protected:
-        void update(double time) override;
+        void onSizeChanged(const glm::vec2& newSize) override;
 
-    private:
-        ScenePtr mNextScene;
-        float mCurrentProgress;
-        bool mAutoSwitchScene;
-        bool mLoadingComplete;
+        void update(double time) override;
+        void draw(ICanvas* canvas) const override;
+
+        bool onTouchBegan(int fingerIndex, const glm::vec2& position) override;
+        void onTouchMoved(int fingerIndex, const glm::vec2& position) override;
+        void onTouchEnded(int fingerIndex, const glm::vec2& position) override;
+        void onTouchCancelled(int fingerIndex, const glm::vec2& position) override;
+
+    public:
+        ScenePtr mNormal;
+        ScenePtr mPressed;
+        int mFingersDown = 0;
+        std::unordered_set<int> mFingersInside;
+
+        B3D_DISABLE_COPY(UIButton);
     };
 }

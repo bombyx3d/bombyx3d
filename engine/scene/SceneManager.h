@@ -66,6 +66,8 @@ namespace B3D
         void onTouchEnded(int fingerIndex, const glm::vec2& position) final override;
         void onTouchCancelled(int fingerIndex, const glm::vec2& position) final override;
 
+        glm::vec2 adjustTouchPosition(const glm::vec2& position) const;
+
         B3D_DISABLE_COPY(SceneManager);
     };
 }

@@ -83,6 +83,7 @@ set(source_files
     interfaces/render/ICanvas.h
     interfaces/render/IImmediateModeRenderer.h
     interfaces/scene/ICamera.h
+    interfaces/scene/ILayoutStrategy.h
     interfaces/scene/IScene.h
     interfaces/scene/ISceneComponent.h
     interfaces/scene/ISceneManager.h
@@ -136,6 +137,8 @@ set(source_files
     scene/camera/OrthogonalCamera.h
     scene/components/ChildrenListComponent.cpp
     scene/components/ChildrenListComponent.h
+    scene/AbstractLayoutStrategy.cpp
+    scene/AbstractLayoutStrategy.h
     scene/AbstractLoadingScene.cpp
     scene/AbstractLoadingScene.h
     scene/AbstractScene.cpp
@@ -144,10 +147,18 @@ set(source_files
     scene/AbstractSceneComponent.h
     scene/SceneManager.cpp
     scene/SceneManager.h
+    ui/layouts/UIAbsoluteLayout.cpp
+    ui/layouts/UIAbsoluteLayout.h
+    ui/UIButton.cpp
+    ui/UIButton.h
     ui/UIElement.cpp
     ui/UIElement.h
+    ui/UIImage.cpp
+    ui/UIImage.h
     ui/UIProgressBar.cpp
     ui/UIProgressBar.h
+    ui/UIScene.cpp
+    ui/UIScene.h
     utility/FileUtils.cpp
     utility/FileUtils.h
     utility/MemoryPool.cpp

@@ -23,25 +23,26 @@
 #pragma once
 #include "engine/core/macros.h"
 #include "engine/scene/components/ChildrenListComponent.h"
+#include "engine/scene/camera/OrthogonalCamera.h"
 #include "engine/scene/AbstractScene.h"
 
 namespace B3D
 {
-    class UIElement : public AbstractScene
+    class UIScene : public AbstractScene
     {
     public:
-        UIElement();
-        ~UIElement();
+        UIScene(const glm::vec2& virtualSize, AspectRatio aspect);
+        ~UIScene();
 
-        bool hasChildren() const;
-        ChildrenListComponent& children();
+        const OrthogonalCameraPtr& camera() { return mCamera; }
 
-    protected:
-        virtual bool isTouchInside(const glm::vec2& position) const;
+        ChildrenListComponent& children() { return *mChildren; }
+        const ChildrenListComponent& children() const { return *mChildren; }
 
     private:
-        mutable ChildrenListComponentPtr mChildren;
+        ChildrenListComponentPtr mChildren;
+        OrthogonalCameraPtr mCamera;
 
-        B3D_DISABLE_COPY(UIElement);
+        B3D_DISABLE_COPY(UIScene);
     };
 }

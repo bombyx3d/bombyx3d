@@ -19,53 +19,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "AbstractLoadingScene.h"
-#include "engine/core/Application.h"
-#include "engine/core/Services.h"
+#include "UIImage.h"
 #include <utility>
 #include <algorithm>
 
 namespace B3D
 {
-    AbstractLoadingScene::AbstractLoadingScene(const glm::vec2& virtualSize, AspectRatio aspect)
-        : UIScene(virtualSize, aspect)
-        , mCurrentProgress(0.0f)
-        , mAutoSwitchScene(true)
-        , mLoadingComplete(false)
+    UIImage::UIImage()
     {
     }
 
-    void AbstractLoadingScene::beginLoading(const ScenePtr& scene)
+    UIImage::UIImage(const SpritePtr& image)
+        : mImage(image)
     {
-        mNextScene = scene;
-        mCurrentProgress = 0.0f;
-        mLoadingComplete = false;
+        if (mImage)
+            setSize(mImage->originalSize());
     }
 
-    void AbstractLoadingScene::beginLoading(ScenePtr&& scene)
+    UIImage::UIImage(SpritePtr&& image)
+        : mImage(std::move(image))
     {
-        mNextScene = std::move(scene);
-        mCurrentProgress = 0.0f;
-        mLoadingComplete = false;
+        if (mImage)
+            setSize(mImage->originalSize());
     }
 
-    void AbstractLoadingScene::switchToNextScene()
+    UIImage::~UIImage()
     {
-        Services::sceneManager()->setCurrentScene(mNextScene);
     }
 
-    void AbstractLoadingScene::update(double)
+    void UIImage::setImage(const SpritePtr& image)
     {
-        if (!mNextScene)
-            return;
+        mImage = image;
+        // FIXME: relayout parent
+        setSize(mImage ? mImage->originalSize() : glm::vec2(0.0f));
+    }
 
-        float progress = Services::resourceManager()->resourceLoadProgress();
-        mCurrentProgress = std::max(mCurrentProgress, progress);
+    void UIImage::setImage(SpritePtr&& image)
+    {
+        mImage = std::move(image);
+        // FIXME: relayout parent
+        setSize(mImage ? mImage->originalSize() : glm::vec2(0.0f));
+    }
 
-        if (!Services::resourceManager()->resourcesAreLoading()) {
-            mLoadingComplete = true;
-            if (mAutoSwitchScene)
-                switchToNextScene();
-        }
+    void UIImage::draw(ICanvas* canvas) const
+    {
+        canvas->setBlend(true);
+        canvas->drawSprite(glm::vec2(0.0f), mImage);
     }
 }

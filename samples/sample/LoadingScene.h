@@ -39,7 +39,6 @@ namespace Game
         void draw(B3D::ICanvas* canvas) const override;
 
     private:
-        B3D::OrthogonalCameraPtr mCamera;
         B3D::UIProgressBarPtr mProgressBar;
         float mCurrentProgress;
         float mTargetProgress;

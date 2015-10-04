@@ -78,8 +78,8 @@ namespace Game
 
         glm::vec2 delta = position - mPrevTouchPosition;
         mPrevTouchPosition = position;
-        mCamera->setHorizontalAngle(mCamera->horizontalAngle() + delta.x * 0.01f);
-        mCamera->setVerticalAngle(glm::clamp(mCamera->verticalAngle() + delta.y * 0.01f,
+        mCamera->setHorizontalAngle(mCamera->horizontalAngle() + delta.x * 4.0f);
+        mCamera->setVerticalAngle(glm::clamp(mCamera->verticalAngle() - delta.y * 4.0f,
             -glm::radians(89.0f), glm::radians(89.0f)));
     }
 

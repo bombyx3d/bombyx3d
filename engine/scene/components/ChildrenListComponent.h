@@ -24,6 +24,7 @@
 #include "engine/core/macros.h"
 #include "engine/scene/AbstractSceneComponent.h"
 #include "engine/interfaces/scene/IScene.h"
+#include "engine/interfaces/scene/ILayoutStrategy.h"
 #include <vector>
 #include <unordered_set>
 
@@ -35,6 +36,12 @@ namespace B3D
         ChildrenListComponent();
         ~ChildrenListComponent();
 
+        const LayoutStrategyPtr& layoutStrategy() const { return mLayoutStrategy; }
+        void setLayoutStrategy(const LayoutStrategyPtr& strategy) { mLayoutStrategy = strategy; mNeedsLayout = true; }
+        void setLayoutStrategy(LayoutStrategyPtr&& s) { mLayoutStrategy = std::move(s); mNeedsLayout = true; }
+        template <class TYPE, class... ARGS> void setLayoutStrategy(ARGS&&... args)
+            { setLayoutStrategy(std::make_shared<TYPE>(std::forward<ARGS>(args)...)); }
+
         size_t childrenCount() const { return mChildren.size(); }
         void insertChild(size_t index, const ScenePtr& child);
         void insertChild(size_t index, ScenePtr&& child);
@@ -43,19 +50,33 @@ namespace B3D
         void appendChild(const ScenePtr& child);
         void appendChild(ScenePtr&& child);
 
+        void layoutChildren(bool force);
+
     protected:
         void onAfterSizeChanged(IScene* scene, const glm::vec2& newSize) override;
+
+        void onBeforeUpdateScene(IScene* scene, double time) override;
         void onAfterUpdateScene(IScene* scene, double time) override;
+
+        void onBeforeDrawScene(const IScene* scene, ICanvas* canvas) override;
         void onAfterDrawScene(const IScene* scene, ICanvas* canvas) override;
+
         void onBeforeTouchEvent(TouchEvent event, int fingerIndex, glm::vec2& position, bool& result) override;
+
         void onAfterSendEvent(const IEvent* event, bool recursive) override;
 
     private:
+        LayoutStrategyPtr mLayoutStrategy;
         std::vector<ScenePtr> mChildren;
         std::unordered_set<int> mTouchedFingers;
         ScenePtr mTouchedChild;
+        size_t mTouchedChildIndex;
+        glm::vec2 mSize;
         mutable int mIterating;
+        bool mNeedsLayout;
 
         B3D_DISABLE_COPY(ChildrenListComponent);
     };
+
+    using ChildrenListComponentPtr = std::shared_ptr<ChildrenListComponent>;
 }

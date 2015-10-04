@@ -30,4 +30,26 @@ namespace B3D
     UIElement::~UIElement()
     {
     }
+
+    bool UIElement::hasChildren() const
+    {
+        return mChildren && mChildren->childrenCount() != 0;
+    }
+
+    ChildrenListComponent& UIElement::children()
+    {
+        if (!mChildren) {
+            mChildren = std::make_shared<ChildrenListComponent>();
+            addComponent(mChildren);
+        }
+        return *mChildren;
+    }
+
+    bool UIElement::isTouchInside(const glm::vec2& position) const
+    {
+        auto half = size() * 0.5f;
+        auto p1 = -half;
+        auto p2 =  half;
+        return position.x >= p1.x && position.y >= p1.y && position.x <= p2.x && position.y <= p2.y;
+    }
 }

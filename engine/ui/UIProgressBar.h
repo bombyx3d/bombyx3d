@@ -48,6 +48,7 @@ namespace B3D
         float progress() const { return mProgress; }
         void setProgress(float progress) { mProgress = progress; }
 
+    protected:
         void draw(ICanvas* canvas) const override;
 
     private:
