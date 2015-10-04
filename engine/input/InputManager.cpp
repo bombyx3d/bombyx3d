@@ -40,8 +40,15 @@ namespace B3D
 
     void InputManager::resetAll()
     {
+        resetKeyPresses();
         resetMouseButtons();
         resetTouches();
+    }
+
+    void InputManager::resetKeyPresses()
+    {
+        while (!mPressedKeys.empty())
+            emitKeyRelease(*mPressedKeys.begin());
     }
 
     void InputManager::resetMouseButtons()
@@ -147,6 +154,16 @@ namespace B3D
         return mMousePosition;
     }
 
+    bool InputManager::isMouseButtonPressed(MouseButton button) const
+    {
+        return mPressedMouseButtons.find(button) != mPressedMouseButtons.end();
+    }
+
+    bool InputManager::isKeyPressed(Key key) const
+    {
+        return mPressedKeys.find(key) != mPressedKeys.end();
+    }
+
     void InputManager::injectMouseButtonPress(MouseButton button)
     {
         emitMouseButtonPress(button);
@@ -212,6 +229,16 @@ namespace B3D
             emitMouseMove(position);
             emitMouseButtonCancel(MouseButton::Left);
         }
+    }
+
+    void InputManager::injectKeyPress(Key key, bool repeat)
+    {
+        emitKeyPress(key, repeat);
+    }
+
+    void InputManager::injectKeyRelease(Key key)
+    {
+        emitKeyRelease(key);
     }
 
     void InputManager::emitMouseButtonPress(MouseButton button)
@@ -282,6 +309,25 @@ namespace B3D
             mPressedFingers.erase(it);
             mObservers.forEach([fingerIndex, &position](IInputObserver* observer) {
                  observer->onTouchCancelled(fingerIndex, position);
+            });
+        }
+    }
+
+    void InputManager::emitKeyPress(Key key, bool repeat)
+    {
+        mPressedKeys.insert(key);
+        mObservers.forEach([key, repeat](IInputObserver* observer) {
+             observer->onKeyPress(key, repeat);
+        });
+    }
+
+    void InputManager::emitKeyRelease(Key key)
+    {
+        auto it = mPressedKeys.find(key);
+        if (it != mPressedKeys.end()) {
+            mPressedKeys.erase(it);
+            mObservers.forEach([key](IInputObserver* observer) {
+                 observer->onKeyRelease(key);
             });
         }
     }

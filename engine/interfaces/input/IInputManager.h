@@ -33,6 +33,7 @@ namespace B3D
         virtual ~IInputManager() = default;
 
         virtual void resetAll() = 0;
+        virtual void resetKeyPresses() = 0;
         virtual void resetMouseButtons() = 0;
         virtual void resetTouches() = 0;
 
@@ -52,6 +53,9 @@ namespace B3D
 
         virtual glm::vec2 mousePosition() const = 0;
 
+        virtual bool isMouseButtonPressed(MouseButton button) const = 0;
+        virtual bool isKeyPressed(Key key) const = 0;
+
         virtual void injectMouseButtonPress(MouseButton button) = 0;
         virtual void injectMouseButtonRelease(MouseButton button) = 0;
         virtual void injectMouseButtonCancel(MouseButton button) = 0;
@@ -61,6 +65,9 @@ namespace B3D
         virtual void injectTouchMove(int fingerIndex, const glm::vec2& position) = 0;
         virtual void injectTouchEnd(int fingerIndex, const glm::vec2& position) = 0;
         virtual void injectTouchCancel(int fingerIndex, const glm::vec2& position) = 0;
+
+        virtual void injectKeyPress(Key key, bool repeat) = 0;
+        virtual void injectKeyRelease(Key key) = 0;
     };
 
     using InputManagerPtr = std::shared_ptr<IInputManager>;

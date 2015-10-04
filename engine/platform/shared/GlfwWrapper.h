@@ -23,6 +23,7 @@
 #pragma once
 #include "engine/core/macros.h"
 #include "engine/interfaces/core/IApplication.h"
+#include "engine/input/Key.h"
 #include <glm/glm.hpp>
 #include <memory>
 #include <functional>
@@ -54,6 +55,8 @@ namespace B3D
         static void mouseScrollCallback(GLFWwindow* window, double x, double y);
         static void mouseMoveCallback(GLFWwindow* window, double x, double y);
         static void errorCallback(int error, const char* description);
+
+        static Key keyFromGlfw(int key);
 
         B3D_DISABLE_COPY(GlfwWrapper);
     };

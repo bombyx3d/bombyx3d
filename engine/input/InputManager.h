@@ -37,6 +37,7 @@ namespace B3D
         ~InputManager();
 
         void resetAll() override;
+        void resetKeyPresses() override;
         void resetMouseButtons() override;
         void resetTouches() override;
 
@@ -61,6 +62,9 @@ namespace B3D
 
         glm::vec2 mousePosition() const override;
 
+        bool isMouseButtonPressed(MouseButton button) const override;
+        bool isKeyPressed(Key key) const override;
+
         void injectMouseButtonPress(MouseButton button) override;
         void injectMouseButtonRelease(MouseButton button) override;
         void injectMouseButtonCancel(MouseButton button) override;
@@ -71,10 +75,14 @@ namespace B3D
         void injectTouchEnd(int fingerIndex, const glm::vec2& position) override;
         void injectTouchCancel(int fingerIndex, const glm::vec2& position) override;
 
+        void injectKeyPress(Key key, bool repeat) override;
+        void injectKeyRelease(Key key) override;
+
     private:
         ObserverList<IInputObserver> mObservers;
         glm::vec2 mMousePosition;
         std::unordered_set<MouseButton> mPressedMouseButtons;
+        std::unordered_set<Key> mPressedKeys;
         std::unordered_map<int, glm::vec2> mPressedFingers;
         bool mHasKeyboard;
         bool mHasMouse;
@@ -93,6 +101,9 @@ namespace B3D
         void emitTouchMove(int fingerIndex, const glm::vec2& position);
         void emitTouchEnd(int fingerIndex, const glm::vec2& position);
         void emitTouchCancel(int fingerIndex, const glm::vec2& position);
+
+        void emitKeyPress(Key key, bool repeat);
+        void emitKeyRelease(Key key);
 
         B3D_DISABLE_COPY(InputManager);
     };

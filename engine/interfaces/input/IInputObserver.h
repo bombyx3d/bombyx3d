@@ -21,6 +21,7 @@
  */
 
 #pragma once
+#include "engine/input/Key.h"
 #include "engine/input/MouseButton.h"
 #include <memory>
 #include <glm/glm.hpp>
@@ -41,5 +42,8 @@ namespace B3D
         virtual void onTouchMoved(int, const glm::vec2&) {}
         virtual void onTouchEnded(int, const glm::vec2&) {}
         virtual void onTouchCancelled(int, const glm::vec2&) {}
+
+        virtual void onKeyPress(Key, bool) {}
+        virtual void onKeyRelease(Key) {}
     };
 }

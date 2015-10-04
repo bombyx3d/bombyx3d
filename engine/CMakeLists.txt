@@ -46,6 +46,7 @@ set(source_files
     image/SpriteSheet.h
     input/InputManager.cpp
     input/InputManager.h
+    input/Key.h
     input/MouseButton.h
     input/TouchEvent.h
     interfaces/core/IApplication.h
