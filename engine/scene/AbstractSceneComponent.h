@@ -31,7 +31,8 @@ namespace B3D
     public:
         ~AbstractSceneComponent();
 
-        void onSceneSizeChanged(IScene* scene, const glm::vec2& newSize) override;
+        void onBeforeSizeChanged(IScene* scene, glm::vec2& newSize) override;
+        void onAfterSizeChanged(IScene* scene, const glm::vec2& newSize) override;
 
         void onBeforeUpdateScene(IScene* scene, double time) override;
         void onAfterUpdateScene(IScene* scene, double time) override;

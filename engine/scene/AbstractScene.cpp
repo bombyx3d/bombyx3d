@@ -51,7 +51,7 @@ namespace B3D
         assert(!mIterating);
 
         mComponents.emplace_back(component);
-        mComponents.back()->onSceneSizeChanged(this, mSize);
+        setSize(mSize);
     }
 
     void AbstractScene::addComponent(SceneComponentPtr&& component)
@@ -59,7 +59,7 @@ namespace B3D
         assert(!mIterating);
 
         mComponents.emplace_back(std::move(component));
-        mComponents.back()->onSceneSizeChanged(this, mSize);
+        setSize(mSize);
     }
 
     void AbstractScene::removeComponent(const SceneComponentPtr& component)
@@ -69,6 +69,7 @@ namespace B3D
         for (auto it = mComponents.begin(); it != mComponents.end(); ++it) {
             if (*it == component) {
                 mComponents.erase(it);
+                setSize(mSize);
                 return;
             }
         }
@@ -77,8 +78,9 @@ namespace B3D
     void AbstractScene::setSize(const glm::vec2& newSize)
     {
         mSize = newSize;
-        FOR_EACH_COMPONENT(onSceneSizeChanged(this, newSize));
-        onSizeChanged(newSize);
+        FOR_EACH_COMPONENT(onBeforeSizeChanged(this, mSize));
+        onSizeChanged(mSize);
+        FOR_EACH_COMPONENT_REVERSE(onAfterSizeChanged(this, mSize))
     }
 
     void AbstractScene::performUpdate(double time)

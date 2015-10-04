@@ -31,7 +31,11 @@ namespace B3D
     {
     }
 
-    void AbstractSceneComponent::onSceneSizeChanged(IScene*, const glm::vec2&)
+    void AbstractSceneComponent::onBeforeSizeChanged(IScene*, glm::vec2&)
+    {
+    }
+
+    void AbstractSceneComponent::onAfterSizeChanged(IScene*, const glm::vec2&)
     {
     }
 

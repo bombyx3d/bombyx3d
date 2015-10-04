@@ -60,7 +60,7 @@ namespace B3D
         void calcProjectionMatrix(glm::mat4& matrix) const override;
         void calcViewMatrix(glm::mat4& matrix) const override;
 
-        void onSceneSizeChanged(IScene* scene, const glm::vec2& newSize) override;
+        void onBeforeSizeChanged(IScene* scene, glm::vec2& newSize) override;
 
     private:
         mutable Quad mVisibleArea;

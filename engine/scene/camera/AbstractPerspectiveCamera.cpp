@@ -47,7 +47,7 @@ namespace B3D
         matrix = glm::perspective(mFovY, mAspect, mNearZ, mFarZ);
     }
 
-    void AbstractPerspectiveCamera::onSceneSizeChanged(IScene*, const glm::vec2& newSize)
+    void AbstractPerspectiveCamera::onAfterSizeChanged(IScene*, const glm::vec2& newSize)
     {
         setAspectRatioFromSize(newSize);
     }

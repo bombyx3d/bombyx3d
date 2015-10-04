@@ -93,7 +93,7 @@ namespace B3D
         mChildren.emplace_back(std::move(child));
     }
 
-    void ChildrenListComponent::onSceneSizeChanged(IScene*, const glm::vec2& newSize)
+    void ChildrenListComponent::onAfterSizeChanged(IScene*, const glm::vec2& newSize)
     {
         ScopedCounter counter(&mIterating);
         for (const auto& child : mChildren)

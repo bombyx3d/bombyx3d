@@ -44,7 +44,7 @@ namespace B3D
         void appendChild(ScenePtr&& child);
 
     protected:
-        void onSceneSizeChanged(IScene* scene, const glm::vec2& newSize) override;
+        void onAfterSizeChanged(IScene* scene, const glm::vec2& newSize) override;
         void onAfterUpdateScene(IScene* scene, double time) override;
         void onAfterDrawScene(const IScene* scene, ICanvas* canvas) override;
         void onBeforeTouchEvent(TouchEvent event, int fingerIndex, glm::vec2& position, bool& result) override;

@@ -36,7 +36,8 @@ namespace B3D
     public:
         virtual ~ISceneComponent() = default;
 
-        virtual void onSceneSizeChanged(IScene* scene, const glm::vec2& newSize) = 0;
+        virtual void onBeforeSizeChanged(IScene* scene, glm::vec2& newSize) = 0;
+        virtual void onAfterSizeChanged(IScene* scene, const glm::vec2& newSize) = 0;
 
         virtual void onBeforeUpdateScene(IScene* scene, double time) = 0;
         virtual void onAfterUpdateScene(IScene* scene, double time) = 0;
