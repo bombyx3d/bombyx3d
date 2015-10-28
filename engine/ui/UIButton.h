@@ -29,6 +29,8 @@ namespace B3D
     class UIButton : public UIElement
     {
     public:
+        class Clicked {};
+
         UIButton();
         ~UIButton();
 

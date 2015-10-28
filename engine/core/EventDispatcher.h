@@ -32,6 +32,8 @@ namespace B3D
     class EventDispatcher : public IEventDispatcher
     {
     public:
+        EventDispatcher() = default;
+
         template <class TYPE> void addObserver(IEventObserver* observer) { addObserver(typeOf<TYPE>(), observer); }
         void addObserver(TypeID event, IEventObserver* observer) override;
         void removeObserver(TypeID event, IEventObserver* observer) override;

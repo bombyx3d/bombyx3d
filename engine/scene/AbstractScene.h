@@ -23,11 +23,13 @@
 #pragma once
 #include "engine/core/macros.h"
 #include "engine/interfaces/scene/IScene.h"
+#include "engine/core/EventDispatcher.h"
 #include <vector>
+#include <memory>
 
 namespace B3D
 {
-    class AbstractScene : public IScene
+    class AbstractScene : public IScene, public IEventObserver
     {
     public:
         ~AbstractScene();
@@ -49,6 +51,28 @@ namespace B3D
 
         void sendEvent(const IEvent* event, bool recursive = true) final override;
 
+        template <class TYPE> void addEventObserver(void* key, const std::function<void()>& handler)
+        {
+            addEventObserver<TYPE>(key, [handler](const TYPE&){ handler(); });
+        }
+
+        template <class TYPE> void addEventObserver(void* key, std::function<void(const TYPE&)>&& handler)
+        {
+            auto typeId = typeOf<TYPE>();
+            EventObserverPtr observer(new EventObserver<TYPE>(std::move(handler)));
+            eventDispatcher().addObserver(typeId, observer.get());
+            eventObserverMap()[key].emplace_back(typeId, std::move(observer));
+        }
+
+        template <class TYPE> void addEventObserver(void* key, const std::function<void(const TYPE&)>& handler)
+        {
+            EventObserverPtr observer(new EventObserver<TYPE>(handler));
+            eventDispatcher().addObserver(typeOf<TYPE>(), observer.get());
+            eventObserverMap()[key].emplace_back(std::move(observer));
+        }
+
+        void removeEventObservers(void* key);
+
     protected:
         AbstractScene();
 
@@ -62,12 +86,37 @@ namespace B3D
         virtual void onTouchEnded(int fingerIndex, const glm::vec2& position);
         virtual void onTouchCancelled(int fingerIndex, const glm::vec2& position);
 
-        virtual void onEvent(const IEvent* event);
+        void onEvent(const IEvent* event) override;
 
     private:
+        template <class TYPE> struct EventObserver : public IEventObserver
+        {
+        public:
+            explicit EventObserver(std::function<void(const TYPE&)>&& function)
+                : mHandlerFunction(std::move(function)) {}
+
+            explicit EventObserver(const std::function<void(const TYPE&)>& function)
+                : mHandlerFunction(function) {}
+
+            void onEvent(const IEvent* event) override
+                { mHandlerFunction(*reinterpret_cast<const TYPE*>(event->rawData())); }
+
+        private:
+            std::function<void(const TYPE&)> mHandlerFunction;
+        };
+
+        using EventObserverPtr = std::unique_ptr<IEventObserver>;
+        using EventObserverList = std::vector<std::pair<TypeID, EventObserverPtr>>;
+        using EventObserverMap = std::unordered_map<void*, EventObserverList>;
+
         std::vector<SceneComponentPtr> mComponents;
+        std::unique_ptr<EventObserverMap> mEventObserverMap;
+        std::unique_ptr<EventDispatcher> mEventDispatcher;
         glm::vec2 mSize;
         mutable int mIterating;
+
+        EventDispatcher& eventDispatcher();
+        EventObserverMap& eventObserverMap();
 
         B3D_DISABLE_COPY(AbstractScene);
     };

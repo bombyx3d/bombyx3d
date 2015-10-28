@@ -29,6 +29,6 @@ namespace B3D
     {
     public:
         virtual ~IEventObserver() = default;
-        virtual void onEventReceived(const IEvent* event) = 0;
+        virtual void onEvent(const IEvent* event) = 0;
     };
 }

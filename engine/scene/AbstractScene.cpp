@@ -145,6 +145,22 @@ namespace B3D
         FOR_EACH_COMPONENT_REVERSE(onAfterSendEvent(event, recursive));
     }
 
+    void AbstractScene::removeEventObservers(void* key)
+    {
+        auto& map = eventObserverMap();
+        auto& dispatcher = eventDispatcher();
+
+        auto it = map.find(key);
+        if (it == map.end())
+            return;
+
+        EventObserverList observers = std::move(it->second);
+        map.erase(it);
+
+        for (const auto& observer : observers)
+            dispatcher.removeObserver(observer.first, observer.second.get());
+    }
+
     void AbstractScene::onSizeChanged(const glm::vec2&)
     {
     }
@@ -174,7 +190,22 @@ namespace B3D
     {
     }
 
-    void AbstractScene::onEvent(const IEvent*)
+    void AbstractScene::onEvent(const IEvent* event)
     {
+        eventDispatcher().sendEvent(event);
+    }
+
+    EventDispatcher& AbstractScene::eventDispatcher()
+    {
+        if (!mEventDispatcher)
+            mEventDispatcher.reset(new EventDispatcher);
+        return *mEventDispatcher;
+    }
+
+    AbstractScene::EventObserverMap& AbstractScene::eventObserverMap()
+    {
+        if (!mEventObserverMap)
+            mEventObserverMap.reset(new EventObserverMap);
+        return *mEventObserverMap;
     }
 }

@@ -22,6 +22,7 @@
 #include "UIButton.h"
 #include "engine/ui/UIImage.h"
 #include "engine/core/Log.h"
+#include "engine/core/Event.h"
 
 namespace B3D
 {
@@ -124,7 +125,7 @@ namespace B3D
             mFingersInside.erase(fingerIndex);
     }
 
-    void UIButton::onTouchEnded(int fingerIndex, const glm::vec2& position)
+    void UIButton::onTouchEnded(int fingerIndex, const glm::vec2&)
     {
         if (--mFingersDown > 0)
             mFingersInside.erase(fingerIndex);
@@ -132,12 +133,14 @@ namespace B3D
             auto it = mFingersInside.find(fingerIndex);
             if (it != mFingersInside.end()) {
                 mFingersInside.erase(it);
-                B3D_LOGI("PRESS!");
+
+                Event<Clicked> event;
+                sendEvent(&event);
             }
         }
     }
 
-    void UIButton::onTouchCancelled(int fingerIndex, const glm::vec2& position)
+    void UIButton::onTouchCancelled(int fingerIndex, const glm::vec2&)
     {
         mFingersInside.erase(fingerIndex);
         --mFingersDown;

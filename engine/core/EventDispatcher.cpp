@@ -45,6 +45,6 @@ namespace B3D
     {
         auto it = mObservers.find(event->typeID());
         if (it != mObservers.end())
-            it->second.forEach([event](IEventObserver* observer){ observer->onEventReceived(event); });
+            it->second.forEach([event](IEventObserver* observer){ observer->onEvent(event); });
     }
 }
