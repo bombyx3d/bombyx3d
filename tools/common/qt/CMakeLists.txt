@@ -20,14 +20,16 @@
 # THE SOFTWARE.
 #
 
-if(NOT _B3D_SET_SOURCE_GROUPS_INCLUDED)
-    set(_B3D_SET_SOURCE_GROUPS_INCLUDED TRUE)
+include(../cmake/QtCommon.cmake)
+include(../../../cmake/SetSourceGroups.cmake)
 
-    macro(b3d_set_source_groups)
-        foreach(file ${ARGN})
-            get_filename_component(path "${file}" DIRECTORY)
-            string(REPLACE "/" "\\" path "${path}")
-            source_group("Source Files\\${path}" FILES "${file}")
-        endforeach()
-    endmacro()
-endif()
+set(sources
+    style.cpp
+    style.h
+)
+
+b3d_set_source_groups(${sources})
+
+add_library(bombyx3d-tools-common-qt STATIC ${sources})
+target_include_directories(bombyx3d-tools-common-qt PUBLIC "${B3D_TOOLS_PATH}")
+b3d_link_qt_libraries(bombyx3d-tools-common-qt)

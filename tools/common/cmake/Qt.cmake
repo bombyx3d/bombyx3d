@@ -20,14 +20,30 @@
 # THE SOFTWARE.
 #
 
-if(NOT _B3D_SET_SOURCE_GROUPS_INCLUDED)
-    set(_B3D_SET_SOURCE_GROUPS_INCLUDED TRUE)
+if(NOT _B3D_QT_INCLUDED)
+    set(_B3D_QT_INCLUDED TRUE)
 
-    macro(b3d_set_source_groups)
-        foreach(file ${ARGN})
-            get_filename_component(path "${file}" DIRECTORY)
-            string(REPLACE "/" "\\" path "${path}")
-            source_group("Source Files\\${path}" FILES "${file}")
-        endforeach()
+    set(B3D_QT_FOUND FALSE)
+    if(POLICY CMP0063)
+        cmake_policy(SET CMP0063 NEW)
+    endif()
+
+    find_package(Qt5Widgets)
+    if(Qt5Widgets_FOUND)
+        find_package(Qt5Xml REQUIRED)
+        find_package(Qt5Network REQUIRED)
+        find_package(Qt5Gui REQUIRED)
+        find_package(Qt5Core REQUIRED)
+        set(B3D_QT_FOUND TRUE)
+        add_definitions(-DB3D_QT_FOUND)
+    endif()
+
+    set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
+    set(CMAKE_AUTOMOC TRUE)
+
+    macro(b3d_link_qt_libraries target)
+        if(${B3D_QT_FOUND})
+            target_link_libraries("${target}" Qt5::Xml Qt5::Network Qt5::Gui Qt5::Core Qt5::Widgets)
+        endif()
     endmacro()
 endif()

@@ -1,8 +1,8 @@
 Game Engine
 ===========
 
-Building
---------
+Building samples
+----------------
 
 You will need the following software to build samples:
 
@@ -48,6 +48,27 @@ The following target platforms and compilers have been tested:
 
   - *HTML5*
     - **NOT YET IMPLEMENTED** (option `-t emscripten`)
+
+
+Building tools
+--------------
+
+You will need the following software to build samples:
+
+  * *CMake 3.2.2* or newer
+  * *Python 2.7.10* or newer
+  * *Qt 5.4* or newer
+
+Code should successfully compile with any C++11-conforming compiler targeting
+Microsoft Windows, Linux or OSX.
+
+There is a script `build-tools.py` in the root directory of the project.
+If you invoke it without options, it will build *Release* version of tools
+for the current platform.
+
+Use option `-c Debug` to build *Debug* version. You may invoke script `build-tools.py`
+with option `--help` to get a full list of supported command line options.
+
 
 License
 -------

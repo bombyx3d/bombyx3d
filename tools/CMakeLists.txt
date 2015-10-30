@@ -20,14 +20,7 @@
 # THE SOFTWARE.
 #
 
-if(NOT _B3D_SET_SOURCE_GROUPS_INCLUDED)
-    set(_B3D_SET_SOURCE_GROUPS_INCLUDED TRUE)
+cmake_minimum_required(VERSION 3.2)
+project(Bombyx3DTools)
 
-    macro(b3d_set_source_groups)
-        foreach(file ${ARGN})
-            get_filename_component(path "${file}" DIRECTORY)
-            string(REPLACE "/" "\\" path "${path}")
-            source_group("Source Files\\${path}" FILES "${file}")
-        endforeach()
-    endmacro()
-endif()
+add_subdirectory(uieditor)

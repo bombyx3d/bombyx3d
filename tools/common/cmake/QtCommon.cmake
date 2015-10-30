@@ -20,14 +20,21 @@
 # THE SOFTWARE.
 #
 
-if(NOT _B3D_SET_SOURCE_GROUPS_INCLUDED)
-    set(_B3D_SET_SOURCE_GROUPS_INCLUDED TRUE)
+if(NOT _B3D_QT_COMMON_INCLUDED)
+    set(_B3D_QT_COMMON_INCLUDED TRUE)
 
-    macro(b3d_set_source_groups)
-        foreach(file ${ARGN})
-            get_filename_component(path "${file}" DIRECTORY)
-            string(REPLACE "/" "\\" path "${path}")
-            source_group("Source Files\\${path}" FILES "${file}")
-        endforeach()
-    endmacro()
+    if(POLICY CMP0063)
+        cmake_policy(SET CMP0063 NEW)
+    endif()
+
+    get_filename_component(B3D_TOOLS_CMAKE_SCRIPTS_PATH "${CMAKE_CURRENT_LIST_FILE}" ABSOLUTE)
+    get_filename_component(B3D_TOOLS_CMAKE_SCRIPTS_PATH "${B3D_TOOLS_CMAKE_SCRIPTS_PATH}" PATH)
+    get_filename_component(B3D_TOOLS_PATH "${B3D_TOOLS_CMAKE_SCRIPTS_PATH}" PATH)
+    get_filename_component(B3D_TOOLS_PATH "${B3D_TOOLS_PATH}" PATH)
+
+    include("${B3D_TOOLS_PATH}/common/cmake/Qt.cmake")
+
+    if(B3D_QT_FOUND AND NOT TARGET bombyx3d-tools-qt-common)
+        add_subdirectory("${B3D_TOOLS_PATH}/common/qt" "${CMAKE_BINARY_DIR}/bombyx3d/tools/common/qt")
+    endif()
 endif()

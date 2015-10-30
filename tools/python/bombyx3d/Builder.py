@@ -68,6 +68,7 @@ class Builder:
     def __init__(self):
         self.projectPath = None
         self.outputPath = None
+        self.defaultOutputDirectoryName = 'cmake-build'
         self.cmakeBuildType = 'Release'
         self.stripUtf8Bom = False
 
@@ -116,8 +117,8 @@ class Builder:
         if self.outputPath:
             buildPath = self.outputPath
         else:
-            buildPath = os.path.join(os.path.abspath(os.getcwd()), 'cmake-build',
-                self.targetPlatform, self.cmakeBuildType)
+            buildPath = os.path.join(os.path.abspath(os.getcwd()),
+                self.defaultOutputDirectoryName, self.targetPlatform, self.cmakeBuildType)
 
         installPath = os.path.join(buildPath, 'DISTRIBUTION_PACKAGE')
 

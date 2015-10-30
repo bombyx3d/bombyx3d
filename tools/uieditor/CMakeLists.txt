@@ -20,14 +20,30 @@
 # THE SOFTWARE.
 #
 
-if(NOT _B3D_SET_SOURCE_GROUPS_INCLUDED)
-    set(_B3D_SET_SOURCE_GROUPS_INCLUDED TRUE)
+cmake_minimum_required(VERSION 3.2)
 
-    macro(b3d_set_source_groups)
-        foreach(file ${ARGN})
-            get_filename_component(path "${file}" DIRECTORY)
-            string(REPLACE "/" "\\" path "${path}")
-            source_group("Source Files\\${path}" FILES "${file}")
-        endforeach()
-    endmacro()
+include(../common/cmake/QtCommon.cmake)
+
+if(POLICY CMP0063)
+    cmake_policy(SET CMP0063 NEW)
+endif()
+
+set(sources
+    main.cpp
+)
+
+b3d_set_source_groups(${sources})
+
+add_executable(UIEditor WIN32 MACOSX_BUNDLE ${sources})
+target_link_libraries(UIEditor bombyx3d-tools-common-qt)
+b3d_link_qt_libraries(UIEditor)
+
+set_target_properties(UIEditor PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+
+if(APPLE)
+    set_target_properties(UIEditor PROPERTIES
+        OSX_ARCHITECTURES "x86_64"
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in"
+        MACOSX_BUNDLE_BUNDLE_NAME "UIEditor"
+    )
 endif()

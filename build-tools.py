@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # Copyright (c) 2015 Nikolay Zapolnov (zapolnov@gmail.com).
 #
@@ -20,14 +21,24 @@
 # THE SOFTWARE.
 #
 
-if(NOT _B3D_SET_SOURCE_GROUPS_INCLUDED)
-    set(_B3D_SET_SOURCE_GROUPS_INCLUDED TRUE)
+import argparse
+import os
+import sys
 
-    macro(b3d_set_source_groups)
-        foreach(file ${ARGN})
-            get_filename_component(path "${file}" DIRECTORY)
-            string(REPLACE "/" "\\" path "${path}")
-            source_group("Source Files\\${path}" FILES "${file}")
-        endforeach()
-    endmacro()
-endif()
+scriptPath = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(scriptPath, 'tools', 'python'))
+from bombyx3d.Builder import Builder
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-o', '--output', help='Path to the build directory')
+parser.add_argument('-c', '--configuration', help='Value for CMAKE_BUILD_TYPE',
+    choices=['Debug', 'Release', 'RelWithDebInfo', 'MinSizeRel'], default='Release')
+args = parser.parse_args()
+
+builder = Builder()
+builder.cmakeBuildType = args.configuration
+builder.defaultOutputDirectoryName = 'cmake-tools-build'
+builder.projectPath = os.path.join(scriptPath, 'tools')
+if args.output:
+    builder.outputPath = os.path.abspath(args.output)
+builder.build()

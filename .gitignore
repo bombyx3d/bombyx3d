@@ -1,2 +1,3 @@
 /cmake-build
+/cmake-tools-build
 *.pyc
