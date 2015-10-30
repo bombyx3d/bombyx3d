@@ -25,7 +25,7 @@ import os
 import sys
 
 scriptPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(scriptPath, 'tools', 'python'))
+sys.path.insert(0, os.path.join(scriptPath, 'tools', 'common', 'python'))
 from bombyx3d.Builder import Builder
 
 builder = Builder()
