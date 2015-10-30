@@ -57,11 +57,19 @@ namespace B3D
         void onTouchEnded(int fingerIndex, const glm::vec2& position) override;
         void onTouchCancelled(int fingerIndex, const glm::vec2& position) override;
 
-    public:
+        virtual void animatePress();
+        virtual void animateRelease(bool isClick);
+
+    private:
         ScenePtr mNormal;
         ScenePtr mPressed;
         int mFingersDown = 0;
         std::unordered_set<int> mFingersInside;
+        double mPressedTime = 0.0;
+        bool mClickPending = false;
+
+        void beginTrackFinger(int fingerIndex);
+        void endTrackFinger(int fingerIndex, bool isClick = false);
 
         B3D_DISABLE_COPY(UIButton);
     };

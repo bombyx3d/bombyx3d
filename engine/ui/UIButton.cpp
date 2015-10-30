@@ -26,6 +26,8 @@
 
 namespace B3D
 {
+    static const double PRESSED_TIME = 0.1;
+
     UIButton::UIButton()
     {
     }
@@ -90,6 +92,14 @@ namespace B3D
 
     void UIButton::update(double time)
     {
+        if (mPressedTime > 0.0)
+            mPressedTime -= time;
+        else if (mClickPending) {
+            mClickPending = false;
+            Event<Clicked> event;
+            sendEvent(&event);
+        }
+
         if (mNormal)
             mNormal->performUpdate(time);
         if (mPressed)
@@ -98,7 +108,7 @@ namespace B3D
 
     void UIButton::draw(ICanvas* canvas) const
     {
-        if (mFingersInside.empty()) {
+        if (mFingersInside.empty() && !mClickPending) {
             if (mNormal)
                 mNormal->performDraw(canvas);
         } else {
@@ -111,7 +121,7 @@ namespace B3D
     {
         if (isTouchInside(position)) {
             ++mFingersDown;
-            mFingersInside.insert(fingerIndex);
+            beginTrackFinger(fingerIndex);
             return true;
         }
         return false;
@@ -120,29 +130,49 @@ namespace B3D
     void UIButton::onTouchMoved(int fingerIndex, const glm::vec2& position)
     {
         if (isTouchInside(position))
-            mFingersInside.insert(fingerIndex);
+            beginTrackFinger(fingerIndex);
         else
-            mFingersInside.erase(fingerIndex);
+            endTrackFinger(fingerIndex);
     }
 
     void UIButton::onTouchEnded(int fingerIndex, const glm::vec2&)
     {
-        if (--mFingersDown > 0)
-            mFingersInside.erase(fingerIndex);
-        else {
-            auto it = mFingersInside.find(fingerIndex);
-            if (it != mFingersInside.end()) {
-                mFingersInside.erase(it);
-
-                Event<Clicked> event;
-                sendEvent(&event);
-            }
-        }
+        --mFingersDown;
+        endTrackFinger(fingerIndex, mFingersDown == 0);
     }
 
     void UIButton::onTouchCancelled(int fingerIndex, const glm::vec2&)
     {
+        endTrackFinger(fingerIndex);
+    }
+
+    void UIButton::animatePress()
+    {
+        mPressedTime = PRESSED_TIME;
+    }
+
+    void UIButton::animateRelease(bool isClick)
+    {
+        if (isClick)
+            mClickPending = true;
+    }
+
+    void UIButton::beginTrackFinger(int fingerIndex)
+    {
+        bool wasReleased = mFingersInside.empty();
+        mFingersInside.insert(fingerIndex);
+
+        if (wasReleased)
+            animatePress();
+    }
+
+    void UIButton::endTrackFinger(int fingerIndex, bool isClick)
+    {
+        bool wasReleased = mFingersInside.empty();
         mFingersInside.erase(fingerIndex);
-        --mFingersDown;
+        bool nowReleased = mFingersInside.empty();
+
+        if (!wasReleased && nowReleased)
+            animateRelease(isClick);
     }
 }
